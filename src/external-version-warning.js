@@ -1,5 +1,3 @@
-import { getReadTheDocsData } from "./readthedocs-config.js";
-
 /**
  * Inject warning informing the documentation comes from an external version (e.g. pull request)
  *
@@ -14,7 +12,7 @@ export function injectExternalVersionWarning(config) {
   <p class="admonition-title">Warning</p>
   <p>
     This page
-    <a class="reference external" href="${ window.location.protocol }//${ window.location.hostname }/projects/${ config.project.slug }/builds/${ config.build.id }/">was created </a>
+    <a class="reference external" href="${ window.location.protocol }//${ config.domains.dashboard }/projects/${ config.project.slug }/builds/${ config.build.id }/">was created </a>
     from a pull request
     (<a class="reference external" href="${ config.project.repository_url }/pull/${ config.version.slug }">#${ config.version.slug }</a>).
   </p>
@@ -22,9 +20,9 @@ export function injectExternalVersionWarning(config) {
 `;
 
         // Allow to override the admonition template
-        if (config.features.banner.external.template) {
-            admonition = config.features.banner.external.template;
-        }
+        // if (config.features.banner.external.template) {
+        //     admonition = config.features.banner.external.template;
+        // }
 
         let main = document.querySelector('[role=main]') || document.querySelector('#main');
         let node = document.createElement("div");

@@ -1,3 +1,4 @@
+import { getReadTheDocsConfig } from "./readthedocs-config";
 import { injectExternalVersionWarning } from "./external-version-warning";
 
 function setup() {
@@ -26,10 +27,10 @@ function setup() {
     return new Promise((resolve) => {
         is_loaded
             .then(() => {
-                return getReadTheDocsData();
+                return getReadTheDocsConfig();
             })
             .then((config) => {
-                return injectExternalVersionWarning();
+                return injectExternalVersionWarning(config);
             })
             .then(() => {
                 resolve();
