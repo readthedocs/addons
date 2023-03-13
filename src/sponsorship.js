@@ -21,7 +21,7 @@ function createAdPlacement() {
         placement.setAttribute("data-ea-type", "image");
         placement.setAttribute("data-ea-manual", "true");
         placement.setAttribute("data-ea-style", "stickybox");
-        placement.classList.add("ethical-rtd");
+        placement.classList.add("raised");
 
         let main = document.querySelector("[role=main]");
         main.insertBefore(placement, main.lastChild);
@@ -32,5 +32,8 @@ function createAdPlacement() {
 
 export function injectEthicalAd(config) {
     createAdPlacement();
+    // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
+    // but we want to call it manually because we need to inject our `div` first.
+    // FIXME: for some reason `ethicalads.loads()` is undefined at executing time.
     ethicalads.load();
 };
