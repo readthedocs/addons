@@ -81,7 +81,7 @@ export function injectFlyout(config) {
 
     const template = `
 <div class="injected">
-   <div class="rst-versions rst-badge shift-up" data-toggle="rst-versions">
+   <div class="rst-versions rst-badge shift-down" data-toggle="rst-versions">
       <span class="rst-current-version" data-toggle="rst-current-version">
       <span class="fa fa-book">&nbsp;</span>
       v: ${config.version.slug}
