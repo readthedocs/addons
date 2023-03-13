@@ -1,5 +1,5 @@
 /**
- * Inject warning informing the documentation comes from an external version (e.g. pull request)
+ * Inject a warning informing the documentation comes from an external version (e.g. pull request)
  *
  */
 export function injectExternalVersionWarning(config) {
