@@ -1,0 +1,41 @@
+/*
+CSS required for the flyout
+
+NOTE: this is a simplified version of
+https://github.com/readthedocs/readthedocs.org/blob/761e3b653be9f1ddca2893b161c63150993062d7/media/css/readthedocs-doc-embed.css
+ */
+.rst-versions.rst-badge {
+    display: block;
+
+    bottom: 50px;
+
+    /* Workaround for mkdocs which set a specific height for this element */
+    height: auto;
+}
+
+.rst-other-versions {
+    text-align: left;
+}
+
+.rst-other-versions a {
+    border: 0;
+}
+
+.rst-other-versions dl {
+    margin: 0;
+}
+
+.rtd-current-item {
+    font-weight: bold;
+}
+
+
+/* Fix RTD theme bottom margin */
+.rst-content .line-block {
+    margin-bottom: 24px
+}
+
+/* Fix for nav bottom padding with flyout */
+nav.wy-nav-side {
+    padding-bottom: 3em;
+}

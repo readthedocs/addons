@@ -1,3 +1,5 @@
+import styles from "./flyout.css";
+
 /**
    Injects the footer into the page
 
@@ -7,12 +9,17 @@
    * All other pages just get it appended to the <body>
 */
 export function injectFlyout(config) {
+    // Inject our styles for the flyout
+    document.adoptedStyleSheets = [styles];
+
     // Default placement for the flyout
-    const EXPLICIT_FLYOUT_PLACEMENT_SELECTOR = '#readthedocs-embed-flyout';
+    const EXPLICIT_FLYOUT_PLACEMENT_SELECTOR = "#readthedocs-embed-flyout";
 
     const params = {
         project: config.project.slug,
         version: config.version.slug,
+        // TODO: figure it out where this data should come from.
+        // Is it OK to ask to the doctool via `readthedocs-build.yaml`?
         page: "",
         theme: "",
         docroot: "",
@@ -20,7 +27,7 @@ export function injectFlyout(config) {
         subproject: false,
     };
     const flyout_url = "/_" + "/api/v2/footer_html/?" + new URLSearchParams(params).toString();
-    fetch(flyout_url, {method: 'GET'})
+    fetch(flyout_url, {method: "GET"})
         .then(response => {
             if (!response.ok) {
                 throw new Error();
@@ -31,7 +38,8 @@ export function injectFlyout(config) {
             // Placement for the flyout
             const placements = [
                 EXPLICIT_FLYOUT_PLACEMENT_SELECTOR,
-                'div.rst-other-versions',
+                // NOTE: avoid integrating it with Sphinx themes because we need more CSS work for this
+                // "div.rst-other-versions",
             ];
 
             for (const query_selector of placements) {
@@ -39,14 +47,14 @@ export function injectFlyout(config) {
                 if (placement !== null) {
                     // TODO: does it make sense to implement a new flyout endpoint as suggested in
                     // https://github.com/readthedocs/readthedocs.org/pull/8052
-                    placement.innerHTML = flyout['html'];
+                    placement.innerHTML = flyout["html"];
                     return;
                 }
             }
 
-            document.body.insertAdjacentHTML('beforeend', flyout);
+            document.body.insertAdjacentHTML("beforeend", flyout["html"]);
         })
         .catch(error => {
-            console.error('Error injecting the flyout');
+            console.error("Error injecting the flyout");
         });
 };

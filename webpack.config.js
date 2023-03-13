@@ -18,7 +18,17 @@ module.exports = (env, argv) => {
             minimize: is_production,
             minimizer: [new TerserPlugin()],
         },
-        module: {},
+        module: {
+            rules: [
+                {
+                    test: /\.css$/,
+                    loader: "css-loader",
+                    options: {
+                        exportType: "css-style-sheet",
+                    },
+                },
+            ],
+        },
         plugins: [],
 
         // Development options
