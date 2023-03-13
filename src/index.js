@@ -3,6 +3,7 @@ import { injectExternalVersionWarning } from "./external-version-warning";
 import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
 import { injectFlyout } from "./flyout";
 import { registerPageView } from "./analytics";
+import { injectEthicalAd } from "./sponsorship";
 
 function setup() {
     const is_loaded = new Promise((resolve) => {
@@ -37,6 +38,7 @@ function setup() {
 
                 promises.push(injectFlyout(config));
                 promises.push(registerPageView(config));
+                promises.push(injectEthicalAd(config));
 
                 if (config.features.non_latest_version_warning.enabled && !config.version.external) {
                     promises.push(injectNonLatestVersionWarning(config));

@@ -1,0 +1,36 @@
+// FIXME: how should we remove the `dist/` from this path?
+// NOTE: it requires this PR to work: https://github.com/readthedocs/ethical-ad-client/pull/148
+import * as ethicalads from "ethical-ad-client/dist/ethicalads";
+
+const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
+
+function createAdPlacement() {
+    let placement;
+
+    placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
+    if (placement) {
+        placement.setAttribute("data-ea-publisher", "readthedocs");
+        placement.setAttribute("data-ea-manual", "true");
+        if (placement.getAttribute("data-ea-type") !== "image" && placement.getAttribute("data-ea-type") !== "text") {
+            placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+        }
+    } else {
+        // Inject our own floating element
+        placement = document.createElement("div");
+        placement.setAttribute("data-ea-publisher", "readthedocs");
+        placement.setAttribute("data-ea-type", "image");
+        placement.setAttribute("data-ea-manual", "true");
+        placement.setAttribute("data-ea-style", "stickybox");
+        placement.classList.add("ethical-rtd");
+
+        let main = document.querySelector("[role=main]");
+        main.insertBefore(placement, main.lastChild);
+        console.log("EthicalAd placement injected.");
+    }
+    return placement;
+};
+
+export function injectEthicalAd(config) {
+    createAdPlacement();
+    ethicalads.load();
+};
