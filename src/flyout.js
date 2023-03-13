@@ -159,3 +159,23 @@ export function injectFlyout(config) {
 
     document.body.insertAdjacentHTML("beforeend", template);
 };
+
+/**
+   Track clicks on flyout.
+*/
+export function trackFlyoutEvents(config) {
+    // TODO: `div.injected` is not the best selector.
+    // We should probably change it to use `EXPLICIT_FLYOUT_PLACEMENT_SELECTOR`
+    const flyout = document.querySelector("[data-toggle='rst-current-version']");
+
+    if (flyout != null) {
+        flyout.addEventListener('click', function () {
+            const state = document.querySelector("[data-toggle='rst-versions']").classList.contains("shift-up") ? 'was_open' : 'was_closed';
+
+            // Only report back if analytics is enabled
+            if (typeof window.ga !== 'undefined') {
+                window.ga('rtfd.send', 'event', 'Flyout', 'Click', state);
+            };
+        });
+    };
+}

@@ -1,8 +1,8 @@
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import { injectExternalVersionWarning } from "./external-version-warning";
 import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
-import { injectFlyout } from "./flyout";
-import { registerPageView } from "./analytics";
+import { injectFlyout, trackFlyoutEvents } from "./flyout";
+import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
 
 function setup() {
@@ -36,7 +36,9 @@ function setup() {
             .then((config) => {
                 let promises = [];
 
+                promises.push(injectAnalytics(config));
                 promises.push(injectFlyout(config));
+                promises.push(trackFlyoutEvents(config));
                 promises.push(registerPageView(config));
                 promises.push(injectEthicalAd(config));
 
