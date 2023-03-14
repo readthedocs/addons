@@ -131,15 +131,19 @@ module.exports = function (i) {
 /***/ }),
 
 /***/ 245:
-/***/ (() => {
+/***/ (function(module) {
 
-var ethicalads =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else {}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// The require function
-/******/ 	function __nested_webpack_require_187__(moduleId) {
+/******/ 	function __nested_webpack_require_543__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId]) {
@@ -153,7 +157,7 @@ var ethicalads =
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_187__);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_543__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -164,20 +168,20 @@ var ethicalads =
 /******/
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__nested_webpack_require_187__.m = modules;
+/******/ 	__nested_webpack_require_543__.m = modules;
 /******/
 /******/ 	// expose the module cache
-/******/ 	__nested_webpack_require_187__.c = installedModules;
+/******/ 	__nested_webpack_require_543__.c = installedModules;
 /******/
 /******/ 	// define getter function for harmony exports
-/******/ 	__nested_webpack_require_187__.d = function(exports, name, getter) {
-/******/ 		if(!__nested_webpack_require_187__.o(exports, name)) {
+/******/ 	__nested_webpack_require_543__.d = function(exports, name, getter) {
+/******/ 		if(!__nested_webpack_require_543__.o(exports, name)) {
 /******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
-/******/ 	__nested_webpack_require_187__.r = function(exports) {
+/******/ 	__nested_webpack_require_543__.r = function(exports) {
 /******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
@@ -189,35 +193,35 @@ var ethicalads =
 /******/ 	// mode & 2: merge all properties of value into the ns
 /******/ 	// mode & 4: return value when already ns object
 /******/ 	// mode & 8|1: behave like require
-/******/ 	__nested_webpack_require_187__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __nested_webpack_require_187__(value);
+/******/ 	__nested_webpack_require_543__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __nested_webpack_require_543__(value);
 /******/ 		if(mode & 8) return value;
 /******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
 /******/ 		var ns = Object.create(null);
-/******/ 		__nested_webpack_require_187__.r(ns);
+/******/ 		__nested_webpack_require_543__.r(ns);
 /******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __nested_webpack_require_187__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __nested_webpack_require_543__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
 /******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__nested_webpack_require_187__.n = function(module) {
+/******/ 	__nested_webpack_require_543__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
 /******/ 			function getModuleExports() { return module; };
-/******/ 		__nested_webpack_require_187__.d(getter, 'a', getter);
+/******/ 		__nested_webpack_require_543__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
 /******/
 /******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__nested_webpack_require_187__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/ 	__nested_webpack_require_543__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__nested_webpack_require_187__.p = "";
+/******/ 	__nested_webpack_require_543__.p = "";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __nested_webpack_require_187__(__nested_webpack_require_187__.s = "./index.js");
+/******/ 	return __nested_webpack_require_543__(__nested_webpack_require_543__.s = "./index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -230,7 +234,7 @@ var ethicalads =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* WEBPACK VAR INJECTION */(function(module) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Placement\", function() { return Placement; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"check_dependencies\", function() { return check_dependencies; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"load_placements\", function() { return load_placements; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"wait\", function() { return wait; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"load\", function() { return load; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"uplifted\", function() { return uplifted; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"detectedKeywords\", function() { return detectedKeywords; });\n/* harmony import */ var verge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! verge */ \"./node_modules/verge/verge.js\");\n/* harmony import */ var verge__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(verge__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles.scss */ \"./styles.scss\");\n/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_1__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; return _typeof = \"function\" == typeof Symbol && \"symbol\" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && \"function\" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }, _typeof(obj); }\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, \"prototype\", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } else if (call !== void 0) { throw new TypeError(\"Derived constructors may only return object or undefined\"); } return _assertThisInitialized(self); }\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\nfunction _wrapNativeSuper(Class) { var _cache = typeof Map === \"function\" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== \"function\") { throw new TypeError(\"Super expression must either be null or a function\"); } if (typeof _cache !== \"undefined\") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }\nfunction _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct.bind(); } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }\nfunction _isNativeFunction(fn) { return Function.toString.call(fn).indexOf(\"[native code]\") !== -1; }\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, \"prototype\", { writable: false }); return Constructor; }\nfunction _toPropertyKey(arg) { var key = _toPrimitive(arg, \"string\"); return _typeof(key) === \"symbol\" ? key : String(key); }\nfunction _toPrimitive(input, hint) { if (_typeof(input) !== \"object\" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || \"default\"); if (_typeof(res) !== \"object\") return res; throw new TypeError(\"@@toPrimitive must return a primitive value.\"); } return (hint === \"string\" ? String : Number)(input); }\n/* Ethical ad publisher JavaScript client\n *\n * Loads placement from Ethical Ad decision API. Searches for elements with\n * `ethical-ad` data binding attributes and uses these attributes to query the\n * decision API.\n *\n * This is native JavaScript, no JQuery. It uses the API JSONP interface to get\n * around CORS and related issues. A script is added with a callback on\n * `window`. The promise is rejected if there are errors with the request or the\n * response doesn't look correct.\n *\n * Currently, only two parameters are supported with the ad placement: publisher\n * id and the place type. All of this is determined by the server and this\n * client so far only renders the API return HTML.\n *\n * This can be loaded async. CSS styles are preloaded via webpack `style-loader`.\n * There is some potential for problems if CSP rules disallow inline\n * stylesheets, but webpack does allow for a hardcoded nonce.\n *\n * Usage:\n *\n *     <script async src=\"ethicalads.min.js\"></script>\n *     <div data-ea-publisher=\"foo\" data-ea-type=\"text\"></div>\n */\n\n\n\nvar AD_CLIENT_VERSION = \"1.6.2\"; // Sent with the ad request\n\n// For local testing, set this\n// const AD_DECISION_URL = \"http://ethicaladserver:5000/api/v1/decision/\";\nvar AD_DECISION_URL = \"https://server.ethicalads.io/api/v1/decision/\";\nvar AD_TYPES_VERSION = 1; // Used with the ad type slugs\nvar ATTR_PREFIX = \"data-ea-\";\nvar ABP_DETECTION_PX = \"https://media.ethicalads.io/abp/px.gif\";\n\n// Keywords and topics\n//\n// This allows us to categorize pages simply and have better content targeting.\n// Additional categorization can be done on the server side for pages\n// that request ads commonly but this quick and easy categorization\n// works decently well most of the time.\nvar KEYWORDS = {\n  // Topics\n  \"android\": \"android\",\n  \"ios\": \"ios\",\n  \"iphone\": \"ios\",\n  \"blockchain\": \"blockchain\",\n  \"bitcoin\": \"bitcoin\",\n  \"ethereum\": \"ethereum\",\n  \"hyperledger\": \"hyperledger\",\n  \"solidity\": \"solidity\",\n  \"cryptography\": \"cryptography\",\n  \"security\": \"security\",\n  \"infosec\": \"security\",\n  \"privacy\": \"privacy\",\n  \"authentication\": \"authentication\",\n  \"authorization\": \"authorization\",\n  \"otp\": \"otp\",\n  \"2fa\": \"2fa\",\n  \"mfa\": \"mfa\",\n  \"sms\": \"sms\",\n  \"frontend\": \"frontend\",\n  \"backend\": \"backend\",\n  \"full-stack\": \"backend\",\n  \"devops\": \"devops\",\n  \"ai\": \"artificial-intelligence\",\n  \"nlp\": \"nlp\",\n  \"ml\": \"machine-learning\",\n  \"cloud\": \"cloud\",\n  \"api\": \"api\",\n  \"docker\": \"docker\",\n  \"kubernetes\": \"kubernetes\",\n  \"container\": \"containers\",\n  \"containers\": \"containers\",\n  \"ansible\": \"ansible\",\n  \"serverless\": \"serverless\",\n  \"openshift\": \"openshift\",\n  \"terraform\": \"terraform\",\n  \"openid\": \"openid\",\n  \"aws\": \"aws\",\n  \"azure\": \"azure\",\n  \"gcp\": \"gcp\",\n  \"linux\": \"linux\",\n  \"ubuntu\": \"ubuntu\",\n  \"monitoring\": \"monitoring\",\n  \"redis\": \"redis\",\n  \"rabbitmq\": \"rabbitmq\",\n  \"nosql\": \"nosql\",\n  \"postgres\": \"postgresql\",\n  \"postgresql\": \"postgresql\",\n  \"mysql\": \"mysql\",\n  \"database\": \"database\",\n  \"testing\": \"testing\",\n  \"pytest\": \"pytest\",\n  \"lint\": \"lint\",\n  \"linting\": \"lint\",\n  \"pylint\": \"pylint\",\n  \"unittest\": \"unittest\",\n  \"ci\": \"ci\",\n  \"cd\": \"cd\",\n  \"tdd\": \"test-driven-development\",\n  \"elasticsearch\": \"elasticsearch\",\n  \"lucene\": \"lucene\",\n  \"solr\": \"solr\",\n  \"nginx\": \"nginx\",\n  \"heroku\": \"heroku\",\n  \"spa\": \"spa\",\n  // Frameworks amd modules\n  \"django\": \"django\",\n  \"rails\": \"rails\",\n  \"angular\": \"angular\",\n  \"angularjs\": \"angular\",\n  \"laravel\": \"laravel\",\n  \"react\": \"reactjs\",\n  \"reactjs\": \"reactjs\",\n  \"react-native\": \"reactjs\",\n  \"jupyter\": \"jupyter\",\n  \"matplotlib\": \"matplotlib\",\n  \"pytorch\": \"pytorch\",\n  \"pydata\": \"pydata\",\n  \"pandas\": \"pandas\",\n  \"numpy\": \"numpy\",\n  \"wsgi\": \"wsgi\",\n  \"celery\": \"celery\",\n  \"jinja\": \"jinja\",\n  \"jinja2\": \"jinja\",\n  \"flask\": \"flask\",\n  \"werkzeug\": \"werkzeug\",\n  \"oauth\": \"oauth\",\n  \"vuejs\": \"vuejs\",\n  \"vue\": \"vuejs\",\n  \"tensorflow\": \"tensorflow\",\n  \"tensor\": \"tensor\",\n  \"webpack\": \"webpack\",\n  // Programming & markup languages\n  \"dotnet\": \"dotnet\",\n  \".net\": \"dotnet\",\n  \"c#\": \"c-sharp\",\n  \"c++\": \"cplusplus\",\n  \"erlang\": \"erlang\",\n  \"f#\": \"fsharp\",\n  \"golang\": \"golang\",\n  \"haskell\": \"haskell\",\n  \"java\": \"java\",\n  \"javascript\": \"javascript\",\n  \"julia\": \"julia\",\n  \"kotlin\": \"kotlin\",\n  \"obj-c\": \"obj-c\",\n  \"objective-c\": \"obj-c\",\n  \"php\": \"php\",\n  \"python\": \"python\",\n  \"perl\": \"perl\",\n  \"sql\": \"sql\",\n  \"ruby\": \"ruby\",\n  \"rust\": \"rust\",\n  \"scala\": \"scala\",\n  \"swift\": \"swift\",\n  \"css\": \"css\",\n  \"scss\": \"scss\",\n  \"typescript\": \"typescript\",\n  \"redux\": \"redux\"\n\n  // Phrases (not currently implemented)\n  //\"data science\": \"datascience\",\n  //\"machine learning\": \"machine-learning\",\n};\n\n// Maximum number of words of a document to analyze looking for keywords\n// This is simply a check against taking too much time on very long documents\nvar MAX_WORDS_ANALYZED = 9999;\n\n// Max number of detected keywords to send\n// Lowering this number means that only major topics of the page get sent on long pages\nvar MAX_KEYWORDS = 3;\n\n// Minimum number of occurrences of a keyword to consider it\nvar MIN_KEYWORD_OCCURRENCES = 2;\n\n// Time between checking whether the ad is in the viewport to count the time viewed\n// Time viewed is an important advertiser metric\nvar VIEW_TIME_INTERVAL = 1; // seconds\nvar VIEW_TIME_MAX = 5 * 60; // seconds\n\n// In-viewport fudge factor\n// A fudge factor of ~3 is needed for the case where the ad\n// is hidden off the side of the screen by a sliding sidebar\n// For example, if the right side of the ad is at x=0\n// or the left side of the ad is at the right side of the viewport\nvar VIEWPORT_FUDGE_FACTOR = -3; // px\n\n/* Placement object to query decision API and return an Element node\n *\n * @param {string} publisher - Publisher ID\n * @param {string} ad_type - Placement ad type id\n * @param {Element} target - Target element\n * @param {Object} options - Various options for configuring the placement such as:\n      keywords, styles, campaign_types, load_manually, force_ad, force_campaign\n */\nvar Placement = /*#__PURE__*/function () {\n  function Placement(publisher, ad_type, target, options) {\n    _classCallCheck(this, Placement);\n    this.publisher = publisher;\n    this.ad_type = ad_type;\n    this.target = target;\n\n    // Options\n    this.options = options;\n    this.style = options.style;\n    this.keywords = options.keywords || [];\n    this.load_manually = options.load_manually;\n    this.force_ad = options.force_ad;\n    this.force_campaign = options.force_campaign;\n    this.campaign_types = options.campaign_types || [];\n    if (!this.campaign_types.length) {\n      this.campaign_types = [\"paid\", \"publisher-house\", \"community\", \"house\"];\n    }\n\n    // Initialized and will be used in the future\n    this.view_time = 0;\n    this.view_time_sent = false; // true once the view time is sent to the server\n    this.response = null;\n  }\n\n  /* Create a placement from an element\n   *\n   * Returns null if the placement is already loaded.\n   *\n   * @static\n   * @param {Element} element - Load placement and append to this Element\n   * @returns {Placement}\n   */\n  _createClass(Placement, [{\n    key: \"load\",\n    value:\n    /* Transforms target element into a placement\n     *\n     * This method organizes all of the operations to transform the placement\n     * configuration wrapper `div` into an ad placement -- including starting the\n     * API transaction, displaying the ad element,\n     * and handling the viewport detection.\n     *\n     * @returns {Promise}\n     */\n    function load() {\n      var _this = this;\n      // Detect the keywords\n      this.keywords = this.keywords.concat(this.detectKeywords());\n      return this.fetch().then(function (element) {\n        if (element === undefined) {\n          throw new EthicalAdsWarning(\"Ad decision request blocked\");\n        }\n        if (!element) {\n          throw new EthicalAdsWarning(\"No ads to show.\");\n        }\n\n        // Add `loaded` class, signifying that the CSS styles should finally be\n        // applied to the target element.\n        var classes = _this.target.className || \"\";\n        classes += \" loaded\";\n        _this.target.className = classes.trim();\n\n        // Make this element the only child element of the target element\n        while (_this.target.firstChild) {\n          _this.target.removeChild(_this.target.firstChild);\n        }\n\n        // Apply any styles based on the specified styling\n        _this.applyStyles(element);\n        _this.target.appendChild(element);\n        return _this;\n      }).then(function (placement) {\n        // Detect when the ad is in the viewport\n        // Add the view pixel to the DOM to count the view\n        // Also count the time the ad is in view\n        //  this will be sent before the page/tab is closed or navigated away\n\n        var viewport_detection = setInterval(function (element) {\n          if (placement.inViewport(element)) {\n            // This ad was seen!\n            var pixel = document.createElement(\"img\");\n            pixel.src = placement.response.view_url;\n            if (uplifted) {\n              pixel.src += \"?uplift=true\";\n            }\n            pixel.className = \"ea-pixel\";\n            element.appendChild(pixel);\n            clearInterval(viewport_detection);\n          }\n        }, 100, placement.target);\n        var view_time_counter = setInterval(function (element) {\n          if (placement.view_time_sent) {\n            clearInterval(view_time_counter);\n          } else if (placement.inViewport(element)) {\n            // Increment the ad's time in view counter\n            placement.view_time += VIEW_TIME_INTERVAL;\n            if (placement.view_time >= VIEW_TIME_MAX) {\n              clearInterval(view_time_counter);\n            }\n          }\n        }, VIEW_TIME_INTERVAL * 1000, placement.target);\n        var visibility_change_listener = function visibility_change_listener() {\n          if (placement.view_time <= 0 || placement.view_time_sent || !placement.response.view_time_url) return;\n          // Check if the tab loses focus/is closed or the browser/app is minimized/closed\n          // In that case, no longer count further time that the ad is in view\n          // Send the time the ad was viewed to the server\n          if (document.visibilityState === \"hidden\" || document.visibilityState === \"unloaded\") {\n            var pixel = document.createElement(\"img\");\n            pixel.src = placement.response.view_time_url + \"?view_time=\" + placement.view_time;\n            pixel.className = \"ea-pixel\";\n            placement.target.appendChild(pixel);\n            placement.view_time_sent = true;\n            document.removeEventListener(\"visibilitychange\", visibility_change_listener);\n          }\n        };\n        document.addEventListener(\"visibilitychange\", visibility_change_listener);\n      });\n    }\n\n    /* Returns whether the ad is visible in the viewport\n     *\n     * @param {Element} element - The ad element\n     * @returns {boolean} True if the ad is loaded and visible in the viewport\n     *  (including the tab being focused and not minimized) and returns false otherwise.\n     */\n  }, {\n    key: \"inViewport\",\n    value: function inViewport(element) {\n      if (this.response && this.response.view_url && verge__WEBPACK_IMPORTED_MODULE_0___default.a.inViewport(element, VIEWPORT_FUDGE_FACTOR) && document.visibilityState === \"visible\") {\n        return true;\n      }\n      return false;\n    }\n\n    /* Get placement data from decision API\n     *\n     * @returns {Promise<Element>} Resolves with an Element converted from an HTML\n     * string from API response. Can also be null, indicating a noop action.\n     */\n  }, {\n    key: \"fetch\",\n    value: function fetch() {\n      var _this2 = this;\n      // Make sure callbacks don't collide even with multiple placements\n      var callback = \"ad_\" + Date.now() + \"_\" + Math.floor(Math.random() * 1000000);\n      var div_id = callback;\n      if (this.target.id) {\n        div_id = this.target.id;\n      }\n\n      // There's no hard maximum on URL lengths (all of these get added to the query params)\n      // but ideally we want to keep our URLs below ~2k which should work basically everywhere\n      var params = {\n        publisher: this.publisher,\n        ad_types: this.ad_type,\n        div_ids: div_id,\n        callback: callback,\n        keywords: this.keywords.join(\"|\"),\n        campaign_types: this.campaign_types.join(\"|\"),\n        format: \"jsonp\",\n        client_version: AD_CLIENT_VERSION,\n        // location.href includes query params (possibly sensitive) and fragments (unnecessary)\n        url: (window.location.origin + window.location.pathname).slice(0, 256)\n      };\n      if (this.force_ad) {\n        params[\"force_ad\"] = this.force_ad;\n      }\n      if (this.force_campaign) {\n        params[\"force_campaign\"] = this.force_campaign;\n      }\n      var url_params = new URLSearchParams(params);\n      var url = new URL(AD_DECISION_URL + \"?\" + url_params.toString());\n      return new Promise(function (resolve, reject) {\n        window[callback] = function (response) {\n          if (response && response.html && response.view_url) {\n            _this2.response = response;\n            var node_convert = document.createElement(\"div\");\n            node_convert.innerHTML = response.html;\n            return resolve(node_convert.firstChild);\n          } else {\n            // No ad to show for this targeting/publisher\n            return resolve(null);\n          }\n        };\n        var script = document.createElement(\"script\");\n        script.src = url;\n        script.type = \"text/javascript\";\n        script.async = true;\n        script.addEventListener(\"error\", function (err) {\n          // There was a problem loading this request, likely this was blocked by\n          // an ad blocker. We'll resolve with an empty response instead of\n          // throwing an error.\n          return resolve();\n        });\n        document.getElementsByTagName(\"head\")[0].appendChild(script);\n      });\n    }\n\n    /* Detect whether this ad is \"uplifted\" meaning allowed by ABP's Acceptable Ads list\n     *\n     * Calls the provided callback passing a boolean whether this ad is uplifted.\n     * We need this data to provide back to the AcceptableAds folks.\n     *\n     * This code comes directly from Eyeo/AdblockPlus team to measure Acceptable Ads.\n     *\n     * @static\n     * @param {string} px - A URL of a pixel to test\n     * @param {function) callback - A callback to call when finished\n     */\n  }, {\n    key: \"detectABP\",\n    value: function detectABP(px, callback) {\n      var detected = false;\n      var checksRemain = 2;\n      var error1 = false;\n      var error2 = false;\n      if (typeof callback != \"function\") return;\n      px += \"?ch=*&rn=*\";\n      function beforeCheck(callback, timeout) {\n        if (checksRemain == 0 || timeout > 1E3) callback(checksRemain == 0 && detected);else setTimeout(function () {\n          beforeCheck(callback, timeout * 2);\n        }, timeout * 2);\n      }\n      function checkImages() {\n        if (--checksRemain) return;\n        detected = !error1 && error2;\n      }\n      var random = Math.random() * 11;\n      var img1 = new Image();\n      img1.onload = checkImages;\n      img1.onerror = function () {\n        error1 = true;\n        checkImages();\n      };\n      img1.src = px.replace(/\\*/, 1).replace(/\\*/, random);\n      var img2 = new Image();\n      img2.onload = checkImages;\n      img2.onerror = function () {\n        error2 = true;\n        checkImages();\n      };\n      img2.src = px.replace(/\\*/, 2).replace(/\\*/, random);\n      beforeCheck(callback, 250);\n    }\n\n    /* Returns an array of keywords (strings) found on the page\n     *\n     * @returns {Array[string]} Advertising keywords found on the page\n     */\n  }, {\n    key: \"detectKeywords\",\n    value: function detectKeywords() {\n      // Return previously detected keywords\n      // If this code has already run.\n      // Note: if there are \"no\" keywords (an empty list) this is still true\n      if (detectedKeywords) return detectedKeywords;\n      var keywordHist = {}; // Keywords found => count of keyword\n      var mainContent = document.querySelector(\"[role='main']\") || document.querySelector(\"main\") || document.querySelector(\"body\");\n      var words = mainContent.textContent.split(/\\s+/);\n      var wordTrimmer = /^[\\('\"]?(.*?)[,\\.\\?\\!:;\\)'\"]?$/g;\n      for (var x = 0; x < words.length && x < MAX_WORDS_ANALYZED; x++) {\n        // Remove certain punctuation from beginning and end of the word\n        var word = words[x].replace(wordTrimmer, \"$1\").toLowerCase();\n        if (KEYWORDS.hasOwnProperty(word)) {\n          keywordHist[KEYWORDS[word]] = (keywordHist[KEYWORDS[word]] || 0) + 1;\n        }\n      }\n\n      // Sort the hist with the most common items first\n      // Grab only the MAX_KEYWORDS most common\n      var keywords = Object.entries(keywordHist).filter(\n      // Only consider a keyword with at least this many occurrences\n      function (a) {\n        return a[1] >= MIN_KEYWORD_OCCURRENCES;\n      }).sort(function (a, b) {\n        if (a[1] > b[1]) return -1;\n        if (a[1] < b[1]) return 1;\n        return 0;\n      }).slice(0, MAX_KEYWORDS).map(function (x) {\n        return x[0];\n      });\n      detectedKeywords = keywords;\n      return keywords;\n    }\n\n    /* Apply custom styles based on data-ea-style\n     *\n     */\n  }, {\n    key: \"applyStyles\",\n    value: function applyStyles(element) {\n      // Stickybox: https://ethical-ad-client.readthedocs.io/en/latest/#stickybox\n      if (this.style === \"stickybox\") {\n        var hideButton = document.createElement(\"div\");\n        hideButton.setAttribute(\"class\", \"ea-stickybox-hide\");\n        hideButton.append(\"×\");\n        hideButton.addEventListener(\"click\", function () {\n          document.querySelector(\"[data-ea-publisher]\").remove();\n        });\n        element.appendChild(hideButton);\n      }\n\n      // FixedFooter: https://ethical-ad-client.readthedocs.io/en/latest/#fixedfooter\n      if (this.style === \"fixedfooter\") {\n        //element.querySelector('.ea-callout a').remove();\n\n        var container = document.createElement(\"div\");\n        container.setAttribute(\"class\", \"ea-fixedfooter-hide\");\n        element.appendChild(container);\n        var _hideButton = document.createElement(\"span\");\n        _hideButton.append(\"Close Ad\");\n        _hideButton.addEventListener(\"click\", function () {\n          document.querySelector(\"[data-ea-publisher]\").remove();\n        });\n        container.appendChild(_hideButton);\n      }\n    }\n  }], [{\n    key: \"from_element\",\n    value: function from_element(element) {\n      // Get attributes from DOM node\n      var publisher = element.getAttribute(ATTR_PREFIX + \"publisher\");\n      var ad_type = element.getAttribute(ATTR_PREFIX + \"type\");\n      if (!ad_type) {\n        ad_type = \"image\";\n        element.setAttribute(ATTR_PREFIX + \"type\", \"image\");\n      }\n      var keywords = (element.getAttribute(ATTR_PREFIX + \"keywords\") || \"\").split(\"|\").filter(function (word) {\n        return word.length > 1;\n      });\n      var campaign_types = (element.getAttribute(ATTR_PREFIX + \"campaign-types\") || \"\").split(\"|\").filter(function (word) {\n        return word.length > 1;\n      });\n      var load_manually = element.getAttribute(ATTR_PREFIX + \"manual\") === \"true\";\n      var style = element.getAttribute(ATTR_PREFIX + \"style\");\n      var force_ad = element.getAttribute(ATTR_PREFIX + \"force-ad\");\n      var force_campaign = element.getAttribute(ATTR_PREFIX + \"force-campaign\");\n\n      // Add version to ad type to verison the HTML return\n      if (ad_type === \"image\" || ad_type === \"text\") {\n        ad_type += \"-v\" + AD_TYPES_VERSION;\n      }\n      var classes = (element.className || \"\").split(\" \");\n      if (classes.indexOf(\"loaded\") >= 0) {\n        console.error(\"EthicalAd already loaded.\");\n        return null;\n      }\n      return new Placement(publisher, ad_type, element, {\n        keywords: keywords,\n        style: style,\n        campaign_types: campaign_types,\n        load_manually: load_manually,\n        force_ad: force_ad,\n        force_campaign: force_campaign\n      });\n    }\n  }]);\n  return Placement;\n}();\n\n/* Detects whether the browser supports the necessary JS APIs to support the ad client\n *\n * Generally we support recent versions of evergreen browsers (Chrome, Firefox, Safari, Edge)\n * but we no longer support IE11.\n *\n *  @returns {boolean} true if all dependencies met and false otherwise\n */\nfunction check_dependencies() {\n  if (!Object.entries || !window.URL || !window.URLSearchParams || !window.Promise) {\n    console.error(\"Browser does not meet ethical ad client dependencies. Not showing ads\");\n    return false;\n  }\n  return true;\n}\n\n/* Find all placement DOM elements and hot load HTML as child nodes\n *\n * @param {boolean} force_load - load placements even if they are set to load manually\n * @returns {Promise<[Placement]>} Resolves to a list of Placement instances\n */\nfunction load_placements() {\n  var force_load = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;\n  // Find all elements matching required data binding attribute.\n  var node_list = document.querySelectorAll(\"[\" + ATTR_PREFIX + \"publisher]\");\n  var elements = Array.prototype.slice.call(node_list);\n\n  // Create main promise. Iterator `all()` Promise will surround array of found\n  // elements. If any of these elements have issues, this main promise will\n  // reject.\n  if (elements.length === 0) {\n    throw new Error(\"No ad placements found.\");\n  }\n  return Promise.all(elements.map(function (element, index) {\n    var placement = Placement.from_element(element);\n\n    // Run AcceptableAds detection code\n    // This lets us know how many impressions are attributed to AceeptableAds\n    // Only run this once even for multiple placements\n    // All impressions will be correctly attributed\n    if (index === 0 && placement && !force_load) {\n      placement.detectABP(ABP_DETECTION_PX, function (usesABP) {\n        uplifted = usesABP;\n        if (usesABP) {\n          console.debug(\"Acceptable Ads enabled. Thanks for allowing our non-tracking ads :)\");\n        }\n      });\n    }\n    if (placement && (force_load || !placement.load_manually)) {\n      return placement.load();\n    } else {\n      // This will be manually loaded later or has already been loaded\n      return null;\n    }\n  }));\n}\n\n// An error class that we will not surface to clients normally.\nvar EthicalAdsWarning = /*#__PURE__*/function (_Error) {\n  _inherits(EthicalAdsWarning, _Error);\n  var _super = _createSuper(EthicalAdsWarning);\n  function EthicalAdsWarning() {\n    _classCallCheck(this, EthicalAdsWarning);\n    return _super.apply(this, arguments);\n  }\n  return _createClass(EthicalAdsWarning);\n}( /*#__PURE__*/_wrapNativeSuper(Error));\n/* Wrapping Promise to allow for handling of errors by user\n *\n * This promise currently does not reject on error as this will emit a console\n * warning if the user hasn't added a promise rejection handler (which is most\n * cases).\n *\n * This promise resolves to an aray of Placement instances, or an empty list if\n * there was any error configuring the placements.\n *\n * For example, to perform an action when no placements are loaded:\n *\n *   <script>\n *   ethicalads.wait.then((placements) => {\n *     if (!placements.length) {\n *       console.log('Ads were not able to load');\n *     }\n *   }\n *   </script>\n *\n * @type {Promise<[Placement]>}\n */\nvar wait;\n\n/* Loading placements manually rather than the normal way\n *\n *   <div data-ea-publisher=\"...\" data-ea-manual=\"true\"></div>\n *   <script>\n *     ethicalads.load();\n *   </script>\n *\n * @type function\n */\nvar load;\n\n/* Whether this ad impression is attributed to being on the Acceptable Ads list.\n * @type boolean\n */\nvar uplifted = false;\n\n/* Keywords detected on the page\n * @type {Array[string]}\n */\nvar detectedKeywords = null;\n\n/* If importing this as a module, do not automatically process DOM and fetch the\n * ad placement. Only do this if using the module directly, from a `script`\n * element. This will allow for future extension and packaging as a module.\n *\n * This also replicates JQuery `$(document).ready()`, with added protection for\n * usage of `async` -- the DOM ready event can fire before the script is loaded..\n */\nif (__webpack_require__.c[__webpack_require__.s] !== module && check_dependencies()) {\n  var wait_dom = new Promise(function (resolve) {\n    if (document.readyState === \"interactive\" || document.readyState === \"complete\") {\n      return resolve();\n    } else {\n      document.addEventListener(\"DOMContentLoaded\", function () {\n        resolve();\n      }, {\n        capture: true,\n        once: true,\n        passive: true\n      });\n    }\n  });\n  wait = new Promise(function (resolve) {\n    wait_dom.then(function () {\n      load_placements().then(function (placements) {\n        resolve(placements);\n      })[\"catch\"](function (err) {\n        resolve([]);\n        if (err instanceof Error) {\n          if (err instanceof EthicalAdsWarning) {\n            // Report these at a lower log level\n            console.debug(err.message);\n            return;\n          }\n          console.error(err.message);\n        }\n      });\n    });\n  });\n  load = function load() {\n    console.debug(\"Loading placements manually\");\n    load_placements(true);\n  };\n}\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/webpack/buildin/harmony-module.js */ \"./node_modules/webpack/buildin/harmony-module.js\")(module)))\n\n//# sourceURL=webpack://ethicalads/./index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Placement\", function() { return Placement; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"check_dependencies\", function() { return check_dependencies; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"load_placements\", function() { return load_placements; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"wait\", function() { return wait; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"load\", function() { return load; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"uplifted\", function() { return uplifted; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"detectedKeywords\", function() { return detectedKeywords; });\n/* harmony import */ var verge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! verge */ \"./node_modules/verge/verge.js\");\n/* harmony import */ var verge__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(verge__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles.scss */ \"./styles.scss\");\n/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_1__);\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; return _typeof = \"function\" == typeof Symbol && \"symbol\" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && \"function\" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }, _typeof(obj); }\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, \"prototype\", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } else if (call !== void 0) { throw new TypeError(\"Derived constructors may only return object or undefined\"); } return _assertThisInitialized(self); }\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\nfunction _wrapNativeSuper(Class) { var _cache = typeof Map === \"function\" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== \"function\") { throw new TypeError(\"Super expression must either be null or a function\"); } if (typeof _cache !== \"undefined\") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }\nfunction _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct.bind(); } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }\nfunction _isNativeFunction(fn) { return Function.toString.call(fn).indexOf(\"[native code]\") !== -1; }\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, \"prototype\", { writable: false }); return Constructor; }\nfunction _toPropertyKey(arg) { var key = _toPrimitive(arg, \"string\"); return _typeof(key) === \"symbol\" ? key : String(key); }\nfunction _toPrimitive(input, hint) { if (_typeof(input) !== \"object\" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || \"default\"); if (_typeof(res) !== \"object\") return res; throw new TypeError(\"@@toPrimitive must return a primitive value.\"); } return (hint === \"string\" ? String : Number)(input); }\n/* Ethical ad publisher JavaScript client\n *\n * Loads placement from Ethical Ad decision API. Searches for elements with\n * `ethical-ad` data binding attributes and uses these attributes to query the\n * decision API.\n *\n * This is native JavaScript, no JQuery. It uses the API JSONP interface to get\n * around CORS and related issues. A script is added with a callback on\n * `window`. The promise is rejected if there are errors with the request or the\n * response doesn't look correct.\n *\n * Currently, only two parameters are supported with the ad placement: publisher\n * id and the place type. All of this is determined by the server and this\n * client so far only renders the API return HTML.\n *\n * This can be loaded async. CSS styles are preloaded via webpack `style-loader`.\n * There is some potential for problems if CSP rules disallow inline\n * stylesheets, but webpack does allow for a hardcoded nonce.\n *\n * Usage:\n *\n *     <script async src=\"ethicalads.min.js\"></script>\n *     <div data-ea-publisher=\"foo\" data-ea-type=\"text\"></div>\n */\n\n\n\nvar AD_CLIENT_VERSION = \"1.6.2\"; // Sent with the ad request\n\n// For local testing, set this\n// const AD_DECISION_URL = \"http://ethicaladserver:5000/api/v1/decision/\";\nvar AD_DECISION_URL = \"https://server.ethicalads.io/api/v1/decision/\";\nvar AD_TYPES_VERSION = 1; // Used with the ad type slugs\nvar ATTR_PREFIX = \"data-ea-\";\nvar ABP_DETECTION_PX = \"https://media.ethicalads.io/abp/px.gif\";\n\n// Keywords and topics\n//\n// This allows us to categorize pages simply and have better content targeting.\n// Additional categorization can be done on the server side for pages\n// that request ads commonly but this quick and easy categorization\n// works decently well most of the time.\nvar KEYWORDS = {\n  // Topics\n  \"android\": \"android\",\n  \"ios\": \"ios\",\n  \"iphone\": \"ios\",\n  \"blockchain\": \"blockchain\",\n  \"bitcoin\": \"bitcoin\",\n  \"ethereum\": \"ethereum\",\n  \"hyperledger\": \"hyperledger\",\n  \"solidity\": \"solidity\",\n  \"cryptography\": \"cryptography\",\n  \"security\": \"security\",\n  \"infosec\": \"security\",\n  \"privacy\": \"privacy\",\n  \"authentication\": \"authentication\",\n  \"authorization\": \"authorization\",\n  \"otp\": \"otp\",\n  \"2fa\": \"2fa\",\n  \"mfa\": \"mfa\",\n  \"sms\": \"sms\",\n  \"frontend\": \"frontend\",\n  \"backend\": \"backend\",\n  \"full-stack\": \"backend\",\n  \"devops\": \"devops\",\n  \"ai\": \"artificial-intelligence\",\n  \"nlp\": \"nlp\",\n  \"ml\": \"machine-learning\",\n  \"cloud\": \"cloud\",\n  \"api\": \"api\",\n  \"docker\": \"docker\",\n  \"kubernetes\": \"kubernetes\",\n  \"container\": \"containers\",\n  \"containers\": \"containers\",\n  \"ansible\": \"ansible\",\n  \"serverless\": \"serverless\",\n  \"openshift\": \"openshift\",\n  \"terraform\": \"terraform\",\n  \"openid\": \"openid\",\n  \"aws\": \"aws\",\n  \"azure\": \"azure\",\n  \"gcp\": \"gcp\",\n  \"linux\": \"linux\",\n  \"ubuntu\": \"ubuntu\",\n  \"monitoring\": \"monitoring\",\n  \"redis\": \"redis\",\n  \"rabbitmq\": \"rabbitmq\",\n  \"nosql\": \"nosql\",\n  \"postgres\": \"postgresql\",\n  \"postgresql\": \"postgresql\",\n  \"mysql\": \"mysql\",\n  \"database\": \"database\",\n  \"testing\": \"testing\",\n  \"pytest\": \"pytest\",\n  \"lint\": \"lint\",\n  \"linting\": \"lint\",\n  \"pylint\": \"pylint\",\n  \"unittest\": \"unittest\",\n  \"ci\": \"ci\",\n  \"cd\": \"cd\",\n  \"tdd\": \"test-driven-development\",\n  \"elasticsearch\": \"elasticsearch\",\n  \"lucene\": \"lucene\",\n  \"solr\": \"solr\",\n  \"nginx\": \"nginx\",\n  \"heroku\": \"heroku\",\n  \"spa\": \"spa\",\n  // Frameworks amd modules\n  \"django\": \"django\",\n  \"rails\": \"rails\",\n  \"angular\": \"angular\",\n  \"angularjs\": \"angular\",\n  \"laravel\": \"laravel\",\n  \"react\": \"reactjs\",\n  \"reactjs\": \"reactjs\",\n  \"react-native\": \"reactjs\",\n  \"jupyter\": \"jupyter\",\n  \"matplotlib\": \"matplotlib\",\n  \"pytorch\": \"pytorch\",\n  \"pydata\": \"pydata\",\n  \"pandas\": \"pandas\",\n  \"numpy\": \"numpy\",\n  \"wsgi\": \"wsgi\",\n  \"celery\": \"celery\",\n  \"jinja\": \"jinja\",\n  \"jinja2\": \"jinja\",\n  \"flask\": \"flask\",\n  \"werkzeug\": \"werkzeug\",\n  \"oauth\": \"oauth\",\n  \"vuejs\": \"vuejs\",\n  \"vue\": \"vuejs\",\n  \"tensorflow\": \"tensorflow\",\n  \"tensor\": \"tensor\",\n  \"webpack\": \"webpack\",\n  // Programming & markup languages\n  \"dotnet\": \"dotnet\",\n  \".net\": \"dotnet\",\n  \"c#\": \"c-sharp\",\n  \"c++\": \"cplusplus\",\n  \"erlang\": \"erlang\",\n  \"f#\": \"fsharp\",\n  \"golang\": \"golang\",\n  \"haskell\": \"haskell\",\n  \"java\": \"java\",\n  \"javascript\": \"javascript\",\n  \"julia\": \"julia\",\n  \"kotlin\": \"kotlin\",\n  \"obj-c\": \"obj-c\",\n  \"objective-c\": \"obj-c\",\n  \"php\": \"php\",\n  \"python\": \"python\",\n  \"perl\": \"perl\",\n  \"sql\": \"sql\",\n  \"ruby\": \"ruby\",\n  \"rust\": \"rust\",\n  \"scala\": \"scala\",\n  \"swift\": \"swift\",\n  \"css\": \"css\",\n  \"scss\": \"scss\",\n  \"typescript\": \"typescript\",\n  \"redux\": \"redux\"\n\n  // Phrases (not currently implemented)\n  //\"data science\": \"datascience\",\n  //\"machine learning\": \"machine-learning\",\n};\n\n// Maximum number of words of a document to analyze looking for keywords\n// This is simply a check against taking too much time on very long documents\nvar MAX_WORDS_ANALYZED = 9999;\n\n// Max number of detected keywords to send\n// Lowering this number means that only major topics of the page get sent on long pages\nvar MAX_KEYWORDS = 3;\n\n// Minimum number of occurrences of a keyword to consider it\nvar MIN_KEYWORD_OCCURRENCES = 2;\n\n// Time between checking whether the ad is in the viewport to count the time viewed\n// Time viewed is an important advertiser metric\nvar VIEW_TIME_INTERVAL = 1; // seconds\nvar VIEW_TIME_MAX = 5 * 60; // seconds\n\n// In-viewport fudge factor\n// A fudge factor of ~3 is needed for the case where the ad\n// is hidden off the side of the screen by a sliding sidebar\n// For example, if the right side of the ad is at x=0\n// or the left side of the ad is at the right side of the viewport\nvar VIEWPORT_FUDGE_FACTOR = -3; // px\n\n/* Placement object to query decision API and return an Element node\n *\n * @param {string} publisher - Publisher ID\n * @param {string} ad_type - Placement ad type id\n * @param {Element} target - Target element\n * @param {Object} options - Various options for configuring the placement such as:\n      keywords, styles, campaign_types, load_manually, force_ad, force_campaign\n */\nvar Placement = /*#__PURE__*/function () {\n  function Placement(publisher, ad_type, target, options) {\n    _classCallCheck(this, Placement);\n    this.publisher = publisher;\n    this.ad_type = ad_type;\n    this.target = target;\n\n    // Options\n    this.options = options;\n    this.style = options.style;\n    this.keywords = options.keywords || [];\n    this.load_manually = options.load_manually;\n    this.force_ad = options.force_ad;\n    this.force_campaign = options.force_campaign;\n    this.campaign_types = options.campaign_types || [];\n    if (!this.campaign_types.length) {\n      this.campaign_types = [\"paid\", \"publisher-house\", \"community\", \"house\"];\n    }\n\n    // Initialized and will be used in the future\n    this.view_time = 0;\n    this.view_time_sent = false; // true once the view time is sent to the server\n    this.response = null;\n  }\n\n  /* Create a placement from an element\n   *\n   * Returns null if the placement is already loaded.\n   *\n   * @static\n   * @param {Element} element - Load placement and append to this Element\n   * @returns {Placement}\n   */\n  _createClass(Placement, [{\n    key: \"load\",\n    value:\n    /* Transforms target element into a placement\n     *\n     * This method organizes all of the operations to transform the placement\n     * configuration wrapper `div` into an ad placement -- including starting the\n     * API transaction, displaying the ad element,\n     * and handling the viewport detection.\n     *\n     * @returns {Promise}\n     */\n    function load() {\n      var _this = this;\n      // Detect the keywords\n      this.keywords = this.keywords.concat(this.detectKeywords());\n      return this.fetch().then(function (element) {\n        if (element === undefined) {\n          throw new EthicalAdsWarning(\"Ad decision request blocked\");\n        }\n        if (!element) {\n          throw new EthicalAdsWarning(\"No ads to show.\");\n        }\n\n        // Add `loaded` class, signifying that the CSS styles should finally be\n        // applied to the target element.\n        var classes = _this.target.className || \"\";\n        classes += \" loaded\";\n        _this.target.className = classes.trim();\n\n        // Make this element the only child element of the target element\n        while (_this.target.firstChild) {\n          _this.target.removeChild(_this.target.firstChild);\n        }\n\n        // Apply any styles based on the specified styling\n        _this.applyStyles(element);\n        _this.target.appendChild(element);\n        return _this;\n      }).then(function (placement) {\n        // Detect when the ad is in the viewport\n        // Add the view pixel to the DOM to count the view\n        // Also count the time the ad is in view\n        //  this will be sent before the page/tab is closed or navigated away\n\n        var viewport_detection = setInterval(function (element) {\n          if (placement.inViewport(element)) {\n            // This ad was seen!\n            var pixel = document.createElement(\"img\");\n            pixel.src = placement.response.view_url;\n            if (uplifted) {\n              pixel.src += \"?uplift=true\";\n            }\n            pixel.className = \"ea-pixel\";\n            element.appendChild(pixel);\n            clearInterval(viewport_detection);\n          }\n        }, 100, placement.target);\n        var view_time_counter = setInterval(function (element) {\n          if (placement.view_time_sent) {\n            clearInterval(view_time_counter);\n          } else if (placement.inViewport(element)) {\n            // Increment the ad's time in view counter\n            placement.view_time += VIEW_TIME_INTERVAL;\n            if (placement.view_time >= VIEW_TIME_MAX) {\n              clearInterval(view_time_counter);\n            }\n          }\n        }, VIEW_TIME_INTERVAL * 1000, placement.target);\n        var visibility_change_listener = function visibility_change_listener() {\n          if (placement.view_time <= 0 || placement.view_time_sent || !placement.response.view_time_url) return;\n          // Check if the tab loses focus/is closed or the browser/app is minimized/closed\n          // In that case, no longer count further time that the ad is in view\n          // Send the time the ad was viewed to the server\n          if (document.visibilityState === \"hidden\" || document.visibilityState === \"unloaded\") {\n            var pixel = document.createElement(\"img\");\n            pixel.src = placement.response.view_time_url + \"?view_time=\" + placement.view_time;\n            pixel.className = \"ea-pixel\";\n            placement.target.appendChild(pixel);\n            placement.view_time_sent = true;\n            document.removeEventListener(\"visibilitychange\", visibility_change_listener);\n          }\n        };\n        document.addEventListener(\"visibilitychange\", visibility_change_listener);\n      });\n    }\n\n    /* Returns whether the ad is visible in the viewport\n     *\n     * @param {Element} element - The ad element\n     * @returns {boolean} True if the ad is loaded and visible in the viewport\n     *  (including the tab being focused and not minimized) and returns false otherwise.\n     */\n  }, {\n    key: \"inViewport\",\n    value: function inViewport(element) {\n      if (this.response && this.response.view_url && verge__WEBPACK_IMPORTED_MODULE_0___default.a.inViewport(element, VIEWPORT_FUDGE_FACTOR) && document.visibilityState === \"visible\") {\n        return true;\n      }\n      return false;\n    }\n\n    /* Get placement data from decision API\n     *\n     * @returns {Promise<Element>} Resolves with an Element converted from an HTML\n     * string from API response. Can also be null, indicating a noop action.\n     */\n  }, {\n    key: \"fetch\",\n    value: function fetch() {\n      var _this2 = this;\n      // Make sure callbacks don't collide even with multiple placements\n      var callback = \"ad_\" + Date.now() + \"_\" + Math.floor(Math.random() * 1000000);\n      var div_id = callback;\n      if (this.target.id) {\n        div_id = this.target.id;\n      }\n\n      // There's no hard maximum on URL lengths (all of these get added to the query params)\n      // but ideally we want to keep our URLs below ~2k which should work basically everywhere\n      var params = {\n        publisher: this.publisher,\n        ad_types: this.ad_type,\n        div_ids: div_id,\n        callback: callback,\n        keywords: this.keywords.join(\"|\"),\n        campaign_types: this.campaign_types.join(\"|\"),\n        format: \"jsonp\",\n        client_version: AD_CLIENT_VERSION,\n        // location.href includes query params (possibly sensitive) and fragments (unnecessary)\n        url: (window.location.origin + window.location.pathname).slice(0, 256)\n      };\n      if (this.force_ad) {\n        params[\"force_ad\"] = this.force_ad;\n      }\n      if (this.force_campaign) {\n        params[\"force_campaign\"] = this.force_campaign;\n      }\n      var url_params = new URLSearchParams(params);\n      var url = new URL(AD_DECISION_URL + \"?\" + url_params.toString());\n      return new Promise(function (resolve, reject) {\n        window[callback] = function (response) {\n          if (response && response.html && response.view_url) {\n            _this2.response = response;\n            var node_convert = document.createElement(\"div\");\n            node_convert.innerHTML = response.html;\n            return resolve(node_convert.firstChild);\n          } else {\n            // No ad to show for this targeting/publisher\n            return resolve(null);\n          }\n        };\n        var script = document.createElement(\"script\");\n        script.src = url;\n        script.type = \"text/javascript\";\n        script.async = true;\n        script.addEventListener(\"error\", function (err) {\n          // There was a problem loading this request, likely this was blocked by\n          // an ad blocker. We'll resolve with an empty response instead of\n          // throwing an error.\n          return resolve();\n        });\n        document.getElementsByTagName(\"head\")[0].appendChild(script);\n      });\n    }\n\n    /* Detect whether this ad is \"uplifted\" meaning allowed by ABP's Acceptable Ads list\n     *\n     * Calls the provided callback passing a boolean whether this ad is uplifted.\n     * We need this data to provide back to the AcceptableAds folks.\n     *\n     * This code comes directly from Eyeo/AdblockPlus team to measure Acceptable Ads.\n     *\n     * @static\n     * @param {string} px - A URL of a pixel to test\n     * @param {function) callback - A callback to call when finished\n     */\n  }, {\n    key: \"detectABP\",\n    value: function detectABP(px, callback) {\n      var detected = false;\n      var checksRemain = 2;\n      var error1 = false;\n      var error2 = false;\n      if (typeof callback != \"function\") return;\n      px += \"?ch=*&rn=*\";\n      function beforeCheck(callback, timeout) {\n        if (checksRemain == 0 || timeout > 1E3) callback(checksRemain == 0 && detected);else setTimeout(function () {\n          beforeCheck(callback, timeout * 2);\n        }, timeout * 2);\n      }\n      function checkImages() {\n        if (--checksRemain) return;\n        detected = !error1 && error2;\n      }\n      var random = Math.random() * 11;\n      var img1 = new Image();\n      img1.onload = checkImages;\n      img1.onerror = function () {\n        error1 = true;\n        checkImages();\n      };\n      img1.src = px.replace(/\\*/, 1).replace(/\\*/, random);\n      var img2 = new Image();\n      img2.onload = checkImages;\n      img2.onerror = function () {\n        error2 = true;\n        checkImages();\n      };\n      img2.src = px.replace(/\\*/, 2).replace(/\\*/, random);\n      beforeCheck(callback, 250);\n    }\n\n    /* Returns an array of keywords (strings) found on the page\n     *\n     * @returns {Array[string]} Advertising keywords found on the page\n     */\n  }, {\n    key: \"detectKeywords\",\n    value: function detectKeywords() {\n      // Return previously detected keywords\n      // If this code has already run.\n      // Note: if there are \"no\" keywords (an empty list) this is still true\n      if (detectedKeywords) return detectedKeywords;\n      var keywordHist = {}; // Keywords found => count of keyword\n      var mainContent = document.querySelector(\"[role='main']\") || document.querySelector(\"main\") || document.querySelector(\"body\");\n      var words = mainContent.textContent.split(/\\s+/);\n      var wordTrimmer = /^[\\('\"]?(.*?)[,\\.\\?\\!:;\\)'\"]?$/g;\n      for (var x = 0; x < words.length && x < MAX_WORDS_ANALYZED; x++) {\n        // Remove certain punctuation from beginning and end of the word\n        var word = words[x].replace(wordTrimmer, \"$1\").toLowerCase();\n        if (KEYWORDS.hasOwnProperty(word)) {\n          keywordHist[KEYWORDS[word]] = (keywordHist[KEYWORDS[word]] || 0) + 1;\n        }\n      }\n\n      // Sort the hist with the most common items first\n      // Grab only the MAX_KEYWORDS most common\n      var keywords = Object.entries(keywordHist).filter(\n      // Only consider a keyword with at least this many occurrences\n      function (a) {\n        return a[1] >= MIN_KEYWORD_OCCURRENCES;\n      }).sort(function (a, b) {\n        if (a[1] > b[1]) return -1;\n        if (a[1] < b[1]) return 1;\n        return 0;\n      }).slice(0, MAX_KEYWORDS).map(function (x) {\n        return x[0];\n      });\n      detectedKeywords = keywords;\n      return keywords;\n    }\n\n    /* Apply custom styles based on data-ea-style\n     *\n     */\n  }, {\n    key: \"applyStyles\",\n    value: function applyStyles(element) {\n      // Stickybox: https://ethical-ad-client.readthedocs.io/en/latest/#stickybox\n      if (this.style === \"stickybox\") {\n        var hideButton = document.createElement(\"div\");\n        hideButton.setAttribute(\"class\", \"ea-stickybox-hide\");\n        hideButton.append(\"×\");\n        hideButton.addEventListener(\"click\", function () {\n          document.querySelector(\"[data-ea-publisher]\").remove();\n        });\n        element.appendChild(hideButton);\n      }\n\n      // FixedFooter: https://ethical-ad-client.readthedocs.io/en/latest/#fixedfooter\n      if (this.style === \"fixedfooter\") {\n        //element.querySelector('.ea-callout a').remove();\n\n        var container = document.createElement(\"div\");\n        container.setAttribute(\"class\", \"ea-fixedfooter-hide\");\n        element.appendChild(container);\n        var _hideButton = document.createElement(\"span\");\n        _hideButton.append(\"Close Ad\");\n        _hideButton.addEventListener(\"click\", function () {\n          document.querySelector(\"[data-ea-publisher]\").remove();\n        });\n        container.appendChild(_hideButton);\n      }\n    }\n  }], [{\n    key: \"from_element\",\n    value: function from_element(element) {\n      // Get attributes from DOM node\n      var publisher = element.getAttribute(ATTR_PREFIX + \"publisher\");\n      var ad_type = element.getAttribute(ATTR_PREFIX + \"type\");\n      if (!ad_type) {\n        ad_type = \"image\";\n        element.setAttribute(ATTR_PREFIX + \"type\", \"image\");\n      }\n      var keywords = (element.getAttribute(ATTR_PREFIX + \"keywords\") || \"\").split(\"|\").filter(function (word) {\n        return word.length > 1;\n      });\n      var campaign_types = (element.getAttribute(ATTR_PREFIX + \"campaign-types\") || \"\").split(\"|\").filter(function (word) {\n        return word.length > 1;\n      });\n      var load_manually = element.getAttribute(ATTR_PREFIX + \"manual\") === \"true\";\n      var style = element.getAttribute(ATTR_PREFIX + \"style\");\n      var force_ad = element.getAttribute(ATTR_PREFIX + \"force-ad\");\n      var force_campaign = element.getAttribute(ATTR_PREFIX + \"force-campaign\");\n\n      // Add version to ad type to verison the HTML return\n      if (ad_type === \"image\" || ad_type === \"text\") {\n        ad_type += \"-v\" + AD_TYPES_VERSION;\n      }\n      var classes = (element.className || \"\").split(\" \");\n      if (classes.indexOf(\"loaded\") >= 0) {\n        console.error(\"EthicalAd already loaded.\");\n        return null;\n      }\n      return new Placement(publisher, ad_type, element, {\n        keywords: keywords,\n        style: style,\n        campaign_types: campaign_types,\n        load_manually: load_manually,\n        force_ad: force_ad,\n        force_campaign: force_campaign\n      });\n    }\n  }]);\n  return Placement;\n}();\n\n/* Detects whether the browser supports the necessary JS APIs to support the ad client\n *\n * Generally we support recent versions of evergreen browsers (Chrome, Firefox, Safari, Edge)\n * but we no longer support IE11.\n *\n *  @returns {boolean} true if all dependencies met and false otherwise\n */\nfunction check_dependencies() {\n  if (!Object.entries || !window.URL || !window.URLSearchParams || !window.Promise) {\n    console.error(\"Browser does not meet ethical ad client dependencies. Not showing ads\");\n    return false;\n  }\n  return true;\n}\n\n/* Find all placement DOM elements and hot load HTML as child nodes\n *\n * @param {boolean} force_load - load placements even if they are set to load manually\n * @returns {Promise<[Placement]>} Resolves to a list of Placement instances\n */\nfunction load_placements() {\n  var force_load = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;\n  // Find all elements matching required data binding attribute.\n  var node_list = document.querySelectorAll(\"[\" + ATTR_PREFIX + \"publisher]\");\n  var elements = Array.prototype.slice.call(node_list);\n\n  // Create main promise. Iterator `all()` Promise will surround array of found\n  // elements. If any of these elements have issues, this main promise will\n  // reject.\n  if (elements.length === 0) {\n    throw new Error(\"No ad placements found.\");\n  }\n  return Promise.all(elements.map(function (element, index) {\n    var placement = Placement.from_element(element);\n\n    // Run AcceptableAds detection code\n    // This lets us know how many impressions are attributed to AceeptableAds\n    // Only run this once even for multiple placements\n    // All impressions will be correctly attributed\n    if (index === 0 && placement && !force_load) {\n      placement.detectABP(ABP_DETECTION_PX, function (usesABP) {\n        uplifted = usesABP;\n        if (usesABP) {\n          console.debug(\"Acceptable Ads enabled. Thanks for allowing our non-tracking ads :)\");\n        }\n      });\n    }\n    if (placement && (force_load || !placement.load_manually)) {\n      return placement.load();\n    } else {\n      // This will be manually loaded later or has already been loaded\n      return null;\n    }\n  }));\n}\n\n// An error class that we will not surface to clients normally.\nvar EthicalAdsWarning = /*#__PURE__*/function (_Error) {\n  _inherits(EthicalAdsWarning, _Error);\n  var _super = _createSuper(EthicalAdsWarning);\n  function EthicalAdsWarning() {\n    _classCallCheck(this, EthicalAdsWarning);\n    return _super.apply(this, arguments);\n  }\n  return _createClass(EthicalAdsWarning);\n}( /*#__PURE__*/_wrapNativeSuper(Error));\n/* Wrapping Promise to allow for handling of errors by user\n *\n * This promise currently does not reject on error as this will emit a console\n * warning if the user hasn't added a promise rejection handler (which is most\n * cases).\n *\n * This promise resolves to an aray of Placement instances, or an empty list if\n * there was any error configuring the placements.\n *\n * For example, to perform an action when no placements are loaded:\n *\n *   <script>\n *   ethicalads.wait.then((placements) => {\n *     if (!placements.length) {\n *       console.log('Ads were not able to load');\n *     }\n *   }\n *   </script>\n *\n * @type {Promise<[Placement]>}\n */\nvar wait;\n\n/* Loading placements manually rather than the normal way\n *\n *   <div data-ea-publisher=\"...\" data-ea-manual=\"true\"></div>\n *   <script>\n *     ethicalads.load();\n *   </script>\n *\n * @type function\n */\nvar load;\n\n/* Whether this ad impression is attributed to being on the Acceptable Ads list.\n * @type boolean\n */\nvar uplifted = false;\n\n/* Keywords detected on the page\n * @type {Array[string]}\n */\nvar detectedKeywords = null;\n\n//# sourceURL=webpack://ethicalads/./index.js?");
 
 /***/ }),
 
@@ -280,17 +284,6 @@ eval("/*!\r\n * verge 1.10.2+201705300050\r\n * http://npm.im/verge\r\n * MIT Ry
 
 /***/ }),
 
-/***/ "./node_modules/webpack/buildin/harmony-module.js":
-/*!*******************************************!*\
-  !*** (webpack)/buildin/harmony-module.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("module.exports = function(originalModule) {\n\tif (!originalModule.webpackPolyfill) {\n\t\tvar module = Object.create(originalModule);\n\t\t// module.parent = undefined by default\n\t\tif (!module.children) module.children = [];\n\t\tObject.defineProperty(module, \"loaded\", {\n\t\t\tenumerable: true,\n\t\t\tget: function() {\n\t\t\t\treturn module.l;\n\t\t\t}\n\t\t});\n\t\tObject.defineProperty(module, \"id\", {\n\t\t\tenumerable: true,\n\t\t\tget: function() {\n\t\t\t\treturn module.i;\n\t\t\t}\n\t\t});\n\t\tObject.defineProperty(module, \"exports\", {\n\t\t\tenumerable: true\n\t\t});\n\t\tmodule.webpackPolyfill = 1;\n\t}\n\treturn module;\n};\n\n\n//# sourceURL=webpack://ethicalads/(webpack)/buildin/harmony-module.js?");
-
-/***/ }),
-
 /***/ "./styles.scss":
 /*!*********************!*\
   !*** ./styles.scss ***!
@@ -303,6 +296,7 @@ eval("var api = __webpack_require__(/*! ./node_modules/style-loader/dist/runtime
 /***/ })
 
 /******/ });
+});
 
 /***/ }),
 
@@ -645,1049 +639,6 @@ const forEachStep = (self, fn, node, thisp) => {
 
 module.exports = LRUCache
 
-
-/***/ }),
-
-/***/ 900:
-/***/ (() => {
-
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 968:
-/***/ ((module, __unused_webpack___webpack_exports__, __nested_webpack_require_167__) => {
-
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_167__(81);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_167__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_167__(645);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_167__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_167__(667);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_167__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
-// Imports
-
-
-
-var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __nested_webpack_require_167__(896), __nested_webpack_require_167__.b);
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
-var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, ".search__outer__wrapper {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 700;\n}\n\n/* Backdrop */\n\n.search__backdrop {\n    /* Positioning */\n    position: fixed;\n    top: 0;\n    left: 0;\n    z-index: 500;\n\n    /* Display and box model */\n    width: 100%;\n    height: 100%;\n    display: none;\n\n    /* Other */\n    background-color: rgba(0, 0, 0, 0.502);\n}\n\n.search__outer {\n    /* Positioning */\n    margin: auto;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    z-index: 100000;\n\n    /* Display and box model */\n    height: 80%;\n    width: 80%;\n    max-height: 1000px;\n    max-width: 1500px;\n    padding: 10px;\n    overflow-y: scroll;\n\n    /* Other */\n    border: 1px solid #e0e0e0;\n    line-height: 1.875;\n    background-color: #fcfcfc;\n    box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.09);\n    text-align: left;\n}\n\n/* Custom scrollbar */\n\n.search__outer::-webkit-scrollbar-track {\n    border-radius: 10px;\n    background-color: #fcfcfc;\n}\n\n.search__outer::-webkit-scrollbar {\n    width: 7px;\n    height: 7px;\n    background-color: #fcfcfc;\n}\n\n.search__outer::-webkit-scrollbar-thumb {\n    border-radius: 10px;\n    background-color: #8f8f8f;\n}\n\n/* Cross icon on top-right corner */\n\n.search__cross__img {\n    width: 15px;\n    height: 15px;\n    margin: 12px;\n}\n\n.search__cross {\n    position: absolute;\n    top: 0;\n    right: 0;\n}\n\n.search__cross:hover {\n    cursor: pointer;\n}\n\n/* Input field on search modal */\n\n.search__outer__input {\n    /* Display and box model */\n    width: 90%;\n    height: 30px;\n    font-size: 19px;\n    outline: none;\n    box-sizing: border-box;\n\n    /* Other */\n    background-color: #fcfcfc;\n    border: none;\n    border-bottom: 1px solid #757575;\n\n    /* search icon */\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n    background-repeat: no-repeat;\n    background-position: left;\n    background-size: 15px 15px;\n    padding-left: 25px;\n}\n\n.search__outer__input:focus {\n    outline: none;\n}\n\n/* For material UI style underline on input field */\n\n.search__outer .bar {\n    position: relative;\n    display: block;\n    width: 90%;\n    margin-bottom: 15px;\n}\n\n.search__outer .bar:before,\n.search__outer .bar:after {\n    content: \"\";\n    height: 2px;\n    width: 0;\n    bottom: 1px;\n    position: absolute;\n    background: #5264ae;\n    transition: 0.2s ease all;\n}\n\n.search__outer .bar:before {\n    left: 50%;\n}\n\n.search__outer .bar:after {\n    right: 50%;\n}\n\n.search__outer__input:focus ~ .bar:before,\n.search__outer__input:focus ~ .bar:after {\n    width: 50%;\n}\n\n/* Search result */\n\n.search__result__single {\n    margin-top: 10px;\n    padding: 0px 10px;\n    border-bottom: 1px solid #e6e6e6;\n}\n\n.search__result__box .active {\n    background-color: rgb(245, 245, 245);\n}\n\n.search__error__box {\n    color: black;\n    min-width: 300px;\n    font-weight: 700;\n}\n\n.outer_div_page_results {\n    margin: 5px 0px;\n    overflow: auto;\n    padding: 3px 5px;\n}\n\n.search__result__single a {\n    text-decoration: none;\n    cursor: pointer;\n}\n\n/* Title of each search result */\n\n.search__result__title {\n    /* Display and box model */\n    display: inline-block;\n    font-weight: 500;\n    margin-bottom: 15px;\n    margin-top: 0;\n    font-size: 15px;\n\n    /* Other */\n    color: #6ea0ec;\n    border-bottom: 1px solid #6ea0ec;\n}\n\n.search__result__subheading {\n    color: black;\n    font-weight: 700;\n    float: left;\n    width: 20%;\n    font-size: 15px;\n    margin-right: 10px;\n    word-break: break-all;\n    overflow-x: hidden;\n}\n\n.search__result__content {\n    margin: 0;\n    text-decoration: none;\n    color: black;\n    font-size: 15px;\n    display: block;\n    margin-bottom: 5px;\n    margin-bottom: 0;\n    line-height: inherit;\n    float: right;\n    width: calc(80% - 15px);\n    text-align: left;\n}\n\n/* Highlighting of matched results */\n\n.search__outer span {\n    font-style: normal;\n}\n\n.search__outer .search__result__title span {\n    background-color: #e5f6ff;\n    padding-bottom: 3px;\n    border-bottom-color: black;\n}\n\n.search__outer .search__result__content span {\n    background-color: #e5f6ff;\n    border-bottom: 1px solid black;\n}\n\n.search__result__subheading span {\n    border-bottom: 1px solid black;\n}\n\n.outer_div_page_results:hover {\n    background-color: rgb(245, 245, 245);\n}\n\n.br-for-hits {\n    display: block;\n    content: \"\";\n    margin-top: 10px;\n}\n\n.rtd_ui_search_subtitle {\n    all: unset;\n    color: inherit;\n    font-size: 85%;\n}\n\n.rtd__search__credits {\n    margin: auto;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: calc(-80% - 20px);\n    width: 80%;\n    max-width: 1500px;\n    height: 30px;\n    overflow: hidden;\n    background: #eee;\n    z-index: 100000;\n    border: 1px solid #eee;\n    padding: 5px 10px;\n    text-align: center;\n    color: black;\n}\n\n.rtd__search__credits a {\n    color: black;\n    text-decoration: underline;\n}\n\n.search__domain_role_name {\n    font-size: 80%;\n    letter-spacing: 1px;\n}\n\n@media (max-width: 670px) {\n    .rtd__search__credits {\n        height: 50px;\n        bottom: calc(-80% - 40px);\n        overflow: hidden;\n    }\n}\n\n@media (min-height: 1250px) {\n    .rtd__search__credits {\n        bottom: calc(-1000px - 30px);\n    }\n}\n\n@media (max-width: 630px) {\n    .search__result__subheading {\n        float: none;\n        width: 90%;\n    }\n\n    .search__result__content {\n        float: none;\n        width: 90%;\n    }\n}\n\n@keyframes fade-in {\n    from {\n        opacity: 0;\n    }\n    to {\n        opacity: 1;\n    }\n}\n", ""]);
-// Exports
-var ___CSS_LOADER_STYLE_SHEET___ = new CSSStyleSheet();
-___CSS_LOADER_STYLE_SHEET___.replaceSync(___CSS_LOADER_EXPORT___.toString());
-/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (0)));
-
-
-/***/ }),
-
-/***/ 645:
-/***/ ((module) => {
-
-
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-*/
-module.exports = function (cssWithMappingToString) {
-  var list = [];
-
-  // return the list of modules as css string
-  list.toString = function toString() {
-    return this.map(function (item) {
-      var content = "";
-      var needLayer = typeof item[5] !== "undefined";
-      if (item[4]) {
-        content += "@supports (".concat(item[4], ") {");
-      }
-      if (item[2]) {
-        content += "@media ".concat(item[2], " {");
-      }
-      if (needLayer) {
-        content += "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {");
-      }
-      content += cssWithMappingToString(item);
-      if (needLayer) {
-        content += "}";
-      }
-      if (item[2]) {
-        content += "}";
-      }
-      if (item[4]) {
-        content += "}";
-      }
-      return content;
-    }).join("");
-  };
-
-  // import a list of modules into the list
-  list.i = function i(modules, media, dedupe, supports, layer) {
-    if (typeof modules === "string") {
-      modules = [[null, modules, undefined]];
-    }
-    var alreadyImportedModules = {};
-    if (dedupe) {
-      for (var k = 0; k < this.length; k++) {
-        var id = this[k][0];
-        if (id != null) {
-          alreadyImportedModules[id] = true;
-        }
-      }
-    }
-    for (var _k = 0; _k < modules.length; _k++) {
-      var item = [].concat(modules[_k]);
-      if (dedupe && alreadyImportedModules[item[0]]) {
-        continue;
-      }
-      if (typeof layer !== "undefined") {
-        if (typeof item[5] === "undefined") {
-          item[5] = layer;
-        } else {
-          item[1] = "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {").concat(item[1], "}");
-          item[5] = layer;
-        }
-      }
-      if (media) {
-        if (!item[2]) {
-          item[2] = media;
-        } else {
-          item[1] = "@media ".concat(item[2], " {").concat(item[1], "}");
-          item[2] = media;
-        }
-      }
-      if (supports) {
-        if (!item[4]) {
-          item[4] = "".concat(supports);
-        } else {
-          item[1] = "@supports (".concat(item[4], ") {").concat(item[1], "}");
-          item[4] = supports;
-        }
-      }
-      list.push(item);
-    }
-  };
-  return list;
-};
-
-/***/ }),
-
-/***/ 667:
-/***/ ((module) => {
-
-
-
-module.exports = function (url, options) {
-  if (!options) {
-    options = {};
-  }
-  if (!url) {
-    return url;
-  }
-  url = String(url.__esModule ? url.default : url);
-
-  // If url is already wrapped in quotes, remove them
-  if (/^['"].*['"]$/.test(url)) {
-    url = url.slice(1, -1);
-  }
-  if (options.hash) {
-    url += options.hash;
-  }
-
-  // Should url be wrapped?
-  // See https://drafts.csswg.org/css-values-3/#urls
-  if (/["'() \t\n]|(%20)/.test(url) || options.needQuotes) {
-    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, "\\n"), "\"");
-  }
-  return url;
-};
-
-/***/ }),
-
-/***/ 81:
-/***/ ((module) => {
-
-
-
-module.exports = function (i) {
-  return i[1];
-};
-
-/***/ }),
-
-/***/ 896:
-/***/ ((module) => {
-
-module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDUxIDQ1MSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDUxIDQ1MTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTQ0Ny4wNSw0MjhsLTEwOS42LTEwOS42YzI5LjQtMzMuOCw0Ny4yLTc3LjksNDcuMi0xMjYuMUMzODQuNjUsODYuMiwyOTguMzUsMCwxOTIuMzUsMEM4Ni4yNSwwLDAuMDUsODYuMywwLjA1LDE5Mi4zDQoJCXM4Ni4zLDE5Mi4zLDE5Mi4zLDE5Mi4zYzQ4LjIsMCw5Mi4zLTE3LjgsMTI2LjEtNDcuMkw0MjguMDUsNDQ3YzIuNiwyLjYsNi4xLDQsOS41LDRzNi45LTEuMyw5LjUtNA0KCQlDNDUyLjI1LDQ0MS44LDQ1Mi4yNSw0MzMuMiw0NDcuMDUsNDI4eiBNMjYuOTUsMTkyLjNjMC05MS4yLDc0LjItMTY1LjMsMTY1LjMtMTY1LjNjOTEuMiwwLDE2NS4zLDc0LjIsMTY1LjMsMTY1LjMNCgkJcy03NC4xLDE2NS40LTE2NS4zLDE2NS40QzEwMS4xNSwzNTcuNywyNi45NSwyODMuNSwyNi45NSwxOTIuM3oiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K";
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nested_webpack_require_12613__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_12613__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__nested_webpack_require_12613__.m = __webpack_modules__;
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nested_webpack_require_12613__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nested_webpack_require_12613__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nested_webpack_require_12613__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nested_webpack_require_12613__.o(definition, key) && !__nested_webpack_require_12613__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nested_webpack_require_12613__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		__nested_webpack_require_12613__.b = document.baseURI || self.location.href;
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			773: 0
-/******/ 		};
-/******/ 		
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		// no jsonp function
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-/* unused harmony export initializeSearchAsYouType */
-/* harmony import */ var _css_rtd_sphinx_search_css__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_12613__(968);
-
-
-const MAX_SUGGESTIONS = 50;
-const MAX_SECTION_RESULTS = 3;
-const MAX_SUBSTRING_LIMIT = 100;
-const FETCH_RESULTS_DELAY = 250;
-const CLEAR_RESULTS_DELAY = 300;
-const RTD_SEARCH_PARAMETER  = "rtd_search";
-
-
-function initializeSearchAsYouType(config) {
-    // Inject our styles for the flyout
-    document.adoptedStyleSheets = [styles];
-
-    const project = config.project.slug;
-    const version = config.version.slug;
-    const api_host = '/_';
-
-    let initialHtml = generateAndReturnInitialHtml();
-    document.body.appendChild(initialHtml);
-
-    let search_outer_wrapper = document.querySelector(
-        ".search__outer__wrapper"
-    );
-    let search_outer_input = document.querySelector(
-        ".search__outer__input"
-    );
-    let cross_icon = document.querySelector(".search__cross");
-
-    // this stores the current request.
-    let current_request = null;
-
-    let search_bar = getInputField();
-    search_bar.addEventListener("focus", e => {
-        showSearchModal();
-    });
-
-    search_outer_input.addEventListener("input", e => {
-        let search_query = getSearchTerm();
-        if (search_query.length > 0) {
-            if (current_request !== null) {
-                // cancel previous ajax request.
-                current_request.cancel();
-            }
-            const search_endpoint = api_host + "/api/v2/search/";
-            const search_params = {
-                q: search_query,
-                project: project,
-                version: version,
-            };
-            current_request = fetchAndGenerateResults(search_endpoint, search_params, project);
-            current_request();
-        } else {
-            // if the last request returns the results,
-            // the suggestions list is generated even if there
-            // is no query. To prevent that, this function
-            // is debounced here.
-            let func = () => {
-                removeResults();
-                updateUrl();
-            };
-            debounce(func, CLEAR_RESULTS_DELAY)();
-            updateUrl();
-        }
-    });
-
-    search_outer_input.addEventListener("keydown", e => {
-        // if "ArrowDown is pressed"
-        if (e.keyCode === 40) {
-            e.preventDefault();
-            selectNextResult(true);
-        }
-
-        // if "ArrowUp" is pressed.
-        if (e.keyCode === 38) {
-            e.preventDefault();
-            selectNextResult(false);
-        }
-
-        // if "Enter" key is pressed.
-        if (e.keyCode === 13) {
-            e.preventDefault();
-            const current_item = document.querySelector(
-                ".outer_div_page_results.active"
-            );
-            // if an item is selected,
-            // then redirect to its link
-            if (current_item !== null) {
-                const link = current_item.parentElement["href"];
-                window.location.href = link;
-            }
-        }
-    });
-
-    search_outer_wrapper.addEventListener("click", e => {
-        // HACK: only close the search modal if the
-        // element clicked has <body> as the parent Node.
-        // This is done so that search modal only gets closed
-        // if the user clicks on the backdrop area.
-        if (e.target.parentNode === document.body) {
-            removeSearchModal();
-        }
-    });
-
-    // close the search modal if clicked on cross icon.
-    cross_icon.addEventListener("click", e => {
-        removeSearchModal();
-    });
-
-    // close the search modal if the user pressed
-    // Escape button
-    document.addEventListener("keydown", e => {
-        if (e.keyCode === 27) {
-            removeSearchModal();
-        }
-    });
-
-    // open search modal if "forward slash" button is pressed
-    document.addEventListener("keydown", e => {
-        if (e.keyCode === 191 && !isModalVisible()) {
-            // prevent opening "Quick Find" in Firefox
-            e.preventDefault();
-            showSearchModal();
-        }
-    });
-
-    // if "rtd_search" is present in URL parameters,
-    // then open the search modal and show the results
-    // for the value of "rtd_search"
-    const url_params = new URLSearchParams(document.location.search);
-    const query = url_params.get(RTD_SEARCH_PARAMETER);
-    if (query !== null) {
-        showSearchModal(query);
-        search_outer_input.value = query;
-
-        let event = document.createEvent("Event");
-        event.initEvent("input", true, true);
-        search_outer_input.dispatchEvent(event);
-    }
-};
-
-/**
- * Debounce the function.
- * Usage::
- *
- *    let func = debounce(() => console.log("Hello World"), 3000);
- *
- *    // calling the func
- *    func();
- *
- *    //cancelling the execution of the func (if not executed)
- *    func.cancel();
- *
- * @param {Function} func function to be debounced
- * @param {Number} wait time to wait before running func (in miliseconds)
- * @return {Function} debounced function
- */
-const debounce = (func, wait) => {
-    let timeout;
-
-    let debounced = function() {
-        let context = this;
-        let args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), wait);
-    };
-
-    debounced.cancel = () => {
-        clearTimeout(timeout);
-        timeout = null;
-    };
-
-    return debounced;
-};
-
-
-/**
-  * Build a section with its matching results.
-  *
-  * A section has the form:
-  *
-  *   <a href="{link}">
-  *     <div class="outer_div_page_results" id="{id}">
-  *       <span class="search__result__subheading">
-  *         {title}
-  *       </span>
-  *       <p class="search__result__content">
-  *         {contents[0]}
-  *       </p>
-  *       <p class="search__result__content">
-  *         {contents[1]}
-  *       </p>
-  *       ...
-  *     </div>
-  *   </a>
-  *
-  * @param {String} id.
-  * @param {String} title.
-  * @param {String} link.
-  * @param {Array} contents.
-  */
-const buildSection = function (id, title, link, contents) {
-    let span_element = createDomNode("span", {class: "search__result__subheading"});
-    span_element.innerHTML = title;
-
-    let div_element = createDomNode("div", {class: "outer_div_page_results", id: id});
-    div_element.appendChild(span_element);
-
-    for (var i = 0; i < contents.length; i += 1) {
-        let p_element = createDomNode("p", {class: "search__result__content"});
-        p_element.innerHTML = contents[i];
-        div_element.appendChild(p_element);
-    }
-
-    let section = createDomNode("a", {href: link});
-    section.appendChild(div_element);
-    return section;
-};
-
-
-/**
- * Adds/removes "rtd_search" url parameter to the url.
- */
-const updateUrl = () => {
-    let parsed_url = new URL(window.location.href);
-    let search_query = getSearchTerm();
-    // search_query should not be an empty string.
-    if (search_query.length > 0) {
-        parsed_url.searchParams.set(RTD_SEARCH_PARAMETER, search_query);
-    } else {
-        parsed_url.searchParams.delete(RTD_SEARCH_PARAMETER);
-    }
-    // Update url.
-    window.history.pushState({}, null, parsed_url.toString());
-};
-
-
-/*
- * Keeps in sync the original search bar with the input from the modal.
- */
-const updateSearchBar = () => {
-  let search_bar = getInputField();
-  search_bar.value = getSearchTerm();
-};
-
-
-/*
- * Returns true if the modal window is visible.
- */
-const isModalVisible = () => {
-  let modal = document.querySelector(".search__outer__wrapper");
-  if (modal !== null && modal.style !== null && modal.style.display !== null) {
-    return modal.style.display === 'block';
-  }
-  return false;
-};
-
-
-/**
- * Create and return DOM nodes
- * with passed attributes.
- *
- * @param {String} nodeName name of the node
- * @param {Object} attributes obj of attributes to be assigned to the node
- * @return {Object} dom node with attributes
- */
-const createDomNode = (nodeName, attributes) => {
-    let node = document.createElement(nodeName);
-    if (attributes !== null) {
-        for (let attr in attributes) {
-            node.setAttribute(attr, attributes[attr]);
-        }
-    }
-    return node;
-};
-
-/**
- * Checks if data type is "string" or not
- *
- * @param {*} data data whose data-type is to be checked
- * @return {Boolean} 'true' if type is "string" and length is > 0
- */
-const _is_string = str => {
-    if (typeof str === "string" && str.length > 0) {
-        return true;
-    } else {
-        return false;
-    }
-};
-
-
-/**
- * Generate and return html structure
- * for a page section result.
- *
- * @param {Object} sectionData object containing the result data
- * @param {String} page_link link of the main page. It is used to construct the section link
- * @param {Number} id to be used in for this section
- */
-const get_section_html = (sectionData, page_link, id) => {
-    let section_subheading = sectionData.title;
-    let highlights = sectionData.highlights;
-    if (highlights.title.length) {
-        section_subheading = highlights.title[0];
-    }
-
-    let section_content = [
-        sectionData.content.substring(0, MAX_SUBSTRING_LIMIT) + " ..."
-    ];
-
-    if (highlights.content.length) {
-        let highlight_content = highlights.content;
-        section_content = [];
-        for (
-            let j = 0;
-            j < highlight_content.length && j < MAX_SECTION_RESULTS;
-            ++j
-        ) {
-            section_content.push("... " + highlight_content[j] + " ...");
-        }
-    }
-
-    let section_link = `${page_link}#${sectionData.id}`;
-    let section_id = "hit__" + id;
-    return buildSection(section_id, section_subheading, section_link, section_content);
-};
-
-/**
- * Generate and return html structure
- * for a sphinx domain result.
- *
- * @param {Object} domainData object containing the result data
- * @param {String} page_link link of the main page. It is used to construct the section link
- * @param {Number} id to be used in for this section
- */
-const get_domain_html = (domainData, page_link, id) => {
-    let domain_link = `${page_link}#${domainData.id}`;
-    let domain_role_name = domainData.role;
-    let domain_name = domainData.name;
-    let domain_content =
-        domainData.content.substr(0, MAX_SUBSTRING_LIMIT) + " ...";
-
-    let highlights = domainData.highlights;
-    if (highlights.name.length) {
-        domain_name = highlights.name[0];
-    }
-    if (highlights.content.length) {
-        domain_content = highlights.content[0];
-    }
-
-    let domain_id = "hit__" + id;
-
-    let div_role_name = createDomNode("div", {class: "search__domain_role_name"});
-    div_role_name.innerText = `[${domain_role_name}]`;
-    domain_name += div_role_name.outerHTML;
-
-    return buildSection(
-        domain_id,
-        domain_name,
-        domain_link,
-        [domain_content]
-    );
-};
-
-
-/**
- * Generate search results for a single page.
- *
- * This has the form:
- *   <div>
- *     <a href="{link}">
- *       <h2 class="search__result__title">
- *         {title}
- *         <small class="rtd_ui_search_subtitle">{subtitle}</small>
- *         <br/>
- *       </h2>
- *     </a>
- *
- *     <a href="{link}">
- *       {section}
- *     </a>
- *     <br class="br-for-hits" />
- *
- *     <a href="{link}">
- *       {section}
- *     </a>
- *     <br class="br-for-hits" />
- *   </div>
- *
- * @param {Object} resultData search results of a page
- * @param {String} projectName
- * @param {Number} id from the last section
- * @return {Object} a <div> node with the results of a single page
- */
-const generateSingleResult = (resultData, projectName, id) => {
-    let page_link = resultData.path;
-    let page_title = resultData.title;
-    let highlights = resultData.highlights;
-
-    if (highlights.title.length) {
-        page_title = highlights.title[0];
-    }
-
-    let h2_element = createDomNode("h2", {class: "search__result__title"});
-    h2_element.innerHTML = page_title;
-
-    // If the result is not from the same project,
-    // then it's from a subproject.
-    if (projectName !== resultData.project) {
-        let subtitle = createDomNode("small", {class: "rtd_ui_search_subtitle"});
-        subtitle.innerText = `(from project ${resultData.project})`;
-        h2_element.appendChild(subtitle);
-    }
-    h2_element.appendChild(createDomNode("br"));
-
-    let a_element = createDomNode("a", {href: page_link});
-    a_element.appendChild(h2_element);
-
-    let content = createDomNode("div");
-    content.appendChild(a_element);
-
-    let separator = createDomNode("br", {class: "br-for-hits"});
-    for (let i = 0; i < resultData.blocks.length; ++i) {
-        let block = resultData.blocks[i];
-        let section = null;
-        id += 1;
-        if (block.type === "section") {
-            section = get_section_html(
-                block,
-                page_link,
-                id,
-            );
-        } else if (block.type === "domain") {
-            section = get_domain_html(
-                block,
-                page_link,
-                id,
-            );
-        }
-
-        if (section !== null) {
-          content.appendChild(section);
-          content.appendChild(separator);
-        }
-    }
-    return content;
-};
-
-/**
- * Generate search suggestions list.
- *
- * @param {Object} data response data from the search backend
- * @param {String} projectName name (slug) of the project
- * @return {Object} a <div> node with class "search__result__box" with results
- */
-const generateSuggestionsList = (data, projectName) => {
-    let search_result_box = createDomNode("div", {
-        class: "search__result__box"
-    });
-
-    let max_results = Math.min(MAX_SUGGESTIONS, data.results.length);
-    let id = 0;
-    for (let i = 0; i < max_results; ++i) {
-        let search_result_single = createDomNode("div", {
-            class: "search__result__single"
-        });
-
-        let content = generateSingleResult(data.results[i], projectName, id);
-
-        search_result_single.appendChild(content);
-        search_result_box.appendChild(search_result_single);
-
-        id += data.results[i].blocks.length;
-    }
-    return search_result_box;
-};
-
-/**
- * Removes .active class from all the suggestions.
- */
-const removeAllActive = () => {
-    const results = document.querySelectorAll(".outer_div_page_results.active");
-    const results_arr = Object.keys(results).map(i => results[i]);
-    for (let i = 1; i <= results_arr.length; ++i) {
-        results_arr[i - 1].classList.remove("active");
-    }
-};
-
-/**
- * Add .active class to the search suggestion
- * corresponding to `id`, and scroll to that suggestion smoothly.
- *
- * @param {Number} id of the suggestion to activate
- */
-const addActive = (id) => {
-    const current_item = document.querySelector("#hit__" + id);
-    // in case of no results or any error,
-    // current_item will not be found in the DOM.
-    if (current_item !== null) {
-        current_item.classList.add("active");
-        current_item.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "start"
-        });
-    }
-};
-
-
-/*
- * Select next/previous result.
- * Go to the first result if already in the last result,
- * or to the last result if already in the first result.
- *
- * @param {Boolean} forward.
- */
-const selectNextResult = (forward) => {
-    const all = document.querySelectorAll(".outer_div_page_results");
-    const current = document.querySelector(".outer_div_page_results.active");
-
-    let next_id = 1;
-    let last_id = 1;
-
-    if (all.length > 0) {
-      let last = all[all.length - 1];
-      if (last.id !== null) {
-        let match = last.id.match(/\d+/);
-        if (match !== null) {
-          last_id = Number(match[0]);
-        }
-      }
-    }
-
-    if (current !== null && current.id !== null) {
-      let match = current.id.match(/\d+/);
-      if (match !== null) {
-        next_id = Number(match[0]);
-        next_id += forward? 1 : -1;
-      }
-    }
-
-    // Cycle to the first or last result.
-    if (next_id <= 0) {
-      next_id = last_id;
-    } else if (next_id > last_id) {
-      next_id = 1;
-    }
-
-    removeAllActive();
-    addActive(next_id);
-};
-
-
-/**
- * Returns initial search input field,
- * which is already present in the docs.
- *
- * @return {Object} Input field node
- */
-const getInputField = () => {
-    let inputField;
-
-    // Integration with the flyout search input only
-    // TODO: make this trigger configurable by the user
-    inputField = document.querySelector("#flyout-search-form");
-    if (inputField === undefined || inputField === null) {
-        console.error("Flyout search form not found");
-    }
-
-    return inputField;
-};
-
-/*
- * Returns the current search term from the modal.
- */
-const getSearchTerm = () => {
-  let search_outer_input = document.querySelector(".search__outer__input");
-  if (search_outer_input !== null) {
-      return search_outer_input.value || "";
-  }
-  return "";
-};
-
-/**
- * Removes all results from the search modal.
- * It doesn't close the search box.
- */
-const removeResults = () => {
-    let all_results = document.querySelectorAll(".search__result__box");
-    for (let i = 0; i < all_results.length; ++i) {
-        all_results[i].parentElement.removeChild(all_results[i]);
-    }
-};
-
-/**
- * Creates and returns a div with error message
- * and some styles.
- *
- * @param {String} err_msg error message to be displayed
- */
-const getErrorDiv = err_msg => {
-    let err_div = createDomNode("div", {
-        class: "search__result__box search__error__box"
-    });
-    err_div.innerHTML = err_msg;
-    return err_div;
-};
-
-/**
- * Fetch the suggestions from search backend,
- * and appends the results to <div class="search__outer"> node,
- * which is already created when the page was loaded.
- *
- * @param {String} api_endpoint: API endpoint
- * @param {Object} parameters: search parameters
- * @param {String} projectName: name (slug) of the project
- * @return {Function} debounced function with debounce time of 500ms
- */
-const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
-    let search_outer = document.querySelector(".search__outer");
-
-    // Removes all results (if there is any),
-    // and show the "Searching ...." text to
-    // the user.
-    removeResults();
-    let search_loding = createDomNode("div", { class: "search__result__box" });
-    search_loding.innerHTML = "<strong>Searching ....</strong>";
-    search_outer.appendChild(search_loding);
-
-    let fetchFunc = () => {
-        // Update URL just before fetching the results
-        updateUrl();
-        updateSearchBar();
-
-        const url = api_endpoint + "?" + new URLSearchParams(parameters).toString();
-
-        fetch(url, {method: "GET"})
-        .then(response => {
-            if (!response.ok) {
-              throw new Error();
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.results.length > 0) {
-                let search_result_box = generateSuggestionsList(
-                    data,
-                    projectName
-                );
-                removeResults();
-                search_outer.appendChild(search_result_box);
-
-                // remove active classes from all suggestions
-                // if the mouse hovers, otherwise styles from
-                // :hover and .active will clash.
-                search_outer.addEventListener("mouseenter", e => {
-                    removeAllActive();
-                });
-            } else {
-                removeResults();
-                let err_div = getErrorDiv("No results found");
-                search_outer.appendChild(err_div);
-            }
-        })
-        .catch(error => {
-            removeResults();
-            let err_div = getErrorDiv("There was an error. Please try again.");
-            search_outer.appendChild(err_div);
-        });
-    };
-    return debounce(fetchFunc, FETCH_RESULTS_DELAY);
-};
-
-/**
- * Creates the initial html structure which will be
- * appended to the <body> as soon as the page loads.
- * This html structure will serve as the boilerplate
- * to show our search results.
- *
- * @return {String} initial html structure
- */
-const generateAndReturnInitialHtml = () => {
-    let innerHTML =
-        '<div class="search__outer"> \
-            <div class="search__cross" title="Close"> \
-                <!--?xml version="1.0" encoding="UTF-8"?--> \
-                <svg class="search__cross__img" width="15px" height="15px" enable-background="new 0 0 612 612" version="1.1" viewBox="0 0 612 612" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"> \
-                    <polygon points="612 36.004 576.52 0.603 306 270.61 35.478 0.603 0 36.004 270.52 306.01 0 576 35.478 611.4 306 341.41 576.52 611.4 612 576 341.46 306.01"></polygon> \
-                </svg> \
-            </div> \
-            <input class="search__outer__input" placeholder="Search ..."> \
-            <span class="bar"></span> \
-        </div> \
-        <div class="rtd__search__credits"> \
-            Search by <a href="https://readthedocs.org/">Read the Docs</a> & <a href="https://readthedocs-sphinx-search.readthedocs.io/en/latest/">readthedocs-sphinx-search</a> \
-        </div>';
-
-    let div = createDomNode("div", {
-        class: "search__outer__wrapper search__backdrop",
-    });
-    div.innerHTML = innerHTML;
-    return div;
-};
-
-/**
- * Opens the search modal.
- *
- * @param {String} custom_query if a custom query is provided,
- * initialize the value of input field with it, or fallback to the
- * value from the original search bar.
- */
-const showSearchModal = custom_query => {
-    // removes previous results (if there are any).
-    removeResults();
-
-    let show_modal = function () {
-        // removes the focus from the initial input field
-        // which as already present in the docs.
-        let search_bar = getInputField();
-        search_bar.blur();
-
-        // sets the value of the input field to empty string and focus it.
-        let search_outer_input = document.querySelector(
-            ".search__outer__input"
-        );
-        if (search_outer_input !== null) {
-            if (
-                typeof custom_query !== "undefined" &&
-                _is_string(custom_query)
-            ) {
-                search_outer_input.value = custom_query;
-                search_bar.value = custom_query;
-            } else {
-                search_outer_input.value = search_bar.value;
-            }
-            search_outer_input.focus();
-        }
-    };
-
-    let element = document.querySelector(".search__outer__wrapper");
-    if (element && element.style) {
-    element.style.display = "block";
-    }
-    show_modal();
-};
-
-/**
- * Closes the search modal.
- */
-const removeSearchModal = () => {
-    // removes previous results before closing
-    removeResults();
-
-    updateSearchBar();
-
-    // sets the value of input field to empty string and remove the focus.
-    let search_outer_input = document.querySelector(".search__outer__input");
-    if (search_outer_input !== null) {
-        search_outer_input.value = "";
-        search_outer_input.blur();
-    }
-
-    // update url (remove 'rtd_search' param)
-    updateUrl();
-
-    let element = document.querySelector(".search__outer__wrapper");
-    if (element && element.style) {
-    element.style.display = "none";
-    }
-};
-
-})();
-
-/******/ })()
-;
 
 /***/ }),
 
@@ -3567,7 +2518,7 @@ try {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -3673,8 +2624,6 @@ var max_satisfying_default = /*#__PURE__*/__webpack_require__.n(max_satisfying);
  */
 function injectNonLatestVersionWarning(config) {
     const highest = max_satisfying_default()(config.features.non_latest_version_warning.versions, '0.0.0');
-    console.log(config.features.non_latest_version_warning.versions);
-    console.log(highest);
 
     if (highest && highest !== config.version.slug) {
         let admonition = `
@@ -3699,7 +2648,7 @@ function injectNonLatestVersionWarning(config) {
 }
 
 // EXTERNAL MODULE: ./src/flyout.css
-var flyout = __webpack_require__(967);
+var src_flyout = __webpack_require__(967);
 ;// CONCATENATED MODULE: ./src/flyout.js
 
 
@@ -3713,7 +2662,7 @@ var flyout = __webpack_require__(967);
 */
 function injectFlyout(config) {
     // Inject our styles for the flyout
-    document.adoptedStyleSheets = [flyout/* default */.Z];
+    document.adoptedStyleSheets.push(src_flyout/* default */.Z);
 
     const languageTemplate = (translation) =>
           `
@@ -3861,6 +2810,14 @@ function injectFlyout(config) {
     }
 
     document.body.insertAdjacentHTML("beforeend", template);
+
+    // Attach event to show/hide the flyout on click
+    const flyout = document.querySelector("[data-toggle='rst-versions']");
+    if (flyout != null) {
+        flyout.addEventListener('click', function () {
+            flyout.classList.toggle("shift-up");
+        });
+    };
 };
 
 /**
@@ -3977,7 +2934,7 @@ function createAdPlacement() {
         placement = document.createElement("div");
         placement.setAttribute("data-ea-publisher", "readthedocs");
         placement.setAttribute("data-ea-type", "image");
-        placement.setAttribute("data-ea-manual", "true");
+        // placement.setAttribute("data-ea-manual", "true");
         placement.setAttribute("data-ea-style", "stickybox");
         placement.classList.add("raised");
 
@@ -3992,12 +2949,1051 @@ function injectEthicalAd(config) {
     createAdPlacement();
     // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
     // but we want to call it manually because we need to inject our `div` first.
-    // FIXME: for some reason `ethicalads.loads()` is undefined at executing time.
-    ethicalads.load();
+    (0,ethicalads.load_placements)();
 };
 
-// EXTERNAL MODULE: ./node_modules/readthedocs-search/dist/readthedocs-search.js
-var readthedocs_search = __webpack_require__(900);
+;// CONCATENATED MODULE: ./node_modules/readthedocs-search/dist/readthedocs-search.js
+/******/ var __webpack_modules__ = ({
+
+/***/ 968:
+/***/ ((module, __webpack_exports__, __nested_webpack_require_87__) => {
+
+/* harmony export */ __nested_webpack_require_87__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_87__(81);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_87__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_87__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_87__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_87__(667);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_87__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
+// Imports
+
+
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __nested_webpack_require_87__(896), __nested_webpack_require_87__.b);
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".search__outer__wrapper {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 700;\n}\n\n/* Backdrop */\n\n.search__backdrop {\n    /* Positioning */\n    position: fixed;\n    top: 0;\n    left: 0;\n    z-index: 500;\n\n    /* Display and box model */\n    width: 100%;\n    height: 100%;\n    display: none;\n\n    /* Other */\n    background-color: rgba(0, 0, 0, 0.502);\n}\n\n.search__outer {\n    /* Positioning */\n    margin: auto;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    z-index: 100000;\n\n    /* Display and box model */\n    height: 80%;\n    width: 80%;\n    max-height: 1000px;\n    max-width: 1500px;\n    padding: 10px;\n    overflow-y: scroll;\n\n    /* Other */\n    border: 1px solid #e0e0e0;\n    line-height: 1.875;\n    background-color: #fcfcfc;\n    box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.09);\n    text-align: left;\n}\n\n/* Custom scrollbar */\n\n.search__outer::-webkit-scrollbar-track {\n    border-radius: 10px;\n    background-color: #fcfcfc;\n}\n\n.search__outer::-webkit-scrollbar {\n    width: 7px;\n    height: 7px;\n    background-color: #fcfcfc;\n}\n\n.search__outer::-webkit-scrollbar-thumb {\n    border-radius: 10px;\n    background-color: #8f8f8f;\n}\n\n/* Cross icon on top-right corner */\n\n.search__cross__img {\n    width: 15px;\n    height: 15px;\n    margin: 12px;\n}\n\n.search__cross {\n    position: absolute;\n    top: 0;\n    right: 0;\n}\n\n.search__cross:hover {\n    cursor: pointer;\n}\n\n/* Input field on search modal */\n\n.search__outer__input {\n    /* Display and box model */\n    width: 90%;\n    height: 30px;\n    font-size: 19px;\n    outline: none;\n    box-sizing: border-box;\n\n    /* Other */\n    background-color: #fcfcfc;\n    border: none;\n    border-bottom: 1px solid #757575;\n\n    /* search icon */\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n    background-repeat: no-repeat;\n    background-position: left;\n    background-size: 15px 15px;\n    padding-left: 25px;\n}\n\n.search__outer__input:focus {\n    outline: none;\n}\n\n/* For material UI style underline on input field */\n\n.search__outer .bar {\n    position: relative;\n    display: block;\n    width: 90%;\n    margin-bottom: 15px;\n}\n\n.search__outer .bar:before,\n.search__outer .bar:after {\n    content: \"\";\n    height: 2px;\n    width: 0;\n    bottom: 1px;\n    position: absolute;\n    background: #5264ae;\n    transition: 0.2s ease all;\n}\n\n.search__outer .bar:before {\n    left: 50%;\n}\n\n.search__outer .bar:after {\n    right: 50%;\n}\n\n.search__outer__input:focus ~ .bar:before,\n.search__outer__input:focus ~ .bar:after {\n    width: 50%;\n}\n\n/* Search result */\n\n.search__result__single {\n    margin-top: 10px;\n    padding: 0px 10px;\n    border-bottom: 1px solid #e6e6e6;\n}\n\n.search__result__box .active {\n    background-color: rgb(245, 245, 245);\n}\n\n.search__error__box {\n    color: black;\n    min-width: 300px;\n    font-weight: 700;\n}\n\n.outer_div_page_results {\n    margin: 5px 0px;\n    overflow: auto;\n    padding: 3px 5px;\n}\n\n.search__result__single a {\n    text-decoration: none;\n    cursor: pointer;\n}\n\n/* Title of each search result */\n\n.search__result__title {\n    /* Display and box model */\n    display: inline-block;\n    font-weight: 500;\n    margin-bottom: 15px;\n    margin-top: 0;\n    font-size: 15px;\n\n    /* Other */\n    color: #6ea0ec;\n    border-bottom: 1px solid #6ea0ec;\n}\n\n.search__result__subheading {\n    color: black;\n    font-weight: 700;\n    float: left;\n    width: 20%;\n    font-size: 15px;\n    margin-right: 10px;\n    word-break: break-all;\n    overflow-x: hidden;\n}\n\n.search__result__content {\n    margin: 0;\n    text-decoration: none;\n    color: black;\n    font-size: 15px;\n    display: block;\n    margin-bottom: 5px;\n    margin-bottom: 0;\n    line-height: inherit;\n    float: right;\n    width: calc(80% - 15px);\n    text-align: left;\n}\n\n/* Highlighting of matched results */\n\n.search__outer span {\n    font-style: normal;\n}\n\n.search__outer .search__result__title span {\n    background-color: #e5f6ff;\n    padding-bottom: 3px;\n    border-bottom-color: black;\n}\n\n.search__outer .search__result__content span {\n    background-color: #e5f6ff;\n    border-bottom: 1px solid black;\n}\n\n.search__result__subheading span {\n    border-bottom: 1px solid black;\n}\n\n.outer_div_page_results:hover {\n    background-color: rgb(245, 245, 245);\n}\n\n.br-for-hits {\n    display: block;\n    content: \"\";\n    margin-top: 10px;\n}\n\n.rtd_ui_search_subtitle {\n    all: unset;\n    color: inherit;\n    font-size: 85%;\n}\n\n.rtd__search__credits {\n    margin: auto;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: calc(-80% - 20px);\n    width: 80%;\n    max-width: 1500px;\n    height: 30px;\n    overflow: hidden;\n    background: #eee;\n    z-index: 100000;\n    border: 1px solid #eee;\n    padding: 5px 10px;\n    text-align: center;\n    color: black;\n}\n\n.rtd__search__credits a {\n    color: black;\n    text-decoration: underline;\n}\n\n.search__domain_role_name {\n    font-size: 80%;\n    letter-spacing: 1px;\n}\n\n@media (max-width: 670px) {\n    .rtd__search__credits {\n        height: 50px;\n        bottom: calc(-80% - 40px);\n        overflow: hidden;\n    }\n}\n\n@media (min-height: 1250px) {\n    .rtd__search__credits {\n        bottom: calc(-1000px - 30px);\n    }\n}\n\n@media (max-width: 630px) {\n    .search__result__subheading {\n        float: none;\n        width: 90%;\n    }\n\n    .search__result__content {\n        float: none;\n        width: 90%;\n    }\n}\n\n@keyframes fade-in {\n    from {\n        opacity: 0;\n    }\n    to {\n        opacity: 1;\n    }\n}\n", ""]);
+// Exports
+var ___CSS_LOADER_STYLE_SHEET___ = new CSSStyleSheet();
+___CSS_LOADER_STYLE_SHEET___.replaceSync(___CSS_LOADER_EXPORT___.toString());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_STYLE_SHEET___);
+
+
+/***/ }),
+
+/***/ 645:
+/***/ ((module) => {
+
+
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+*/
+module.exports = function (cssWithMappingToString) {
+  var list = [];
+
+  // return the list of modules as css string
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = "";
+      var needLayer = typeof item[5] !== "undefined";
+      if (item[4]) {
+        content += "@supports (".concat(item[4], ") {");
+      }
+      if (item[2]) {
+        content += "@media ".concat(item[2], " {");
+      }
+      if (needLayer) {
+        content += "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {");
+      }
+      content += cssWithMappingToString(item);
+      if (needLayer) {
+        content += "}";
+      }
+      if (item[2]) {
+        content += "}";
+      }
+      if (item[4]) {
+        content += "}";
+      }
+      return content;
+    }).join("");
+  };
+
+  // import a list of modules into the list
+  list.i = function i(modules, media, dedupe, supports, layer) {
+    if (typeof modules === "string") {
+      modules = [[null, modules, undefined]];
+    }
+    var alreadyImportedModules = {};
+    if (dedupe) {
+      for (var k = 0; k < this.length; k++) {
+        var id = this[k][0];
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
+      }
+    }
+    for (var _k = 0; _k < modules.length; _k++) {
+      var item = [].concat(modules[_k]);
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        continue;
+      }
+      if (typeof layer !== "undefined") {
+        if (typeof item[5] === "undefined") {
+          item[5] = layer;
+        } else {
+          item[1] = "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {").concat(item[1], "}");
+          item[5] = layer;
+        }
+      }
+      if (media) {
+        if (!item[2]) {
+          item[2] = media;
+        } else {
+          item[1] = "@media ".concat(item[2], " {").concat(item[1], "}");
+          item[2] = media;
+        }
+      }
+      if (supports) {
+        if (!item[4]) {
+          item[4] = "".concat(supports);
+        } else {
+          item[1] = "@supports (".concat(item[4], ") {").concat(item[1], "}");
+          item[4] = supports;
+        }
+      }
+      list.push(item);
+    }
+  };
+  return list;
+};
+
+/***/ }),
+
+/***/ 667:
+/***/ ((module) => {
+
+
+
+module.exports = function (url, options) {
+  if (!options) {
+    options = {};
+  }
+  if (!url) {
+    return url;
+  }
+  url = String(url.__esModule ? url.default : url);
+
+  // If url is already wrapped in quotes, remove them
+  if (/^['"].*['"]$/.test(url)) {
+    url = url.slice(1, -1);
+  }
+  if (options.hash) {
+    url += options.hash;
+  }
+
+  // Should url be wrapped?
+  // See https://drafts.csswg.org/css-values-3/#urls
+  if (/["'() \t\n]|(%20)/.test(url) || options.needQuotes) {
+    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, "\\n"), "\"");
+  }
+  return url;
+};
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+
+
+module.exports = function (i) {
+  return i[1];
+};
+
+/***/ }),
+
+/***/ 896:
+/***/ ((module) => {
+
+module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNDUxIDQ1MSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDUxIDQ1MTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTQ0Ny4wNSw0MjhsLTEwOS42LTEwOS42YzI5LjQtMzMuOCw0Ny4yLTc3LjksNDcuMi0xMjYuMUMzODQuNjUsODYuMiwyOTguMzUsMCwxOTIuMzUsMEM4Ni4yNSwwLDAuMDUsODYuMywwLjA1LDE5Mi4zDQoJCXM4Ni4zLDE5Mi4zLDE5Mi4zLDE5Mi4zYzQ4LjIsMCw5Mi4zLTE3LjgsMTI2LjEtNDcuMkw0MjguMDUsNDQ3YzIuNiwyLjYsNi4xLDQsOS41LDRzNi45LTEuMyw5LjUtNA0KCQlDNDUyLjI1LDQ0MS44LDQ1Mi4yNSw0MzMuMiw0NDcuMDUsNDI4eiBNMjYuOTUsMTkyLjNjMC05MS4yLDc0LjItMTY1LjMsMTY1LjMtMTY1LjNjOTEuMiwwLDE2NS4zLDc0LjIsMTY1LjMsMTY1LjMNCgkJcy03NC4xLDE2NS40LTE2NS4zLDE2NS40QzEwMS4xNSwzNTcuNywyNi45NSwyODMuNSwyNi45NSwxOTIuM3oiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K";
+
+/***/ })
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __nested_webpack_require_12626__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		id: moduleId,
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_12626__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/******/ // expose the modules object (__webpack_modules__)
+/******/ __nested_webpack_require_12626__.m = __webpack_modules__;
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/compat get default export */
+/******/ (() => {
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__nested_webpack_require_12626__.n = (module) => {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__nested_webpack_require_12626__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__nested_webpack_require_12626__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__nested_webpack_require_12626__.o(definition, key) && !__nested_webpack_require_12626__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__nested_webpack_require_12626__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/jsonp chunk loading */
+/******/ (() => {
+/******/ 	__nested_webpack_require_12626__.b = document.baseURI || self.location.href;
+/******/ 	
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		773: 0
+/******/ 	};
+/******/ 	
+/******/ 	// no chunk on demand loading
+/******/ 	
+/******/ 	// no prefetching
+/******/ 	
+/******/ 	// no preloaded
+/******/ 	
+/******/ 	// no HMR
+/******/ 	
+/******/ 	// no HMR manifest
+/******/ 	
+/******/ 	// no on chunks loaded
+/******/ 	
+/******/ 	// no jsonp function
+/******/ })();
+/******/ 
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/* harmony export */ __nested_webpack_require_12626__.d(__webpack_exports__, {
+/* harmony export */   "A": () => (/* binding */ initializeSearchAsYouType)
+/* harmony export */ });
+/* harmony import */ var _css_rtd_sphinx_search_css__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_12626__(968);
+
+
+const MAX_SUGGESTIONS = 50;
+const MAX_SECTION_RESULTS = 3;
+const MAX_SUBSTRING_LIMIT = 100;
+const FETCH_RESULTS_DELAY = 250;
+const CLEAR_RESULTS_DELAY = 300;
+const RTD_SEARCH_PARAMETER  = "rtd_search";
+
+
+function initializeSearchAsYouType(config) {
+    // Inject our styles for the search-as-you-type
+    document.adoptedStyleSheets.push(_css_rtd_sphinx_search_css__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z);
+
+    const project = config.project.slug;
+    const version = config.version.slug;
+    const api_host = '/_';
+
+    let initialHtml = generateAndReturnInitialHtml();
+    document.body.appendChild(initialHtml);
+
+    let search_outer_wrapper = document.querySelector(
+        ".search__outer__wrapper"
+    );
+    let search_outer_input = document.querySelector(
+        ".search__outer__input"
+    );
+    let cross_icon = document.querySelector(".search__cross");
+
+    // this stores the current request.
+    let current_request = null;
+
+    let search_bar = getInputField();
+    search_bar.addEventListener("focus", e => {
+        showSearchModal();
+    });
+
+    search_outer_input.addEventListener("input", e => {
+        let search_query = getSearchTerm();
+        if (search_query.length > 0) {
+            if (current_request !== null) {
+                // cancel previous ajax request.
+                current_request.cancel();
+            }
+            const search_endpoint = api_host + "/api/v2/search/";
+            const search_params = {
+                q: search_query,
+                project: project,
+                version: version,
+            };
+            current_request = fetchAndGenerateResults(search_endpoint, search_params, project);
+            current_request();
+        } else {
+            // if the last request returns the results,
+            // the suggestions list is generated even if there
+            // is no query. To prevent that, this function
+            // is debounced here.
+            let func = () => {
+                removeResults();
+                updateUrl();
+            };
+            debounce(func, CLEAR_RESULTS_DELAY)();
+            updateUrl();
+        }
+    });
+
+    search_outer_input.addEventListener("keydown", e => {
+        // if "ArrowDown is pressed"
+        if (e.keyCode === 40) {
+            e.preventDefault();
+            selectNextResult(true);
+        }
+
+        // if "ArrowUp" is pressed.
+        if (e.keyCode === 38) {
+            e.preventDefault();
+            selectNextResult(false);
+        }
+
+        // if "Enter" key is pressed.
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            const current_item = document.querySelector(
+                ".outer_div_page_results.active"
+            );
+            // if an item is selected,
+            // then redirect to its link
+            if (current_item !== null) {
+                const link = current_item.parentElement["href"];
+                window.location.href = link;
+            }
+        }
+    });
+
+    search_outer_wrapper.addEventListener("click", e => {
+        // HACK: only close the search modal if the
+        // element clicked has <body> as the parent Node.
+        // This is done so that search modal only gets closed
+        // if the user clicks on the backdrop area.
+        if (e.target.parentNode === document.body) {
+            removeSearchModal();
+        }
+    });
+
+    // close the search modal if clicked on cross icon.
+    cross_icon.addEventListener("click", e => {
+        removeSearchModal();
+    });
+
+    // close the search modal if the user pressed
+    // Escape button
+    document.addEventListener("keydown", e => {
+        if (e.keyCode === 27) {
+            removeSearchModal();
+        }
+    });
+
+    // open search modal if "forward slash" button is pressed
+    document.addEventListener("keydown", e => {
+        if (e.keyCode === 191 && !isModalVisible()) {
+            // prevent opening "Quick Find" in Firefox
+            e.preventDefault();
+            showSearchModal();
+        }
+    });
+
+    // if "rtd_search" is present in URL parameters,
+    // then open the search modal and show the results
+    // for the value of "rtd_search"
+    const url_params = new URLSearchParams(document.location.search);
+    const query = url_params.get(RTD_SEARCH_PARAMETER);
+    if (query !== null) {
+        showSearchModal(query);
+        search_outer_input.value = query;
+
+        let event = document.createEvent("Event");
+        event.initEvent("input", true, true);
+        search_outer_input.dispatchEvent(event);
+    }
+};
+
+/**
+ * Debounce the function.
+ * Usage::
+ *
+ *    let func = debounce(() => console.log("Hello World"), 3000);
+ *
+ *    // calling the func
+ *    func();
+ *
+ *    //cancelling the execution of the func (if not executed)
+ *    func.cancel();
+ *
+ * @param {Function} func function to be debounced
+ * @param {Number} wait time to wait before running func (in miliseconds)
+ * @return {Function} debounced function
+ */
+const debounce = (func, wait) => {
+    let timeout;
+
+    let debounced = function() {
+        let context = this;
+        let args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+
+    debounced.cancel = () => {
+        clearTimeout(timeout);
+        timeout = null;
+    };
+
+    return debounced;
+};
+
+
+/**
+  * Build a section with its matching results.
+  *
+  * A section has the form:
+  *
+  *   <a href="{link}">
+  *     <div class="outer_div_page_results" id="{id}">
+  *       <span class="search__result__subheading">
+  *         {title}
+  *       </span>
+  *       <p class="search__result__content">
+  *         {contents[0]}
+  *       </p>
+  *       <p class="search__result__content">
+  *         {contents[1]}
+  *       </p>
+  *       ...
+  *     </div>
+  *   </a>
+  *
+  * @param {String} id.
+  * @param {String} title.
+  * @param {String} link.
+  * @param {Array} contents.
+  */
+const buildSection = function (id, title, link, contents) {
+    let span_element = createDomNode("span", {class: "search__result__subheading"});
+    span_element.innerHTML = title;
+
+    let div_element = createDomNode("div", {class: "outer_div_page_results", id: id});
+    div_element.appendChild(span_element);
+
+    for (var i = 0; i < contents.length; i += 1) {
+        let p_element = createDomNode("p", {class: "search__result__content"});
+        p_element.innerHTML = contents[i];
+        div_element.appendChild(p_element);
+    }
+
+    let section = createDomNode("a", {href: link});
+    section.appendChild(div_element);
+    return section;
+};
+
+
+/**
+ * Adds/removes "rtd_search" url parameter to the url.
+ */
+const updateUrl = () => {
+    let parsed_url = new URL(window.location.href);
+    let search_query = getSearchTerm();
+    // search_query should not be an empty string.
+    if (search_query.length > 0) {
+        parsed_url.searchParams.set(RTD_SEARCH_PARAMETER, search_query);
+    } else {
+        parsed_url.searchParams.delete(RTD_SEARCH_PARAMETER);
+    }
+    // Update url.
+    window.history.pushState({}, null, parsed_url.toString());
+};
+
+
+/*
+ * Keeps in sync the original search bar with the input from the modal.
+ */
+const updateSearchBar = () => {
+  let search_bar = getInputField();
+  search_bar.value = getSearchTerm();
+};
+
+
+/*
+ * Returns true if the modal window is visible.
+ */
+const isModalVisible = () => {
+  let modal = document.querySelector(".search__outer__wrapper");
+  if (modal !== null && modal.style !== null && modal.style.display !== null) {
+    return modal.style.display === 'block';
+  }
+  return false;
+};
+
+
+/**
+ * Create and return DOM nodes
+ * with passed attributes.
+ *
+ * @param {String} nodeName name of the node
+ * @param {Object} attributes obj of attributes to be assigned to the node
+ * @return {Object} dom node with attributes
+ */
+const createDomNode = (nodeName, attributes) => {
+    let node = document.createElement(nodeName);
+    if (attributes !== null) {
+        for (let attr in attributes) {
+            node.setAttribute(attr, attributes[attr]);
+        }
+    }
+    return node;
+};
+
+/**
+ * Checks if data type is "string" or not
+ *
+ * @param {*} data data whose data-type is to be checked
+ * @return {Boolean} 'true' if type is "string" and length is > 0
+ */
+const _is_string = str => {
+    if (typeof str === "string" && str.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+
+/**
+ * Generate and return html structure
+ * for a page section result.
+ *
+ * @param {Object} sectionData object containing the result data
+ * @param {String} page_link link of the main page. It is used to construct the section link
+ * @param {Number} id to be used in for this section
+ */
+const get_section_html = (sectionData, page_link, id) => {
+    let section_subheading = sectionData.title;
+    let highlights = sectionData.highlights;
+    if (highlights.title.length) {
+        section_subheading = highlights.title[0];
+    }
+
+    let section_content = [
+        sectionData.content.substring(0, MAX_SUBSTRING_LIMIT) + " ..."
+    ];
+
+    if (highlights.content.length) {
+        let highlight_content = highlights.content;
+        section_content = [];
+        for (
+            let j = 0;
+            j < highlight_content.length && j < MAX_SECTION_RESULTS;
+            ++j
+        ) {
+            section_content.push("... " + highlight_content[j] + " ...");
+        }
+    }
+
+    let section_link = `${page_link}#${sectionData.id}`;
+    let section_id = "hit__" + id;
+    return buildSection(section_id, section_subheading, section_link, section_content);
+};
+
+/**
+ * Generate and return html structure
+ * for a sphinx domain result.
+ *
+ * @param {Object} domainData object containing the result data
+ * @param {String} page_link link of the main page. It is used to construct the section link
+ * @param {Number} id to be used in for this section
+ */
+const get_domain_html = (domainData, page_link, id) => {
+    let domain_link = `${page_link}#${domainData.id}`;
+    let domain_role_name = domainData.role;
+    let domain_name = domainData.name;
+    let domain_content =
+        domainData.content.substr(0, MAX_SUBSTRING_LIMIT) + " ...";
+
+    let highlights = domainData.highlights;
+    if (highlights.name.length) {
+        domain_name = highlights.name[0];
+    }
+    if (highlights.content.length) {
+        domain_content = highlights.content[0];
+    }
+
+    let domain_id = "hit__" + id;
+
+    let div_role_name = createDomNode("div", {class: "search__domain_role_name"});
+    div_role_name.innerText = `[${domain_role_name}]`;
+    domain_name += div_role_name.outerHTML;
+
+    return buildSection(
+        domain_id,
+        domain_name,
+        domain_link,
+        [domain_content]
+    );
+};
+
+
+/**
+ * Generate search results for a single page.
+ *
+ * This has the form:
+ *   <div>
+ *     <a href="{link}">
+ *       <h2 class="search__result__title">
+ *         {title}
+ *         <small class="rtd_ui_search_subtitle">{subtitle}</small>
+ *         <br/>
+ *       </h2>
+ *     </a>
+ *
+ *     <a href="{link}">
+ *       {section}
+ *     </a>
+ *     <br class="br-for-hits" />
+ *
+ *     <a href="{link}">
+ *       {section}
+ *     </a>
+ *     <br class="br-for-hits" />
+ *   </div>
+ *
+ * @param {Object} resultData search results of a page
+ * @param {String} projectName
+ * @param {Number} id from the last section
+ * @return {Object} a <div> node with the results of a single page
+ */
+const generateSingleResult = (resultData, projectName, id) => {
+    let page_link = resultData.path;
+    let page_title = resultData.title;
+    let highlights = resultData.highlights;
+
+    if (highlights.title.length) {
+        page_title = highlights.title[0];
+    }
+
+    let h2_element = createDomNode("h2", {class: "search__result__title"});
+    h2_element.innerHTML = page_title;
+
+    // If the result is not from the same project,
+    // then it's from a subproject.
+    if (projectName !== resultData.project) {
+        let subtitle = createDomNode("small", {class: "rtd_ui_search_subtitle"});
+        subtitle.innerText = `(from project ${resultData.project})`;
+        h2_element.appendChild(subtitle);
+    }
+    h2_element.appendChild(createDomNode("br"));
+
+    let a_element = createDomNode("a", {href: page_link});
+    a_element.appendChild(h2_element);
+
+    let content = createDomNode("div");
+    content.appendChild(a_element);
+
+    let separator = createDomNode("br", {class: "br-for-hits"});
+    for (let i = 0; i < resultData.blocks.length; ++i) {
+        let block = resultData.blocks[i];
+        let section = null;
+        id += 1;
+        if (block.type === "section") {
+            section = get_section_html(
+                block,
+                page_link,
+                id,
+            );
+        } else if (block.type === "domain") {
+            section = get_domain_html(
+                block,
+                page_link,
+                id,
+            );
+        }
+
+        if (section !== null) {
+          content.appendChild(section);
+          content.appendChild(separator);
+        }
+    }
+    return content;
+};
+
+/**
+ * Generate search suggestions list.
+ *
+ * @param {Object} data response data from the search backend
+ * @param {String} projectName name (slug) of the project
+ * @return {Object} a <div> node with class "search__result__box" with results
+ */
+const generateSuggestionsList = (data, projectName) => {
+    let search_result_box = createDomNode("div", {
+        class: "search__result__box"
+    });
+
+    let max_results = Math.min(MAX_SUGGESTIONS, data.results.length);
+    let id = 0;
+    for (let i = 0; i < max_results; ++i) {
+        let search_result_single = createDomNode("div", {
+            class: "search__result__single"
+        });
+
+        let content = generateSingleResult(data.results[i], projectName, id);
+
+        search_result_single.appendChild(content);
+        search_result_box.appendChild(search_result_single);
+
+        id += data.results[i].blocks.length;
+    }
+    return search_result_box;
+};
+
+/**
+ * Removes .active class from all the suggestions.
+ */
+const removeAllActive = () => {
+    const results = document.querySelectorAll(".outer_div_page_results.active");
+    const results_arr = Object.keys(results).map(i => results[i]);
+    for (let i = 1; i <= results_arr.length; ++i) {
+        results_arr[i - 1].classList.remove("active");
+    }
+};
+
+/**
+ * Add .active class to the search suggestion
+ * corresponding to `id`, and scroll to that suggestion smoothly.
+ *
+ * @param {Number} id of the suggestion to activate
+ */
+const addActive = (id) => {
+    const current_item = document.querySelector("#hit__" + id);
+    // in case of no results or any error,
+    // current_item will not be found in the DOM.
+    if (current_item !== null) {
+        current_item.classList.add("active");
+        current_item.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start"
+        });
+    }
+};
+
+
+/*
+ * Select next/previous result.
+ * Go to the first result if already in the last result,
+ * or to the last result if already in the first result.
+ *
+ * @param {Boolean} forward.
+ */
+const selectNextResult = (forward) => {
+    const all = document.querySelectorAll(".outer_div_page_results");
+    const current = document.querySelector(".outer_div_page_results.active");
+
+    let next_id = 1;
+    let last_id = 1;
+
+    if (all.length > 0) {
+      let last = all[all.length - 1];
+      if (last.id !== null) {
+        let match = last.id.match(/\d+/);
+        if (match !== null) {
+          last_id = Number(match[0]);
+        }
+      }
+    }
+
+    if (current !== null && current.id !== null) {
+      let match = current.id.match(/\d+/);
+      if (match !== null) {
+        next_id = Number(match[0]);
+        next_id += forward? 1 : -1;
+      }
+    }
+
+    // Cycle to the first or last result.
+    if (next_id <= 0) {
+      next_id = last_id;
+    } else if (next_id > last_id) {
+      next_id = 1;
+    }
+
+    removeAllActive();
+    addActive(next_id);
+};
+
+
+/**
+ * Returns initial search input field,
+ * which is already present in the docs.
+ *
+ * @return {Object} Input field node
+ */
+const getInputField = () => {
+    let inputField;
+
+    // Integration with the flyout search input only
+    // TODO: make this trigger configurable by the user
+    inputField = document.querySelector("#flyout-search-form > input");
+    if (inputField === undefined || inputField === null) {
+        console.log("Flyout search form not found");
+    }
+
+    return inputField;
+};
+
+/*
+ * Returns the current search term from the modal.
+ */
+const getSearchTerm = () => {
+  let search_outer_input = document.querySelector(".search__outer__input");
+  if (search_outer_input !== null) {
+      return search_outer_input.value || "";
+  }
+  return "";
+};
+
+/**
+ * Removes all results from the search modal.
+ * It doesn't close the search box.
+ */
+const removeResults = () => {
+    let all_results = document.querySelectorAll(".search__result__box");
+    for (let i = 0; i < all_results.length; ++i) {
+        all_results[i].parentElement.removeChild(all_results[i]);
+    }
+};
+
+/**
+ * Creates and returns a div with error message
+ * and some styles.
+ *
+ * @param {String} err_msg error message to be displayed
+ */
+const getErrorDiv = err_msg => {
+    let err_div = createDomNode("div", {
+        class: "search__result__box search__error__box"
+    });
+    err_div.innerHTML = err_msg;
+    return err_div;
+};
+
+/**
+ * Fetch the suggestions from search backend,
+ * and appends the results to <div class="search__outer"> node,
+ * which is already created when the page was loaded.
+ *
+ * @param {String} api_endpoint: API endpoint
+ * @param {Object} parameters: search parameters
+ * @param {String} projectName: name (slug) of the project
+ * @return {Function} debounced function with debounce time of 500ms
+ */
+const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
+    let search_outer = document.querySelector(".search__outer");
+
+    // Removes all results (if there is any),
+    // and show the "Searching ...." text to
+    // the user.
+    removeResults();
+    let search_loding = createDomNode("div", { class: "search__result__box" });
+    search_loding.innerHTML = "<strong>Searching ....</strong>";
+    search_outer.appendChild(search_loding);
+
+    let fetchFunc = () => {
+        // Update URL just before fetching the results
+        updateUrl();
+        updateSearchBar();
+
+        const url = api_endpoint + "?" + new URLSearchParams(parameters).toString();
+
+        fetch(url, {method: "GET"})
+        .then(response => {
+            if (!response.ok) {
+              throw new Error();
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.results.length > 0) {
+                let search_result_box = generateSuggestionsList(
+                    data,
+                    projectName
+                );
+                removeResults();
+                search_outer.appendChild(search_result_box);
+
+                // remove active classes from all suggestions
+                // if the mouse hovers, otherwise styles from
+                // :hover and .active will clash.
+                search_outer.addEventListener("mouseenter", e => {
+                    removeAllActive();
+                });
+            } else {
+                removeResults();
+                let err_div = getErrorDiv("No results found");
+                search_outer.appendChild(err_div);
+            }
+        })
+        .catch(error => {
+            removeResults();
+            let err_div = getErrorDiv("There was an error. Please try again.");
+            search_outer.appendChild(err_div);
+        });
+    };
+    return debounce(fetchFunc, FETCH_RESULTS_DELAY);
+};
+
+/**
+ * Creates the initial html structure which will be
+ * appended to the <body> as soon as the page loads.
+ * This html structure will serve as the boilerplate
+ * to show our search results.
+ *
+ * @return {String} initial html structure
+ */
+const generateAndReturnInitialHtml = () => {
+    let innerHTML =
+        '<div class="search__outer"> \
+            <div class="search__cross" title="Close"> \
+                <!--?xml version="1.0" encoding="UTF-8"?--> \
+                <svg class="search__cross__img" width="15px" height="15px" enable-background="new 0 0 612 612" version="1.1" viewBox="0 0 612 612" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"> \
+                    <polygon points="612 36.004 576.52 0.603 306 270.61 35.478 0.603 0 36.004 270.52 306.01 0 576 35.478 611.4 306 341.41 576.52 611.4 612 576 341.46 306.01"></polygon> \
+                </svg> \
+            </div> \
+            <input class="search__outer__input" placeholder="Search ..."> \
+            <span class="bar"></span> \
+        </div> \
+        <div class="rtd__search__credits"> \
+            Search by <a href="https://readthedocs.org/">Read the Docs</a> & <a href="https://readthedocs-sphinx-search.readthedocs.io/en/latest/">readthedocs-sphinx-search</a> \
+        </div>';
+
+    let div = createDomNode("div", {
+        class: "search__outer__wrapper search__backdrop",
+    });
+    div.innerHTML = innerHTML;
+    return div;
+};
+
+/**
+ * Opens the search modal.
+ *
+ * @param {String} custom_query if a custom query is provided,
+ * initialize the value of input field with it, or fallback to the
+ * value from the original search bar.
+ */
+const showSearchModal = custom_query => {
+    // removes previous results (if there are any).
+    removeResults();
+
+    let show_modal = function () {
+        // removes the focus from the initial input field
+        // which as already present in the docs.
+        let search_bar = getInputField();
+        search_bar.blur();
+
+        // sets the value of the input field to empty string and focus it.
+        let search_outer_input = document.querySelector(
+            ".search__outer__input"
+        );
+        if (search_outer_input !== null) {
+            if (
+                typeof custom_query !== "undefined" &&
+                _is_string(custom_query)
+            ) {
+                search_outer_input.value = custom_query;
+                search_bar.value = custom_query;
+            } else {
+                search_outer_input.value = search_bar.value;
+            }
+            search_outer_input.focus();
+        }
+    };
+
+    let element = document.querySelector(".search__outer__wrapper");
+    if (element && element.style) {
+    element.style.display = "block";
+    }
+    show_modal();
+};
+
+/**
+ * Closes the search modal.
+ */
+const removeSearchModal = () => {
+    // removes previous results before closing
+    removeResults();
+
+    updateSearchBar();
+
+    // sets the value of input field to empty string and remove the focus.
+    let search_outer_input = document.querySelector(".search__outer__input");
+    if (search_outer_input !== null) {
+        search_outer_input.value = "";
+        search_outer_input.blur();
+    }
+
+    // update url (remove 'rtd_search' param)
+    updateUrl();
+
+    let element = document.querySelector(".search__outer__wrapper");
+    if (element && element.style) {
+    element.style.display = "none";
+    }
+};
+
+})();
+
+var __webpack_exports__initializeSearchAsYouType = __webpack_exports__.A;
+
+
 ;// CONCATENATED MODULE: ./src/index.js
 
 
@@ -4040,7 +4036,7 @@ function setup() {
 
                 promises.push(injectAnalytics(config));
                 promises.push(injectFlyout(config));
-                promises.push((0,readthedocs_search.initializeSearchAsYouType)(config));
+                promises.push(__webpack_exports__initializeSearchAsYouType(config));
                 promises.push(trackFlyoutEvents(config));
                 promises.push(registerPageView(config));
                 promises.push(injectEthicalAd(config));

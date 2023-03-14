@@ -8,8 +8,6 @@ import maxSatisfying from "semver/ranges/max-satisfying";
  */
 export function injectNonLatestVersionWarning(config) {
     const highest = maxSatisfying(config.features.non_latest_version_warning.versions, '0.0.0');
-    console.log(config.features.non_latest_version_warning.versions);
-    console.log(highest);
 
     if (highest && highest !== config.version.slug) {
         let admonition = `

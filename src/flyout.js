@@ -158,6 +158,14 @@ export function injectFlyout(config) {
     }
 
     document.body.insertAdjacentHTML("beforeend", template);
+
+    // Attach event to show/hide the flyout on click
+    const flyout = document.querySelector("[data-toggle='rst-versions']");
+    if (flyout != null) {
+        flyout.addEventListener('click', function () {
+            flyout.classList.toggle("shift-up");
+        });
+    };
 };
 
 /**
