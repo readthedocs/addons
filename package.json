@@ -19,6 +19,7 @@
     "devDependencies": {
         "css-loader": "^6.7.3",
         "ethical-ad-client": "github:readthedocs/ethical-ad-client#humitos/node-sass",
+        "readthedocs-search": "github:readthedocs/readthedocs-sphinx-search#humitos/js-module",
         "prettier": "^2.7.1",
         "semver": "^7.3.8",
         "webpack": "^5.76.1",
