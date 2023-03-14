@@ -23,7 +23,8 @@ function createAdPlacement() {
         placement.setAttribute("data-ea-style", "stickybox");
         placement.classList.add("raised");
 
-        let main = document.querySelector("[role=main]");
+        // TODO: find the right last resourse to append (probably not `document.body`)
+        let main = document.querySelector("[role=main]") || document.body;
         main.insertBefore(placement, main.lastChild);
         console.log("EthicalAd placement injected.");
     }
