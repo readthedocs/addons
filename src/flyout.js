@@ -10,7 +10,7 @@ import styles from "./flyout.css";
 */
 export function injectFlyout(config) {
     // Inject our styles for the flyout
-    document.adoptedStyleSheets = [styles];
+    document.adoptedStyleSheets.push(styles);
 
     const languageTemplate = (translation) =>
           `
