@@ -1,6 +1,6 @@
 // FIXME: how should we remove the `dist/` from this path?
 // NOTE: it requires this PR to work: https://github.com/readthedocs/ethical-ad-client/pull/148
-import * as ethicalads from "ethical-ad-client/dist/ethicalads";
+import { load_placements } from "ethical-ad-client/dist/ethicalads";
 
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
 
@@ -35,5 +35,5 @@ export function injectEthicalAd(config) {
     // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
     // but we want to call it manually because we need to inject our `div` first.
     // FIXME: for some reason `ethicalads.loads()` is undefined at executing time.
-    ethicalads.load();
+    load_placements();
 };
