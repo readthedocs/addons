@@ -1,7 +1,11 @@
 import $ from "jquery";
 import * as tooltipster from "tooltipster";
 import styles from "./hoverxref.css";
-// import tooltipsterStyle from "tooltipster/dist/css/tooltipster.bundle.min.css";
+
+// TODO: what's the correct way to import these?
+// Note I'm using a relative path from inside `node_modules`.
+// I need to use "dist/" for example.
+// However, I didn't find how these files are exported by the npm module.
 import tooltipsterStyle from "tooltipster/dist/css/tooltipster.main.min.css";
 import tooltipsterSideTip from "tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css";
 import tooltipsterShadowTheme from "tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css";
@@ -18,7 +22,6 @@ export function initializeHoverXRef(config) {
         // Our Sphinx extension is adding a class depending on the configuration.
         // However, we won't have this for other doctools or when the extension is not installed.
         const elements = document.querySelectorAll('[role=main] a.internal'); // .each(function () { this.removeAttr('title'); });
-        console.log(elements);
         for (const element of elements) {
             addTooltip(element);
         }
@@ -41,6 +44,8 @@ function getEmbedURL(url) {
 function addTooltip(target) {
     // NOTE: we need to call the target as `$()` because the `.tooltipster` method comes from a jQuery plugin
     return $(target).tooltipster({
+        // TODO: all these values are settings from the sphinx-hoverxref extension.
+        // The user should be able to configure them.
         theme: ['tooltipster-shadow', 'tooltipster-shadow-custom'],
         interactive: 'true',
         maxWidth: 450,
@@ -66,16 +71,14 @@ function addTooltip(target) {
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
                         // call the 'content' method to update the content of our tooltip with the returned data.
                         // note: this content update will trigger an update animation (see the updateAnimation option)
-                        console.log(instance);
                         instance.content(data["content"]);
                         instance.enable();
                         instance.open();
 
                         // to remember that the data has been loaded
-                        // origin.setAttribute("loaded", true);
+                        origin.setAttribute("loaded", "true");
                     });
             }
         },
@@ -84,7 +87,6 @@ function addTooltip(target) {
             // most of Read the Docs Sphinx theme bases its style on "rst-content".
             // We add that class to the tooltipser HTML tag here by default or a user-defined one.
             helper.tooltip.classList.add("rst-content");
-            console.log("ready");
         }
     });
 }
