@@ -5,7 +5,7 @@ import { injectFlyout, trackFlyoutEvents } from "./flyout";
 import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
 import { initializeHoverXRef } from "./hoverxref";
-import { initializeSearchAsYouType } from "readthedocs-search";
+// import { initializeSearchAsYouType } from "./search";
 
 function setup() {
   const is_loaded = new Promise((resolve) => {
@@ -40,7 +40,7 @@ function setup() {
 
         promises.push(injectAnalytics(config));
         promises.push(injectFlyout(config));
-        promises.push(initializeSearchAsYouType(config));
+        // promises.push(initializeSearchAsYouType(config));
         promises.push(trackFlyoutEvents(config));
         promises.push(registerPageView(config));
         promises.push(injectEthicalAd(config));
