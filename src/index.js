@@ -6,6 +6,7 @@ import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
 import { initializeHoverXRef } from "./hoverxref";
 // import { initializeSearchAsYouType } from "./search";
+import { initializeDocDiff} from "./docdiff";
 
 function setup() {
   const is_loaded = new Promise((resolve) => {
@@ -45,6 +46,7 @@ function setup() {
         promises.push(registerPageView(config));
         promises.push(injectEthicalAd(config));
         promises.push(initializeHoverXRef(config));
+        promises.push(initializeDocDiff(config));
 
         if (
           config.features.non_latest_version_warning.enabled &&

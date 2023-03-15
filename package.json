@@ -18,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "css-loader": "^6.7.3",
+    "doc-diff": "github:readthedocs/doc-diff#humitos/js-module",
     "ethical-ad-client": "github:readthedocs/ethical-ad-client#humitos/node-sass",
     "express-interceptor": "^1.2.0",
     "jquery": "^3.6.4",
