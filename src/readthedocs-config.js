@@ -3,12 +3,13 @@
  *
  */
 export function getReadTheDocsConfig() {
-    return fetch("/_/readthedocs-config.json", {method: 'GET'})
-    .then(response => {
-        if (!response.ok) {
-            console.debug("Error parsing configuration data");
-            return undefined;
-        }
-        return response.json();
-    });
+  return fetch("/_/readthedocs-config.json", { method: "GET" }).then(
+    (response) => {
+      if (!response.ok) {
+        console.debug("Error parsing configuration data");
+        return undefined;
+      }
+      return response.json();
+    }
+  );
 }
