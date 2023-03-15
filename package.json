@@ -19,6 +19,7 @@
   "devDependencies": {
     "css-loader": "^6.7.3",
     "ethical-ad-client": "github:readthedocs/ethical-ad-client#humitos/node-sass",
+    "express-interceptor": "^1.2.0",
     "jquery": "^3.6.4",
     "prettier": "^2.8.4",
     "readthedocs-search": "github:readthedocs/readthedocs-sphinx-search#humitos/js-module",
