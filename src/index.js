@@ -4,6 +4,7 @@ import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
 import { injectFlyout, trackFlyoutEvents } from "./flyout";
 import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
+import { initializeHoverXRef } from "./hoverxref";
 import { initializeSearchAsYouType } from "readthedocs-search";
 
 function setup() {
@@ -43,6 +44,7 @@ function setup() {
                 promises.push(trackFlyoutEvents(config));
                 promises.push(registerPageView(config));
                 promises.push(injectEthicalAd(config));
+                promises.push(initializeHoverXRef(config));
 
                 if (config.features.non_latest_version_warning.enabled && !config.version.external) {
                     promises.push(injectNonLatestVersionWarning(config));
