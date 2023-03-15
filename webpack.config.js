@@ -14,7 +14,7 @@ var injectReadTheDocsClient = interceptor(function (req, res) {
       send(
         body.replace(
           "</head>",
-          '<script src="/readthedocs-client.js"></script></head'
+          '<script src="/readthedocs-client.js"></script></head>'
         )
       );
     },
