@@ -48,31 +48,29 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
+        const integrations = [
+          injectAnalytics,
+          injectFlyout,
+          initializeSearchAsYouType,
+          trackFlyoutEvents,
+          registerPageView,
+          injectEthicalAd,
+          initializeHoverXRef,
+          injectNonLatestVersionWarning,
+          injectExternalVersionWarning,
+          // initializeDocDiff,
+        ];
 
-        promises.push(injectAnalytics(config));
-        promises.push(injectFlyout(config));
-        promises.push(initializeSearchAsYouType(config));
-        promises.push(trackFlyoutEvents(config));
-        promises.push(registerPageView(config));
-        promises.push(injectEthicalAd(config));
-        promises.push(initializeHoverXRef(config));
-        // FIXME: re-enable docdiff.
-        // It's conflicting with EthicalAds and Search As You Type.
-        // promises.push(initializeDocDiff(config));
-
-        if (
-          config.features.non_latest_version_warning.enabled &&
-          !config.version.external
-        ) {
-          promises.push(injectNonLatestVersionWarning(config));
+        // Iterate over all the integration functions and create one Promise for each of them.
+        // They will be executed concurrently.
+        for (let fn of integrations) {
+          promises.push(
+            new Promise((resolve) => {
+              fn(config);
+            })
+          );
         }
 
-        if (
-          config.features.external_version_warning.enabled &&
-          config.version.external
-        ) {
-          promises.push(injectExternalVersionWarning(config));
-        }
         return Promise.all(promises);
       })
       .then(() => {

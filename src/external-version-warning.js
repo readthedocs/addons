@@ -5,6 +5,12 @@
 export function injectExternalVersionWarning(config) {
   // TODO: make all these banners (injected HTML) templates that users can override with their own.
   // This way, we allow customization of the look&feel without compromising the logic.
+  if (
+    !config.features.external_version_warning.enabled ||
+    !config.version.external
+  ) {
+    return false;
+  }
 
   return new Promise((resolve, reject) => {
     let admonition = `

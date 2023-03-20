@@ -7,6 +7,13 @@ import maxSatisfying from "semver/ranges/max-satisfying";
  *
  */
 export function injectNonLatestVersionWarning(config) {
+  if (
+    !config.features.non_latest_version_warning.enabled ||
+    !config.version.external
+  ) {
+    return false;
+  }
+
   const highest = maxSatisfying(
     config.features.non_latest_version_warning.versions,
     "0.0.0"
