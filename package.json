@@ -4,8 +4,8 @@
   "description": "Read the Docs client embeded into documentation pages",
   "main": "dist/readthedocs-client.js",
   "engines": {
-    "node": "18.15.0",
-    "npm": "9.5.0"
+    "node": "^18.15.0",
+    "npm": "^9.5.0"
   },
   "scripts": {
     "build": "webpack --mode=production --progress",
