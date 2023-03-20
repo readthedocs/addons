@@ -8,7 +8,19 @@ import { initializeHoverXRef } from "./hoverxref";
 import { initializeSearchAsYouType } from "./search";
 import { initializeDocDiff } from "./docdiff";
 
+
+export function IsReadTheDocsEmbedPresent () {
+    const url = "/_/static/javascript/readthedocs-doc-embed.js";
+    return document.querySelectorAll(`script[src="${url}"]`).length > 0;
+}
+
+
 export function setup() {
+    if (IsReadTheDocsEmbedPresent()) {
+        console.debug("Read the Docs Embed is present. Skipping...");
+        return false;
+    }
+
   const is_loaded = new Promise((resolve) => {
     if (
       document.readyState === "interactive" ||
