@@ -3,11 +3,17 @@
  *
  */
 export function getReadTheDocsConfig() {
-  const url =
+  let url =
     "/_/readthedocs-config/?" +
     new URLSearchParams({
       url: window.location.href,
     });
+
+  // Retrieve a static JSON file when working in development mode
+  if (window.location.href.startsWith("http://localhost")) {
+    url = "/_/readthedocs-config.json";
+  }
+
   return fetch(url, { method: "GET" }).then((response) => {
     if (!response.ok) {
       console.debug("Error parsing configuration data");
