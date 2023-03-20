@@ -58,7 +58,6 @@ export function setup() {
           initializeHoverXRef,
           injectNonLatestVersionWarning,
           injectExternalVersionWarning,
-          // initializeDocDiff,
         ];
 
         // Iterate over all the integration functions and create one Promise for each of them.
@@ -71,7 +70,11 @@ export function setup() {
           );
         }
 
-        return Promise.all(promises);
+        return Promise.all(promises).then(() => {
+          // FIXME: why this function is not called at all?
+          // I want to call it _after_ all the promises have been executed.
+          initializeDocDiff(config);
+        });
       })
       .then(() => {
         resolve();
