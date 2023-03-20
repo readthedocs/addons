@@ -61,6 +61,7 @@ module.exports = (env, argv) => {
       open: false,
       hot: false,
       liveReload: true,
+      allowedHosts: "all",
       proxy: {
         // Useful to hit API in a local development instance.
         // Our extension uses it for traffic/search analytics.
