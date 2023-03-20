@@ -36,7 +36,12 @@ module.exports = (env, argv) => {
     },
     optimization: {
       minimize: is_production,
-      minimizer: [new TerserPlugin()],
+      minimizer: [
+        new TerserPlugin({
+          // Avoids creating a `.LICENSE.txt` file
+          extractComments: false,
+        }),
+      ],
     },
     module: {
       rules: [
