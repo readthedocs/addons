@@ -5,8 +5,8 @@ import { injectFlyout, trackFlyoutEvents } from "./flyout";
 import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
 import { initializeHoverXRef } from "./hoverxref";
-// import { initializeSearchAsYouType } from "./search";
-import { initializeDocDiff} from "./docdiff";
+import { initializeSearchAsYouType } from "./search";
+import { initializeDocDiff } from "./docdiff";
 
 function setup() {
   const is_loaded = new Promise((resolve) => {
@@ -41,12 +41,14 @@ function setup() {
 
         promises.push(injectAnalytics(config));
         promises.push(injectFlyout(config));
-        // promises.push(initializeSearchAsYouType(config));
+        promises.push(initializeSearchAsYouType(config));
         promises.push(trackFlyoutEvents(config));
         promises.push(registerPageView(config));
         promises.push(injectEthicalAd(config));
         promises.push(initializeHoverXRef(config));
-        promises.push(initializeDocDiff(config));
+        // FIXME: re-enable docdiff.
+        // It's conflicting with EthicalAds and Search As You Type.
+        // promises.push(initializeDocDiff(config));
 
         if (
           config.features.non_latest_version_warning.enabled &&
