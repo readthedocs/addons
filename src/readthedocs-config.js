@@ -3,7 +3,10 @@
  *
  */
 export function getReadTheDocsConfig() {
-  return fetch("/_/readthedocs-config.json", { method: "GET" }).then(
+    const url = "/_/readthedocs-config/?" + new URLSearchParams({
+        url: window.location.href,
+    });
+  return fetch(url, { method: "GET" }).then(
     (response) => {
       if (!response.ok) {
         console.debug("Error parsing configuration data");
