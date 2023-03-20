@@ -3,16 +3,16 @@
  *
  */
 export function getReadTheDocsConfig() {
-    const url = "/_/readthedocs-config/?" + new URLSearchParams({
-        url: window.location.href,
+  const url =
+    "/_/readthedocs-config/?" +
+    new URLSearchParams({
+      url: window.location.href,
     });
-  return fetch(url, { method: "GET" }).then(
-    (response) => {
-      if (!response.ok) {
-        console.debug("Error parsing configuration data");
-        return undefined;
-      }
-      return response.json();
+  return fetch(url, { method: "GET" }).then((response) => {
+    if (!response.ok) {
+      console.debug("Error parsing configuration data");
+      return undefined;
     }
-  );
+    return response.json();
+  });
 }
