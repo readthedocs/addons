@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      "readthedocs-client": ["./src/index.js"],
+      "readthedocs-client": ["./src/init.js"],
     },
     output: {
       filename: "[name].js?[fullhash]",
@@ -47,6 +47,16 @@ module.exports = (env, argv) => {
             exportType: "css-style-sheet",
           },
         },
+        {
+          test: /\.js$/,
+          exclude: /(node_modules)/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env"],
+            },
+          },
+        },
       ],
     },
     plugins: [],
@@ -59,6 +69,7 @@ module.exports = (env, argv) => {
     },
     devServer: {
       open: false,
+      port: 8000,
       hot: false,
       liveReload: true,
       allowedHosts: "all",

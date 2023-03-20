@@ -8,7 +8,7 @@ import { initializeHoverXRef } from "./hoverxref";
 import { initializeSearchAsYouType } from "./search";
 import { initializeDocDiff } from "./docdiff";
 
-function setup() {
+export function setup() {
   const is_loaded = new Promise((resolve) => {
     if (
       document.readyState === "interactive" ||
@@ -73,5 +73,3 @@ function setup() {
       });
   });
 }
-
-setup();

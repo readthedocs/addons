@@ -1,0 +1,84 @@
+{
+    "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
+    "project": {
+        "slug": "example",
+        "language": "en",
+        "repository_url": "https://github.com/humitos/readthedocs-client",
+        "programming_language": "words"
+    },
+    "version": {
+        "slug": "v1",
+        "external": true
+    },
+    "build": {
+        "id": 2801
+    },
+    "domains": {
+        "dashboard": "devthedocs.org"
+    },
+    "readthedocs": {
+        "analytics": {
+            "code": null
+        }
+    },
+    "features": {
+        "analytics": {
+            "code": null
+        },
+        "external_version_warning": {
+            "enabled": true,
+            "query_selector": "[role=main]"
+        },
+        "non_latest_version_warning": {
+            "enabled": true,
+            "query_selector": "[role=main]",
+            "versions": [
+                "stable",
+                "latest",
+                "v1.0",
+                "v1.4",
+                "v2.0"
+            ]
+        },
+        "doc_diff": {
+            "enabled": true,
+            "base_host": "http://test-builds.devthedocs.org",
+            "base_url": "http://test-builds.devthedocs.org/en/latest/index.html",
+            "root_selector": "[role=main]",
+            "inject_styles": true
+        },
+        "flyout": {
+            "translations": [],
+            "versions": [
+                {
+                    "slug": "stable",
+                    "url": "/en/stable/"
+                },
+                {
+                    "slug": "latest",
+                    "url": "/en/latest/"
+                },
+                {
+                    "slug": "v1.0",
+                    "url": "/en/v1.0/"
+                },
+                {
+                    "slug": "v1.4",
+                    "url": "/en/v1.4/"
+                },
+                {
+                    "slug": "v2.0",
+                    "url": "/en/v2.0/"
+                }
+            ],
+            "downloads": [],
+            "vcs": {
+                "url": "https://github.com",
+                "username": "readthedocs",
+                "repository": "reathedocs-client",
+                "branch": "main",
+                "filepath": "/examples/sphinx/docs/index.rst"
+            }
+        }
+    }
+}
