@@ -1,3 +1,5 @@
+import styles from "./external-version-warning.css";
+
 /**
  * Inject a warning informing the documentation comes from an external version (e.g. pull request)
  *
@@ -11,17 +13,18 @@ export function injectExternalVersionWarning(config) {
   ) {
     return false;
   }
+  document.adoptedStyleSheets.push(styles);
 
   return new Promise((resolve, reject) => {
     let admonition = `
-<div class="admonition warning">
-  <p class="admonition-title">Warning</p>
+<div id="readthedocs-external-version-warning">
   <p>
     This page
     <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created </a>
     from a pull request
     (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
   </p>
+  <i class="close icon"></i>
 </div>
 `;
 
@@ -30,10 +33,14 @@ export function injectExternalVersionWarning(config) {
     //     admonition = config.features.banner.external.template;
     // }
 
-    let main =
-      document.querySelector("[role=main]") || document.querySelector("#main");
     let node = document.createElement("div");
     node.innerHTML = admonition;
-    main.insertBefore(node, main.firstChild);
+    document.body.append(node);
+
+    // Connect the X to close the banner
+    const close = document.querySelector("#readthedocs-external-version-warning i.close");
+      close.onclick = function() {
+        document.querySelector("#readthedocs-external-version-warning").style.display = "none";
+      };
   });
 }
