@@ -19,6 +19,8 @@ build:
     # Copy a JSON file that acts as the response of the API
     - cp public/_/readthedocs-config.json $READTHEDOCS_OUTPUT/html
 
+    - find ./
+
     # Inject our Javascript file :)
     - cat ./.inject-js.sh
     - bash ./.inject-js.sh
