@@ -15,11 +15,11 @@
   background: #f0b37e;
   text-align: center;
   top: 25px;
-  left: 5%;  /* (100 - width) / 2 */
+  left: 5%; /* (100 - width) / 2 */
   width: 90%;
   padding: 5px;
   font-size: 16px;
-  font-family: Lato,proxima-nova,Helvetica Neue,Arial,sans-serif;
+  font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
   font-weight: 400;
 }
 
@@ -40,7 +40,7 @@
 }
 
 #readthedocs-external-version-warning svg.warning {
-    display: inline-block;
-    margin-left: 1em;
-    margin-right: 1em;
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
 }

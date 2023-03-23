@@ -26,7 +26,7 @@ export function injectExternalVersionWarning(config) {
 
     const warning = icon(faTriangleExclamation, {
       title: "Warning",
-        classes: ["warning"],
+      classes: ["warning"],
     });
     const xmark = icon(faCircleXmark, {
       title: "Close",
