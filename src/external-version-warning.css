@@ -11,7 +11,7 @@
   min-height: 50px;
   position: fixed;
   display: inline-block;
-  opacity: 0.75;
+  opacity: 0.85;
   text-align: center;
   top: 25px;
   background: #ffedcc;
@@ -30,13 +30,14 @@
 }
 
 #readthedocs-external-version-warning div.title {
+  border-radius: 0.25rem;
   display: block;
   height: 25px;
   background: #f0b37e;
 }
 
 #readthedocs-external-version-warning div.title p {
-  display: block;
+  display: inline-block;
   font-weight: bold;
   font-size: 110%;
   margin: 0;
@@ -53,12 +54,6 @@
 }
 
 #readthedocs-external-version-warning svg.warning {
-  font-size: 225%;
   display: inline-block;
-  position: absolute;
-  left: 25px;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-  margin-left: 1em;
-  margin-right: 1em;
+  color: white;
 }
