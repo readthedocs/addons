@@ -12,12 +12,11 @@
   position: fixed;
   display: inline-block;
   opacity: 0.75;
-  background: #f0b37e;
   text-align: center;
   top: 25px;
+  background: #ffedcc;
   left: 5%; /* (100 - width) / 2 */
   width: 90%;
-  padding: 5px;
   font-size: 16px;
   font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
   font-weight: 400;
@@ -30,6 +29,20 @@
   line-weight: 24px;
 }
 
+#readthedocs-external-version-warning div.title {
+  display: block;
+  height: 25px;
+  background: #f0b37e;
+}
+
+#readthedocs-external-version-warning div.title p {
+  display: block;
+  font-weight: bold;
+  font-size: 110%;
+  margin: 0;
+  color: white;
+}
+
 #readthedocs-external-version-warning svg.close {
   display: inline-block;
   position: absolute;
@@ -40,12 +53,12 @@
 }
 
 #readthedocs-external-version-warning svg.warning {
-    font-size: 225%;
-    display: inline-block;
-    position: absolute;
-    left: 25px;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-left: 1em;
-    margin-right: 1em;
+  font-size: 225%;
+  display: inline-block;
+  position: absolute;
+  left: 25px;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  margin-left: 1em;
+  margin-right: 1em;
 }

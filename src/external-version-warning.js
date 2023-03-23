@@ -35,7 +35,10 @@ export function injectExternalVersionWarning(config) {
 
     const admonition = `
 <div id="readthedocs-external-version-warning">
+<div class="title">
   ${warning.html[0]}
+  <p>Warning</p>
+</div>
   <p>
     This page
     <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
