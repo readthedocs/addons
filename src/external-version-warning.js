@@ -42,7 +42,6 @@ export function injectExternalVersionWarning(config) {
     from a pull request
     (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>)
   </p>
-  ${warning.html[0]}
   ${xmark.html[0]}
 </div>
 `;

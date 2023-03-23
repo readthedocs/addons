@@ -40,7 +40,12 @@
 }
 
 #readthedocs-external-version-warning svg.warning {
-  display: inline-block;
-  margin-left: 1em;
-  margin-right: 1em;
+    font-size: 225%;
+    display: inline-block;
+    position: absolute;
+    left: 25px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 1em;
+    margin-right: 1em;
 }
