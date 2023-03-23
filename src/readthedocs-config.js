@@ -16,7 +16,7 @@ export function getReadTheDocsConfig() {
 
   // Use a hardcoded file when running on Read the Docs
   if (window.location.href.indexOf(".readthedocs.io") !== -1) {
-    url = "readthedocs-config.json";
+    url = "../readthedocs-config.json";
   }
 
   return fetch(url, { method: "GET" }).then((response) => {
