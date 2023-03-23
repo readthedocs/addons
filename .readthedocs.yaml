@@ -1,0 +1,13 @@
+version: 2
+
+build:
+  os: "ubuntu-22.04"
+  tools:
+    nodejs: "18"
+  commands:
+    - npm ci
+    - npm run build
+    - mkdir -p $READTHEDOCS_OUTPUT/html
+    - cp dist/readthedocs-client.js $READTHEDOCS_OUTPUT/html
+    - cp -r public/* $READTHEDOCS_OUTPUT/html
+    - cp public/_/readthedocs-config.json $READTHEDOCS_OUTPUT/html
