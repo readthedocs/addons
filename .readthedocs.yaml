@@ -11,5 +11,6 @@ build:
     - cp dist/readthedocs-client.js $READTHEDOCS_OUTPUT/html
     - cp -r public/* $READTHEDOCS_OUTPUT/html
     - cp public/_/readthedocs-config.json $READTHEDOCS_OUTPUT/html
+
     # Inject our Javascript file :)
-    - sed -i 's/<\/head>/<script src="readthedocs-client.js"><\/script><\/head>/g' $READTHEDOCS_OUTPUT/**/*.html
+    - sed -i -e 's|</head>|<script src="readthedocs-client.js"></script></head>|g' $READTHEDOCS_OUTPUT/**/*.html
