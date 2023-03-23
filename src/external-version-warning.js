@@ -1,6 +1,9 @@
 import styles from "./external-version-warning.css";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Inject a warning informing the documentation comes from an external version (e.g. pull request)
@@ -18,8 +21,13 @@ export function injectExternalVersionWarning(config) {
 
   return new Promise((resolve, reject) => {
     document.adoptedStyleSheets.push(styles);
+    library.add(faTriangleExclamation);
     library.add(faCircleXmark);
 
+    const warning = icon(faTriangleExclamation, {
+      title: "Warning",
+        classes: ["warning"],
+    });
     const xmark = icon(faCircleXmark, {
       title: "Close",
       classes: ["close"],
@@ -27,12 +35,14 @@ export function injectExternalVersionWarning(config) {
 
     const admonition = `
 <div id="readthedocs-external-version-warning">
+  ${warning.html[0]}
   <p>
     This page
     <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
     from a pull request
-    (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
+    (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>)
   </p>
+  ${warning.html[0]}
   ${xmark.html[0]}
 </div>
 `;
