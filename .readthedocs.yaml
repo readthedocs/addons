@@ -1,0 +1,26 @@
+version: 2
+
+build:
+  os: "ubuntu-22.04"
+  tools:
+    nodejs: "18"
+  commands:
+    - npm install -g npm@latest
+    - npm install
+    - npm run build
+    - mkdir -p $READTHEDOCS_OUTPUT/html
+
+    # Copy our client into the output
+    - cp dist/readthedocs-client.js $READTHEDOCS_OUTPUT/html
+
+    # Copy all the example sites (Sphinx and Pelican) into the output
+    - cp -r public/* $READTHEDOCS_OUTPUT/html
+
+    # Copy a JSON file that acts as the response of the API
+    - cp public/_/readthedocs-config.json $READTHEDOCS_OUTPUT/html
+
+    - find ./
+
+    # Inject our Javascript file :)
+    - cat ./.inject-js.sh
+    - bash ./.inject-js.sh
