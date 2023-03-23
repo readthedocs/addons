@@ -29,7 +29,7 @@ export function injectExternalVersionWarning(config) {
 <div id="readthedocs-external-version-warning">
   <p>
     This page
-    <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created </a>
+    <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
     from a pull request
     (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
   </p>
