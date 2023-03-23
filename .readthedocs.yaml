@@ -6,7 +6,7 @@ build:
     nodejs: "18"
   commands:
     - npm install -g npm@latest
-    - npm ci
+    - npm install
     - npm run build
     - mkdir -p $READTHEDOCS_OUTPUT/html
     - cp dist/readthedocs-client.js $READTHEDOCS_OUTPUT/html
