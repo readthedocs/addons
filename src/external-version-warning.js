@@ -1,4 +1,6 @@
 import styles from "./external-version-warning.css";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Inject a warning informing the documentation comes from an external version (e.g. pull request)
@@ -13,10 +15,17 @@ export function injectExternalVersionWarning(config) {
   ) {
     return false;
   }
-  document.adoptedStyleSheets.push(styles);
 
   return new Promise((resolve, reject) => {
-    let admonition = `
+    document.adoptedStyleSheets.push(styles);
+    library.add(faCircleXmark);
+
+    const xmark = icon(faCircleXmark, {
+      title: "Close",
+      classes: ["close"],
+    });
+
+    const admonition = `
 <div id="readthedocs-external-version-warning">
   <p>
     This page
@@ -24,7 +33,7 @@ export function injectExternalVersionWarning(config) {
     from a pull request
     (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
   </p>
-  <i class="close icon"></i>
+  ${xmark.html[0]}
 </div>
 `;
 
@@ -38,9 +47,13 @@ export function injectExternalVersionWarning(config) {
     document.body.append(node);
 
     // Connect the X to close the banner
-    const close = document.querySelector("#readthedocs-external-version-warning i.close");
-      close.onclick = function() {
-        document.querySelector("#readthedocs-external-version-warning").style.display = "none";
-      };
+    const close = document.querySelector(
+      "#readthedocs-external-version-warning svg.close"
+    );
+    close.onclick = function () {
+      document.querySelector(
+        "#readthedocs-external-version-warning"
+      ).style.display = "none";
+    };
   });
 }

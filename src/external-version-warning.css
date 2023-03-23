@@ -1,36 +1,36 @@
+#readthedocs-external-version-warning:hover {
+  opacity: 0.95;
+}
 #readthedocs-external-version-warning {
-    color: #404040;
-    box-shadow: 0 0 0 1px rgba(34,36,38,.22) inset,0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.15);
-    z-index: 999;
-    border-radius: .25rem;
-    min-height: 25px;
-    position: fixed;
-    display: inline-block;
-    opacity: .85;
-    background: #f0b37e;;
-    text-align: center;
-    top: 0;
-    left: 0;
-    width: 96%;
-    margin-top: 15px;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-bottom: 0 !important;
-    padding: 5px;
+  color: #404040;
+  box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.22) inset,
+    0 2px 4px 0 rgba(34, 36, 38, 0.12), 0 2px 10px 0 rgba(34, 36, 38, 0.15);
+  z-index: 999;
+  border-radius: 0.25rem;
+  min-height: 25px;
+  position: fixed;
+  display: inline-block;
+  opacity: 0.75;
+  background: #f0b37e;
+  text-align: center;
+  top: 0;
+  left: 0;
+  width: 96%;
+  margin-top: 15px;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 0 !important;
+  padding: 5px;
 }
 
 #readthedocs-external-version-warning p {
-    display: inline-block;
+  display: inline-block;
 }
 
-#readthedocs-external-version-warning i.close::before {
-    content: "\f00d";
-    cursor: pointer;
-}
-
-#readthedocs-external-version-warning i.close {
-    display: inline-block;
-    position: absolute;
-    right: 25px;
-    top: 20px;
+#readthedocs-external-version-warning svg.close {
+  display: inline-block;
+  position: absolute;
+  right: 25px;
+  top: 20px;
+  cursor: pointer;
 }
