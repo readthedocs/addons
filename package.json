@@ -30,7 +30,7 @@
     "prettier": "^2.8.4",
     "readthedocs-search": "github:readthedocs/readthedocs-sphinx-search#humitos/js-module",
     "semver": "^7.3.8",
-    "tooltipster": "^4.2.2",
+    "tippy.js": "^6.3.7",
     "webpack": "^5.76.1",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
