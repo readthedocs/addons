@@ -30,7 +30,6 @@
     "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.6.4",
     "prettier": "^2.8.4",
-    "readthedocs-search": "github:readthedocs/readthedocs-sphinx-search#humitos/js-module",
     "semver": "^7.3.8",
     "tippy.js": "^6.3.7",
     "webpack": "^5.76.1",
