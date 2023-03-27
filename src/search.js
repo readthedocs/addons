@@ -2,6 +2,7 @@ import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
   faMagnifyingGlass,
+  faCircleNotch,
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
@@ -326,9 +327,10 @@ const generateSingleResult = (resultData, projectName, id) => {
  * @return {Object} a <div> node with class "search__result__box" with results
  */
 const generateSuggestionsList = (data, projectName) => {
-  let search_result_box = createDomNode("div", {
-    class: "search__result__box",
-  });
+  // let search_result_box = createDomNode("div", {
+  //   class: "search__result__box",
+  // });
+  let search_result_box = document.querySelector(".search__result__box");
 
   let max_results = Math.min(MAX_SUGGESTIONS, data.results.length);
   let id = 0;
@@ -462,10 +464,7 @@ const getSearchTerm = () => {
  * It doesn't close the search box.
  */
 const removeResults = () => {
-  let all_results = document.querySelectorAll(".search__result__box");
-  for (let i = 0; i < all_results.length; ++i) {
-    all_results[i].parentElement.removeChild(all_results[i]);
-  }
+  document.querySelector(".search__result__box").innerHTML = "";
 };
 
 /**
@@ -474,12 +473,36 @@ const removeResults = () => {
  *
  * @param {String} err_msg error message to be displayed
  */
-const getErrorDiv = (err_msg) => {
-  let err_div = createDomNode("div", {
-    class: "search__result__box search__error__box",
+// const getErrorDiv = (err_msg) => {
+//   let err_div = createDomNode("div", {
+//     class: "search__result__box search__error__box",
+//   });
+//   err_div.innerHTML = err_msg;
+//   return err_div;
+// };
+
+const spinIcon = () => {
+  if (
+    !document
+      .querySelector(".search__outer form label svg")
+      .classList.contains("spinner")
+  ) {
+    const spinner = icon(faCircleNotch, {
+      title: "Spinner",
+      classes: ["spinner", "fa-spin"],
+    });
+    const magnifier = document.querySelector(".search__outer form label");
+    magnifier.innerHTML = spinner.html[0];
+  }
+};
+
+const magnifierIcon = () => {
+  const magnifier = icon(faMagnifyingGlass, {
+    title: "Magnifier",
+    classes: ["magnifier"],
   });
-  err_div.innerHTML = err_msg;
-  return err_div;
+  const spinner = document.querySelector(".search__outer form label");
+  spinner.innerHTML = magnifier.html[0];
 };
 
 /**
@@ -499,9 +522,11 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
   // and show the "Searching ...." text to
   // the user.
   removeResults();
-  let search_loding = createDomNode("div", { class: "search__result__box" });
-  search_loding.innerHTML = "<strong>Searching ....</strong>";
-  search_outer.appendChild(search_loding);
+
+  spinIcon();
+  // let search_loding = createDomNode("div", { class: "search__result__box" });
+  // search_loding.innerHTML = "<strong>Searching ....</strong>";
+  // search_outer.appendChild(search_loding);
 
   let fetchFunc = () => {
     // Update URL just before fetching the results
@@ -520,8 +545,10 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
       .then((data) => {
         if (data.results.length > 0) {
           let search_result_box = generateSuggestionsList(data, projectName);
-          removeResults();
-          search_outer.appendChild(search_result_box);
+          // document.querySelector(".search__result__box").innerHTML = search_result_box;
+          // removeResults();
+          magnifierIcon();
+          // search_outer.appendChild(search_result_box);
 
           // remove active classes from all suggestions
           // if the mouse hovers, otherwise styles from
@@ -531,14 +558,15 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
           });
         } else {
           removeResults();
-          let err_div = getErrorDiv("No results found");
-          search_outer.appendChild(err_div);
+          // let err_div = getErrorDiv("No results found");
+          // search_outer.appendChild(err_div);
+          magnifierIcon();
         }
       })
       .catch((error) => {
         removeResults();
-        let err_div = getErrorDiv("There was an error. Please try again.");
-        search_outer.appendChild(err_div);
+        // let err_div = getErrorDiv("There was an error. Please try again.");
+        // search_outer.appendChild(err_div);
       });
   };
   return debounce(fetchFunc, FETCH_RESULTS_DELAY);
@@ -580,7 +608,7 @@ const generateAndReturnInitialHtml = (config) => {
             <ul>
             </ul>
           </div>
-        </div>
+        <div class="search__result__box"></div>
         <div class="rtd__search__footer">
           <ul class="rtd__search__help">
           </ul>
@@ -591,6 +619,7 @@ const generateAndReturnInitialHtml = (config) => {
             </a>
           </div>
         </div>
+      </div>
     `;
 
   let div = createDomNode("div", {
@@ -690,14 +719,8 @@ const removeSearchModal = () => {
   // removes previous results before closing
   removeResults();
 
-  updateSearchBar();
-
   // sets the value of input field to empty string and remove the focus.
-  let search_outer_input = document.querySelector(".search__outer__input");
-  if (search_outer_input !== null) {
-    search_outer_input.value = "";
-    search_outer_input.blur();
-  }
+  document.querySelector(".search__outer__input").value = "";
 
   // update url (remove 'rtd_search' param)
   // updateUrl();
@@ -727,6 +750,7 @@ export function initializeSearchAsYouType(config) {
   document.adoptedStyleSheets.push(styles);
   library.add(faMagnifyingGlass);
   library.add(faCircleXmark);
+  library.add(faCircleNotch);
   domReady.then(() => {
     let initialHtml = generateAndReturnInitialHtml(config);
     document.body.appendChild(initialHtml);

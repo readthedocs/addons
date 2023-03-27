@@ -27,7 +27,7 @@
 
 .search__outer {
   /* Positioning */
-  margin: auto;
+  margin: 5rem auto auto auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -40,11 +40,13 @@
   width: 60%;
   max-height: 1000px;
   max-width: 1500px;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 
   /* Other */
   border: 1px solid #e0e0e0;
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
   line-height: 1.875;
   background-color: #fcfcfc;
   box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
@@ -54,21 +56,21 @@
 
 /* Custom scrollbar */
 
-.search__outer::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background-color: #fcfcfc;
-}
+/* .search__result__box::-webkit-scrollbar-track { */
+/*   border-radius: 10px; */
+/*   background-color: #fcfcfc; */
+/* } */
 
-.search__outer::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-  background-color: #fcfcfc;
-}
+/* .search__result__box::-webkit-scrollbar { */
+/*   width: 7px; */
+/*   height: 7px; */
+/*   background-color: #fcfcfc; */
+/* } */
 
-.search__outer::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #8f8f8f;
-}
+/* .search__result__box::-webkit-scrollbar-thumb { */
+/*   border-radius: 10px; */
+/*   background-color: #8f8f8f; */
+/* } */
 
 .search__outer form {
   background-color: #eaeaea;
@@ -106,6 +108,8 @@
 .search__result__box {
   padding: 5px;
   margin: 1rem;
+  overflow-y: scroll;
+  height: 100%;
 }
 
 .search__result__single {
@@ -211,28 +215,20 @@
   font-size: 85%;
 }
 
+.rtd__search__footer {
+  width: 100%;
+}
+
 .rtd__search__credits {
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: calc(-60% - 20px);
-  width: 60%;
-  max-width: 1500px;
   height: 30px;
-  overflow: hidden;
   background: #eee;
-  z-index: 100000;
   border-radius: 0 0 0.5rem 0.5rem;
   box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px;
-  padding: 3px;
   text-align: center;
-  color: black;
+  color: #404040;
 }
 
 .rtd__search__credits a {
-  color: black;
   text-decoration: underline;
   display: inline-block;
 }
