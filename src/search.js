@@ -98,30 +98,6 @@ const buildSection = function (id, title, link, contents) {
   return section;
 };
 
-/**
- * Adds/removes "rtd_search" url parameter to the url.
- */
-const updateUrl = () => {
-  let parsed_url = new URL(window.location.href);
-  let search_query = getSearchTerm();
-  // search_query should not be an empty string.
-  if (search_query.length > 0) {
-    parsed_url.searchParams.set(RTD_SEARCH_PARAMETER, search_query);
-  } else {
-    parsed_url.searchParams.delete(RTD_SEARCH_PARAMETER);
-  }
-  // Update url.
-  window.history.pushState({}, null, parsed_url.toString());
-};
-
-/*
- * Keeps in sync the original search bar with the input from the modal.
- */
-const updateSearchBar = () => {
-  let search_bar = getInputField();
-  search_bar.value = getSearchTerm();
-};
-
 /*
  * Returns true if the modal window is visible.
  */
@@ -423,31 +399,6 @@ const selectNextResult = (forward) => {
   addActive(next_id);
 };
 
-/**
- * Returns initial search input field,
- * which is already present in the docs.
- *
- * @return {Object} Input field node
- */
-const getInputField = () => {
-  let inputField;
-
-  // on search some pages (like search.html),
-  // no div is present with role="search",
-  // in that case, use the other query to select
-  // the input field
-  try {
-    inputField = document.querySelector("[role='search'] input");
-    if (inputField === undefined || inputField === null) {
-      throw "'[role='search'] input' not found";
-    }
-  } catch (err) {
-    inputField = document.querySelector("input[name='q']");
-  }
-
-  return inputField;
-};
-
 /*
  * Returns the current search term from the modal.
  */
@@ -516,23 +467,11 @@ const magnifierIcon = () => {
  * @return {Function} debounced function with debounce time of 500ms
  */
 const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
-  let search_outer = document.querySelector(".search__outer");
-
-  // Removes all results (if there is any),
-  // and show the "Searching ...." text to
-  // the user.
+  // Removes all results (if there is any)
   removeResults();
-
   spinIcon();
-  // let search_loding = createDomNode("div", { class: "search__result__box" });
-  // search_loding.innerHTML = "<strong>Searching ....</strong>";
-  // search_outer.appendChild(search_loding);
 
   let fetchFunc = () => {
-    // Update URL just before fetching the results
-    // updateUrl();
-    updateSearchBar();
-
     const url = api_endpoint + "?" + new URLSearchParams(parameters).toString();
 
     fetch(url, { method: "GET" })
@@ -686,30 +625,11 @@ const showSearchModal = (custom_query) => {
   // removes previous results (if there are any).
   removeResults();
 
-  let show_modal = function () {
-    // removes the focus from the initial input field
-    // which as already present in the docs.
-    let search_bar = getInputField();
-    search_bar.blur();
-
-    // sets the value of the input field to empty string and focus it.
-    let search_outer_input = document.querySelector(".search__outer__input");
-    if (search_outer_input !== null) {
-      if (typeof custom_query !== "undefined" && _is_string(custom_query)) {
-        search_outer_input.value = custom_query;
-        search_bar.value = custom_query;
-      } else {
-        search_outer_input.value = search_bar.value;
-      }
-      search_outer_input.focus();
-    }
-  };
-
   let element = document.querySelector(".search__outer__wrapper");
   if (element && element.style) {
     element.style.display = "block";
   }
-  show_modal();
+  document.querySelector(".search__outer form input").focus();
 };
 
 /**
@@ -721,9 +641,6 @@ const removeSearchModal = () => {
 
   // sets the value of input field to empty string and remove the focus.
   document.querySelector(".search__outer__input").value = "";
-
-  // update url (remove 'rtd_search' param)
-  // updateUrl();
 
   let element = document.querySelector(".search__outer__wrapper");
   if (element && element.style) {
@@ -807,10 +724,8 @@ function eventListeners(config) {
       // is debounced here.
       let func = () => {
         removeResults();
-        // updateUrl();
       };
       debounce(func, CLEAR_RESULTS_DELAY)();
-      // updateUrl();
     }
   });
 
@@ -838,14 +753,6 @@ function eventListeners(config) {
       if (current_item !== null) {
         const link = current_item.parentElement["href"];
         window.location.href = link;
-      } else {
-        // submit search form if there
-        // is no active item.
-        const input_field = getInputField();
-        const form = input_field.parentElement;
-
-        search_bar.value = getSearchTerm();
-        form.submit();
       }
     }
   });
