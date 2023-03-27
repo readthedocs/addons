@@ -311,3 +311,32 @@
     opacity: 1;
   }
 }
+
+div.no__results {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 36px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+div.no__results svg {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+div.no__results .footer p {
+  font-size: small;
+}
+
+div.no__results .tips {
+  padding-left: 15%;
+  text-align: left;
+  font-size: 15px;
+  margin-bottom: 1rem;
+}
+
+div.no__results .tips li {
+  list-style-position: inside;
+  list-style-type: "\BB  ";
+}

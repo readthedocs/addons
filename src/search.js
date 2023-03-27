@@ -3,6 +3,7 @@ import {
   faCircleXmark,
   faMagnifyingGlass,
   faCircleNotch,
+  faBinoculars,
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
@@ -489,6 +490,8 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
           magnifierIcon();
           // search_outer.appendChild(search_result_box);
 
+          let search_outer = document.querySelector(".search__outer");
+
           // remove active classes from all suggestions
           // if the mouse hovers, otherwise styles from
           // :hover and .active will clash.
@@ -497,6 +500,7 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
           });
         } else {
           removeResults();
+          noResultsFound();
           // let err_div = getErrorDiv("No results found");
           // search_outer.appendChild(err_div);
           magnifierIcon();
@@ -509,6 +513,33 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
       });
   };
   return debounce(fetchFunc, FETCH_RESULTS_DELAY);
+};
+
+const noResultsFound = () => {
+  // TODO: change the icon to a slash-ed magnifier or similar
+  const binoculars = icon(faBinoculars, {
+    title: "Not found",
+  });
+  const query = getSearchTerm();
+  const template = `
+<div class="no__results">
+  ${binoculars.html[0]}
+  <p class="title">No results for <strong>"${query}"</strong></p>
+  <div class="tips">
+    <p>Try using the following modifiers:</p>
+<ul>
+<li>Use <code>project:slug</code> to search on a specific project.</li>
+<li>Use <code>subprojects:slug</code> to search on its subprojects.</li>
+<li>Use <code>user:@me</code> to only search on your projects.</li>
+</ul>
+
+  </div>
+  <div class="footer">
+    <p>Believe this query should return results? <a target="_blank" href="https://github.com/readthedocs/readthedocs.org/issues/new?title=Search:+missing+results+for+query:+'${query}'">Let us know</a>.</p>
+  </div>
+</div>
+`;
+  document.querySelector(".search__result__box").innerHTML = template;
 };
 
 /**
@@ -538,10 +569,7 @@ const generateAndReturnInitialHtml = (config) => {
 <label>
             ${magnifier.html[0]}
 </label>
-          <input class="search__outer__input" placeholder="Search docs">
-<button type="reset" title="Clear the query" hidden="">
-            ${xmark.html[0]}
-</button>
+          <input class="search__outer__input" placeholder="Search docs" autocomplete="off">
 </form>
           <div class="search__filters">
             <ul>
@@ -668,6 +696,7 @@ export function initializeSearchAsYouType(config) {
   library.add(faMagnifyingGlass);
   library.add(faCircleXmark);
   library.add(faCircleNotch);
+  library.add(faBinoculars);
   domReady.then(() => {
     let initialHtml = generateAndReturnInitialHtml(config);
     document.body.appendChild(initialHtml);
