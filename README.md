@@ -11,8 +11,8 @@ elevating them to the next level 🚀
 It uses the [Read the Docs analytics backend](https://docs.readthedocs.io/page/reference/analytics.html) to track page views and searches performed in your documentation.
 
 
-
 | Traffic analytics | Search analytics |
+| ------------------|----------------- |
 | ![Traffic analytics](docs/traffic-analytics-example.png) | ![Search analytics](docs/search-analytics-example.png) |
 | [Documentation](https://docs.readthedocs.io/page/analytics.html) | [Documentation](https://docs.readthedocs.io/page/guides/search-analytics.html) |
 
