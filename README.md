@@ -1,7 +1,8 @@
 # Empower your docs with Read the Docs
 
 This repository contains a self-contained JavaScript client that will empower your docs,
-elevating them to the next level 🚀
+elevating them to the next level 🚀.
+All these features are enabled by default *just* by hosting your documentation in Read the Docs.
 
 ## Features
 
