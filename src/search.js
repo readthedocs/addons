@@ -775,11 +775,6 @@ function eventListeners(config) {
     }
   });
 
-  // close the search modal if clicked on cross icon.
-  // cross_icon.addEventListener("click", (e) => {
-  //   removeSearchModal();
-  // });
-
   // close the search modal if the user pressed
   // Escape button
   document.addEventListener("keydown", (e) => {
