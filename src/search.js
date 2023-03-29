@@ -537,6 +537,7 @@ const generateAndReturnInitialHtml = (config) => {
 
   const search_html = `
 <section id="readthedocs-search" role="search">
+    <!-- Warning: this HTML structure and CSS styles are still in beta. They could change without notice.  -->
     <div class="readthedocs-search-background">
         <div class="readthedocs-search-container">
             <form>
@@ -555,7 +556,9 @@ const generateAndReturnInitialHtml = (config) => {
             </div>
             <div class="readthedocs-search-footer">
                 <ul class="readthedocs-search-help">
-                    <!-- TODO: add help about how to navigate the modal -->
+                    <li><code>Enter</code> to select</li>
+                    <li><code>Up</code>/<code>Down</code> to navigate</li>
+                    <li><code>Esc</code> to close</li>
                 </ul>
                 <div class="readthedocs-search-credits">
                     Search powered by
