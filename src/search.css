@@ -121,6 +121,8 @@
   font-size: 15px;
   margin-right: 10px;
   overflow-x: hidden;
+  margin: inherit;
+  line-height: inherit;
 }
 
 #readthedocs-search .readthedocs-search-result-hit--content {
@@ -147,14 +149,10 @@
   border-bottom-color: black;
 }
 
-#readthedocs-search .readthedocs-search-result-hit--content span {
+#readthedocs-search .readthedocs-search-result-hit span {
   color: #6ea0ec;
   font-style: italic;
   font-weight: bold;
-}
-
-#readthedocs-search .readthedocs-search-result-hit--subheading span {
-  border-bottom: 1px solid black;
 }
 
 #readthedocs-search .readthedocs-search-result-hit:hover {

@@ -76,28 +76,28 @@ const debounce = (func, wait) => {
  * @param {Array} contents.
  */
 const buildSection = function (id, title, link, contents) {
-  let span_element = createDomNode("span", {
+  let p_subheading = createDomNode("p", {
     class: "readthedocs-search-result-hit--subheading",
   });
-  span_element.innerHTML = title;
+  p_subheading.innerHTML = title;
 
   if (contents.length !== 1) {
     // NOTE: I don't know when this happens.
     console.warning("There are more content in this section.");
   }
 
-  let p_element = createDomNode("p", {
+  let p_content = createDomNode("p", {
     class: "readthedocs-search-result-hit--content",
   });
-  p_element.innerHTML = contents[0];
+  p_content.innerHTML = contents[0];
 
   let section = createDomNode("a", {
     href: link,
     id: id,
     class: "readthedocs-search-result-hit",
   });
-  section.appendChild(span_element);
-  section.appendChild(p_element);
+  section.appendChild(p_subheading);
+  section.appendChild(p_content);
   return section;
 };
 
