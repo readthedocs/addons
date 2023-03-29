@@ -4,6 +4,9 @@
   /* Remove all the existing CSS style to not depend on anything from the theme */
   all: unset;
 
+  font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
+  font-size: 16px;
+  color: rgb(64,64,64);
   position: fixed;
   top: 0;
   left: 0;
@@ -11,6 +14,19 @@
   height: 100%;
   z-index: 700;
   display: none;
+}
+
+#readthedocs-search a {
+    color: #2980b9;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#readthedocs-search a:hover {
+    color: inherit;
+    background-color: inherit;
+    text-decoration: inherit;
+    text-shadow: inherit;
 }
 
 #readthedocs-search .readthedocs-search-background {
@@ -62,6 +78,7 @@
   font-size: 1.3rem;
   padding-left: 10px;
   margin: 0;
+  color: #333;
 }
 
 #readthedocs-search form input {
@@ -72,6 +89,7 @@
   font-size: 1.3rem;
   box-shadow: none;
   width: 100%;
+  padding: 6px;
 }
 
 #readthedocs-search .readthedocs-search-results {
@@ -82,20 +100,30 @@
   hyphens: auto;
 }
 
+#readthedocs-search .readthedocs-search-results h2:hover {
+  color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+}
+
+#readthedocs-search .readthedocs-search-result-container a:hover {
+  color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+  background-color: rgb(245, 245, 245);
+}
+
 #readthedocs-search .readthedocs-search-result-container {
   margin-top: 10px;
   border-bottom: 1px solid #e6e6e6;
   height: max-content;
 }
 
-#readthedocs-search .readthedocs-search-results .action {
-  background-color: rgb(245, 245, 245);
-}
-
 #readthedocs-search .readthedocs-search-result-hit {
   width: 100%;
   display: inline-block;
   padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 #readthedocs-search .readthedocs-search-result-hit a {
@@ -111,6 +139,8 @@
   font-size: 15px;
   color: #6ea0ec;
   border-bottom: 1px solid #6ea0ec;
+  font-family: inherit;
+  line-height: inherit;
 }
 
 #readthedocs-search .readthedocs-search-result-hit--subheading {
@@ -155,10 +185,6 @@
   font-weight: bold;
 }
 
-#readthedocs-search .readthedocs-search-result-hit:hover {
-  background-color: rgb(245, 245, 245);
-}
-
 #readthedocs-search .readthedocs-search-result-hit--active {
   background-color: rgb(245, 245, 245);
 }
@@ -184,6 +210,7 @@
 #readthedocs-search .readthedocs-search-credits a img {
   display: inline-block;
   width: 125px;
+  vertical-align: middle;
 }
 
 #readthedocs-search .readthedocs-search-result-hit--domain-role {
@@ -210,7 +237,7 @@
 #readthedocs-search .readthedocs-search-filters li {
   display: flex;
   align-items: center;
-  margin-right: 15px;
+  margin: 0 0 0 15px;
 }
 
 #readthedocs-search .readthedocs-search-filters li label {
@@ -252,3 +279,4 @@
   list-style-position: inside;
   list-style-type: "\BB  ";
 }
+
