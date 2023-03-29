@@ -475,7 +475,7 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
 
           // remove active classes from all suggestions
           // if the mouse hovers, otherwise styles from
-          // :hover and .active will clash.
+          // :hover and --active will clash.
           search_background.addEventListener("mouseenter", (e) => {
             removeAllActive();
           });
@@ -604,7 +604,7 @@ const generateAndReturnInitialHtml = (config) => {
       // Uncheck all other filters when one is checked.
       // We only support one filter at a time.
       const checkboxes = document.querySelectorAll(
-        "#readthedocs-search form input[type=checkbox]"
+        "#readthedocs-search .readthedocs-search-filters input[type=checkbox]"
       );
       for (const checkbox of checkboxes) {
         if (checkbox.checked && checkbox.value != event.target.value) {
@@ -614,16 +614,18 @@ const generateAndReturnInitialHtml = (config) => {
 
       // Trigger a search with the current selected filter.
       let search_query = getSearchTerm();
-      const filter = getCurrentFilter(config);
-      search_query = filter + " " + search_query;
-      const search_params = {
-        q: search_query,
-      };
-      fetchAndGenerateResults(
-        config.features.search.api_endpoint,
-        search_params,
-        config.features.search.project
-      )();
+        if (search_query !== "") {
+            const filter = getCurrentFilter(config);
+            search_query = filter + " " + search_query;
+            const search_params = {
+                q: search_query,
+            };
+            fetchAndGenerateResults(
+                config.features.search.api_endpoint,
+                search_params,
+                config.features.search.project
+            )();
+        }
     });
   }
 };
