@@ -2,7 +2,6 @@ import styles from "./external-version-warning.css";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
-  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
 /**
@@ -21,31 +20,25 @@ export function injectExternalVersionWarning(config) {
 
   return new Promise((resolve, reject) => {
     document.adoptedStyleSheets.push(styles);
-    library.add(faTriangleExclamation);
     library.add(faCircleXmark);
 
-    const warning = icon(faTriangleExclamation, {
-      title: "Warning",
-      classes: ["warning"],
-    });
     const xmark = icon(faCircleXmark, {
       title: "Close",
-      classes: ["close"],
+        classes: ["readthedocs-external-version-warning-close-icon"],
     });
 
     const admonition = `
 <div id="readthedocs-external-version-warning">
-<div class="title">
-  ${warning.html[0]}
+<div class="readthedocs-external-version-warning-title">
   <p>Warning</p>
+  ${xmark.html[0]}
 </div>
   <p>
     This page
-    <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
+    <a href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
     from a pull request
-    (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>)
+    (<a href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
   </p>
-  ${xmark.html[0]}
 </div>
 `;
 
@@ -60,7 +53,7 @@ export function injectExternalVersionWarning(config) {
 
     // Connect the X to close the banner
     const close = document.querySelector(
-      "#readthedocs-external-version-warning svg.close"
+      "#readthedocs-external-version-warning .readthedocs-external-version-warning-close-icon"
     );
     close.onclick = function () {
       document.querySelector(
