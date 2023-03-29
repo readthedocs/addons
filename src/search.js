@@ -501,9 +501,9 @@ const noResultsFound = () => {
   <div class="readthedocs-search-no-results-tips">
     <p>Try using the following special queries:</p>
     <ul>
-      <li><strong>Exact phrase search</strong>: use double quotes to match a whole pharse: <code>"adding a subproject"</code>.</li>
-      <li><strong>Prefix query</strong>: use an asterisk at the end of any term to prefix a result: <code>environ*</code>.</li>
-      <li><strong>Fuzziness</strong>: add a tilde followed by a number to indicate the fuzziness of that word: <code>getter~2</code>.</li>
+      <li><strong>Exact phrase</strong>: use double quotes to match a whole pharse: <code>"adding a subproject"</code>.</li>
+      <li><strong>Prefix</strong>: use an asterisk at the end of any term to prefix a result: <code>environ*</code>.</li>
+      <li><strong>Fuzziness</strong>: add a tilde and a number to indicate the fuzziness of the word: <code>getter~2</code>.</li>
     </ul>
   </div>
 
