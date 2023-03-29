@@ -1,0 +1,316 @@
+/* https://getbem.com/introduction/ */
+
+#readthedocs-search {
+  /* Remove all the existing CSS style to not depend on anything from the theme */
+  all: unset;
+
+  font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
+  font-size: 16px;
+  color: rgb(64, 64, 64);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 700;
+  display: none;
+  line-height: 1.875;
+}
+
+#readthedocs-search a {
+  color: #2980b9;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#readthedocs-search a:hover {
+  color: inherit;
+  background-color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+}
+
+#readthedocs-search code {
+  background: #fff;
+  padding: 2px 5px;
+  border: solid 1px #e1e4e5;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 87.5%;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  border-radius: 0;
+}
+
+#readthedocs-search .readthedocs-search-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#readthedocs-search .readthedocs-search-container {
+  margin: 5rem auto auto auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100000;
+  height: 60%;
+  width: 60%;
+  max-height: 1000px;
+  max-width: 1500px;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+  line-height: 1.875;
+  background-color: #fcfcfc;
+  box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
+    rgba(0, 0, 0, 0.05) -5px -5px 5px 5px;
+  text-align: left;
+}
+
+#readthedocs-search form {
+  background-color: #eaeaea;
+  margin: 1rem;
+  border-radius: 0.3rem;
+  font-size: 1.2rem;
+  padding: 5px;
+  display: flex;
+}
+
+#readthedocs-search form label {
+  display: inline-block;
+  cursor: default;
+  font-size: 1.3rem;
+  padding-left: 10px;
+  margin: 0;
+  color: #333;
+}
+
+#readthedocs-search form input {
+  border: 0;
+  outline: none;
+  background: inherit;
+  width: max-content;
+  font-size: 1.3rem;
+  box-shadow: none;
+  width: 100%;
+  padding: 6px;
+  line-height: 1;
+}
+
+#readthedocs-search .readthedocs-search-results {
+  padding: 5px;
+  margin: 1rem;
+  overflow-y: scroll;
+  height: 100%;
+  hyphens: auto;
+}
+
+#readthedocs-search .readthedocs-search-results h2:hover {
+  color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+}
+
+#readthedocs-search .readthedocs-search-result-hit:hover {
+  color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+  background-color: rgb(245, 245, 245);
+}
+
+#readthedocs-search .readthedocs-search-result-container {
+  margin-top: 10px;
+  border-bottom: 1px solid #e6e6e6;
+  height: max-content;
+}
+
+#readthedocs-search .readthedocs-search-result-hit {
+  width: 100%;
+  display: inline-block;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+#readthedocs-search .readthedocs-search-result-hit a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#readthedocs-search .readthedocs-search-results h2 {
+  display: inline-block;
+  font-weight: 500;
+  margin-bottom: 15px;
+  margin-top: 0;
+  font-size: 15px;
+  color: #6ea0ec;
+  border-bottom: 1px solid #6ea0ec;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+#readthedocs-search .readthedocs-search-result-hit--subheading {
+  color: black;
+  font-weight: 700;
+  float: left;
+  width: 20%;
+  font-size: 15px;
+  margin-right: 10px;
+  overflow-x: hidden;
+  margin: inherit;
+  line-height: inherit;
+}
+
+#readthedocs-search .readthedocs-search-result-hit--content {
+  margin: 0;
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 5px;
+  margin-bottom: 0;
+  line-height: inherit;
+  float: right;
+  width: calc(80% - 15px);
+  text-align: left;
+}
+
+#readthedocs-search .readthedocs-search-results span {
+  font-style: normal;
+}
+
+#readthedocs-search .readthedocs-search-result-hit h2 span {
+  background-color: #e5f6ff;
+  padding-bottom: 3px;
+  border-bottom-color: black;
+}
+
+#readthedocs-search .readthedocs-search-result-hit span {
+  color: #6ea0ec;
+  font-style: italic;
+  font-weight: bold;
+}
+
+#readthedocs-search .readthedocs-search-result-hit--active {
+  background-color: rgb(245, 245, 245);
+}
+
+#readthedocs-search .readthedocs-search-footer {
+  width: 100%;
+  display: inline-block;
+  height: 30px;
+  background-color: rgb(234, 234, 234);
+  color: #404040;
+}
+
+#readthedocs-search .readthedocs-search-credits {
+  float: right;
+  margin: 0 15px;
+}
+
+#readthedocs-search .readthedocs-search-credits a {
+  text-decoration: underline;
+  display: inline-block;
+}
+
+#readthedocs-search .readthedocs-search-credits a img {
+  display: inline-block;
+  width: 125px;
+  vertical-align: middle;
+}
+
+#readthedocs-search .readthedocs-search-result-hit--domain-role {
+  font-size: 80%;
+  letter-spacing: 1px;
+}
+
+#readthedocs-search .readthedocs-search-filters input {
+  margin: 3px;
+}
+
+#readthedocs-search .readthedocs-search-filters {
+  padding: 5px 10px;
+  margin: 0 1rem;
+  border-radius: 0.5rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #80808057;
+}
+
+#readthedocs-search .readthedocs-search-filters ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+#readthedocs-search .readthedocs-search-filters li {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 15px;
+}
+
+#readthedocs-search .readthedocs-search-filters li label {
+  border: 3px;
+  padding: 3px;
+}
+
+#readthedocs-search .readthedocs-search-filters label {
+  color: black;
+  font-size: 15px;
+  margin: auto;
+}
+
+#readthedocs-search .readthedocs-search-no-results {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 36px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+#readthedocs-search .readthedocs-search-no-results svg {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+#readthedocs-search .readthedocs-search-no-results-footer p {
+  font-size: small;
+}
+
+#readthedocs-search .readthedocs-search-no-results-tips {
+  padding-left: 10%;
+  text-align: left;
+  font-size: 15px;
+  margin-bottom: 1rem;
+}
+
+#readthedocs-search .readthedocs-search-no-results-tips ul {
+  padding: 0 0 0 0.5rem;
+}
+#readthedocs-search .readthedocs-search-no-results-tips li {
+  list-style-position: inside;
+  list-style-type: "\BB  ";
+}
+
+#readthedocs-search .readthedocs-search-help {
+  display: inline-block;
+  font-size: small;
+  margin: 0 15px;
+  padding: 0;
+}
+
+#readthedocs-search .readthedocs-search-help li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 0.25rem;
+}

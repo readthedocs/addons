@@ -62,6 +62,10 @@ module.exports = (env, argv) => {
             },
           },
         },
+        {
+          test: /\.svg/,
+          type: "asset/inline",
+        },
       ],
     },
     plugins: [],
