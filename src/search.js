@@ -11,8 +11,7 @@ import styles from "./search.css";
 import { domReady } from "./utils";
 
 const MAX_SUGGESTIONS = 50;
-const MAX_SECTION_RESULTS = 3;
-const MAX_SUBSTRING_LIMIT = 100;
+const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
 
@@ -150,15 +149,11 @@ const get_section_html = (sectionData, page_link, id) => {
   ];
 
   if (highlights.content.length) {
-    let highlight_content = highlights.content;
-    section_content = [];
-    for (
-      let j = 0;
-      j < highlight_content.length && j < MAX_SECTION_RESULTS;
-      ++j
-    ) {
-      section_content.push("... " + highlight_content[j] + " ...");
-    }
+    section_content = [
+      "... " +
+        highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+        " ... ",
+    ];
   }
 
   let section_link = `${page_link}#${sectionData.id}`;
