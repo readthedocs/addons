@@ -614,18 +614,18 @@ const generateAndReturnInitialHtml = (config) => {
 
       // Trigger a search with the current selected filter.
       let search_query = getSearchTerm();
-        if (search_query !== "") {
-            const filter = getCurrentFilter(config);
-            search_query = filter + " " + search_query;
-            const search_params = {
-                q: search_query,
-            };
-            fetchAndGenerateResults(
-                config.features.search.api_endpoint,
-                search_params,
-                config.features.search.project
-            )();
-        }
+      if (search_query !== "") {
+        const filter = getCurrentFilter(config);
+        search_query = filter + " " + search_query;
+        const search_params = {
+          q: search_query,
+        };
+        fetchAndGenerateResults(
+          config.features.search.api_endpoint,
+          search_params,
+          config.features.search.project
+        )();
+      }
     });
   }
 };
