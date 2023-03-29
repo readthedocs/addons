@@ -11,6 +11,8 @@ import styles from "./search.css";
 import { domReady } from "./utils";
 
 const MAX_SUGGESTIONS = 50;
+// TODO: play more with the substring limit.
+// The idea is to try to fit most of the results in one line.
 const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
@@ -56,9 +58,9 @@ const debounce = (func, wait) => {
  *
  *   <a href="{link}">
  *     <div id="{id}">
- *       <span class="readthedocs-search-result-hit--subheading">
+ *       <p class="readthedocs-search-result-hit--subheading">
  *         {title}
- *       </span>
+ *       </p>
  *       <p class="readthedocs-search-result-hit--content">
  *         {contents[0]}
  *       </p>
@@ -148,6 +150,8 @@ const get_section_html = (sectionData, page_link, id) => {
     sectionData.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...",
   ];
 
+  // NOTE: it seems the API could return "multiple highlights",
+  // but I wasn't able to reproduce that
   if (highlights.content.length) {
     section_content = [
       "... " +
