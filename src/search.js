@@ -750,8 +750,7 @@ function eventListeners(config) {
       // if an item is selected,
       // then redirect to its link
       if (current_item !== null) {
-        const link = current_item.parentElement["href"];
-        window.location.href = link;
+        window.location.href = current_item.href;
       }
     }
   });
