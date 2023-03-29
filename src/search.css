@@ -6,7 +6,7 @@
 
   font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
   font-size: 16px;
-  color: rgb(64,64,64);
+  color: rgb(64, 64, 64);
   position: fixed;
   top: 0;
   left: 0;
@@ -18,27 +18,28 @@
 }
 
 #readthedocs-search a {
-    color: #2980b9;
-    text-decoration: none;
-    cursor: pointer;
+  color: #2980b9;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 #readthedocs-search a:hover {
-    color: inherit;
-    background-color: inherit;
-    text-decoration: inherit;
-    text-shadow: inherit;
+  color: inherit;
+  background-color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
 }
 
 #readthedocs-search code {
-    background: #fff;
-    padding: 2px 5px;
-    border: solid 1px #e1e4e5;
-    color: #333;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-size: 87.5%;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background: #fff;
+  padding: 2px 5px;
+  border: solid 1px #e1e4e5;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 87.5%;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 #readthedocs-search .readthedocs-search-background {
@@ -232,7 +233,7 @@
 }
 
 #readthedocs-search .readthedocs-search-filters input {
-    margin: 3px;
+  margin: 3px;
 }
 
 #readthedocs-search .readthedocs-search-filters {
@@ -293,10 +294,9 @@
 }
 
 #readthedocs-search .readthedocs-search-no-results-tips ul {
-    padding: 0 0 0 1.5rem;
+  padding: 0 0 0 1.5rem;
 }
 #readthedocs-search .readthedocs-search-no-results-tips li {
   list-style-position: inside;
   list-style-type: "\BB  ";
 }
-
