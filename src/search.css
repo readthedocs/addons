@@ -148,8 +148,9 @@
 }
 
 #readthedocs-search .readthedocs-search-result-hit--content span {
-  background-color: #e5f6ff;
-  border-bottom: 1px solid black;
+  color: #6ea0ec;
+  font-style: italic;
+  font-weight: bold;
 }
 
 #readthedocs-search .readthedocs-search-result-hit--subheading span {
