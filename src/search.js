@@ -499,16 +499,16 @@ const noResultsFound = () => {
   ${binoculars.html[0]}
   <p class="title">No results for <strong>"${query}"</strong></p>
   <div class="readthedocs-search-no-results-tips">
-    <p>Try using the following modifiers:</p>
-<ul>
-<li>Use <code>project:slug</code> to search on a specific project.</li>
-<li>Use <code>subprojects:slug</code> to search on its subprojects.</li>
-<li>Use <code>user:@me</code> to only search on your projects.</li>
-</ul>
-
+    <p>Try using the following special queries:</p>
+    <ul>
+      <li><strong>Exact phrase search</strong>: use double quotes to match a whole pharse: <code>"adding a subproject"</code>.</li>
+      <li><strong>Prefix query</strong>: use an asterisk at the end of any term to prefix a result: <code>environ*</code>.</li>
+      <li><strong>Fuzziness</strong>: add a tilde followed by a number to indicate the fuzziness of that word: <code>getter~2</code>.</li>
+    </ul>
   </div>
+
   <div class="readthedocs-search-no-results-footer">
-    <p>Believe this query should return results? <a target="_blank" href="https://github.com/readthedocs/readthedocs.org/issues/new?title=Search:+missing+results+for+query:+'${query}'">Let us know</a>.</p>
+    <p>Learn more about the query syntax supported in our <a target="_blank" href="https://docs.readthedocs.io/page/server-side-search/syntax.html">documentation</a>.</p>
   </div>
 </div>
 `;
