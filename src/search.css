@@ -53,6 +53,7 @@
   border-radius: 0.3rem;
   font-size: 1.2rem;
   padding: 5px;
+  display: flex;
 }
 
 #readthedocs-search form label {
@@ -70,6 +71,7 @@
   width: max-content;
   font-size: 1.3rem;
   box-shadow: none;
+  width: 100%;
 }
 
 #readthedocs-search .readthedocs-search-results {
