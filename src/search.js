@@ -81,24 +81,23 @@ const buildSection = function (id, title, link, contents) {
   });
   span_element.innerHTML = title;
 
-  let div_element = createDomNode("div", {
-    id: id,
-  });
-  div_element.appendChild(span_element);
-
-  for (var i = 0; i < contents.length; i += 1) {
-    let p_element = createDomNode("p", {
-      class: "readthedocs-search-result-hit--content",
-    });
-    p_element.innerHTML = contents[i];
-    div_element.appendChild(p_element);
+  if (contents.length !== 1) {
+    // NOTE: I don't know when this happens.
+    console.warning("There are more content in this section.");
   }
+
+  let p_element = createDomNode("p", {
+    class: "readthedocs-search-result-hit--content",
+  });
+  p_element.innerHTML = contents[0];
 
   let section = createDomNode("a", {
     href: link,
+    id: id,
     class: "readthedocs-search-result-hit",
   });
-  section.appendChild(div_element);
+  section.appendChild(span_element);
+  section.appendChild(p_element);
   return section;
 };
 
@@ -315,11 +314,8 @@ const removeAllActive = () => {
   const results = document.querySelectorAll(
     "#readthedocs-search .readthedocs-search-results .readthedocs-search-result-hit--active"
   );
-  const results_arr = Object.keys(results).map((i) => results[i]);
-  for (let i = 1; i <= results_arr.length; ++i) {
-    results_arr[i - 1].classList.remove(
-      ".readthedocs-search-result-hit--active"
-    );
+  for (let element of results) {
+    element.classList.remove("readthedocs-search-result-hit--active");
   }
 };
 
