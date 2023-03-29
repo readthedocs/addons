@@ -154,19 +154,11 @@
 }
 
 #readthedocs-search .readthedocs-search-result-hit:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+#readthedocs-search .readthedocs-search-result-hit--active {
   background-color: rgb(245, 245, 245);
-}
-
-.br-for-hits {
-  display: block;
-  content: "";
-  margin-top: 10px;
-}
-
-.rtd_ui_search_subtitle {
-  all: unset;
-  color: inherit;
-  font-size: 85%;
 }
 
 #readthedocs-search .readthedocs-search-footer {
@@ -199,7 +191,7 @@
 
 #readthedocs-search .readthedocs-search-filters {
   padding: 5px;
-  margin-left: 1rem;
+  margin: 0 1rem;
 }
 
 #readthedocs-search .readthedocs-search-filters ul {
@@ -224,11 +216,6 @@
   color: black;
   font-size: 15px;
   margin: auto;
-}
-
-.search__filters .search__filters__title {
-  color: black;
-  font-size: 15px;
 }
 
 #readthedocs-search .readthedocs-search-no-results {

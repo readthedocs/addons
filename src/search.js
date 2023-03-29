@@ -357,7 +357,7 @@ const selectNextResult = (forward) => {
     "#readthedocs-search .readthedocs-search-result-hit "
   );
   const current = document.querySelector(
-    "#readthedocs-search .readthedocs-search-results .readthedocs-search-result-hit--active"
+    "#readthedocs-search .readthedocs-search-result-hit--active"
   );
 
   let next_id = 1;
@@ -754,7 +754,7 @@ function eventListeners(config) {
     if (e.keyCode === 13) {
       e.preventDefault();
       const current_item = document.querySelector(
-        ".outer_div_page_results.active"
+        "#readthedocs-search .readthedocs-search-result-hit--active"
       );
       // if an item is selected,
       // then redirect to its link
