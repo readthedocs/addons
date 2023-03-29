@@ -768,7 +768,7 @@ function eventListeners(config) {
     // element clicked has <body> as the parent Node.
     // This is done so that search modal only gets closed
     // if the user clicks on the backdrop area.
-    if (e.target.parentNode === document.body) {
+    if (e.target.parentNode.parentNode === document.body) {
       removeSearchModal();
     }
   });
