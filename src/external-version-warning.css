@@ -17,13 +17,13 @@
 }
 
 #readthedocs-external-version-warning a {
-    color: #088cdb;
-    text-decoration: none;
-    text-shadow: none;
+  color: #088cdb;
+  text-decoration: none;
 }
 
 #readthedocs-external-version-warning a:hover {
-    background-color: inherit;
+  background-color: inherit;
+  text-shadow: none;
 }
 
 #readthedocs-external-version-warning p {
@@ -33,23 +33,27 @@
   line-weight: 24px;
 }
 
-#readthedocs-external-version-warning .readthedocs-external-version-warning-title {
-    border-radius: 0.5rem 0.5rem 0 0;
+#readthedocs-external-version-warning
+  .readthedocs-external-version-warning-title {
+  border-radius: 0.5rem 0.5rem 0 0;
   display: block;
   height: 25px;
   background-color: rgb(190, 190, 190);
 }
 
-#readthedocs-external-version-warning .readthedocs-external-version-warning-title p {
+#readthedocs-external-version-warning
+  .readthedocs-external-version-warning-title
+  p {
   display: inline-block;
   font-weight: bold;
   margin: 0;
   color: white;
 }
 
-#readthedocs-external-version-warning .readthedocs-external-version-warning-close-icon {
-    float: right;
-    margin: 5px 10px;
+#readthedocs-external-version-warning
+  .readthedocs-external-version-warning-close-icon {
+  float: right;
+  margin: 5px 10px;
   cursor: pointer;
   padding: 0;
   color: white;

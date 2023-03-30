@@ -1,8 +1,6 @@
 import styles from "./external-version-warning.css";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import {
-  faCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Inject a warning informing the documentation comes from an external version (e.g. pull request)
@@ -24,7 +22,7 @@ export function injectExternalVersionWarning(config) {
 
     const xmark = icon(faCircleXmark, {
       title: "Close",
-        classes: ["readthedocs-external-version-warning-close-icon"],
+      classes: ["readthedocs-external-version-warning-close-icon"],
     });
 
     const admonition = `
