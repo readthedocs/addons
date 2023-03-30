@@ -273,7 +273,7 @@
 #readthedocs-search .readthedocs-search-no-results {
   text-align: center;
   margin-top: 1rem;
-  padding: 36px;
+  padding: 15px;
   margin: 0 auto;
   width: 80%;
 }
@@ -288,7 +288,7 @@
 }
 
 #readthedocs-search .readthedocs-search-no-results-tips {
-  padding-left: 10%;
+  padding: 0;
   text-align: left;
   font-size: 15px;
   margin-bottom: 1rem;
