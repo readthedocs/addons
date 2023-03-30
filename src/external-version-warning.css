@@ -18,7 +18,14 @@
 
 #readthedocs-external-version-warning a {
     color: #088cdb;
+    text-decoration: none;
+    text-shadow: none;
 }
+
+#readthedocs-external-version-warning a:hover {
+    background-color: inherit;
+}
+
 #readthedocs-external-version-warning p {
   display: inline-block;
   margin-top: 1em;
