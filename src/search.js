@@ -738,6 +738,13 @@ function eventListeners(config) {
     }
   });
 
+  search_input.addEventListener("focusin", (e) => {
+    search_input.parentNode.classList.add("readthedocs-search-input--focus");
+  });
+  search_input.addEventListener("focusout", (e) => {
+    search_input.parentNode.classList.remove("readthedocs-search-input--focus");
+  });
+
   search_input.addEventListener("keydown", (e) => {
     // if "ArrowDown is pressed"
     if (e.keyCode === 40) {
