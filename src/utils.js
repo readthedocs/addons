@@ -1,7 +1,11 @@
+import packagejson from "../package.json";
+
 export function isReadTheDocsEmbedPresent() {
   const url = "/_/static/javascript/readthedocs-doc-embed.js";
   return document.querySelectorAll(`script[src="${url}"]`).length > 0;
 }
+
+export const CLIENT_VERSION = packagejson.version;
 
 export const domReady = new Promise((resolve) => {
   if (

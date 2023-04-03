@@ -8,7 +8,7 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styles from "./search.css";
-import { domReady } from "./utils";
+import { domReady, CLIENT_VERSION } from "./utils";
 
 const MAX_SUGGESTIONS = 50;
 // TODO: play more with the substring limit.
@@ -452,7 +452,10 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
   let fetchFunc = () => {
     const url = api_endpoint + "?" + new URLSearchParams(parameters).toString();
 
-    fetch(url, { method: "GET" })
+    fetch(url, {
+      method: "GET",
+      headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error();

@@ -1,3 +1,5 @@
+import { CLIENT_VERSION } from "./utils";
+
 /**
   Register page view on Read the Docs analytics feature.
   https://docs.readthedocs.io/en/stable/reference/analytics.html
@@ -11,7 +13,11 @@ export function registerPageView(config) {
 
   const url =
     "/_" + "/api/v2/analytics/?" + new URLSearchParams(params).toString();
-  fetch(url, { method: "GET", cache: "no-store" })
+  fetch(url, {
+    method: "GET",
+    cache: "no-store",
+    headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error();
