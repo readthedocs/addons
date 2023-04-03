@@ -54,7 +54,7 @@
 }
 
 #readthedocs-search .readthedocs-search-container {
-  margin: 5rem auto auto auto;
+  margin: 5em auto auto auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #e0e0e0;
-  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+  border-radius: 0.7em 0.7em 0.7em 0.7em;
   line-height: 1.875;
   background-color: #fcfcfc;
   box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
@@ -79,9 +79,9 @@
 
 #readthedocs-search form {
   background-color: #eaeaea;
-  margin: 1rem;
-  border-radius: 0.3rem;
-  font-size: 1.2rem;
+  margin: 1.2em;
+  border-radius: 0.25em;
+  font-size: 1.15em;
   padding: 5px;
   display: flex;
 }
@@ -94,7 +94,7 @@
 #readthedocs-search form label {
   display: inline-block;
   cursor: default;
-  font-size: 1.3rem;
+  font-size: 1.15em;
   padding-left: 10px;
   margin: 0;
   color: #333;
@@ -105,16 +105,17 @@
   outline: none;
   background: inherit;
   width: max-content;
-  font-size: 1.3rem;
+  font-size: 1.15em;
   box-shadow: none;
   width: 100%;
   padding: 6px;
   line-height: 1;
+  font-family: inherit;
 }
 
 #readthedocs-search .readthedocs-search-results {
   padding: 5px;
-  margin: 1rem;
+  margin: 1.15em;
   overflow-y: scroll;
   height: 100%;
   hyphens: auto;
@@ -142,7 +143,7 @@
 #readthedocs-search .readthedocs-search-result-hit {
   width: 100%;
   display: inline-block;
-  padding: 0 1rem;
+  padding: 0 1.15em;
   box-sizing: border-box;
 }
 
@@ -244,8 +245,8 @@
 
 #readthedocs-search .readthedocs-search-filters {
   padding: 5px 10px;
-  margin: 0 1rem;
-  border-radius: 0.5rem;
+  margin: 0 1.15em;
+  border-radius: 0.7em;
   border-style: solid;
   border-width: 1px;
   border-color: #80808057;
@@ -277,15 +278,15 @@
 
 #readthedocs-search .readthedocs-search-no-results {
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 1.15em;
   padding: 15px;
   margin: 0 auto;
   width: 80%;
 }
 
 #readthedocs-search .readthedocs-search-no-results svg {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 4em;
+  margin-bottom: 1.15em;
 }
 
 #readthedocs-search .readthedocs-search-no-results-footer p {
@@ -296,11 +297,11 @@
   padding: 0;
   text-align: left;
   font-size: 15px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.15em;
 }
 
 #readthedocs-search .readthedocs-search-no-results-tips ul {
-  padding: 0 0 0 0.5rem;
+  padding: 0 0 0 0.7em;
 }
 #readthedocs-search .readthedocs-search-no-results-tips li {
   list-style-position: inside;
@@ -317,5 +318,5 @@
 #readthedocs-search .readthedocs-search-help li {
   list-style: none;
   display: inline-block;
-  margin: 0 0.25rem;
+  margin: 0 0.4em;
 }
