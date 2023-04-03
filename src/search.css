@@ -284,6 +284,10 @@
   width: 80%;
 }
 
+#readthedocs-search .readthedocs-search-no-results-title {
+    margin-bottom: 0.5em;
+}
+
 #readthedocs-search .readthedocs-search-no-results svg {
   font-size: 4em;
   margin-bottom: 1.15em;
