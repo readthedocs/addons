@@ -306,10 +306,12 @@
 
 #readthedocs-search .readthedocs-search-no-results-tips ul {
   padding: 0 0 0 0.7em;
+  margin: 0;
 }
 #readthedocs-search .readthedocs-search-no-results-tips li {
   list-style-position: inside;
   list-style-type: "\BB  ";
+  margin: 0;
 }
 
 #readthedocs-search .readthedocs-search-help {
