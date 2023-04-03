@@ -7,7 +7,7 @@ export function injectExternalVersionWarning(config) {
   // This way, we allow customization of the look&feel without compromising the logic.
   if (
     !config.features.external_version_warning.enabled ||
-    !config.version.external
+    !config.version.type !== "external"
   ) {
     return false;
   }
@@ -20,7 +20,7 @@ export function injectExternalVersionWarning(config) {
     This page
     <a class="reference external" href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created </a>
     from a pull request
-    (<a class="reference external" href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
+    (<a class="reference external" href="${config.project.repository.url}/pull/${config.version.slug}">#${config.version.slug}</a>).
   </p>
 </div>
 `;

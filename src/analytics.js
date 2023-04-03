@@ -62,8 +62,8 @@ export function injectAnalytics(config) {
         cookie_expires: 0, // Session cookie (non-persistent)
         dimension1: config.project.slug,
         dimension2: config.version.slug,
-        dimension3: config.project.language,
-        dimension5: config.project.programming_language,
+        dimension3: config.project.language.code,
+        dimension5: config.project.programming_language.code,
         groups: "rtfd",
       });
 
