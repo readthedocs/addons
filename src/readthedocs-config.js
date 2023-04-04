@@ -21,6 +21,10 @@ export function getReadTheDocsConfig() {
     url = "../readthedocs-config.json";
   }
 
+  if (window.location.href.indexOf(".readthedocs.build") !== -1) {
+    url = "../readthedocs-config.json";
+  }
+
   return fetch(url, {
     method: "GET",
     headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
