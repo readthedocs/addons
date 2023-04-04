@@ -27,16 +27,19 @@ export function injectExternalVersionWarning(config) {
 
     const admonition = `
 <div id="readthedocs-external-version-warning">
-<div class="readthedocs-external-version-warning-title">
-  <p>Warning</p>
-  ${xmark.html[0]}
-</div>
-  <p>
-    This page
-    <a href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
-    from a pull request
-    (<a href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
-  </p>
+<div class="readthedocs-external-version-warning-shadow"></div>
+<div class="readthedocs-external-version-warning-container">
+  <div class="readthedocs-external-version-warning-title">
+    <p>Warning</p>
+    ${xmark.html[0]}
+  </div>
+    <p>
+      This page
+      <a href="${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/">was created</a>
+      from a pull request
+      (<a href="${config.project.repository_url}/pull/${config.version.slug}">#${config.version.slug}</a>).
+    </p>
+  </div>
 </div>
 `;
 
@@ -45,9 +48,7 @@ export function injectExternalVersionWarning(config) {
     //     admonition = config.features.banner.external.template;
     // }
 
-    let node = document.createElement("div");
-    node.innerHTML = admonition;
-    document.body.append(node);
+    document.body.insertAdjacentHTML("beforeend", admonition);
 
     // Connect the X to close the banner
     const close = document.querySelector(
