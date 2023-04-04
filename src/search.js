@@ -16,6 +16,7 @@ const MAX_SUGGESTIONS = 50;
 const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
+const MIN_CHARACTERS_QUERY = 3;
 
 /**
  * Debounce the function.
@@ -710,7 +711,7 @@ function eventListeners(config) {
 
   search_background.addEventListener("input", (e) => {
     let search_query = getSearchTerm();
-    if (search_query.length > 0) {
+    if (search_query.length >= MIN_CHARACTERS_QUERY) {
       if (current_request !== null) {
         // cancel previous ajax request.
         current_request.cancel();
