@@ -35,7 +35,7 @@ export function injectExternalVersionWarning(config) {
 
     // TODO the URLs here should come from a backend API, instead of manually
     // created here.
-    // TODO the pull request URL likely 
+    // TODO the pull request URL likely
     const admonition = `
 <div class="readthedocs-banner version-warning">
   <div class="title">
