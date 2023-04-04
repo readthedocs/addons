@@ -583,8 +583,8 @@ const generateAndReturnInitialHtml = (config) => {
   );
   // Add filters below the search box if present.
   if (filters.length > 0) {
-    let li = createDomNode("li", {});
-    li.innerText = "Filters:";
+    let li = createDomNode("li", { class: "readthedocs-search-filters-title" });
+    li.innerText = "Filters";
     filters_list.appendChild(li);
   }
 

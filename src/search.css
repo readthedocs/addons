@@ -245,6 +245,16 @@
   letter-spacing: 1px;
 }
 
+#readthedocs-search
+  .readthedocs-search-filters
+  li.readthedocs-search-filters-title {
+  position: absolute;
+  top: 80px;
+  background: rgb(252, 252, 252);
+  margin: 0 5px;
+  padding: 0 5px;
+}
+
 #readthedocs-search .readthedocs-search-filters input {
   margin: 3px;
 }
