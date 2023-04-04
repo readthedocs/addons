@@ -101,9 +101,9 @@
 }
 
 #readthedocs-search form label svg {
-    font-size: inherit;
-    height: 1em;
-    text-align: inherit;
+  font-size: inherit;
+  height: 1em;
+  text-align: inherit;
 }
 
 #readthedocs-search form input {
@@ -291,8 +291,8 @@
 }
 
 #readthedocs-search .readthedocs-search-no-results-title {
-    margin-top: 0;
-    margin-bottom: 0.5em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
 }
 
 #readthedocs-search .readthedocs-search-no-results svg {
