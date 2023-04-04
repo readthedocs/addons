@@ -500,7 +500,7 @@ const noResultsFound = () => {
   const template = `
 <div class="readthedocs-search-no-results">
   ${binoculars.html[0]}
-  <p class="title">No results for <strong>"${query}"</strong></p>
+  <p class="readthedocs-search-no-results-title">No results for <strong>"${query}"</strong></p>
   <div class="readthedocs-search-no-results-tips">
     <p>Try using the following special queries:</p>
     <ul>
