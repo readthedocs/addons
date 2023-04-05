@@ -7,8 +7,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
-import styles from "./search.css";
+import styleSheet from "./search.css";
 import { domReady } from "./utils";
+import { html, render, LitElement } from "lit";
 
 const MAX_SUGGESTIONS = 50;
 // TODO: play more with the substring limit.
@@ -16,6 +17,198 @@ const MAX_SUGGESTIONS = 50;
 const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
+const API_ENDPOINT = "/_/api/v3/search/";
+
+export class SearchElement extends LitElement {
+  static elementName = "readthedocs-search";
+
+  static properties = {
+    config: {
+      state: true,
+      hasChanged: (before, after) => {
+        if (after && Object.keys(after).length) {
+        }
+      },
+    },
+    filters: { state: true },
+    show: { type: Boolean },
+  };
+
+  // Show / Hide on CSS file
+  // :host([show]) {
+  //     display: block;
+  // }
+  // :host([!show]) svg {
+  //     display: none;
+  // }
+  static styles = styleSheet;
+
+  constructor() {
+    super();
+
+    this.className = this.className || "raised floating";
+    this.config = {};
+    this.filters = {};
+  }
+
+  loadConfig(config) {
+    this.config = config;
+  }
+
+  render() {
+    // The element doesn't yet have our config, don't render it.
+    if (!this.config) {
+      return;
+    }
+
+    if (
+      true
+      // this.config.features &&
+      // this.config.features.search &&
+      // this.config.features.search.enabled
+    ) {
+      return this.renderSearchModal();
+    }
+  }
+
+  closeModal(e) {
+    this.show = false;
+  }
+
+  showModal(e) {
+    this.show = true;
+  }
+
+  renderSearchModal() {
+    console.log("renderSearchModal");
+    library.add(faMagnifyingGlass);
+    library.add(faCircleXmark);
+    library.add(faCircleNotch);
+    library.add(faBinoculars);
+
+    const magnifierIcon = icon(faMagnifyingGlass, {
+      title: "Magnifier",
+      classes: ["magnifier"],
+    });
+    const filters = this.config.features.search.filters;
+
+    return html`
+      <div role="search">
+        <div @click=${this.closeModal} class="background"></div>
+        <div class="content">
+          <form>
+            <label>${magnifierIcon.html[0]}</label>
+            <input placeholder="Search docs" type="search" autocomplete="off" />
+          </form>
+          <div class="title">Filters</div>
+          <div @click=${this.filterSelected} class="filters">
+            <ul></ul>
+          </div>
+          <div class="results"></div>
+          <div class="footer">
+            <ul class="help">
+              <li><code>Enter</code> to select</li>
+              <li><code>Up</code>/<code>Down</code> to navigate</li>
+              <li><code>Esc</code> to close</li>
+            </ul>
+            <div class="credits">
+              Search powered by
+              <a href="https://about.readthedocs.com/">
+                <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  addFilter(filter) {
+    // inject a filter into the component
+    html`
+      <li>
+        <input type="checkbox" value="${this.filters.defaults[0].value}" />
+        <label>${this.filters.defaults[0].name}</label>
+      </li>
+    `;
+  }
+
+  filterSelected(e) {
+    console.log("Filter selected: " + e.target.textContent);
+    //     // Uncheck all other filters when one is checked.
+    //     // We only support one filter at a time.
+    //     const checkboxes = document.querySelectorAll(
+    //         "#readthedocs-search .readthedocs-search-filters input[type=checkbox]"
+    //     );
+    //     for (const checkbox of checkboxes) {
+    //         if (checkbox.checked && checkbox.value != event.target.value) {
+    //             checkbox.checked = false;
+    //         }
+    //     }
+
+    //     // Trigger a search with the current selected filter.
+    //     let search_query = getSearchTerm();
+    //     if (search_query !== "") {
+    //         const filter = getCurrentFilter(config);
+    //         search_query = filter + " " + search_query;
+    //         const search_params = {
+    //             q: search_query,
+    //         };
+    //         fetchAndGenerateResults(
+    //             config.features.search.api_endpoint,
+    //             search_params,
+    //             config.features.search.project
+    //         )();
+    //     }
+    // });
+  }
+
+  loadResults() {}
+
+  attachEvents() {
+    // eventListeners(config);
+  }
+
+  _handleShowModal(e) {
+    console.log("key pressed");
+    if (e.keyCode === 191 && !this.show) {
+      // prevent opening "Quick Find" in Firefox
+      e.preventDefault();
+      this.show = true;
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // open search modal if "forward slash" button is pressed
+    document.addEventListener("keydown", this._handleShowModal);
+  }
+  disconnectedCallback() {
+    document.removeEventListener("keydown", this._handleShowModal);
+    super.disconnectedCallback();
+  }
+}
+
+export class SearchAddon {
+  constructor(config) {
+    customElements.define("readthedocs-search", SearchElement);
+    let elems = document.querySelectorAll("readthedocs-search");
+    if (!elems.length) {
+      console.log("no defaul element");
+      elems = [new SearchElement()];
+      render(elems[0], document.body);
+    }
+
+    for (const elem of elems) {
+      elem.loadConfig(config);
+    }
+  }
+
+  static is_enabled(config) {
+    return true;
+    // return config.features && config.features.search.enabled;
+  }
+}
 
 /**
  * Debounce the function.
@@ -524,109 +717,7 @@ const noResultsFound = () => {
  * to show our search results.
  *
  */
-const generateAndReturnInitialHtml = (config) => {
-  const magnifier = icon(faMagnifyingGlass, {
-    title: "Magnifier",
-    classes: ["magnifier"],
-  });
-  const xmark = icon(faCircleXmark, {
-    title: "Close",
-    classes: ["close"],
-  });
-  const filters = config.features.search.filters;
-
-  const search_html = `
-<section id="readthedocs-search" role="search">
-    <!-- Warning: this HTML structure and CSS styles are still in beta. They could change without notice.  -->
-    <div class="readthedocs-search-background">
-        <div class="readthedocs-search-container">
-            <form>
-                <label>
-                    ${magnifier.html[0]}
-                </label>
-                <input placeholder="Search docs" type="search" autocomplete="off">
-            </form>
-            <section class="readthedocs-search-filters">
-                <ul>
-                    <!-- Rendered at load time -->
-                </ul>
-            </section>
-            <div class="readthedocs-search-results">
-                <!-- Rendered after the query is performed -->
-            </div>
-            <div class="readthedocs-search-footer">
-                <ul class="readthedocs-search-help">
-                    <li><code>Enter</code> to select</li>
-                    <li><code>Up</code>/<code>Down</code> to navigate</li>
-                    <li><code>Esc</code> to close</li>
-                </ul>
-                <div class="readthedocs-search-credits">
-                    Search powered by
-                    <a href="https://about.readthedocs.com/">
-                        <img src="${READTHEDOCS_LOGO}" alt="Read the Docs">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-`;
-
-  document.body.insertAdjacentHTML("beforeend", search_html);
-
-  let filters_list = document.querySelector(
-    "#readthedocs-search .readthedocs-search-filters ul"
-  );
-  // Add filters below the search box if present.
-  if (filters.length > 0) {
-    let li = createDomNode("li", {});
-    li.innerText = "Filters:";
-    filters_list.appendChild(li);
-  }
-
-  // Each checkbox contains the index of the filter,
-  // so we can get the proper filter when selected.
-  for (let i = 0, len = filters.length; i < len; i++) {
-    const [name, filter] = filters[i];
-    let li = createDomNode("li", { title: filter });
-    let id = `readthedocs-search-filter-${i}`;
-    let checkbox = createDomNode("input", { type: "checkbox", id: id });
-    let label = createDomNode("label", { for: id });
-    label.innerText = name;
-    checkbox.value = i;
-    li.appendChild(checkbox);
-    li.appendChild(label);
-    filters_list.appendChild(li);
-
-    checkbox.addEventListener("click", (event) => {
-      // Uncheck all other filters when one is checked.
-      // We only support one filter at a time.
-      const checkboxes = document.querySelectorAll(
-        "#readthedocs-search .readthedocs-search-filters input[type=checkbox]"
-      );
-      for (const checkbox of checkboxes) {
-        if (checkbox.checked && checkbox.value != event.target.value) {
-          checkbox.checked = false;
-        }
-      }
-
-      // Trigger a search with the current selected filter.
-      let search_query = getSearchTerm();
-      if (search_query !== "") {
-        const filter = getCurrentFilter(config);
-        search_query = filter + " " + search_query;
-        const search_params = {
-          q: search_query,
-        };
-        fetchAndGenerateResults(
-          config.features.search.api_endpoint,
-          search_params,
-          config.features.search.project
-        )();
-      }
-    });
-  }
-};
+const generateAndReturnInitialHtml = (config) => {};
 
 /**
  * Opens the search modal.
@@ -649,19 +740,19 @@ const showSearchModal = (custom_query) => {
 /**
  * Closes the search modal.
  */
-const removeSearchModal = () => {
-  // removes previous results before closing
-  removeResults();
+// const removeSearchModal = () => {
+//   // removes previous results before closing
+//   removeResults();
 
-  // sets the value of input field to empty string and remove the focus.
-  document.querySelector("#readthedocs-search form input[type=search]").value =
-    "";
+//   // sets the value of input field to empty string and remove the focus.
+//   document.querySelector("#readthedocs-search form input[type=search]").value =
+//     "";
 
-  let element = document.querySelector("#readthedocs-search");
-  if (element && element.style) {
-    element.style.display = "none";
-  }
-};
+//   let element = document.querySelector("#readthedocs-search");
+//   if (element && element.style) {
+//     element.style.display = "none";
+//   }
+// };
 
 /**
  * Get the current selected filter.
@@ -681,21 +772,13 @@ function getCurrentFilter(config) {
 }
 
 export function initializeSearchAsYouType(config) {
-  if (!config.features || !config.features.search) {
-    return false;
+  // TODO drop this function and move this logic to index.js instead. This
+  // function can go away once all addons share a similar interface for common
+  // logic, like checking if an addon is enabled and customizing the adddon.
+  if (SearchAddon.is_enabled) {
+    console.log("works");
+    return new SearchAddon(config);
   }
-
-  document.adoptedStyleSheets.push(styles);
-  library.add(faMagnifyingGlass);
-  library.add(faCircleXmark);
-  library.add(faCircleNotch);
-  library.add(faBinoculars);
-  domReady.then(() => {
-    generateAndReturnInitialHtml(config);
-    eventListeners(config);
-    // TODO: remove this showSearchModal at the beginning, this is just for testing purposes
-    showSearchModal();
-  });
 }
 
 function eventListeners(config) {
@@ -781,15 +864,6 @@ function eventListeners(config) {
   document.addEventListener("keydown", (e) => {
     if (e.keyCode === 27) {
       removeSearchModal();
-    }
-  });
-
-  // open search modal if "forward slash" button is pressed
-  document.addEventListener("keydown", (e) => {
-    if (e.keyCode === 191 && !isModalVisible()) {
-      // prevent opening "Quick Find" in Firefox
-      e.preventDefault();
-      showSearchModal();
     }
   });
 }
