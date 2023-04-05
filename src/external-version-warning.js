@@ -3,7 +3,7 @@ import {
   faCircleXmark,
   faCodePullRequest,
 } from "@fortawesome/free-solid-svg-icons";
-import { html, render, LitElement } from "lit";
+import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./warning.css";
 
@@ -50,7 +50,8 @@ export class WarningElement extends LitElement {
   render() {
     // The element doesn't yet have our config, don't render it.
     if (!this.config) {
-      return;
+      // nothing is a special Lit response type
+      return nothing;
     }
 
     if (
@@ -74,20 +75,22 @@ export class WarningElement extends LitElement {
       classes: ["header", "icon"],
     });
 
-    return html` <div @click=${this.closeWarning}>
-      ${iconPullRequest.node[0]}
-      <div class="title">
-        This page was created from a pull request build
-        <div class="right">${xmark.node[0]}</div>
+    return html`
+      <div>
+        ${iconPullRequest.node[0]}
+        <div class="title">
+          This page was created from a pull request build
+          <div class="right" @click=${this.closeWarning}>${xmark.node[0]}</div>
+        </div>
+        <div class="content">
+          This page
+          <a href="${this.urls.build}">was created</a>
+          from a pull request (<a href="${this.urls.external}"
+            >#${this.config.version.slug}</a
+          >).
+        </div>
       </div>
-      <div class="content">
-        This page
-        <a href="${this.urls.build}">was created</a>
-        from a pull request (<a href="${this.urls.external}"
-          >#${this.config.version.slug}</a
-        >).
-      </div>
-    </div>`;
+    `;
   }
 
   closeWarning(e) {
