@@ -79,6 +79,22 @@
                 "branch": "main",
                 "filepath": "/examples/sphinx/docs/index.rst"
             }
+        },
+        "search": {
+            "project": "example",
+            "version": "latest",
+            "api_endpoint": "/_/api/v3/search/",
+            "filters": [
+                [
+                  "Search only in this project",
+                  "project:example/latest"
+                ],
+                [
+                  "Search subprojects",
+                  "subprojects:example/latest"
+                ]
+            ],
+            "default_filter": "subprojects:example/latest"
         }
     }
 }
