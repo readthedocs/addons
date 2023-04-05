@@ -25,13 +25,10 @@ export class SearchElement extends LitElement {
   static properties = {
     config: {
       state: true,
-      hasChanged: (before, after) => {
-        if (after && Object.keys(after).length) {
-        }
-      },
+      reactive: true,
     },
     filters: { state: true },
-    show: { type: Boolean },
+    show: { type: Boolean, reactive: true },
   };
 
   // Show / Hide on CSS file
@@ -48,7 +45,14 @@ export class SearchElement extends LitElement {
 
     this.className = this.className || "raised floating";
     this.config = {};
-    this.filters = {};
+    this.filters = {
+      defaults: [
+        {
+          name: "Search only in this project",
+          value: "projects:example",
+        },
+      ],
+    };
   }
 
   loadConfig(config) {
@@ -90,7 +94,6 @@ export class SearchElement extends LitElement {
       title: "Magnifier",
       classes: ["magnifier"],
     });
-    const filters = this.config.features.search.filters;
 
     return html`
       <div role="search">
@@ -102,7 +105,7 @@ export class SearchElement extends LitElement {
           </form>
           <div class="title">Filters</div>
           <div @click=${this.filterSelected} class="filters">
-            <ul></ul>
+            ${this.filtersTemplate()}
           </div>
           <div class="results"></div>
           <div class="footer">
@@ -123,9 +126,10 @@ export class SearchElement extends LitElement {
     `;
   }
 
-  addFilter(filter) {
-    // inject a filter into the component
-    html`
+  filtersTemplate() {
+    // TODO: iterate over the default filters and generate more than 1
+    // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
+    return html`
       <li>
         <input type="checkbox" value="${this.filters.defaults[0].value}" />
         <label>${this.filters.defaults[0].name}</label>
@@ -181,6 +185,7 @@ export class SearchElement extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     // open search modal if "forward slash" button is pressed
+    console.log("connectedCallback");
     document.addEventListener("keydown", this._handleShowModal);
   }
   disconnectedCallback() {
@@ -194,7 +199,7 @@ export class SearchAddon {
     customElements.define("readthedocs-search", SearchElement);
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
-      console.log("no defaul element");
+      console.log("no default element");
       elems = [new SearchElement()];
       render(elems[0], document.body);
     }
