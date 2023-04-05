@@ -40,7 +40,7 @@ export function injectNonLatestVersionWarning(config) {
     );
     let node = document.createElement("div");
     node.innerHTML = admonition;
-      
+
     if (main) {
       main.insertBefore(node, main.firstChild);
     }
