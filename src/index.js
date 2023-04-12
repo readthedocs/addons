@@ -22,7 +22,7 @@ export function setup() {
         ];
 
         for (const addon of addons) {
-          if (addon.isEnabled) {
+          if (addon.isEnabled(config)) {
             promises.push(
               new Promise((resolve) => {
                 resolve(new addon(config));
