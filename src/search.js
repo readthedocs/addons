@@ -685,6 +685,10 @@ function getCurrentFilter(config) {
 }
 
 export function initializeSearchAsYouType(config) {
+  if (!config.features || !config.features.search) {
+    return false;
+  }
+
   document.adoptedStyleSheets.push(styles);
   library.add(faMagnifyingGlass);
   library.add(faCircleXmark);
