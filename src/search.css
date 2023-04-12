@@ -46,7 +46,7 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-:host > div .content {
+:host > div > div.content {
   margin: 5em auto auto auto;
   position: absolute;
   top: 0;
@@ -85,11 +85,8 @@
 }
 
 :host > div form > label {
-  display: inline-block;
-  cursor: default;
   font-size: 1.15em;
   padding-left: 10px;
-  margin: 0;
   color: #333;
 }
 
@@ -200,7 +197,7 @@
   background-color: rgb(245, 245, 245);
 }
 
-:host > div .footer {
+:host div.content > div.footer {
   width: 100%;
   display: inline-block;
   height: 30px;
@@ -243,7 +240,7 @@
 }
 
 :host > div .filters li {
-  display: flex;
+  display: inline-block;
   margin: 0 0 0 15px;
 }
 
@@ -255,7 +252,7 @@
   font-size: 0.9rem;
 }
 
-:host > div .readthedocs-search-no-results {
+:host > div .no-results {
   text-align: center;
   margin-top: 1.15em;
   padding: 15px;
@@ -263,32 +260,32 @@
   width: 80%;
 }
 
-:host > div .readthedocs-search-no-results-title {
+:host > div .no-results > p.title {
   margin-top: 0;
   margin-bottom: 0.5em;
 }
 
-:host > div .readthedocs-search-no-results svg {
-  font-size: 4em;
+:host > div .no-results > svg {
+  height: 5.5rem;
   margin-bottom: 1.15em;
 }
 
-:host > div .readthedocs-search-no-results-footer p {
+:host > div .no-results > div.footer p {
   font-size: small;
 }
 
-:host > div .readthedocs-search-no-results-tips {
+:host > div .no-results > .tips {
   padding: 0;
   text-align: left;
   font-size: 15px;
   margin-bottom: 1.15em;
 }
 
-:host > div .readthedocs-search-no-results-tips ul {
+:host > div .no-results > .tips ul {
   padding: 0 0 0 0.7em;
   margin: 0;
 }
-:host > div .readthedocs-search-no-results-tips li {
+:host > div .no-results > .tips li {
   list-style-position: inside;
   list-style-type: "\BB  ";
   margin: 0;

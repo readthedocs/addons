@@ -31,6 +31,12 @@ export class SearchElement extends LitElement {
     },
     filters: { state: true },
     show: { state: true },
+    inputIcon: { state: true },
+    // NOTE: does it make sense to handle the query as a property?
+    // query: { state: true },
+    results: {
+      state: true,
+    },
     cssFormFocusClasses: { state: true },
   };
 
@@ -43,14 +49,24 @@ export class SearchElement extends LitElement {
     this.config = {};
     this.show = true;
     this.cssFormFocusClasses = {};
+    this.results = null;
+    this.inputIcon = icon(faMagnifyingGlass, { title: "Search" });
     this.filters = {
       defaults: [
         {
           name: "Search only in this project",
           value: "projects:example",
         },
+        {
+          name: "Search in subprojects",
+          value: "subprojects:example",
+        },
       ],
     };
+
+    library.add(faMagnifyingGlass);
+    library.add(faCircleNotch);
+    library.add(faBinoculars);
   }
 
   loadConfig(config) {
@@ -98,26 +114,69 @@ export class SearchElement extends LitElement {
   }
 
   getUserQuery() {
-    return null;
+    return this.renderRoot.querySelector("input[type=search]").value;
   }
 
   showSpinIcon() {
-    return null;
+    if (this.inputIcon.iconName !== "circle-notch") {
+      this.inputIcon = icon(faCircleNotch, {
+        title: "Spinner",
+        classes: ["spinner", "fa-spin"],
+      });
+    }
   }
 
   showMagnifierIcon() {
-    return null;
+    this.inputIcon = icon(faMagnifyingGlass, { title: "Search" });
   }
 
   removeResults() {
-    return null;
+    this.results = null;
   }
+
   showNoResultsFound() {
-    return null;
+    // TODO: change the icon to a slash-ed magnifier or similar
+    const binoculars = icon(faBinoculars, {
+      title: "Not found",
+    });
+    const query = this.getUserQuery();
+    this.results = html`
+      <div class="no-results">
+        ${binoculars.node[0]}
+        <p class="title">No results for <strong>"${query}"</strong></p>
+        <div class="tips">
+          <p>Try using the following special queries:</p>
+          <ul>
+            <li>
+              <strong>Exact phrase</strong>: use double quotes to match a whole
+              pharse: <code>"adding a subproject"</code>.
+            </li>
+            <li>
+              <strong>Prefix</strong>: use an asterisk at the end of any term to
+              prefix a result: <code>environ*</code>.
+            </li>
+            <li>
+              <strong>Fuzziness</strong>: add a tilde and a number to indicate
+              the fuzziness of the word: <code>getter~2</code>.
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          <p>
+            Learn more about the query syntax supported in our
+            <a
+              target="_blank"
+              href="https://docs.readthedocs.io/page/server-side-search/syntax.html"
+              >documentation</a
+            >.
+          </p>
+        </div>
+      </div>
+    `;
   }
 
   fetchResults(query) {
-    console.log("fetchResults");
     this.removeResults();
     this.showSpinIcon();
 
@@ -136,6 +195,7 @@ export class SearchElement extends LitElement {
       .then((data) => {
         console.log(data);
         if (data.results.length > 0) {
+          this.loadResults(data);
           // let search_result_box = generateSuggestionsList(data, projectName);
           console.log(data.results);
           this.showMagnifierIcon();
@@ -181,18 +241,12 @@ export class SearchElement extends LitElement {
   }
 
   renderSearchModal() {
-    library.add(faMagnifyingGlass);
-    const magnifierIcon = icon(faMagnifyingGlass, {
-      title: "Magnifier",
-      classes: ["magnifier"],
-    });
-
     return html`
       <div ?hidden=${!this.show} role="search">
         <div @click=${this.closeModal} class="background"></div>
         <div class="content">
           <form class=${classMap(this.cssFormFocusClasses)}>
-            <label>${magnifierIcon.node[0]}</label>
+            <label>${this.inputIcon.node[0]}</label>
             <input
               @input=${this.queryInput}
               @focusin=${this.searchFocus}
@@ -203,9 +257,9 @@ export class SearchElement extends LitElement {
             />
           </form>
           <div @click=${this.filterSelected} class="filters">
-            ${this.filtersTemplate()}
+            ${this.renderFilters()}
           </div>
-          <div class="results"></div>
+          <div class="results">${this.results}</div>
           <div class="footer">
             <ul class="help">
               <li><code>Enter</code> to select</li>
@@ -224,22 +278,23 @@ export class SearchElement extends LitElement {
     `;
   }
 
-  filtersTemplate() {
-    // TODO: iterate over the default filters and generate more than 1
+  renderFilters() {
     // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
     // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
     return html`
       <li class="title">Filters</li>
-      <li>
-        <input
-          id="readthedocs-search-filter-1"
-          type="checkbox"
-          value="${this.filters.defaults[0].value}"
-        />
-        <label for="readthedocs-search-filter-1"
-          >${this.filters.defaults[0].name}</label
-        >
-      </li>
+      ${this.filters.defaults.map(
+        (filter, index) => html`
+          <li>
+            <input
+              id="filter-${index}"
+              type="checkbox"
+              value="${filter.value}"
+            />
+            <label for="filter-${index}"> ${filter.name} </label>
+          </li>
+        `
+      )}
     `;
   }
 
@@ -273,7 +328,55 @@ export class SearchElement extends LitElement {
     // });
   }
 
-  loadResults() {}
+  sectionHTML(block) {
+    let title = block.title;
+    if (block.highlights.title.length) {
+      title = block.highlights.title[0];
+    }
+
+    let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
+    if (block.highlights.content.length) {
+      content =
+        "... " +
+        block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+        " ...";
+    }
+
+    // FIXME: grab this id properly (probably from outside .map)
+    let id = 1;
+
+    return html`
+      <a href="${block.path}#${block.id}">
+        <div id="${id}">
+          <p class="hit subheading">${title}</p>
+          <p class="hit content">${content}</p>
+        </div>
+      </a>
+    `;
+  }
+
+  loadResults(data) {
+    console.log(data);
+    this.results = html`
+      <div class="hit">
+        ${data.results.map(
+          (result) =>
+            html`
+              <a href="${result.path}">
+                <h2>
+                  ${result.title}
+                  <small class="subtitle">
+                    (from project ${result.project_slug})
+                  </small>
+                </h2>
+              </a>
+
+              ${result.blocks.map((block) => html`${this.sectionHTML(block)}`)}
+            `
+        )}
+      </div>
+    `;
+  }
 
   attachEvents() {
     // eventListeners(config);
@@ -295,9 +398,7 @@ export class SearchElement extends LitElement {
   };
 
   showNoResults() {
-    library.add(faCircleXmark);
-    library.add(faCircleNotch);
-    library.add(faBinoculars);
+    return null;
   }
 
   connectedCallback() {
@@ -725,30 +826,6 @@ const removeResults = () => {
   document.querySelector(
     "#readthedocs-search .readthedocs-search-results"
   ).innerHTML = "";
-};
-
-const spinIcon = () => {
-  if (
-    !document
-      .querySelector("#readthedocs-search form label svg")
-      .classList.contains("spinner")
-  ) {
-    const spinner = icon(faCircleNotch, {
-      title: "Spinner",
-      classes: ["spinner", "fa-spin"],
-    });
-    const magnifier = document.querySelector("#readthedocs-search form label");
-    magnifier.innerHTML = spinner.html[0];
-  }
-};
-
-const magnifierIcon = () => {
-  const magnifier = icon(faMagnifyingGlass, {
-    title: "Magnifier",
-    classes: ["magnifier"],
-  });
-  const spinner = document.querySelector("#readthedocs-search form label");
-  spinner.innerHTML = magnifier.html[0];
 };
 
 /**
