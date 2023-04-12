@@ -80,7 +80,10 @@ export class NotificationElement extends LitElement {
         <div class="content">
           Take a look at the
           <a href="${this.urls.build}">build details' page</a>
-          and/or the <a href="${this.urls.external}">pull request #${this.config.version.slug}</a>
+          and/or the
+          <a href="${this.urls.external}"
+            >pull request #${this.config.version.slug}</a
+          >
           for more context.
         </div>
       </div>
