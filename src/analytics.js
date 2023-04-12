@@ -67,14 +67,6 @@ export function injectAnalytics(config) {
         dimension5: config.project.programming_language,
         groups: "rtfd",
       });
-
-      // Setup the project (user) analytics code and send a pageview
-      if (config.features.analytics.code) {
-        gtag("config", config.features.analytics.code, {
-          anonymize_ip: true,
-          cookie_expires: 0, // Session cookie (non-persistent)
-        });
-      }
     }
   }
 }
