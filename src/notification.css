@@ -138,3 +138,6 @@
 :host(.inverted) > div > .title > .right > svg {
   color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
 }
+:host(.titled) > div > .title > .right > svg {
+  margin: 0.5rem 0rem;
+}

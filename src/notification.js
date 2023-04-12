@@ -69,7 +69,7 @@ export class NotificationElement extends LitElement {
     library.add(faCircleXmark);
     library.add(faCodePullRequest);
     const xmark = icon(faCircleXmark, {
-      title: "Close",
+      title: "Close notification",
     });
     const iconPullRequest = icon(faCodePullRequest, {
       title: "This version is a pull request version",
@@ -81,9 +81,9 @@ export class NotificationElement extends LitElement {
         ${iconPullRequest.node[0]}
         <div class="title">
           This page was created from a pull request build
-          <div class="right" @click=${this.closeNotification}>
+          <a href="#" class="right" @click=${this.closeNotification}>
             ${xmark.node[0]}
-          </div>
+          </a>
         </div>
         <div class="content">
           This page
@@ -100,6 +100,9 @@ export class NotificationElement extends LitElement {
     // TODO add cookie to allow closing this notification for all page views on this
     // PR build.
     this.remove();
+
+    // Avoid event propagation
+    return false;
   }
 }
 
