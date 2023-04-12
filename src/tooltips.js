@@ -1,7 +1,7 @@
 import tippy from "tippy.js";
 import styles from "tippy.js/dist/tippy.css";
 import lightTheme from "tippy.js/themes/light.css";
-import { domReady } from "./utils";
+import { domReady, CLIENT_VERSION } from "./utils";
 
 export function initializeTooltips(config) {
   // Inject our styles for the flyout
@@ -36,7 +36,9 @@ export function initializeTooltips(config) {
 
           fetch(url, {
             method: "GET",
-            headers: { "X-HoverXRef-Version": "unknown" },
+            headers: {
+              "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
+            },
           })
             .then((response) => {
               if (!response.ok) {

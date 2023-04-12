@@ -1,3 +1,5 @@
+import { CLIENT_VERSION } from "./utils";
+
 /**
  * Load Read the Docs configuration from API endpoint.
  *
@@ -14,12 +16,10 @@ export function getReadTheDocsConfig() {
     url = "/_/readthedocs-config.json";
   }
 
-  // Use a hardcoded file when running on Read the Docs
-  if (window.location.href.indexOf(".readthedocs.io") !== -1) {
-    url = "../readthedocs-config.json";
-  }
-
-  return fetch(url, { method: "GET" }).then((response) => {
+  return fetch(url, {
+    method: "GET",
+    headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
+  }).then((response) => {
     if (!response.ok) {
       console.debug("Error parsing configuration data");
       return undefined;

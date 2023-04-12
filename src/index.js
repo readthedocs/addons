@@ -1,12 +1,6 @@
 import { getReadTheDocsConfig } from "./readthedocs-config";
-import { injectExternalVersionWarning } from "./external-version-warning";
-import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
-import { injectFlyout, trackFlyoutEvents } from "./flyout";
-import { registerPageView, injectAnalytics } from "./analytics";
-import { injectEthicalAd } from "./sponsorship";
-import { initializeSearchAsYouType } from "./search";
-import { initializeDocDiff } from "./docdiff";
-import { initializeTooltips } from "./tooltips";
+import * as notification from "./notification";
+import * as analytics from "./analytics";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -22,29 +16,19 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        const integrations = [
-          injectAnalytics,
-          injectFlyout,
-          initializeSearchAsYouType,
-          trackFlyoutEvents,
-          registerPageView,
-          injectEthicalAd,
-          initializeTooltips,
-          injectNonLatestVersionWarning,
-          injectExternalVersionWarning,
-          // NOTE: disable DocDiff for now because it breaks other integrations
-          // See https://github.com/readthedocs/readthedocs-client/issues/11
-          // initializeDocDiff,
+        const addons = [
+          notification.NotificationAddon,
+          analytics.AnalyticsAddon,
         ];
 
-        // Iterate over all the integration functions and create one Promise for each of them.
-        // They will be executed concurrently.
-        for (let fn of integrations) {
-          promises.push(
-            new Promise((resolve) => {
-              resolve(fn(config));
-            })
-          );
+        for (const addon of addons) {
+          if (addon.isEnabled) {
+            promises.push(
+              new Promise((resolve) => {
+                resolve(new addon(config));
+              })
+            );
+          }
         }
 
         return Promise.all(promises);

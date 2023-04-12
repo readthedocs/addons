@@ -3,7 +3,7 @@
     "project": {
         "slug": "example",
         "language": "en",
-        "repository_url": "https://github.com/humitos/readthedocs-client",
+        "repository_url": "https://github.com/readthedocs/readthedocs-client",
         "programming_language": "words"
     },
     "version": {
@@ -22,6 +22,22 @@
         }
     },
     "features": {
+        "search": {
+            "project": "readthedocs-client",
+            "version": "latest",
+            "api_endpoint": "/_/api/v3/search/",
+            "filters": [
+                [
+                "Search only in this project",
+                "project:readthedocs-client/latest"
+            ],
+                [
+                "Search subprojects",
+                "subprojects:readthedocs-client/latest"
+            ]
+            ],
+            "default_filter": "subprojects:readthedocs-client/latest"
+        },
         "analytics": {
             "code": null
         },

@@ -8,7 +8,7 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
-import { domReady } from "./utils";
+import { domReady, CLIENT_VERSION } from "./utils";
 import { html, render, LitElement } from "lit";
 
 const MAX_SUGGESTIONS = 50;
@@ -17,6 +17,7 @@ const MAX_SUGGESTIONS = 50;
 const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
+const MIN_CHARACTERS_QUERY = 3;
 const API_ENDPOINT = "/_/api/v3/search/";
 
 export class SearchElement extends LitElement {
@@ -650,7 +651,10 @@ const fetchAndGenerateResults = (api_endpoint, parameters, projectName) => {
   let fetchFunc = () => {
     const url = api_endpoint + "?" + new URLSearchParams(parameters).toString();
 
-    fetch(url, { method: "GET" })
+    fetch(url, {
+      method: "GET",
+      headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -695,7 +699,7 @@ const noResultsFound = () => {
   const template = `
 <div class="readthedocs-search-no-results">
   ${binoculars.html[0]}
-  <p class="title">No results for <strong>"${query}"</strong></p>
+  <p class="readthedocs-search-no-results-title">No results for <strong>"${query}"</strong></p>
   <div class="readthedocs-search-no-results-tips">
     <p>Try using the following special queries:</p>
     <ul>
@@ -799,7 +803,7 @@ function eventListeners(config) {
 
   search_background.addEventListener("input", (e) => {
     let search_query = getSearchTerm();
-    if (search_query.length > 0) {
+    if (search_query.length >= MIN_CHARACTERS_QUERY) {
       if (current_request !== null) {
         // cancel previous ajax request.
         current_request.cancel();
@@ -825,6 +829,13 @@ function eventListeners(config) {
       };
       debounce(func, CLEAR_RESULTS_DELAY)();
     }
+  });
+
+  search_input.addEventListener("focusin", (e) => {
+    search_input.parentNode.classList.add("readthedocs-search-input--focus");
+  });
+  search_input.addEventListener("focusout", (e) => {
+    search_input.parentNode.classList.remove("readthedocs-search-input--focus");
   });
 
   search_input.addEventListener("keydown", (e) => {
@@ -869,6 +880,15 @@ function eventListeners(config) {
   document.addEventListener("keydown", (e) => {
     if (e.keyCode === 27) {
       removeSearchModal();
+    }
+  });
+
+  // open search modal if "forward slash" button is pressed
+  document.addEventListener("keydown", (e) => {
+    if (e.keyCode === 191 && !isModalVisible()) {
+      // prevent opening "Quick Find" in Firefox
+      e.preventDefault();
+      showSearchModal();
     }
   });
 }

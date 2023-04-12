@@ -3,13 +3,14 @@ import {
   faCircleXmark,
   faCodePullRequest,
 } from "@fortawesome/free-solid-svg-icons";
-import { html, render, LitElement } from "lit";
+import { html, nothing, render, LitElement } from "lit";
 
-import styleSheet from "./warning.css";
+import styleSheet from "./notification.css";
+import { AddonBase } from "./utils";
 
-export class WarningElement extends LitElement {
+export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
-  static elementName = "readthedocs-warning";
+  static elementName = "readthedocs-notification";
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
@@ -50,7 +51,8 @@ export class WarningElement extends LitElement {
   render() {
     // The element doesn't yet have our config, don't render it.
     if (!this.config) {
-      return;
+      // nothing is a special Lit response type
+      return nothing;
     }
 
     if (
@@ -67,50 +69,45 @@ export class WarningElement extends LitElement {
     library.add(faCircleXmark);
     library.add(faCodePullRequest);
     const xmark = icon(faCircleXmark, {
-      title: "Close",
+      title: "Close notification",
     });
     const iconPullRequest = icon(faCodePullRequest, {
       title: "This version is a pull request version",
       classes: ["header", "icon"],
     });
 
-    return html` <div @click=${this.closeWarning}>
-      ${iconPullRequest.node[0]}
-      <div class="title">
-        This page was created from a pull request build
-        <div class="right">${xmark.node[0]}</div>
+    return html`
+      <div>
+        ${iconPullRequest.node[0]}
+        <div class="title">
+          This page was created from a pull request build
+          <a href="#" class="right" @click=${this.closeNotification}>
+            ${xmark.node[0]}
+          </a>
+        </div>
+        <div class="content">
+          This page
+          <a href="${this.urls.build}">was created</a>
+          from a pull request (<a href="${this.urls.external}"
+            >#${this.config.version.slug}</a
+          >).
+        </div>
       </div>
-      <div class="content">
-        This page
-        <a href="${this.urls.build}">was created</a>
-        from a pull request (<a href="${this.urls.external}"
-          >#${this.config.version.slug}</a
-        >).
-      </div>
-    </div>`;
+    `;
   }
 
-  closeWarning(e) {
-    // TODO add cookie to allow closing this warning for all page views on this
+  closeNotification(e) {
+    // TODO add cookie to allow closing this notification for all page views on this
     // PR build.
     this.remove();
+
+    // Avoid event propagation
+    return false;
   }
 }
 
 /**
- * Inject a warning informing the documentation comes from an external version (e.g. pull request)
- */
-export function injectExternalVersionWarning(config) {
-  // TODO drop this function and move this logic to index.js instead. This
-  // function can go away once all addons share a similar interface for common
-  // logic, like checking if an addon is enabled and customizing the adddon.
-  if (WarningAddon.is_enabled) {
-    return new WarningAddon(config);
-  }
-}
-
-/**
- * Warning addon
+ * Notification addon
  *
  * Currently this addon is used to warn readers that the documentation is built
  * from a pull request.
@@ -125,16 +122,18 @@ export function injectExternalVersionWarning(config) {
  *
  * @param {Object} config - Addon configuration object
  */
-export class WarningAddon {
+export class NotificationAddon extends AddonBase {
   constructor(config) {
+    super();
+
     // Load this first as it is illegal to instantiate the element class without
     // defining the custom element first.
-    customElements.define("readthedocs-warning", WarningElement);
+    customElements.define("readthedocs-notification", NotificationElement);
 
     // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-warning");
+    let elems = document.querySelectorAll("readthedocs-notification");
     if (!elems.length) {
-      elems = [new WarningElement()];
+      elems = [new NotificationElement()];
       render(elems[0], document.body);
     }
 
@@ -148,7 +147,7 @@ export class WarningAddon {
    *
    * @param {Object} config - Addon configuration object
    */
-  static is_enabled(config) {
+  static isEnabled(config) {
     // TODO support the outdated version warning feature here too.
     return (
       config.features &&
