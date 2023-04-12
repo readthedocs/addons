@@ -90,11 +90,10 @@ export class NotificationElement extends LitElement {
           </a>
         </div>
         <div class="content">
-          This page
-          <a href="${this.urls.build}">was created</a>
-          from a pull request (<a href="${this.urls.external}"
-            >#${this.config.version.slug}</a
-          >).
+          Take a look at the
+          <a href="${this.urls.build}">build details' page</a>
+          and/or the <a href="${this.urls.external}">pull request #${this.config.version.slug}</a>
+          for more context.
         </div>
       </div>
     `;

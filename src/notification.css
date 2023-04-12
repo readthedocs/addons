@@ -85,6 +85,7 @@
 }
 :host > div > div.content {
   line-height: 1rem;
+  font-size: 85%;
 }
 
 :host(.toast) > div > .title {
