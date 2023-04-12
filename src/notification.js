@@ -18,13 +18,17 @@ export class NotificationElement extends LitElement {
       state: true,
       // Update derived fields from config data
       // TODO the URLs here should come from a backend API instead
-      hasChanged: (before, after) => {
-        if (after && Object.keys(after).length) {
+      hasChanged: (after, before) => {
+        if (after && after !== before && Object.keys(after).length) {
           this.urls = {
             build: `${window.location.protocol}//${after.domains.dashboard}/projects/${after.project.slug}/builds/${after.build.id}/`,
             external: `${after.project.repository_url}/pull/${after.version.slug}`,
           };
+            // FIXME: for some reason the element is not being updated once the URLs are defined here.
+            // Resulting in empty URLs on the links :/
+            return true;
         }
+          return false;
       },
     },
     urls: { state: true },
