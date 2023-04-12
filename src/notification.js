@@ -1,7 +1,10 @@
+import semverMaxSatisfying from "semver/ranges/max-satisfying";
+import semverCoerce from "semver/functions/coerce";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
   faCodePullRequest,
+  faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 
@@ -16,6 +19,7 @@ export class NotificationElement extends LitElement {
   static properties = {
     config: { state: true },
     urls: { state: true },
+    highest: { state: true },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -30,6 +34,7 @@ export class NotificationElement extends LitElement {
       build: null,
       external: null,
     };
+    this.highest = null;
   }
 
   loadConfig(config) {
@@ -45,6 +50,7 @@ export class NotificationElement extends LitElement {
       build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
       external: `${vcs_external_url}/pull/${config.version.slug}`,
     };
+    this.calculateHighestVersion();
   }
 
   render() {
@@ -54,14 +60,64 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (
-      this.config.features.external_version_warning.enabled &&
-      this.config.version.external
+    if (this.config.version.external) {
+      if (this.config.features.external_version_warning.enabled) {
+        return this.renderExternalVersionWarning();
+      }
+    } else if (
+      this.config.features.non_latest_version_warning.enabled &&
+      this.highest
     ) {
-      return this.renderExternalVersionWarning();
+      return this.renderNonLatestVersionWarning();
     }
+    return nothing;
+  }
 
-    // TODO support the outdated version warning
+  calculateHighestVersion() {
+    // Convert versions like `v1` into `1.0.0` to be able to compare them
+    const versions = this.config.features.non_latest_version_warning.versions;
+    const coercedVersions = versions.map((v) => semverCoerce(v));
+    const coercedHighest = semverMaxSatisfying(coercedVersions, ">=0.0.0");
+
+    // Get back the original `v1` to generate the URLs and display the correct name
+    const index = coercedVersions.indexOf(coercedHighest);
+    const highest = versions[index];
+
+    if (highest && highest !== this.config.version.slug) {
+      this.highest = {
+        name: highest,
+        url: `${window.location.protocol}/${window.location.hostname}/${this.config.project.language}/${highest}/`,
+      };
+    }
+  }
+
+  renderNonLatestVersionWarning() {
+    library.add(faCircleXmark);
+    library.add(faLayerGroup);
+    const xmark = icon(faCircleXmark, {
+      title: "Close notification",
+    });
+    const iconLayerGroup = icon(faLayerGroup, {
+      title: "This version is not the latest one",
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div>
+        ${iconLayerGroup.node[0]}
+        <div class="title">
+          This is an <span>old version</span>
+          <a href="#" class="right" @click=${this.closeNotification}>
+            ${xmark.node[0]}
+          </a>
+        </div>
+        <div class="content">
+          You are reading an old version of this documentation. The latest
+          stable version is
+          <a href="${this.highest.url}">${this.highest.name}</a>.
+        </div>
+      </div>
+    `;
   }
 
   renderExternalVersionWarning() {
