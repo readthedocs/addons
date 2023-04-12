@@ -10,10 +10,15 @@ export const domReady = new Promise((resolve) => {
   ) {
     return resolve();
   } else {
+    // Deduplicate DOM complete events
+    let is_loaded = false;
     document.addEventListener(
       "DOMContentLoaded",
       () => {
-        resolve();
+        if (!is_loaded) {
+          resolve();
+        }
+        is_loaded = true;
       },
       {
         capture: true,
@@ -22,5 +27,16 @@ export const domReady = new Promise((resolve) => {
       }
     );
   }
-  return undefined;
 });
+
+/**
+ * Addon base class
+ *
+ * Provides a common interface for addon configuration testing, customization,
+ * and loading.
+ */
+export class AddonBase {
+  static isEnabled() {
+    return false;
+  }
+}
