@@ -16,6 +16,7 @@ const MAX_SUGGESTIONS = 50;
 const MAX_SUBSTRING_LIMIT = 80;
 const FETCH_RESULTS_DELAY = 250;
 const CLEAR_RESULTS_DELAY = 300;
+const MIN_CHARACTERS_QUERY = 3;
 
 /**
  * Debounce the function.
@@ -500,7 +501,7 @@ const noResultsFound = () => {
   const template = `
 <div class="readthedocs-search-no-results">
   ${binoculars.html[0]}
-  <p class="title">No results for <strong>"${query}"</strong></p>
+  <p class="readthedocs-search-no-results-title">No results for <strong>"${query}"</strong></p>
   <div class="readthedocs-search-no-results-tips">
     <p>Try using the following special queries:</p>
     <ul>
@@ -582,8 +583,8 @@ const generateAndReturnInitialHtml = (config) => {
   );
   // Add filters below the search box if present.
   if (filters.length > 0) {
-    let li = createDomNode("li", {});
-    li.innerText = "Filters:";
+    let li = createDomNode("li", { class: "readthedocs-search-filters-title" });
+    li.innerText = "Filters";
     filters_list.appendChild(li);
   }
 
@@ -684,6 +685,10 @@ function getCurrentFilter(config) {
 }
 
 export function initializeSearchAsYouType(config) {
+  if (!config.features || !config.features.search) {
+    return false;
+  }
+
   document.adoptedStyleSheets.push(styles);
   library.add(faMagnifyingGlass);
   library.add(faCircleXmark);
@@ -710,7 +715,7 @@ function eventListeners(config) {
 
   search_background.addEventListener("input", (e) => {
     let search_query = getSearchTerm();
-    if (search_query.length > 0) {
+    if (search_query.length >= MIN_CHARACTERS_QUERY) {
       if (current_request !== null) {
         // cancel previous ajax request.
         current_request.cancel();
@@ -736,6 +741,13 @@ function eventListeners(config) {
       };
       debounce(func, CLEAR_RESULTS_DELAY)();
     }
+  });
+
+  search_input.addEventListener("focusin", (e) => {
+    search_input.parentNode.classList.add("readthedocs-search-input--focus");
+  });
+  search_input.addEventListener("focusout", (e) => {
+    search_input.parentNode.classList.remove("readthedocs-search-input--focus");
   });
 
   search_input.addEventListener("keydown", (e) => {
