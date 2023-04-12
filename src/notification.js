@@ -5,16 +5,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 
-import styleSheet from "./warning.css";
+import styleSheet from "./notification.css";
+import { AddonBase } from "./utils";
 
-export class WarningElement extends LitElement {
+export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
-  static elementName = "readthedocs-warning";
+  static elementName = "readthedocs-notification";
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
-    config: {
-      state: true,
+    config: { state: true,
       // Update derived fields from config data
       // TODO the URLs here should come from a backend API instead
       hasChanged: (before, after) => {
@@ -80,7 +80,7 @@ export class WarningElement extends LitElement {
         ${iconPullRequest.node[0]}
         <div class="title">
           This page was created from a pull request build
-          <div class="right" @click=${this.closeWarning}>${xmark.node[0]}</div>
+          <div class="right" @click=${this.closeNotification}>${xmark.node[0]}</div>
         </div>
         <div class="content">
           This page
@@ -93,27 +93,15 @@ export class WarningElement extends LitElement {
     `;
   }
 
-  closeWarning(e) {
-    // TODO add cookie to allow closing this warning for all page views on this
+  closeNotification(e) {
+    // TODO add cookie to allow closing this notification for all page views on this
     // PR build.
     this.remove();
   }
 }
 
 /**
- * Inject a warning informing the documentation comes from an external version (e.g. pull request)
- */
-export function injectExternalVersionWarning(config) {
-  // TODO drop this function and move this logic to index.js instead. This
-  // function can go away once all addons share a similar interface for common
-  // logic, like checking if an addon is enabled and customizing the adddon.
-  if (WarningAddon.is_enabled) {
-    return new WarningAddon(config);
-  }
-}
-
-/**
- * Warning addon
+ * Notification addon
  *
  * Currently this addon is used to warn readers that the documentation is built
  * from a pull request.
@@ -128,16 +116,18 @@ export function injectExternalVersionWarning(config) {
  *
  * @param {Object} config - Addon configuration object
  */
-export class WarningAddon {
+export class NotificationAddon extends AddonBase {
   constructor(config) {
+    super();
+
     // Load this first as it is illegal to instantiate the element class without
     // defining the custom element first.
-    customElements.define("readthedocs-warning", WarningElement);
+    customElements.define("readthedocs-notification", NotificationElement);
 
     // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-warning");
+    let elems = document.querySelectorAll("readthedocs-notification");
     if (!elems.length) {
-      elems = [new WarningElement()];
+      elems = [new NotificationElement()];
       render(elems[0], document.body);
     }
 
@@ -151,7 +141,7 @@ export class WarningAddon {
    *
    * @param {Object} config - Addon configuration object
    */
-  static is_enabled(config) {
+  static isEnabled(config) {
     // TODO support the outdated version warning feature here too.
     return (
       config.features &&

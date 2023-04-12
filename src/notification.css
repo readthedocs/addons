@@ -5,15 +5,35 @@
   overflow: auto;
   border-radius: 0.5rem;
   font-family: var(
-    --readthedocs-warning-font-family,
+    --readthedocs-notification-font-family,
     "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif"
   );
-  font-size: var(--readthedocs-warning-font-size, 1rem);
-  color: var(--readthedocs-warning-color, rgb(64, 64, 64));
+  font-size: var(--readthedocs-notification-font-size, 1rem);
+  color: var(--readthedocs-notification-color, rgb(64, 64, 64));
   background-color: var(
-    --readthedocs-warning-background-color,
+    --readthedocs-notification-background-color,
     rgb(234, 234, 234)
   );
+}
+
+:host(.floating) > div {
+  position: fixed;
+  top: 2rem;
+  left: 20%; /* (100 - width) / 2 */
+  width: 60%;
+  z-index: 1750;
+}
+
+:host(.toast) > div {
+  position: fixed;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  margin: .75rem 0rem;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1750;
+  font-size: 0.85rem;
+  width: 35rem;
 }
 
 :host(.raised) > div {
@@ -26,39 +46,35 @@
   text-align: center;
 }
 
-:host(.titled) > div > svg.header.icon {
-  display: none;
-}
-
 :host > div > svg.header.icon {
   height: 2rem;
   padding: 0.5rem 1.5rem;
   float: left;
 }
 
+:host(.toast) > div > svg.header.icon {
+  height: 1.5rem;
+}
+
+:host(.titled) > div > svg.header.icon {
+  display: none;
+}
+
 :host(.inverted) > div {
-  color: var(--readthedocs-warning-color, rgb(234, 234, 234));
+  color: var(--readthedocs-notification-color, rgb(234, 234, 234));
   background-color: var(
-    --readthedocs-warning-background-color,
+    --readthedocs-notification-background-color,
     rgb(64, 64, 64)
   );
 }
 
-:host(.floating) > div {
-  position: fixed;
-  top: 2rem;
-  left: 20%; /* (100 - width) / 2 */
-  width: 60%;
-  z-index: 1750;
-}
-
 :host > div a {
-  color: var(--readthedocs-warning-link-color, rgb(8, 140, 219));
+  color: var(--readthedocs-notification-link-color, rgb(8, 140, 219));
   text-decoration: none;
 }
 
 :host(.inverted) > div a {
-  color: var(--readthedocs-warning-link-color, rgb(134, 203, 243));
+  color: var(--readthedocs-notification-link-color, rgb(134, 203, 243));
 }
 
 :host > div > .title {
@@ -71,15 +87,19 @@
   line-height: 1rem;
 }
 
+:host(.toast) > div > .title {
+  padding: 0rem 1rem;
+}
+
 :host(.titled) > div > .title {
   display: block;
   margin: 0rem;
   padding: 0.1rem 1rem;
   line-height: 2rem;
   border-radius: 0.5rem 0.5rem 0 0;
-  color: var(--readthedocs-warning-title-color, rgb(96, 96, 96));
+  color: var(--readthedocs-notification-title-color, rgb(96, 96, 96));
   background-color: var(
-    --readthedocs-warning-title-background-color,
+    --readthedocs-notification-title-background-color,
     rgb(224, 224, 224)
   );
   vertical-align: middle;
@@ -92,12 +112,12 @@
 }
 
 :host(.inverted) > div > .title {
-  color: var(--readthedocs-warning-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
 }
 
 :host(.inverted.titled) > div > .title {
   background-color: var(
-    --readthedocs-warning-title-background-color,
+    --readthedocs-notification-title-background-color,
     rgb(48, 48, 48)
   );
 }
@@ -111,10 +131,10 @@
   height: 1rem;
   vertical-align: middle;
   cursor: pointer;
-  color: var(--readthedocs-warning-title-color, rgba(96, 96, 96));
+  color: var(--readthedocs-notification-title-color, rgba(96, 96, 96));
   font-weight: normal;
 }
 
 :host(.inverted) > div > .title > .right > svg {
-  color: var(--readthedocs-warning-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
 }
