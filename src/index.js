@@ -1,8 +1,8 @@
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
+import * as analytics from "./analytics";
 import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
 import { injectFlyout, trackFlyoutEvents } from "./flyout";
-import { registerPageView, injectAnalytics } from "./analytics";
 import { injectEthicalAd } from "./sponsorship";
 import { initializeSearchAsYouType } from "./search";
 import { initializeDocDiff } from "./docdiff";
@@ -23,11 +23,9 @@ export function setup() {
       .then((config) => {
         let promises = [];
         const integrations = [
-          injectAnalytics,
           injectFlyout,
           initializeSearchAsYouType,
           trackFlyoutEvents,
-          registerPageView,
           injectEthicalAd,
           initializeTooltips,
           injectNonLatestVersionWarning,
@@ -48,7 +46,10 @@ export function setup() {
 
         // TODO migrate the above to use a common pattern for addon injection.
         // Addons should not execute or inject anything if they are not enabled.
-        const addons = [notification.NotificationAddon];
+        const addons = [
+          notification.NotificationAddon,
+          analytics.AnalyticsAddon,
+        ];
 
         for (const addon of addons) {
           if (addon.isEnabled) {
