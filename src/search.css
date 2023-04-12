@@ -1,11 +1,13 @@
 /* https://getbem.com/introduction/ */
 
-#readthedocs-search {
-  /* Remove all the existing CSS style to not depend on anything from the theme */
-  all: unset;
+:host > div {
+  font-family: var(
+    --readthedocs-search-font-family,
+    "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;"
+  );
+  font-size: var(--readthedocs-search-font-size, 16px);
 
-  font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
-  font-size: 16px;
+  /* TODO: make some of this variables */
   color: rgb(64, 64, 64);
   position: fixed;
   top: 0;
@@ -13,24 +15,17 @@
   width: 100%;
   height: 100%;
   z-index: 1500;
-  display: none;
+  /* display: none; */
   line-height: 1.875;
 }
 
-#readthedocs-search a {
+:host > div a {
   color: #2980b9;
   text-decoration: none;
   cursor: pointer;
 }
 
-#readthedocs-search a:hover {
-  color: inherit;
-  background-color: inherit;
-  text-decoration: inherit;
-  text-shadow: inherit;
-}
-
-#readthedocs-search code {
+:host > div code {
   background: #fff;
   padding: 2px 5px;
   border: solid 1px #e1e4e5;
@@ -43,7 +38,7 @@
   border-radius: 0;
 }
 
-#readthedocs-search .readthedocs-search-background {
+:host > div .background {
   position: fixed;
   top: 0;
   left: 0;
@@ -53,7 +48,7 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-#readthedocs-search .readthedocs-search-container {
+:host > div .content {
   margin: 5em auto auto auto;
   position: absolute;
   top: 0;
@@ -77,7 +72,7 @@
   text-align: left;
 }
 
-#readthedocs-search form {
+:host > div form {
   background-color: #eaeaea;
   margin: 1.2em;
   border-radius: 0.25em;
@@ -86,12 +81,12 @@
   display: flex;
 }
 
-#readthedocs-search form.readthedocs-search-input--focus {
+:host > div form.readthedocs-search-input--focus {
   outline: 2px solid #6ea0ec;
   border-shadow: inset 0 0 1px white transparent;
 }
 
-#readthedocs-search form label {
+:host > div form > label {
   display: inline-block;
   cursor: default;
   font-size: 1.15em;
@@ -100,13 +95,11 @@
   color: #333;
 }
 
-#readthedocs-search form label svg {
-  font-size: inherit;
+:host > div form label svg {
   height: 1em;
-  text-align: inherit;
 }
 
-#readthedocs-search form input {
+:host > div form > input {
   border: 0;
   outline: none;
   background: inherit;
@@ -119,7 +112,21 @@
   font-family: inherit;
 }
 
-#readthedocs-search .readthedocs-search-results {
+/* :host > div .readthedocs-search-results h2:hover { */
+/*   color: inherit; */
+/*   text-decoration: inherit; */
+/*   text-shadow: inherit; */
+/* } */
+
+:host > div .readthedocs-search-result-hit:hover {
+  color: inherit;
+  text-decoration: inherit;
+  text-shadow: inherit;
+  background-color: rgb(245, 245, 245);
+}
+
+:host > div .results {
+  margin-top: 10px;
   padding: 5px;
   margin: 1.15em;
   overflow-y: scroll;
@@ -127,38 +134,19 @@
   hyphens: auto;
 }
 
-#readthedocs-search .readthedocs-search-results h2:hover {
-  color: inherit;
-  text-decoration: inherit;
-  text-shadow: inherit;
-}
-
-#readthedocs-search .readthedocs-search-result-hit:hover {
-  color: inherit;
-  text-decoration: inherit;
-  text-shadow: inherit;
-  background-color: rgb(245, 245, 245);
-}
-
-#readthedocs-search .readthedocs-search-result-container {
-  margin-top: 10px;
-  border-bottom: 1px solid #e6e6e6;
-  height: max-content;
-}
-
-#readthedocs-search .readthedocs-search-result-hit {
+:host > div .readthedocs-search-result-hit {
   width: 100%;
   display: inline-block;
   padding: 0 1.15em;
   box-sizing: border-box;
 }
 
-#readthedocs-search .readthedocs-search-result-hit a {
+:host > div .readthedocs-search-result-hit a {
   text-decoration: none;
   cursor: pointer;
 }
 
-#readthedocs-search .readthedocs-search-results h2 {
+:host > div .results h2 {
   display: inline-block;
   font-weight: 500;
   margin-bottom: 15px;
@@ -170,7 +158,7 @@
   line-height: inherit;
 }
 
-#readthedocs-search .readthedocs-search-result-hit--subheading {
+:host > div .readthedocs-search-result-hit--subheading {
   color: black;
   font-weight: 700;
   float: left;
@@ -182,7 +170,7 @@
   line-height: inherit;
 }
 
-#readthedocs-search .readthedocs-search-result-hit--content {
+:host > div .readthedocs-search-result-hit--content {
   margin: 0;
   text-decoration: none;
   color: black;
@@ -196,27 +184,27 @@
   text-align: left;
 }
 
-#readthedocs-search .readthedocs-search-results span {
+:host > div .results span {
   font-style: normal;
 }
 
-#readthedocs-search .readthedocs-search-result-hit h2 span {
+:host > div .readthedocs-search-result-hit h2 span {
   background-color: #e5f6ff;
   padding-bottom: 3px;
   border-bottom-color: black;
 }
 
-#readthedocs-search .readthedocs-search-result-hit span {
+:host > div .readthedocs-search-result-hit span {
   color: #6ea0ec;
   font-style: italic;
   font-weight: bold;
 }
 
-#readthedocs-search .readthedocs-search-result-hit--active {
+:host > div .readthedocs-search-result-hit--active {
   background-color: rgb(245, 245, 245);
 }
 
-#readthedocs-search .readthedocs-search-footer {
+:host > div .footer {
   width: 100%;
   display: inline-block;
   height: 30px;
@@ -224,30 +212,23 @@
   color: #404040;
 }
 
-#readthedocs-search .readthedocs-search-credits {
+:host > div .credits {
   float: right;
   margin: 0 15px;
 }
 
-#readthedocs-search .readthedocs-search-credits a {
-  text-decoration: underline;
-  display: inline-block;
-}
-
-#readthedocs-search .readthedocs-search-credits a img {
+:host > div .credits a img {
   display: inline-block;
   width: 125px;
   vertical-align: middle;
 }
 
-#readthedocs-search .readthedocs-search-result-hit--domain-role {
+:host > div .readthedocs-search-result-hit--domain-role {
   font-size: 80%;
   letter-spacing: 1px;
 }
 
-#readthedocs-search
-  .readthedocs-search-filters
-  li.readthedocs-search-filters-title {
+:host > div .filters li.title {
   position: absolute;
   top: 80px;
   background: rgb(252, 252, 252);
@@ -255,11 +236,11 @@
   padding: 0 5px;
 }
 
-#readthedocs-search .readthedocs-search-filters input {
+:host > div .filters input {
   margin: 3px;
 }
 
-#readthedocs-search .readthedocs-search-filters {
+:host > div .filters {
   padding: 5px 10px;
   margin: 0 1.15em;
   border-radius: 0.7em;
@@ -268,31 +249,31 @@
   border-color: #80808057;
 }
 
-#readthedocs-search .readthedocs-search-filters ul {
+:host > div .filters ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
 }
 
-#readthedocs-search .readthedocs-search-filters li {
+:host > div .filters li {
   display: flex;
   align-items: center;
   margin: 0 0 0 15px;
 }
 
-#readthedocs-search .readthedocs-search-filters li label {
+:host > div .filters li label {
   border: 3px;
   padding: 3px;
 }
 
-#readthedocs-search .readthedocs-search-filters label {
+:host > div .filters label {
   color: black;
   font-size: 15px;
   margin: auto;
 }
 
-#readthedocs-search .readthedocs-search-no-results {
+:host > div .readthedocs-search-no-results {
   text-align: center;
   margin-top: 1.15em;
   padding: 15px;
@@ -300,45 +281,45 @@
   width: 80%;
 }
 
-#readthedocs-search .readthedocs-search-no-results-title {
+:host > div .readthedocs-search-no-results-title {
   margin-top: 0;
   margin-bottom: 0.5em;
 }
 
-#readthedocs-search .readthedocs-search-no-results svg {
+:host > div .readthedocs-search-no-results svg {
   font-size: 4em;
   margin-bottom: 1.15em;
 }
 
-#readthedocs-search .readthedocs-search-no-results-footer p {
+:host > div .readthedocs-search-no-results-footer p {
   font-size: small;
 }
 
-#readthedocs-search .readthedocs-search-no-results-tips {
+:host > div .readthedocs-search-no-results-tips {
   padding: 0;
   text-align: left;
   font-size: 15px;
   margin-bottom: 1.15em;
 }
 
-#readthedocs-search .readthedocs-search-no-results-tips ul {
+:host > div .readthedocs-search-no-results-tips ul {
   padding: 0 0 0 0.7em;
   margin: 0;
 }
-#readthedocs-search .readthedocs-search-no-results-tips li {
+:host > div .readthedocs-search-no-results-tips li {
   list-style-position: inside;
   list-style-type: "\BB  ";
   margin: 0;
 }
 
-#readthedocs-search .readthedocs-search-help {
+:host > div .help {
   display: inline-block;
   font-size: small;
   margin: 0 15px;
   padding: 0;
 }
 
-#readthedocs-search .readthedocs-search-help li {
+:host > div .help li {
   list-style: none;
   display: inline-block;
   margin: 0 0.4em;

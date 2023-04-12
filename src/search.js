@@ -8,7 +8,7 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
-import { domReady, CLIENT_VERSION } from "./utils";
+import { domReady, CLIENT_VERSION, AddonBase } from "./utils";
 import { html, render, LitElement } from "lit";
 
 const MAX_SUGGESTIONS = 50;
@@ -101,7 +101,7 @@ export class SearchElement extends LitElement {
         <div @click=${this.closeModal} class="background"></div>
         <div class="content">
           <form>
-            <label>${magnifierIcon.html[0]}</label>
+            <label>${magnifierIcon.node[0]}</label>
             <input placeholder="Search docs" type="search" autocomplete="off" />
           </form>
           <div class="title">Filters</div>
@@ -195,12 +195,14 @@ export class SearchElement extends LitElement {
   }
 }
 
-export class SearchAddon {
+export class SearchAddon extends AddonBase {
   constructor(config) {
+    super();
+
+    // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-search", SearchElement);
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
-      console.log("no default element");
       elems = [new SearchElement()];
       render(elems[0], document.body);
     }
@@ -210,9 +212,9 @@ export class SearchAddon {
     }
   }
 
-  static is_enabled(config) {
-    return true;
+  static isEnabled(config) {
     // return config.features && config.features.search.enabled;
+    return true;
   }
 }
 
@@ -778,16 +780,6 @@ function getCurrentFilter(config) {
     return config.features.search.default_filter;
   }
   return config.features.search.filters[parseInt(checkbox.value)][1];
-}
-
-export function initializeSearchAsYouType(config) {
-  // TODO drop this function and move this logic to index.js instead. This
-  // function can go away once all addons share a similar interface for common
-  // logic, like checking if an addon is enabled and customizing the adddon.
-  if (SearchAddon.is_enabled) {
-    console.log("works");
-    return new SearchAddon(config);
-  }
 }
 
 function eventListeners(config) {
