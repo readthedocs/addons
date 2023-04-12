@@ -1,5 +1,7 @@
 import { CLIENT_VERSION } from "./utils";
 
+const API_ENDPOINT = "/_/api/v2/analytics/";
+
 /**
   Register page view on Read the Docs analytics feature.
   https://docs.readthedocs.io/en/stable/reference/analytics.html
@@ -11,8 +13,7 @@ export function registerPageView(config) {
     absolute_uri: window.location.href,
   };
 
-  const url =
-    "/_" + "/api/v2/analytics/?" + new URLSearchParams(params).toString();
+  const url = API_ENDPOINT + "?" + new URLSearchParams(params).toString();
   fetch(url, {
     method: "GET",
     cache: "no-store",
