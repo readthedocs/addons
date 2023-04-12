@@ -26,9 +26,9 @@
 
 :host(.toast) > div {
   position: fixed;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  margin: .75rem 0rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin: 0.75rem 0rem;
   top: 2rem;
   right: 2rem;
   z-index: 1750;

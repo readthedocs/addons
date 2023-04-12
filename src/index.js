@@ -48,16 +48,14 @@ export function setup() {
 
         // TODO migrate the above to use a common pattern for addon injection.
         // Addons should not execute or inject anything if they are not enabled.
-        const addons = [
-          notification.NotificationAddon,
-        ]
+        const addons = [notification.NotificationAddon];
 
         for (const addon of addons) {
           if (addon.isEnabled) {
             promises.push(
               new Promise((resolve) => {
                 resolve(new addon(config));
-              }),
+              })
             );
           }
         }

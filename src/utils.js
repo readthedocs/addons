@@ -18,7 +18,7 @@ export const domReady = new Promise((resolve) => {
         if (!is_loaded) {
           resolve();
         }
-        is_loaded = true; 
+        is_loaded = true;
       },
       {
         capture: true,
@@ -30,11 +30,11 @@ export const domReady = new Promise((resolve) => {
 });
 
 /**
-  * Addon base class
-  *
-  * Provides a common interface for addon configuration testing, customization,
-  * and loading.
-  */
+ * Addon base class
+ *
+ * Provides a common interface for addon configuration testing, customization,
+ * and loading.
+ */
 export class AddonBase {
   static isEnabled() {
     return false;

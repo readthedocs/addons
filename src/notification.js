@@ -14,7 +14,8 @@ export class NotificationElement extends LitElement {
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
-    config: { state: true,
+    config: {
+      state: true,
       // Update derived fields from config data
       // TODO the URLs here should come from a backend API instead
       hasChanged: (before, after) => {
@@ -80,7 +81,9 @@ export class NotificationElement extends LitElement {
         ${iconPullRequest.node[0]}
         <div class="title">
           This page was created from a pull request build
-          <div class="right" @click=${this.closeNotification}>${xmark.node[0]}</div>
+          <div class="right" @click=${this.closeNotification}>
+            ${xmark.node[0]}
+          </div>
         </div>
         <div class="content">
           This page
