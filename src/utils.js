@@ -10,10 +10,15 @@ export const domReady = new Promise((resolve) => {
   ) {
     return resolve();
   } else {
+    // Deduplicate DOM complete events
+    let is_loaded = false;
     document.addEventListener(
       "DOMContentLoaded",
       () => {
-        resolve();
+        if (!is_loaded) {
+          resolve();
+        }
+        is_loaded = true; 
       },
       {
         capture: true,
