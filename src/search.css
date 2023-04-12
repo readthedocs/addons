@@ -1,9 +1,7 @@
-/* https://getbem.com/introduction/ */
-
 :host > div {
   font-family: var(
     --readthedocs-search-font-family,
-    "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;"
+    "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif"
   );
   font-size: var(--readthedocs-search-font-size, 16px);
 
@@ -64,7 +62,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #e0e0e0;
-  border-radius: 0.7em 0.7em 0.7em 0.7em;
+  border-radius: 0.7rem;
   line-height: 1.875;
   background-color: #fcfcfc;
   box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
@@ -74,14 +72,14 @@
 
 :host > div form {
   background-color: #eaeaea;
-  margin: 1.2em;
+  margin: 1.2rem;
   border-radius: 0.25em;
   font-size: 1.15em;
   padding: 5px;
   display: flex;
 }
 
-:host > div form.readthedocs-search-input--focus {
+:host > div form.focus {
   outline: 2px solid #6ea0ec;
   border-shadow: inset 0 0 1px white transparent;
 }
@@ -109,7 +107,6 @@
   width: 100%;
   padding: 6px;
   line-height: 1;
-  font-family: inherit;
 }
 
 /* :host > div .readthedocs-search-results h2:hover { */
@@ -154,7 +151,6 @@
   font-size: 15px;
   color: #6ea0ec;
   border-bottom: 1px solid #6ea0ec;
-  font-family: inherit;
   line-height: inherit;
 }
 
@@ -229,48 +225,34 @@
 }
 
 :host > div .filters li.title {
+  font-size: 0.9rem;
   position: absolute;
-  top: 80px;
+  top: 75px;
   background: rgb(252, 252, 252);
   margin: 0 5px;
   padding: 0 5px;
 }
 
-:host > div .filters input {
-  margin: 3px;
-}
-
 :host > div .filters {
   padding: 5px 10px;
   margin: 0 1.15em;
-  border-radius: 0.7em;
+  border-radius: 0.3rem;
   border-style: solid;
   border-width: 1px;
   border-color: #80808057;
 }
 
-:host > div .filters ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
 :host > div .filters li {
   display: flex;
-  align-items: center;
   margin: 0 0 0 15px;
 }
 
 :host > div .filters li label {
-  border: 3px;
   padding: 3px;
 }
 
 :host > div .filters label {
-  color: black;
-  font-size: 15px;
-  margin: auto;
+  font-size: 0.9rem;
 }
 
 :host > div .readthedocs-search-no-results {

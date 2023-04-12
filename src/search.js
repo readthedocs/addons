@@ -10,6 +10,7 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 import styleSheet from "./search.css";
 import { domReady, CLIENT_VERSION, AddonBase } from "./utils";
 import { html, render, LitElement } from "lit";
+import { classMap } from "lit/directives/class-map.js";
 
 const MAX_SUGGESTIONS = 50;
 // TODO: play more with the substring limit.
@@ -29,16 +30,10 @@ export class SearchElement extends LitElement {
       reactive: true,
     },
     filters: { state: true },
-    show: { type: Boolean, reactive: true },
+    show: { state: true },
+    cssFormFocusClasses: { state: true },
   };
 
-  // Show / Hide on CSS file
-  // :host([show]) {
-  //     display: block;
-  // }
-  // :host([!show]) svg {
-  //     display: none;
-  // }
   static styles = styleSheet;
 
   constructor() {
@@ -46,6 +41,8 @@ export class SearchElement extends LitElement {
 
     this.className = this.className || "raised floating";
     this.config = {};
+    this.show = true;
+    this.cssFormFocusClasses = {};
     this.filters = {
       defaults: [
         {
@@ -82,29 +79,129 @@ export class SearchElement extends LitElement {
 
   showModal(e) {
     this.show = true;
+    // https://lit.dev/docs/components/shadow-dom/
+    const input = this.renderRoot.querySelector("input[type=search]");
+    // TODO: for some reason it does not get focus
+    input.focus();
+  }
+
+  searchFocus(e) {
+    if (e.type === "focusin") {
+      this.cssFormFocusClasses = {
+        focus: true,
+      };
+    } else if (e.type === "focusout") {
+      this.cssFormFocusClasses = {
+        focus: false,
+      };
+    }
+  }
+
+  getUserQuery() {
+    return null;
+  }
+
+  showSpinIcon() {
+    return null;
+  }
+
+  showMagnifierIcon() {
+    return null;
+  }
+
+  removeResults() {
+    return null;
+  }
+  showNoResultsFound() {
+    return null;
+  }
+
+  fetchResults(query) {
+    console.log("fetchResults");
+    this.removeResults();
+    this.showSpinIcon();
+
+    const url =
+      API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
+    fetch(url, {
+      method: "GET",
+      headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.results.length > 0) {
+          // let search_result_box = generateSuggestionsList(data, projectName);
+          console.log(data.results);
+          this.showMagnifierIcon();
+        } else {
+          this.removeResults();
+          this.showNoResultsFound();
+          this.showMagnifierIcon();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        this.removeResults();
+        // TODO: create a page similar to noResultsFound for this.
+      });
+  }
+
+  getCurrentFilter() {
+    // TODO: get the filter the user has selected
+    return this.config.features.search.default_filter;
+  }
+
+  queryInput(e) {
+    let query = e.originalTarget.value;
+    if (query.length >= MIN_CHARACTERS_QUERY) {
+      // TODO: save the current query request and handle it here
+      // if (this.currentQueryRequest !== null) {
+      //     // cancel previous ajax request.
+      //     this.currentQueryRequest.cancel();
+      // }
+      const filter = this.getCurrentFilter();
+      query = filter + " " + query;
+      const currentQueryRequest = this.fetchResults(query);
+    } else {
+      // if the last request returns the results,
+      // the suggestions list is generated even if there
+      // is no query. To prevent that, this function
+      // is debounced here.
+      let func = () => {
+        this.removeResults();
+      };
+      debounce(func, CLEAR_RESULTS_DELAY)();
+    }
   }
 
   renderSearchModal() {
-    console.log("renderSearchModal");
     library.add(faMagnifyingGlass);
-    library.add(faCircleXmark);
-    library.add(faCircleNotch);
-    library.add(faBinoculars);
-
     const magnifierIcon = icon(faMagnifyingGlass, {
       title: "Magnifier",
       classes: ["magnifier"],
     });
 
     return html`
-      <div role="search">
+      <div ?hidden=${!this.show} role="search">
         <div @click=${this.closeModal} class="background"></div>
         <div class="content">
-          <form>
+          <form class=${classMap(this.cssFormFocusClasses)}>
             <label>${magnifierIcon.node[0]}</label>
-            <input placeholder="Search docs" type="search" autocomplete="off" />
+            <input
+              @input=${this.queryInput}
+              @focusin=${this.searchFocus}
+              @focusout=${this.searchFocus}
+              placeholder="Search docs"
+              type="search"
+              autocomplete="off"
+            />
           </form>
-          <div class="title">Filters</div>
           <div @click=${this.filterSelected} class="filters">
             ${this.filtersTemplate()}
           </div>
@@ -130,10 +227,18 @@ export class SearchElement extends LitElement {
   filtersTemplate() {
     // TODO: iterate over the default filters and generate more than 1
     // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
+    // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
     return html`
+      <li class="title">Filters</li>
       <li>
-        <input type="checkbox" value="${this.filters.defaults[0].value}" />
-        <label>${this.filters.defaults[0].name}</label>
+        <input
+          id="readthedocs-search-filter-1"
+          type="checkbox"
+          value="${this.filters.defaults[0].value}"
+        />
+        <label for="readthedocs-search-filter-1"
+          >${this.filters.defaults[0].name}</label
+        >
       </li>
     `;
   }
@@ -174,19 +279,30 @@ export class SearchElement extends LitElement {
     // eventListeners(config);
   }
 
-  _handleShowModal(e) {
-    console.log("key pressed");
-    if (e.keyCode === 191 && !this.show) {
+  // We have to use "arrow function" so `this` refers to the component
+  // https://lit.dev/docs/components/events/#understanding-this-in-event-listeners
+  _handleShowModal = (e) => {
+    // Close the modal with `Esc`
+    if (e.keyCode === 27) {
+      this.closeModal();
+    }
+    // Show the modal with `/`
+    else if (e.keyCode === 191 && !this.show) {
       // prevent opening "Quick Find" in Firefox
       e.preventDefault();
-      this.show = true;
+      this.showModal();
     }
+  };
+
+  showNoResults() {
+    library.add(faCircleXmark);
+    library.add(faCircleNotch);
+    library.add(faBinoculars);
   }
 
   connectedCallback() {
     super.connectedCallback();
     // open search modal if "forward slash" button is pressed
-    console.log("connectedCallback");
     document.addEventListener("keydown", this._handleShowModal);
   }
   disconnectedCallback() {
@@ -720,50 +836,6 @@ const noResultsFound = () => {
     "#readthedocs-search .readthedocs-search-results"
   ).innerHTML = template;
 };
-
-/**
- * Creates the initial html structure which will be
- * appended to the <body> as soon as the page loads.
- * This html structure will serve as the boilerplate
- * to show our search results.
- *
- */
-const generateAndReturnInitialHtml = (config) => {};
-
-/**
- * Opens the search modal.
- *
- * @param {String} custom_query if a custom query is provided,
- * initialize the value of input field with it, or fallback to the
- * value from the original search bar.
- */
-const showSearchModal = (custom_query) => {
-  // removes previous results (if there are any).
-  removeResults();
-
-  let element = document.querySelector("#readthedocs-search");
-  if (element && element.style) {
-    element.style.display = "block";
-  }
-  document.querySelector("#readthedocs-search form input[type=search]").focus();
-};
-
-/**
- * Closes the search modal.
- */
-// const removeSearchModal = () => {
-//   // removes previous results before closing
-//   removeResults();
-
-//   // sets the value of input field to empty string and remove the focus.
-//   document.querySelector("#readthedocs-search form input[type=search]").value =
-//     "";
-
-//   let element = document.querySelector("#readthedocs-search");
-//   if (element && element.style) {
-//     element.style.display = "none";
-//   }
-// };
 
 /**
  * Get the current selected filter.
