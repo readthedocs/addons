@@ -45,7 +45,7 @@ export const domReady = new Promise((resolve) => {
  * and loading.
  */
 export class AddonBase {
-  static isEnabled() {
+  static isEnabled(config) {
     return false;
   }
 }

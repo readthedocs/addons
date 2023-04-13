@@ -6,7 +6,11 @@
   border-radius: 0.5rem;
   font-family: var(
     --readthedocs-notification-font-family,
-    "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif"
+    "Lato",
+    "proxima-nova",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif"
   );
   font-size: var(--readthedocs-notification-font-size, 1rem);
   color: var(--readthedocs-notification-color, rgb(64, 64, 64));
@@ -85,6 +89,7 @@
 }
 :host > div > div.content {
   line-height: 1rem;
+  font-size: 0.85em;
 }
 
 :host(.toast) > div > .title {

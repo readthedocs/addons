@@ -14,19 +14,7 @@ export class NotificationElement extends LitElement {
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
-    config: {
-      state: true,
-      // Update derived fields from config data
-      // TODO the URLs here should come from a backend API instead
-      hasChanged: (before, after) => {
-        if (after && Object.keys(after).length) {
-          this.urls = {
-            build: `${window.location.protocol}//${after.domains.dashboard}/projects/${after.project.slug}/builds/${after.build.id}/`,
-            external: `${after.project.repository_url}/pull/${after.version.slug}`,
-          };
-        }
-      },
-    },
+    config: { state: true },
     urls: { state: true },
   };
 
@@ -46,6 +34,17 @@ export class NotificationElement extends LitElement {
 
   loadConfig(config) {
     this.config = config;
+
+    // TODO: this URL should come from the backend API.
+    // Doing a simple replacement for now to solve the most common cases.
+    const vcs_external_url = config.project.repository_url
+      .replace(".git", "")
+      .replace("git@github.com:", "https://github.com/");
+
+    this.urls = {
+      build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
+      external: `${vcs_external_url}/pull/${config.version.slug}`,
+    };
   }
 
   render() {
@@ -86,11 +85,13 @@ export class NotificationElement extends LitElement {
           </a>
         </div>
         <div class="content">
-          This page
-          <a href="${this.urls.build}">was created</a>
-          from a pull request (<a href="${this.urls.external}"
-            >#${this.config.version.slug}</a
-          >).
+          See the
+          <a href="${this.urls.build}">build's detail page</a>
+          or
+          <a href="${this.urls.external}"
+            >pull request #${this.config.version.slug}</a
+          >
+          for more information.
         </div>
       </div>
     `;
