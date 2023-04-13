@@ -21,11 +21,6 @@ const CLEAR_RESULTS_DELAY = 300;
 const MIN_CHARACTERS_QUERY = 3;
 const API_ENDPOINT = "/_/api/v3/search/";
 
-// TODO: move with keyboard arrows
-// TODO: select result when hitting Enter
-// TODO: remove results when empty query
-// TODO: remove highlighted results when `mouseenter` on hits
-// TODO: get current selected filters
 // TODO: generate Domain results
 // TODO: make the spinner to spin
 
@@ -197,7 +192,7 @@ export class SearchElement extends LitElement {
     // if "Enter" key is pressed.
     if (e.keyCode === 13) {
       e.preventDefault();
-      const selected = document.querySelector(".hit .active");
+      const selected = this.renderRoot.querySelector("a.hit.active");
       // if an item is selected, then redirect to its link
       if (selected !== null) {
         window.location.href = selected.href;
@@ -402,6 +397,13 @@ export class SearchElement extends LitElement {
     this.queryInput();
   }
 
+  mouseEnter(e) {
+    const activeElements = this.renderRoot.querySelectorAll("a.hit.active");
+    for (const element of activeElements) {
+      element.classList.remove("active");
+    }
+  }
+
   loadBlockResultHTML(block, index, result) {
     // TODO: distinguish between `block.type` (section or domain)
 
@@ -424,7 +426,11 @@ export class SearchElement extends LitElement {
     }
 
     return html`
-      <a class="hit" href="${result.path}#${block.id}">
+      <a
+        @mouseenter=${this.mouseEnter}
+        class="hit"
+        href="${result.path}#${block.id}"
+      >
         <div id="hit-${index}">
           <p class="hit subheading">${unsafeHTML(title)}</p>
           <p class="hit content">${unsafeHTML(content)}</p>
