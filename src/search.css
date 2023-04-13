@@ -1,7 +1,11 @@
 :host > div {
   font-family: var(
     --readthedocs-search-font-family,
-    "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif"
+    "Lato",
+    "proxima-nova",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif"
   );
   font-size: var(--readthedocs-search-font-size, 16px);
 
@@ -13,7 +17,6 @@
   width: 100%;
   height: 100%;
   z-index: 1500;
-  /* display: none; */
   line-height: 1.875;
 }
 
@@ -30,7 +33,7 @@
   color: #333;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 87.5%;
+  font-size: 0.875em;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
   border-radius: 0;
@@ -92,6 +95,8 @@
 
 :host > div form label svg {
   height: 1em;
+  position: relative;
+  top: 5px;
 }
 
 :host > div form > input {
@@ -106,19 +111,6 @@
   line-height: 1;
 }
 
-/* :host > div .readthedocs-search-results h2:hover { */
-/*   color: inherit; */
-/*   text-decoration: inherit; */
-/*   text-shadow: inherit; */
-/* } */
-
-:host > div .readthedocs-search-result-hit:hover {
-  color: inherit;
-  text-decoration: inherit;
-  text-shadow: inherit;
-  background-color: rgb(245, 245, 245);
-}
-
 :host > div .results {
   margin-top: 10px;
   padding: 5px;
@@ -128,16 +120,15 @@
   hyphens: auto;
 }
 
-:host > div .readthedocs-search-result-hit {
+:host > div .results a.hit {
   width: 100%;
   display: inline-block;
   padding: 0 1.15em;
   box-sizing: border-box;
 }
 
-:host > div .readthedocs-search-result-hit a {
-  text-decoration: none;
-  cursor: pointer;
+:host > div .results a.hit:hover {
+    background-color: rgb(245, 245, 245);
 }
 
 :host > div .results h2 {
@@ -151,7 +142,7 @@
   line-height: inherit;
 }
 
-:host > div .readthedocs-search-result-hit--subheading {
+:host > div .results .hit .subheading {
   color: black;
   font-weight: 700;
   float: left;
@@ -163,7 +154,7 @@
   line-height: inherit;
 }
 
-:host > div .readthedocs-search-result-hit--content {
+:host > div .results .hit .content {
   margin: 0;
   text-decoration: none;
   color: black;
@@ -181,19 +172,19 @@
   font-style: normal;
 }
 
-:host > div .readthedocs-search-result-hit h2 span {
+:host > div .results .hit h2 span {
   background-color: #e5f6ff;
   padding-bottom: 3px;
   border-bottom-color: black;
 }
 
-:host > div .readthedocs-search-result-hit span {
+:host > div .results .hit span {
   color: #6ea0ec;
   font-style: italic;
   font-weight: bold;
 }
 
-:host > div .readthedocs-search-result-hit--active {
+:host > div .results .hit .active {
   background-color: rgb(245, 245, 245);
 }
 
@@ -216,6 +207,7 @@
   vertical-align: middle;
 }
 
+/* TODO: find an example for domain role and style it properly */
 :host > div .readthedocs-search-result-hit--domain-role {
   font-size: 80%;
   letter-spacing: 1px;
