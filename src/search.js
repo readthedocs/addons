@@ -102,6 +102,176 @@ export class SearchElement extends LitElement {
     }
   }
 
+  renderSearchModal() {
+    return html`
+      <div ?hidden=${!this.show} role="search">
+        <div @click=${this.closeModal} class="background"></div>
+        <div class="content">
+          <form class=${classMap(this.cssFormFocusClasses)}>
+            <label>${this.inputIcon.node[0]}</label>
+            <input
+              @input=${this.queryInput}
+              @keydown=${this.selectResultKeyboard}
+              @focusin=${this.queryInputFocus}
+              @focusout=${this.queryInputFocus}
+              placeholder="Search docs"
+              type="search"
+              autocomplete="off"
+            />
+          </form>
+          <div class="filters">${this.renderFilters()}</div>
+          <div class="results">${this.results}</div>
+          <div class="footer">
+            <ul class="help">
+              <li><code>Enter</code> to select</li>
+              <li><code>Up</code>/<code>Down</code> to navigate</li>
+              <li><code>Esc</code> to close</li>
+            </ul>
+            <div class="credits">
+              Search powered by
+              <a href="https://about.readthedocs.com/">
+                <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderNoResultsFound() {
+    // TODO: change the icon to a slash-ed magnifier or similar
+    const binoculars = icon(faBinoculars, {
+      title: "Not found",
+    });
+    const query = this.getUserQuery();
+    this.results = html`
+      <div class="no-results">
+        ${binoculars.node[0]}
+        <p class="title">No results for <strong>"${query}"</strong></p>
+        <div class="tips">
+          <p>Try using the following special queries:</p>
+          <ul>
+            <li>
+              <strong>Exact phrase</strong>: use double quotes to match a whole
+              pharse: <code>"adding a subproject"</code>.
+            </li>
+            <li>
+              <strong>Prefix</strong>: use an asterisk at the end of any term to
+              prefix a result: <code>environ*</code>.
+            </li>
+            <li>
+              <strong>Fuzziness</strong>: add a tilde and a number to indicate
+              the fuzziness of the word: <code>getter~2</code>.
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          <p>
+            Learn more about the query syntax supported in our
+            <a
+              target="_blank"
+              href="https://docs.readthedocs.io/page/server-side-search/syntax.html"
+              >documentation</a
+            >.
+          </p>
+        </div>
+      </div>
+    `;
+  }
+
+  renderFilters() {
+    // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
+    // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
+    return html`
+      <li class="title">Filters</li>
+      ${this.filters.map(
+        (filter, index) => html`
+          <li>
+            <input
+              @click=${this.filterClicked}
+              id="filter-${index}"
+              type="checkbox"
+              value="${filter.value}"
+            />
+            <label for="filter-${index}"> ${filter.name} </label>
+          </li>
+        `
+      )}
+    `;
+  }
+
+  renderResults(data) {
+    // JSON example from our production API
+    // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
+    // TODO: make the `(from project)` conditional based on
+    // `result.project_slug !== this.config.project.current.slug`
+    this.results = html`
+      <div class="hit">
+        ${data.results.map(
+          (result, rindex) =>
+            html` <a href="${result.path}">
+                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+              </a>
+
+              ${result.blocks.map(
+                (block, bindex) =>
+                  html`${this.renderBlockResult(
+                    block,
+                    rindex + bindex + 1,
+                    result
+                  )}`
+              )}`
+        )}
+      </div>
+    `;
+  }
+
+  renderBlockResult(block, index, result) {
+    // TODO: distinguish between `block.type` (section or domain)
+
+    // TODO: take a substring of the title as well in case it's too long?
+    let title = block.title;
+    if (block.highlights.title.length) {
+      title = block.highlights.title[0];
+    }
+
+    let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
+    if (block.highlights.content.length) {
+      // TODO: with this logic it could happen the highlighted part is outside of the substring
+      content = block.highlights.content[0];
+      if (content.length > MAX_SUBSTRING_LIMIT) {
+        content =
+          "... " +
+          block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+          " ...";
+      }
+    }
+
+    return html`
+      <a
+        @mouseenter=${this.mouseenterResultHit}
+        class="hit"
+        href="${result.path}#${block.id}"
+      >
+        <div id="hit-${index}">
+          <p class="hit subheading">${unsafeHTML(title)}</p>
+          <p class="hit content">${unsafeHTML(content)}</p>
+        </div>
+      </a>
+    `;
+  }
+
+  renderExternalProject(result) {
+    if (result.project.slug !== this.config.project.slug) {
+      return html`
+        <small class="subtitle"> (from project ${result.project.slug}) </small>
+      `;
+    }
+    return nothing;
+  }
+
   closeModal(e) {
     this.show = false;
   }
@@ -114,7 +284,7 @@ export class SearchElement extends LitElement {
     input.focus();
   }
 
-  searchFocus(e) {
+  queryInputFocus(e) {
     if (e.type === "focusin") {
       this.cssFormFocusClasses = {
         focus: true,
@@ -225,48 +395,6 @@ export class SearchElement extends LitElement {
     this.results = null;
   }
 
-  renderNoResultsFound() {
-    // TODO: change the icon to a slash-ed magnifier or similar
-    const binoculars = icon(faBinoculars, {
-      title: "Not found",
-    });
-    const query = this.getUserQuery();
-    this.results = html`
-      <div class="no-results">
-        ${binoculars.node[0]}
-        <p class="title">No results for <strong>"${query}"</strong></p>
-        <div class="tips">
-          <p>Try using the following special queries:</p>
-          <ul>
-            <li>
-              <strong>Exact phrase</strong>: use double quotes to match a whole
-              pharse: <code>"adding a subproject"</code>.
-            </li>
-            <li>
-              <strong>Prefix</strong>: use an asterisk at the end of any term to
-              prefix a result: <code>environ*</code>.
-            </li>
-            <li>
-              <strong>Fuzziness</strong>: add a tilde and a number to indicate
-              the fuzziness of the word: <code>getter~2</code>.
-            </li>
-          </ul>
-        </div>
-
-        <div class="footer">
-          <p>
-            Learn more about the query syntax supported in our
-            <a
-              target="_blank"
-              href="https://docs.readthedocs.io/page/server-side-search/syntax.html"
-              >documentation</a
-            >.
-          </p>
-        </div>
-      </div>
-    `;
-  }
-
   fetchResults(query) {
     this.removeAllResults();
     this.showSpinIcon();
@@ -338,64 +466,6 @@ export class SearchElement extends LitElement {
     }
   }
 
-  renderSearchModal() {
-    return html`
-      <div ?hidden=${!this.show} role="search">
-        <div @click=${this.closeModal} class="background"></div>
-        <div class="content">
-          <form class=${classMap(this.cssFormFocusClasses)}>
-            <label>${this.inputIcon.node[0]}</label>
-            <input
-              @input=${this.queryInput}
-              @keydown=${this.selectResultKeyboard}
-              @focusin=${this.searchFocus}
-              @focusout=${this.searchFocus}
-              placeholder="Search docs"
-              type="search"
-              autocomplete="off"
-            />
-          </form>
-          <div class="filters">${this.renderFilters()}</div>
-          <div class="results">${this.results}</div>
-          <div class="footer">
-            <ul class="help">
-              <li><code>Enter</code> to select</li>
-              <li><code>Up</code>/<code>Down</code> to navigate</li>
-              <li><code>Esc</code> to close</li>
-            </ul>
-            <div class="credits">
-              Search powered by
-              <a href="https://about.readthedocs.com/">
-                <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderFilters() {
-    // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
-    // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
-    return html`
-      <li class="title">Filters</li>
-      ${this.filters.map(
-        (filter, index) => html`
-          <li>
-            <input
-              @click=${this.filterClicked}
-              id="filter-${index}"
-              type="checkbox"
-              value="${filter.value}"
-            />
-            <label for="filter-${index}"> ${filter.name} </label>
-          </li>
-        `
-      )}
-    `;
-  }
-
   filterClicked(e) {
     this.queryInput();
   }
@@ -405,76 +475,6 @@ export class SearchElement extends LitElement {
     for (const element of activeElements) {
       element.classList.remove("active");
     }
-  }
-
-  renderBlockResultHTML(block, index, result) {
-    // TODO: distinguish between `block.type` (section or domain)
-
-    // TODO: take a substring of the title as well in case it's too long?
-    let title = block.title;
-    if (block.highlights.title.length) {
-      title = block.highlights.title[0];
-    }
-
-    let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
-    if (block.highlights.content.length) {
-      // TODO: with this logic it could happen the highlighted part is outside of the substring
-      content = block.highlights.content[0];
-      if (content.length > MAX_SUBSTRING_LIMIT) {
-        content =
-          "... " +
-          block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
-          " ...";
-      }
-    }
-
-    return html`
-      <a
-        @mouseenter=${this.mouseenterResultHit}
-        class="hit"
-        href="${result.path}#${block.id}"
-      >
-        <div id="hit-${index}">
-          <p class="hit subheading">${unsafeHTML(title)}</p>
-          <p class="hit content">${unsafeHTML(content)}</p>
-        </div>
-      </a>
-    `;
-  }
-
-  renderExternalProject(result) {
-    if (result.project.slug !== this.config.project.slug) {
-      return html`
-        <small class="subtitle"> (from project ${result.project.slug}) </small>
-      `;
-    }
-    return nothing;
-  }
-
-  renderResults(data) {
-    // JSON example from our production API
-    // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
-    // TODO: make the `(from project)` conditional based on
-    // `result.project_slug !== this.config.project.current.slug`
-    this.results = html`
-      <div class="hit">
-        ${data.results.map(
-          (result, rindex) =>
-            html` <a href="${result.path}">
-                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
-              </a>
-
-              ${result.blocks.map(
-                (block, bindex) =>
-                  html`${this.renderBlockResultHTML(
-                    block,
-                    rindex + bindex + 1,
-                    result
-                  )}`
-              )}`
-        )}
-      </div>
-    `;
   }
 
   // We have to use "arrow function" so `this` refers to the component
