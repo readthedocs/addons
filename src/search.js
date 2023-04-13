@@ -30,12 +30,12 @@ export class SearchElement extends LitElement {
   static properties = {
     config: {
       state: true,
-      reactive: true,
     },
     filters: { state: true },
     show: { state: true },
     inputIcon: { state: true },
-    // NOTE: does it make sense to handle the query as a property?
+    // NOTE: does it make sense to handle the query as a property that changes
+    // on keydown?
     // query: { state: true },
     results: {
       state: true,
@@ -48,18 +48,22 @@ export class SearchElement extends LitElement {
   constructor() {
     super();
 
-    this.className = this.className || "raised floating";
-    this.config = {};
-    this.show = true;
-    this.cssFormFocusClasses = {};
-    this.results = null;
-    this.inputIcon = icon(faMagnifyingGlass, { title: "Search" });
-    this.currentQueryRequest = null;
-    this.defaultFilter = null;
-    this.filters = [];
     library.add(faMagnifyingGlass);
     library.add(faCircleNotch);
     library.add(faBinoculars);
+
+    // TODO: expand the default supported styles
+    this.className = this.className || "raised floating";
+
+    this.config = {};
+    // TODO: hide it by default
+    this.show = true;
+    this.cssFormFocusClasses = {};
+    this.results = null;
+    this.inputIcon = icon(faMagnifyingGlass, { title: "Search docs" });
+    this.currentQueryRequest = null;
+    this.defaultFilter = null;
+    this.filters = [];
   }
 
   loadConfig(config) {
@@ -106,7 +110,7 @@ export class SearchElement extends LitElement {
     this.show = true;
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.renderRoot.querySelector("input[type=search]");
-    // TODO: for some reason it does not get focus
+    // FIXME: for some reason it does not get focus
     input.focus();
   }
 
@@ -217,11 +221,11 @@ export class SearchElement extends LitElement {
     this.inputIcon = icon(faMagnifyingGlass, { title: "Search" });
   }
 
-  removeResults() {
+  removeAllResults() {
     this.results = null;
   }
 
-  showNoResultsFound() {
+  renderNoResultsFound() {
     // TODO: change the icon to a slash-ed magnifier or similar
     const binoculars = icon(faBinoculars, {
       title: "Not found",
@@ -264,12 +268,13 @@ export class SearchElement extends LitElement {
   }
 
   fetchResults(query) {
-    this.removeResults();
+    this.removeAllResults();
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
       const url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
+
       fetch(url, {
         method: "GET",
         headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
@@ -282,19 +287,17 @@ export class SearchElement extends LitElement {
         })
         .then((data) => {
           if (data.results.length > 0) {
-            this.loadResults(data);
-            // let search_result_box = generateSuggestionsList(data, projectName);
-            this.showMagnifierIcon();
+            this.renderResults(data);
           } else {
-            this.removeResults();
-            this.showNoResultsFound();
-            this.showMagnifierIcon();
+            this.renderNoResultsFound();
           }
+          this.showMagnifierIcon();
         })
         .catch((error) => {
+          // TODO: create a page similar to noResultsFound when there is an
+          // error hitting the API.
           console.error(error);
-          this.removeResults();
-          // TODO: create a page similar to noResultsFound for this.
+          this.removeAllResults();
         });
     };
 
@@ -329,7 +332,7 @@ export class SearchElement extends LitElement {
       // is no query. To prevent that, this function
       // is debounced here.
       let func = () => {
-        this.removeResults();
+        this.removeAllResults();
       };
       debounce(func, CLEAR_RESULTS_DELAY)();
     }
@@ -397,14 +400,14 @@ export class SearchElement extends LitElement {
     this.queryInput();
   }
 
-  mouseEnter(e) {
+  mouseenterResultHit(e) {
     const activeElements = this.renderRoot.querySelectorAll("a.hit.active");
     for (const element of activeElements) {
       element.classList.remove("active");
     }
   }
 
-  loadBlockResultHTML(block, index, result) {
+  renderBlockResultHTML(block, index, result) {
     // TODO: distinguish between `block.type` (section or domain)
 
     // TODO: take a substring of the title as well in case it's too long?
@@ -427,7 +430,7 @@ export class SearchElement extends LitElement {
 
     return html`
       <a
-        @mouseenter=${this.mouseEnter}
+        @mouseenter=${this.mouseenterResultHit}
         class="hit"
         href="${result.path}#${block.id}"
       >
@@ -439,7 +442,7 @@ export class SearchElement extends LitElement {
     `;
   }
 
-  externalProject(result) {
+  renderExternalProject(result) {
     if (result.project.slug !== this.config.project.slug) {
       return html`
         <small class="subtitle"> (from project ${result.project.slug}) </small>
@@ -448,7 +451,7 @@ export class SearchElement extends LitElement {
     return nothing;
   }
 
-  loadResults(data) {
+  renderResults(data) {
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     // TODO: make the `(from project)` conditional based on
@@ -458,12 +461,12 @@ export class SearchElement extends LitElement {
         ${data.results.map(
           (result, rindex) =>
             html` <a href="${result.path}">
-                <h2>${result.title} ${this.externalProject(result)}</h2>
+                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
               </a>
 
               ${result.blocks.map(
                 (block, bindex) =>
-                  html`${this.loadBlockResultHTML(
+                  html`${this.renderBlockResultHTML(
                     block,
                     rindex + bindex + 1,
                     result
@@ -472,10 +475,6 @@ export class SearchElement extends LitElement {
         )}
       </div>
     `;
-  }
-
-  attachEvents() {
-    // eventListeners(config);
   }
 
   // We have to use "arrow function" so `this` refers to the component
@@ -522,6 +521,7 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
+    // TODO: un-comment when the endpoint returns these fields
     // return config.features && config.features.search.enabled;
     return true;
   }
