@@ -27,6 +27,7 @@ const API_ENDPOINT = "/_/api/v3/search/";
 // TODO: remove highlighted results when `mouseenter` on hits
 // TODO: get current selected filters
 // TODO: generate Domain results
+// TODO: make the spinner to spin
 
 export class SearchElement extends LitElement {
   static elementName = "readthedocs-search";
@@ -118,6 +119,90 @@ export class SearchElement extends LitElement {
       this.cssFormFocusClasses = {
         focus: false,
       };
+    }
+  }
+
+  selectNextResult(forward) {
+    const all = this.renderRoot.querySelectorAll("a.hit");
+    let selected = this.renderRoot.querySelector("a.hit.active");
+    if (selected !== null) {
+      selected = selected.children;
+    }
+
+    let nextId = 1;
+    let lastId = 1;
+    console.log(all);
+    console.log(selected);
+
+    // Find the `lastId`
+    if (all.length > 0) {
+      const last = all[all.length - 1];
+      if (last.id !== null) {
+        const match = last.id.match(/\d+/);
+        if (match !== null) {
+          lastId = Number(match[0]);
+        }
+      }
+    }
+
+    // Find the `nextId`
+    if (selected !== null && selected.id !== null) {
+      let match = selected.id.match(/\d+/);
+      if (match !== null) {
+        nextId = Number(match[0]);
+        nextId += forward ? 1 : -1;
+      }
+    }
+
+    // Cycle to the first or last result.
+    if (nextId <= 0) {
+      nextId = lastId;
+    } else if (nextId > lastId) {
+      nextId = 1;
+    }
+
+    console.log(nextId);
+    console.log(lastId);
+
+    // Remove all active elements
+    for (const active of this.renderRoot.querySelectorAll("a.hit.active")) {
+      active.classList.remove("active");
+    }
+
+    // Add class for active element and scroll to it
+    const newActive = this.renderRoot.querySelector(
+      `#hit-${nextId}`
+    ).parentNode;
+    console.log(newActive);
+    newActive.classList.add("active");
+    newActive.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start",
+    });
+  }
+
+  selectResultKeyboard(e) {
+    // if "ArrowDown is pressed"
+    if (e.keyCode === 40) {
+      e.preventDefault();
+      this.selectNextResult(true);
+    }
+
+    // if "ArrowUp" is pressed.
+    if (e.keyCode === 38) {
+      e.preventDefault();
+      this.selectNextResult(false);
+    }
+
+    // if "Enter" key is pressed.
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      const selected = document.querySelector(".hit .active");
+      // if an item is selected, then redirect to its link
+      if (selected !== null) {
+        window.location.href = selected.href;
+      }
     }
   }
 
@@ -261,6 +346,7 @@ export class SearchElement extends LitElement {
             <label>${this.inputIcon.node[0]}</label>
             <input
               @input=${this.queryInput}
+              @keydown=${this.selectResultKeyboard}
               @focusin=${this.searchFocus}
               @focusout=${this.searchFocus}
               placeholder="Search docs"
@@ -389,14 +475,18 @@ export class SearchElement extends LitElement {
     this.results = html`
       <div class="hit">
         ${data.results.map(
-          (result) =>
+          (result, rindex) =>
             html` <a href="${result.path}">
                 <h2>${result.title} ${this.externalProject(result)}</h2>
               </a>
 
               ${result.blocks.map(
-                (block, index) =>
-                  html`${this.loadBlockResultHTML(block, index, result)}`
+                (block, bindex) =>
+                  html`${this.loadBlockResultHTML(
+                    block,
+                    rindex + bindex + 1,
+                    result
+                  )}`
               )}`
         )}
       </div>
@@ -454,102 +544,4 @@ export class SearchAddon extends AddonBase {
     // return config.features && config.features.search.enabled;
     return true;
   }
-}
-
-/**
- * Add .active class to the search suggestion
- * corresponding to `id`, and scroll to that suggestion smoothly.
- *
- * @param {Number} id of the suggestion to activate
- */
-const addActive = (id) => {
-  const current_item = document.querySelector(
-    "#readthedocs-search-result-hit--" + id
-  );
-  // in case of no results or any error,
-  // current_item will not be found in the DOM.
-  if (current_item !== null) {
-    current_item.classList.add("readthedocs-search-result-hit--active");
-    current_item.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start",
-    });
-  }
-};
-
-/*
- * Select next/previous result.
- * Go to the first result if already in the last result,
- * or to the last result if already in the first result.
- *
- * @param {Boolean} forward.
- */
-const selectNextResult = (forward) => {
-  const all = document.querySelectorAll(
-    "#readthedocs-search .readthedocs-search-result-hit "
-  );
-  const current = document.querySelector(
-    "#readthedocs-search .readthedocs-search-result-hit--active"
-  );
-
-  let next_id = 1;
-  let last_id = 1;
-
-  if (all.length > 0) {
-    let last = all[all.length - 1];
-    if (last.id !== null) {
-      let match = last.id.match(/\d+/);
-      if (match !== null) {
-        last_id = Number(match[0]);
-      }
-    }
-  }
-
-  if (current !== null && current.id !== null) {
-    let match = current.id.match(/\d+/);
-    if (match !== null) {
-      next_id = Number(match[0]);
-      next_id += forward ? 1 : -1;
-    }
-  }
-
-  // Cycle to the first or last result.
-  if (next_id <= 0) {
-    next_id = last_id;
-  } else if (next_id > last_id) {
-    next_id = 1;
-  }
-
-  removeAllActive();
-  addActive(next_id);
-};
-
-function eventListeners(config) {
-  search_input.addEventListener("keydown", (e) => {
-    // if "ArrowDown is pressed"
-    if (e.keyCode === 40) {
-      e.preventDefault();
-      selectNextResult(true);
-    }
-
-    // if "ArrowUp" is pressed.
-    if (e.keyCode === 38) {
-      e.preventDefault();
-      selectNextResult(false);
-    }
-
-    // if "Enter" key is pressed.
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const current_item = document.querySelector(
-        "#readthedocs-search .readthedocs-search-result-hit--active"
-      );
-      // if an item is selected,
-      // then redirect to its link
-      if (current_item !== null) {
-        window.location.href = current_item.href;
-      }
-    }
-  });
 }
