@@ -128,7 +128,7 @@
 }
 
 :host > div .results a.hit:hover {
-    background-color: rgb(245, 245, 245);
+  background-color: rgb(245, 245, 245);
 }
 
 :host > div .results h2 {
