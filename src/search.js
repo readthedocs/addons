@@ -60,19 +60,8 @@ export class SearchElement extends LitElement {
     this.results = null;
     this.inputIcon = icon(faMagnifyingGlass, { title: "Search" });
     this.currentQueryRequest = null;
-    this.filters = {
-      defaults: [
-        {
-          name: "Search only in this project",
-          value: "projects:example",
-        },
-        {
-          name: "Search in subprojects",
-          value: "subprojects:example",
-        },
-      ],
-    };
-
+    this.defaultFilter = null;
+    this.filters = [];
     library.add(faMagnifyingGlass);
     library.add(faCircleNotch);
     library.add(faBinoculars);
@@ -80,6 +69,22 @@ export class SearchElement extends LitElement {
 
   loadConfig(config) {
     this.config = config;
+
+    if (config.features.search) {
+      this.defaultFilter = {
+        name: "Default filter",
+        value: config.features.search.default_filter,
+      };
+
+      let userFilters = [];
+      for (const filter of config.features.search.filters) {
+        userFilters.push({
+          name: filter[0],
+          value: filter[1],
+        });
+      }
+      this.filters = userFilters;
+    }
   }
 
   render() {
@@ -126,17 +131,15 @@ export class SearchElement extends LitElement {
     const all = this.renderRoot.querySelectorAll("a.hit");
     let selected = this.renderRoot.querySelector("a.hit.active");
     if (selected !== null) {
-      selected = selected.children;
+      selected = selected.firstElementChild;
     }
 
     let nextId = 1;
     let lastId = 1;
-    console.log(all);
-    console.log(selected);
 
     // Find the `lastId`
     if (all.length > 0) {
-      const last = all[all.length - 1];
+      const last = all[all.length - 1].firstElementChild;
       if (last.id !== null) {
         const match = last.id.match(/\d+/);
         if (match !== null) {
@@ -161,9 +164,6 @@ export class SearchElement extends LitElement {
       nextId = 1;
     }
 
-    console.log(nextId);
-    console.log(lastId);
-
     // Remove all active elements
     for (const active of this.renderRoot.querySelectorAll("a.hit.active")) {
       active.classList.remove("active");
@@ -173,7 +173,6 @@ export class SearchElement extends LitElement {
     const newActive = this.renderRoot.querySelector(
       `#hit-${nextId}`
     ).parentNode;
-    console.log(newActive);
     newActive.classList.add("active");
     newActive.scrollIntoView({
       behavior: "smooth",
@@ -287,11 +286,9 @@ export class SearchElement extends LitElement {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
           if (data.results.length > 0) {
             this.loadResults(data);
             // let search_result_box = generateSuggestionsList(data, projectName);
-            console.log(data.results);
             this.showMagnifierIcon();
           } else {
             this.removeResults();
@@ -310,12 +307,18 @@ export class SearchElement extends LitElement {
   }
 
   getCurrentFilter() {
-    // TODO: get the filter the user has selected
-    return this.config.features.search.default_filter;
+    let filters = [];
+    const filterElements = this.renderRoot.querySelectorAll(
+      ".filters input[type=checkbox]:checked"
+    );
+    for (const e of filterElements) {
+      filters.push(e.value);
+    }
+    return filters.join(" ") || this.defaultFilter.value;
   }
 
   queryInput(e) {
-    let query = e.originalTarget.value;
+    let query = this.getUserQuery();
     if (query.length >= MIN_CHARACTERS_QUERY) {
       if (this.currentQueryRequest !== null) {
         // cancel previous ajax request.
@@ -354,9 +357,7 @@ export class SearchElement extends LitElement {
               autocomplete="off"
             />
           </form>
-          <div @click=${this.filterSelected} class="filters">
-            ${this.renderFilters()}
-          </div>
+          <div class="filters">${this.renderFilters()}</div>
           <div class="results">${this.results}</div>
           <div class="footer">
             <ul class="help">
@@ -381,10 +382,11 @@ export class SearchElement extends LitElement {
     // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
     return html`
       <li class="title">Filters</li>
-      ${this.filters.defaults.map(
+      ${this.filters.map(
         (filter, index) => html`
           <li>
             <input
+              @click=${this.filterClicked}
               id="filter-${index}"
               type="checkbox"
               value="${filter.value}"
@@ -396,34 +398,8 @@ export class SearchElement extends LitElement {
     `;
   }
 
-  filterSelected(e) {
-    console.log("Filter selected: " + e.target.textContent);
-    //     // Uncheck all other filters when one is checked.
-    //     // We only support one filter at a time.
-    //     const checkboxes = document.querySelectorAll(
-    //         "#readthedocs-search .readthedocs-search-filters input[type=checkbox]"
-    //     );
-    //     for (const checkbox of checkboxes) {
-    //         if (checkbox.checked && checkbox.value != event.target.value) {
-    //             checkbox.checked = false;
-    //         }
-    //     }
-
-    //     // Trigger a search with the current selected filter.
-    //     let search_query = getSearchTerm();
-    //     if (search_query !== "") {
-    //         const filter = getCurrentFilter(config);
-    //         search_query = filter + " " + search_query;
-    //         const search_params = {
-    //             q: search_query,
-    //         };
-    //         fetchAndGenerateResults(
-    //             config.features.search.api_endpoint,
-    //             search_params,
-    //             config.features.search.project
-    //         )();
-    //     }
-    // });
+  filterClicked(e) {
+    this.queryInput();
   }
 
   loadBlockResultHTML(block, index, result) {
@@ -469,7 +445,6 @@ export class SearchElement extends LitElement {
   loadResults(data) {
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
-    console.log(data);
     // TODO: make the `(from project)` conditional based on
     // `result.project_slug !== this.config.project.current.slug`
     this.results = html`
