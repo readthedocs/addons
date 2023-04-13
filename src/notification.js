@@ -34,7 +34,7 @@ export class NotificationElement extends LitElement {
       build: null,
       external: null,
     };
-    this.highest = null;
+    this.highest_version = {};
   }
 
   loadConfig(config) {
@@ -66,7 +66,7 @@ export class NotificationElement extends LitElement {
       }
     } else if (
       this.config.features.non_latest_version_warning.enabled &&
-      this.highest
+      this.highest_version
     ) {
       return this.renderNonLatestVersionWarning();
     }
@@ -84,8 +84,9 @@ export class NotificationElement extends LitElement {
     const highest = versions[index];
 
     if (highest && highest !== this.config.version.slug) {
-      this.highest = {
+      this.highest_version = {
         name: highest,
+        // TODO: get this URL from the API
         url: `${window.location.protocol}/${window.location.hostname}/${this.config.project.language}/${highest}/`,
       };
     }
@@ -114,7 +115,8 @@ export class NotificationElement extends LitElement {
         <div class="content">
           You are reading an old version of this documentation. The latest
           stable version is
-          <a href="${this.highest.url}">${this.highest.name}</a>.
+          <a href="${this.highest_version.url}">${this.highest_version.name}</a
+          >.
         </div>
       </div>
     `;
