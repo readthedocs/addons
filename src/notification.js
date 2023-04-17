@@ -207,11 +207,12 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    // TODO support the outdated version warning feature here too.
     return (
-      config.features &&
-      config.features.external_version_warning.enabled &&
-      config.version.external
+      (config.features &&
+        config.features.external_version_warning.enabled &&
+        config.version.external) ||
+      (config.features.non_latest_version_warning.enabled &&
+        !config.version.external)
     );
   }
 }
