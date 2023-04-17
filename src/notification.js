@@ -98,7 +98,7 @@ export class NotificationElement extends LitElement {
       this.highest_version = {
         name: highest,
         // TODO: get this URL from the API
-        url: `${window.location.protocol}/${window.location.hostname}/${this.config.project.language}/${highest}/`,
+        url: `${window.location.protocol}//${window.location.hostname}/${this.config.project.language}/${highest}/`,
       };
     }
   }
