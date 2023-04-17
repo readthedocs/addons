@@ -32,7 +32,7 @@ export function injectFlyout(config) {
 `;
 
   function get_languages(config) {
-    if (config.features.flyout.translations.length === 0) {
+    if (config.addons.flyout.translations.length === 0) {
       return "";
     }
 
@@ -40,7 +40,7 @@ export function injectFlyout(config) {
       // TODO: how do we handle translations here?
       `<dl><dt>Languages</dt>`,
     ];
-    for (const language of config.features.flyout.translations) {
+    for (const language of config.addons.flyout.translations) {
       result.push(languageTemplate(language));
     }
     result.push(`</dl>`);
@@ -48,7 +48,7 @@ export function injectFlyout(config) {
   }
 
   function get_versions(config) {
-    if (config.features.flyout.versions.length === 0) {
+    if (config.addons.flyout.versions.length === 0) {
       return "";
     }
 
@@ -56,7 +56,7 @@ export function injectFlyout(config) {
       // TODO: how do we handle translations here?
       `<dl><dt>Versions</dt>`,
     ];
-    for (const version of config.features.flyout.versions) {
+    for (const version of config.addons.flyout.versions) {
       result.push(versionTemplate(version));
     }
     result.push(`</dl>`);
@@ -64,7 +64,7 @@ export function injectFlyout(config) {
   }
 
   function get_downloads(config) {
-    if (config.features.flyout.downloads.length === 0) {
+    if (config.addons.flyout.downloads.length === 0) {
       return "";
     }
 
@@ -72,7 +72,7 @@ export function injectFlyout(config) {
       // TODO: how do we handle translations here?
       `<dl><dt>Downloads</dt>`,
     ];
-    for (const download of config.features.flyout.downloads) {
+    for (const download of config.addons.flyout.downloads) {
       result.push(downloadTemplate(download));
     }
     result.push(`</dl>`);
@@ -84,7 +84,7 @@ export function injectFlyout(config) {
    <div class="rst-versions rst-badge shift-down" data-toggle="rst-versions">
       <span class="rst-current-version" data-toggle="rst-current-version">
       <span class="fa fa-book">&nbsp;</span>
-      v: ${config.version.slug}
+      v: ${config.versions.current.slug}
       <span class="fa fa-caret-down"></span>
       </span>
       <div class="rst-other-versions">
@@ -98,17 +98,17 @@ export function injectFlyout(config) {
             <dt>On Read the Docs</dt>
             <dd>
                <a href="//${config.domains.dashboard}/projects/${
-    config.project.slug
+    config.projects.current.slug
   }/">Project Home</a>
             </dd>
             <dd>
                <a href="//${config.domains.dashboard}/projects/${
-    config.project.slug
+    config.projects.current.slug
   }/builds/">Builds</a>
             </dd>
             <dd>
                <a href="//${config.domains.dashboard}/projects/${
-    config.project.slug
+    config.projects.current.slug
   }/downloads/">Downloads</a>
             </dd>
          </dl>
@@ -116,18 +116,18 @@ export function injectFlyout(config) {
          <dl>
             <dt>On GitHub</dt>
             <dd>
-               <a href="${config.features.flyout.vcs.url}/${
-    config.features.flyout.vcs.username
-  }/${config.features.flyout.vcs.repository}/blob/${
-    config.features.flyout.vcs.branch
-  }/${config.features.flyout.vcs.filepath}">View</a>
+               <a href="${config.addons.flyout.vcs.url}/${
+    config.addons.flyout.vcs.username
+  }/${config.addons.flyout.vcs.repository}/blob/${
+    config.addons.flyout.vcs.branch
+  }/${config.addons.flyout.vcs.filepath}">View</a>
             </dd>
             <dd>
-               <a href="${config.features.flyout.vcs.url}/${
-    config.features.flyout.vcs.username
-  }/${config.features.flyout.vcs.repository}/edit/${
-    config.features.flyout.vcs.branch
-  }/${config.features.flyout.vcs.filepath}">Edit</a>
+               <a href="${config.addons.flyout.vcs.url}/${
+    config.addons.flyout.vcs.username
+  }/${config.addons.flyout.vcs.repository}/edit/${
+    config.addons.flyout.vcs.branch
+  }/${config.addons.flyout.vcs.filepath}">Edit</a>
             </dd>
          </dl>
 
@@ -137,7 +137,9 @@ export function injectFlyout(config) {
                <div style="padding: 6px;">
                   <form id="flyout-search-form" class="wy-form" target="_blank" action="//${
                     config.domains.dashboard
-                  }/projects/${config.project.slug}/search/" method="get">
+                  }/projects/${
+    config.projects.current.slug
+  }/search/" method="get">
                      <input type="text" name="q" aria-label="Search docs" placeholder="Search docs">
                   </form>
                </div>
