@@ -56,8 +56,7 @@ export class SearchElement extends LitElement {
     this.className = this.className || "raised floating";
 
     this.config = {};
-    // TODO: hide it by default
-    this.show = true;
+    this.show = false;
     this.cssFormFocusClasses = {};
     this.results = null;
     this.inputIcon = icon(faMagnifyingGlass, { title: "Search docs" });
@@ -93,10 +92,9 @@ export class SearchElement extends LitElement {
     }
 
     if (
-      true
-      // this.config.features &&
-      // this.config.features.search &&
-      // this.config.features.search.enabled
+      this.config.features &&
+      this.config.features.search &&
+      this.config.features.search.enabled
     ) {
       return this.renderSearchModal();
     }
@@ -205,8 +203,6 @@ export class SearchElement extends LitElement {
   renderResults(data) {
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
-    // TODO: make the `(from project)` conditional based on
-    // `result.project_slug !== this.config.project.current.slug`
     this.results = html`
       <div class="hit">
         ${data.results.map(
@@ -521,8 +517,6 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    // TODO: un-comment when the endpoint returns these fields
-    // return config.features && config.features.search.enabled;
-    return true;
+    return config.features && config.features.search.enabled;
   }
 }
