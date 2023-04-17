@@ -34,7 +34,7 @@ export class NotificationElement extends LitElement {
       build: null,
       external: null,
     };
-    this.highest_version = {};
+    this.highest_version = null;
   }
 
   loadConfig(config) {
