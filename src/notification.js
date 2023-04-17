@@ -19,7 +19,7 @@ export class NotificationElement extends LitElement {
   static properties = {
     config: { state: true },
     urls: { state: true },
-    highest: { state: true },
+    highest_version: { state: true },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
