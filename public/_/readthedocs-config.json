@@ -1,116 +1,107 @@
 {
-    "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
-    "project": {
-        "slug": "example",
-        "language": "en",
-        "repository_url": "https://github.com/readthedocs/readthedocs-client",
-        "programming_language": "words"
-    },
-    "version": {
-        "slug": "v1",
-        "external": true
-    },
-    "build": {
-        "id": 2801
-    },
-    "domains": {
-        "dashboard": "devthedocs.org"
-    },
-    "readthedocs": {
-        "analytics": {
-            "code": null
-        }
-    },
-    "features": {
-        "search": {
-            "project": "readthedocs-client",
-            "version": "latest",
-            "api_endpoint": "/_/api/v3/search/",
-            "filters": [
-                [
-                "Search only in this project",
-                "project:readthedocs-client/latest"
-            ],
-                [
-                "Search subprojects",
-                "subprojects:readthedocs-client/latest"
-            ]
-            ],
-            "default_filter": "subprojects:readthedocs-client/latest"
-        },
-        "analytics": {
-            "code": null
-        },
-        "external_version_warning": {
-            "enabled": true,
-            "query_selector": "[role=main]"
-        },
-        "non_latest_version_warning": {
-            "enabled": true,
-            "query_selector": "[role=main]",
-            "versions": [
-                "stable",
-                "latest",
-                "v1.0",
-                "v1.4",
-                "v2.0"
-            ]
-        },
-        "doc_diff": {
-            "enabled": true,
-            "base_host": "http://test-builds.devthedocs.org",
-            "base_url": "http://test-builds.devthedocs.org/en/latest/index.html",
-            "root_selector": "[role=main]",
-            "inject_styles": true
-        },
-        "flyout": {
-            "translations": [],
-            "versions": [
-                {
-                    "slug": "stable",
-                    "url": "/en/stable/"
-                },
-                {
-                    "slug": "latest",
-                    "url": "/en/latest/"
-                },
-                {
-                    "slug": "v1.0",
-                    "url": "/en/v1.0/"
-                },
-                {
-                    "slug": "v1.4",
-                    "url": "/en/v1.4/"
-                },
-                {
-                    "slug": "v2.0",
-                    "url": "/en/v2.0/"
-                }
-            ],
-            "downloads": [],
-            "vcs": {
-                "url": "https://github.com",
-                "username": "readthedocs",
-                "repository": "reathedocs-client",
-                "branch": "main",
-                "filepath": "/examples/sphinx/docs/index.rst"
-            }
-        },
-        "search": {
-            "project": "example",
-            "version": "latest",
-            "api_endpoint": "/_/api/v3/search/",
-            "filters": [
-                [
-                  "Search only in this project",
-                  "project:example/latest"
-                ],
-                [
-                  "Search subprojects",
-                  "subprojects:example/latest"
-                ]
-            ],
-            "default_filter": "subprojects:example/latest"
-        }
+  "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
+  "projects": {
+    "current": {
+      "slug": "example",
+      "language": "en",
+      "repository_url": "https://github.com/readthedocs/readthedocs-client",
+      "programming_language": "words"
     }
+  },
+  "versions": {
+    "current": {
+      "slug": "v1",
+      "external": true
+    }
+  },
+  "builds": {
+    "current": {
+      "id": 2801
+    }
+  },
+  "domains": {
+    "dashboard": "devthedocs.org"
+  },
+  "readthedocs": {
+    "analytics": {
+      "code": null
+    }
+  },
+  "addons": {
+    "search": {
+      "enabled": true,
+      "project": "readthedocs-client",
+      "version": "latest",
+      "api_endpoint": "/_/api/v3/search/",
+      "filters": [
+        ["Search only in this project", "project:readthedocs-client/latest"],
+        ["Search subprojects", "subprojects:readthedocs-client/latest"]
+      ],
+      "default_filter": "subprojects:readthedocs-client/latest"
+    },
+    "analytics": {
+      "enabled": true,
+      "code": null
+    },
+    "external_version_warning": {
+      "enabled": true,
+      "query_selector": "[role=main]"
+    },
+    "non_latest_version_warning": {
+      "enabled": true,
+      "query_selector": "[role=main]",
+      "versions": ["stable", "latest", "v1.0", "v1.4", "v2.0"]
+    },
+    "doc_diff": {
+      "enabled": true,
+      "base_host": "http://test-builds.devthedocs.org",
+      "base_url": "http://test-builds.devthedocs.org/en/latest/index.html",
+      "root_selector": "[role=main]",
+      "inject_styles": true
+    },
+    "flyout": {
+      "translations": [],
+      "versions": [
+        {
+          "slug": "stable",
+          "url": "/en/stable/"
+        },
+        {
+          "slug": "latest",
+          "url": "/en/latest/"
+        },
+        {
+          "slug": "v1.0",
+          "url": "/en/v1.0/"
+        },
+        {
+          "slug": "v1.4",
+          "url": "/en/v1.4/"
+        },
+        {
+          "slug": "v2.0",
+          "url": "/en/v2.0/"
+        }
+      ],
+      "downloads": [],
+      "vcs": {
+        "url": "https://github.com",
+        "username": "readthedocs",
+        "repository": "reathedocs-client",
+        "branch": "main",
+        "filepath": "/examples/sphinx/docs/index.rst"
+      }
+    },
+    "search": {
+      "enabled": true,
+      "project": "example",
+      "version": "latest",
+      "api_endpoint": "/_/api/v3/search/",
+      "filters": [
+        ["Search only in this project", "project:example/latest"],
+        ["Search subprojects", "subprojects:example/latest"]
+      ],
+      "default_filter": "subprojects:example/latest"
+    }
+  }
 }
