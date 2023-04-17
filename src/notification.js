@@ -51,7 +51,7 @@ export class NotificationElement extends LitElement {
         .replace("git@github.com:", "https://github.com/");
 
       this.urls = {
-        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.build.id}/`,
+        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.builds.current.id}/`,
         external: `${vcs_external_url}/pull/${config.versions.current.slug}`,
       };
     }
