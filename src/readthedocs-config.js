@@ -16,15 +16,6 @@ export function getReadTheDocsConfig() {
     url = "/_/readthedocs-config.json";
   }
 
-  // Use a hardcoded file when running on Read the Docs
-  if (window.location.href.indexOf(".readthedocs.io") !== -1) {
-    url = "../readthedocs-config.json";
-  }
-
-  if (window.location.href.indexOf(".readthedocs.build") !== -1) {
-    url = "../readthedocs-config.json";
-  }
-
   return fetch(url, {
     method: "GET",
     headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },

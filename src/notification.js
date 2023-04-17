@@ -1,7 +1,10 @@
+import semverMaxSatisfying from "semver/ranges/max-satisfying";
+import semverCoerce from "semver/functions/coerce";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
   faCodePullRequest,
+  faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 
@@ -14,20 +17,9 @@ export class NotificationElement extends LitElement {
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
-    config: {
-      state: true,
-      // Update derived fields from config data
-      // TODO the URLs here should come from a backend API instead
-      hasChanged: (before, after) => {
-        if (after && Object.keys(after).length) {
-          this.urls = {
-            build: `${window.location.protocol}//${after.domains.dashboard}/projects/${after.project.slug}/builds/${after.build.id}/`,
-            external: `${after.project.repository_url}/pull/${after.version.slug}`,
-          };
-        }
-      },
-    },
+    config: { state: true },
     urls: { state: true },
+    highest_version: { state: true },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -42,10 +34,34 @@ export class NotificationElement extends LitElement {
       build: null,
       external: null,
     };
+    this.highest_version = null;
   }
 
   loadConfig(config) {
     this.config = config;
+
+    if (
+      config.features.external_version_warning.enabled &&
+      config.version.external
+    ) {
+      // TODO: this URL should come from the backend API.
+      // Doing a simple replacement for now to solve the most common cases.
+      const vcs_external_url = config.project.repository_url
+        .replace(".git", "")
+        .replace("git@github.com:", "https://github.com/");
+
+      this.urls = {
+        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
+        external: `${vcs_external_url}/pull/${config.version.slug}`,
+      };
+    }
+
+    if (
+      config.features.non_latest_version_warning.enabled &&
+      !config.version.external
+    ) {
+      this.calculateHighestVersion();
+    }
   }
 
   render() {
@@ -55,14 +71,66 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (
-      this.config.features.external_version_warning.enabled &&
-      this.config.version.external
+    if (this.config.version.external) {
+      if (this.config.features.external_version_warning.enabled) {
+        return this.renderExternalVersionWarning();
+      }
+    } else if (
+      this.config.features.non_latest_version_warning.enabled &&
+      this.highest_version
     ) {
-      return this.renderExternalVersionWarning();
+      return this.renderNonLatestVersionWarning();
     }
+    return nothing;
+  }
 
-    // TODO support the outdated version warning
+  calculateHighestVersion() {
+    // Convert versions like `v1` into `1.0.0` to be able to compare them
+    const versions = this.config.features.non_latest_version_warning.versions;
+    const coercedVersions = versions.map((v) => semverCoerce(v));
+    const coercedHighest = semverMaxSatisfying(coercedVersions, ">=0.0.0");
+
+    // Get back the original `v1` to generate the URLs and display the correct name
+    const index = coercedVersions.indexOf(coercedHighest);
+    const highest = versions[index];
+
+    if (highest && highest !== this.config.version.slug) {
+      this.highest_version = {
+        name: highest,
+        // TODO: get this URL from the API
+        url: `${window.location.protocol}//${window.location.hostname}/${this.config.project.language}/${highest}/`,
+      };
+    }
+  }
+
+  renderNonLatestVersionWarning() {
+    library.add(faCircleXmark);
+    library.add(faLayerGroup);
+    const xmark = icon(faCircleXmark, {
+      title: "Close notification",
+    });
+    const iconLayerGroup = icon(faLayerGroup, {
+      title: "This version is not the latest one",
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div>
+        ${iconLayerGroup.node[0]}
+        <div class="title">
+          This is an <span>old version</span>
+          <a href="#" class="right" @click=${this.closeNotification}>
+            ${xmark.node[0]}
+          </a>
+        </div>
+        <div class="content">
+          You are reading an old version of this documentation. The latest
+          stable version is
+          <a href="${this.highest_version.url}">${this.highest_version.name}</a
+          >.
+        </div>
+      </div>
+    `;
   }
 
   renderExternalVersionWarning() {
@@ -86,11 +154,13 @@ export class NotificationElement extends LitElement {
           </a>
         </div>
         <div class="content">
-          This page
-          <a href="${this.urls.build}">was created</a>
-          from a pull request (<a href="${this.urls.external}"
-            >#${this.config.version.slug}</a
-          >).
+          See the
+          <a href="${this.urls.build}">build's detail page</a>
+          or
+          <a href="${this.urls.external}"
+            >pull request #${this.config.version.slug}</a
+          >
+          for more information.
         </div>
       </div>
     `;
@@ -148,11 +218,12 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    // TODO support the outdated version warning feature here too.
     return (
-      config.features &&
-      config.features.external_version_warning.enabled &&
-      config.version.external
+      (config.features &&
+        config.features.external_version_warning.enabled &&
+        config.version.external) ||
+      (config.features.non_latest_version_warning.enabled &&
+        !config.version.external)
     );
   }
 }

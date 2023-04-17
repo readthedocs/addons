@@ -1,12 +1,7 @@
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
-import { injectNonLatestVersionWarning } from "./non-latest-version-warning";
-import { injectFlyout, trackFlyoutEvents } from "./flyout";
-import { registerPageView, injectAnalytics } from "./analytics";
-import { injectEthicalAd } from "./sponsorship";
-import { initializeSearchAsYouType } from "./search";
-import { initializeDocDiff } from "./docdiff";
-import { initializeTooltips } from "./tooltips";
+import * as analytics from "./analytics";
+import * as search from "./search";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -22,36 +17,14 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        const integrations = [
-          injectAnalytics,
-          injectFlyout,
-          initializeSearchAsYouType,
-          trackFlyoutEvents,
-          registerPageView,
-          injectEthicalAd,
-          initializeTooltips,
-          injectNonLatestVersionWarning,
-          // NOTE: disable DocDiff for now because it breaks other integrations
-          // See https://github.com/readthedocs/readthedocs-client/issues/11
-          // initializeDocDiff,
+        const addons = [
+          notification.NotificationAddon,
+          analytics.AnalyticsAddon,
+          search.SearchAddon,
         ];
 
-        // Iterate over all the integration functions and create one Promise for each of them.
-        // They will be executed concurrently.
-        for (const fn of integrations) {
-          promises.push(
-            new Promise((resolve) => {
-              resolve(fn(config));
-            })
-          );
-        }
-
-        // TODO migrate the above to use a common pattern for addon injection.
-        // Addons should not execute or inject anything if they are not enabled.
-        const addons = [notification.NotificationAddon];
-
         for (const addon of addons) {
-          if (addon.isEnabled) {
+          if (addon.isEnabled(config)) {
             promises.push(
               new Promise((resolve) => {
                 resolve(new addon(config));
