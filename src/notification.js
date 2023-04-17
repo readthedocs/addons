@@ -56,12 +56,13 @@ export class NotificationElement extends LitElement {
       };
     }
 
-    if (
-      config.addons.non_latest_version_warning.enabled &&
-      !config.versions.current.external
-    ) {
-      this.calculateHighestVersion();
-    }
+    // TODO: uncomment when ready to deploy non-latest version warning
+    // if (
+    //   config.addons.non_latest_version_warning.enabled &&
+    //   !config.versions.current.external
+    // ) {
+    //   this.calculateHighestVersion();
+    // }
   }
 
   render() {
@@ -75,12 +76,14 @@ export class NotificationElement extends LitElement {
       if (this.config.addons.external_version_warning.enabled) {
         return this.renderExternalVersionWarning();
       }
-    } else if (
-      this.config.addons.non_latest_version_warning.enabled &&
-      this.highest_version
-    ) {
-      return this.renderNonLatestVersionWarning();
     }
+    // TODO: uncomment when ready to deploy non-latest version warning
+    // else if (
+    //   this.config.addons.non_latest_version_warning.enabled &&
+    //   this.highest_version
+    // ) {
+    //   return this.renderNonLatestVersionWarning();
+    // }
     return nothing;
   }
 
