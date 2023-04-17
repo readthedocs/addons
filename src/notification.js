@@ -41,24 +41,24 @@ export class NotificationElement extends LitElement {
     this.config = config;
 
     if (
-      config.features.external_version_warning.enabled &&
-      config.version.external
+      config.addons.external_version_warning.enabled &&
+      config.versions.current.external
     ) {
       // TODO: this URL should come from the backend API.
       // Doing a simple replacement for now to solve the most common cases.
-      const vcs_external_url = config.project.repository_url
+      const vcs_external_url = config.projects.current.repository_url
         .replace(".git", "")
         .replace("git@github.com:", "https://github.com/");
 
       this.urls = {
-        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
-        external: `${vcs_external_url}/pull/${config.version.slug}`,
+        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.build.id}/`,
+        external: `${vcs_external_url}/pull/${config.versions.current.slug}`,
       };
     }
 
     if (
-      config.features.non_latest_version_warning.enabled &&
-      !config.version.external
+      config.addons.non_latest_version_warning.enabled &&
+      !config.versions.current.external
     ) {
       this.calculateHighestVersion();
     }
@@ -71,12 +71,12 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (this.config.version.external) {
-      if (this.config.features.external_version_warning.enabled) {
+    if (this.config.versions.current.external) {
+      if (this.config.addons.external_version_warning.enabled) {
         return this.renderExternalVersionWarning();
       }
     } else if (
-      this.config.features.non_latest_version_warning.enabled &&
+      this.config.addons.non_latest_version_warning.enabled &&
       this.highest_version
     ) {
       return this.renderNonLatestVersionWarning();
@@ -86,7 +86,7 @@ export class NotificationElement extends LitElement {
 
   calculateHighestVersion() {
     // Convert versions like `v1` into `1.0.0` to be able to compare them
-    const versions = this.config.features.non_latest_version_warning.versions;
+    const versions = this.config.addons.non_latest_version_warning.versions;
     const coercedVersions = versions.map((v) => semverCoerce(v));
     const coercedHighest = semverMaxSatisfying(coercedVersions, ">=0.0.0");
 
@@ -94,11 +94,11 @@ export class NotificationElement extends LitElement {
     const index = coercedVersions.indexOf(coercedHighest);
     const highest = versions[index];
 
-    if (highest && highest !== this.config.version.slug) {
+    if (highest && highest !== this.config.versions.current.slug) {
       this.highest_version = {
         name: highest,
         // TODO: get this URL from the API
-        url: `${window.location.protocol}//${window.location.hostname}/${this.config.project.language}/${highest}/`,
+        url: `${window.location.protocol}//${window.location.hostname}/${this.config.projects.current.language}/${highest}/`,
       };
     }
   }
@@ -158,7 +158,7 @@ export class NotificationElement extends LitElement {
           <a href="${this.urls.build}">build's detail page</a>
           or
           <a href="${this.urls.external}"
-            >pull request #${this.config.version.slug}</a
+            >pull request #${this.config.versions.current.slug}</a
           >
           for more information.
         </div>
@@ -219,11 +219,11 @@ export class NotificationAddon extends AddonBase {
    */
   static isEnabled(config) {
     return (
-      (config.features &&
-        config.features.external_version_warning.enabled &&
-        config.version.external) ||
-      (config.features.non_latest_version_warning.enabled &&
-        !config.version.external)
+      (config.addons &&
+        config.addons.external_version_warning.enabled &&
+        config.versions.current.external) ||
+      (config.addons.non_latest_version_warning.enabled &&
+        !config.versions.current.external)
     );
   }
 }

@@ -68,14 +68,14 @@ export class SearchElement extends LitElement {
   loadConfig(config) {
     this.config = config;
 
-    if (config.features.search) {
+    if (config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
-        value: config.features.search.default_filter,
+        value: config.addons.search.default_filter,
       };
 
       let userFilters = [];
-      for (const filter of config.features.search.filters) {
+      for (const filter of config.addons.search.filters) {
         userFilters.push({
           name: filter[0],
           value: filter[1],
@@ -92,9 +92,9 @@ export class SearchElement extends LitElement {
     }
 
     if (
-      this.config.features &&
-      this.config.features.search &&
-      this.config.features.search.enabled
+      this.config.addons &&
+      this.config.addons.search &&
+      this.config.addons.search.enabled
     ) {
       return this.renderSearchModal();
     }
@@ -260,7 +260,7 @@ export class SearchElement extends LitElement {
   }
 
   renderExternalProject(result) {
-    if (result.project.slug !== this.config.project.slug) {
+    if (result.project.slug !== this.config.projects.current.slug) {
       return html`
         <small class="subtitle"> (from project ${result.project.slug}) </small>
       `;
@@ -517,6 +517,6 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.features && config.features.search.enabled;
+    return config.addons && config.addons.search.enabled;
   }
 }

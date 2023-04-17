@@ -26,8 +26,8 @@ export class AnalyticsAddon extends AddonBase {
 
   registerPageView() {
     const params = {
-      project: this.config.project.slug,
-      version: this.config.version.slug,
+      project: this.config.projects.current.slug,
+      version: this.config.versions.current.slug,
       absolute_uri: window.location.href,
     };
 
@@ -75,10 +75,10 @@ export class AnalyticsAddon extends AddonBase {
         gtag("config", this.config.readthedocs.analytics.code, {
           anonymize_ip: true,
           cookie_expires: 0, // Session cookie (non-persistent)
-          dimension1: this.config.project.slug,
-          dimension2: this.config.version.slug,
-          dimension3: this.config.project.language,
-          dimension5: this.config.project.programming_language,
+          dimension1: this.config.projects.current.slug,
+          dimension2: this.config.versions.current.slug,
+          dimension3: this.config.projects.current.language,
+          dimension5: this.config.projects.current.programming_language,
           groups: "rtfd",
         });
       }
@@ -86,6 +86,6 @@ export class AnalyticsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.features && config.features.analytics.enabled;
+    return config.addons && config.addons.analytics.enabled;
   }
 }
