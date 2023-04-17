@@ -40,17 +40,28 @@ export class NotificationElement extends LitElement {
   loadConfig(config) {
     this.config = config;
 
-    // TODO: this URL should come from the backend API.
-    // Doing a simple replacement for now to solve the most common cases.
-    const vcs_external_url = config.project.repository_url
-      .replace(".git", "")
-      .replace("git@github.com:", "https://github.com/");
+    if (
+      config.features.external_version_warning.enabled &&
+      config.version.external
+    ) {
+      // TODO: this URL should come from the backend API.
+      // Doing a simple replacement for now to solve the most common cases.
+      const vcs_external_url = config.project.repository_url
+        .replace(".git", "")
+        .replace("git@github.com:", "https://github.com/");
 
-    this.urls = {
-      build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
-      external: `${vcs_external_url}/pull/${config.version.slug}`,
-    };
-    this.calculateHighestVersion();
+      this.urls = {
+        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.project.slug}/builds/${config.build.id}/`,
+        external: `${vcs_external_url}/pull/${config.version.slug}`,
+      };
+    }
+
+    if (
+      config.features.non_latest_version_warning.enabled &&
+      !config.version.external
+    ) {
+      this.calculateHighestVersion();
+    }
   }
 
   render() {
