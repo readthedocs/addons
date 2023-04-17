@@ -1,6 +1,7 @@
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
+import * as search from "./search";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -19,6 +20,7 @@ export function setup() {
         const addons = [
           notification.NotificationAddon,
           analytics.AnalyticsAddon,
+          search.SearchAddon,
         ];
 
         for (const addon of addons) {

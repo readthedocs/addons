@@ -49,3 +49,38 @@ export class AddonBase {
     return false;
   }
 }
+
+/**
+ * Debounce a function.
+ *
+ * Usage::
+ *
+ *    let func = debounce(() => console.log("Hello World"), 3000);
+ *
+ *    // calling the func
+ *    func();
+ *
+ *    //cancelling the execution of the func (if not executed)
+ *    func.cancel();
+ *
+ * @param {Function} func function to be debounced
+ * @param {Number} wait time to wait before running func (in miliseconds)
+ * @return {Function} debounced function
+ */
+export function debounce(func, wait) {
+  let timeout;
+
+  let debounced = function () {
+    let context = this;
+    let args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+
+  debounced.cancel = () => {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
