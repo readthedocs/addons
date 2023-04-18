@@ -42,11 +42,11 @@ export class NotificationElement extends LitElement {
 
     if (
       config.addons.external_version_warning.enabled &&
-      config.versions.current.external
+      config.versions.current.type === "external"
     ) {
       // TODO: this URL should come from the backend API.
       // Doing a simple replacement for now to solve the most common cases.
-      const vcs_external_url = config.projects.current.repository_url
+      const vcs_external_url = config.projects.current.repository.url
         .replace(".git", "")
         .replace("git@github.com:", "https://github.com/");
 
@@ -59,7 +59,7 @@ export class NotificationElement extends LitElement {
     // TODO: uncomment when ready to deploy non-latest version warning
     // if (
     //   config.addons.non_latest_version_warning.enabled &&
-    //   !config.versions.current.external
+    //   config.versions.current.type !== "external"
     // ) {
     //   this.calculateHighestVersion();
     // }
@@ -72,7 +72,7 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (this.config.versions.current.external) {
+    if (this.config.versions.current.type === "external") {
       if (this.config.addons.external_version_warning.enabled) {
         return this.renderExternalVersionWarning();
       }
@@ -224,9 +224,9 @@ export class NotificationAddon extends AddonBase {
     return (
       (config.addons &&
         config.addons.external_version_warning.enabled &&
-        config.versions.current.external) ||
+        config.versions.current.type === "external") ||
       (config.addons.non_latest_version_warning.enabled &&
-        !config.versions.current.external)
+        config.versions.current.type !== "external")
     );
   }
 }

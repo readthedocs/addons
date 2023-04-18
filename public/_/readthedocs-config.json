@@ -4,14 +4,17 @@
     "current": {
       "slug": "example",
       "language": "en",
-      "repository_url": "https://github.com/readthedocs/readthedocs-client",
+      "repository": {
+        "url": "https://github.com/readthedocs/readthedocs-client",
+        "type": "git"
+      },
       "programming_language": "words"
     }
   },
   "versions": {
     "current": {
       "slug": "v1",
-      "external": true
+      "type": "external"
     }
   },
   "builds": {
