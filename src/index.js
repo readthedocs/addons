@@ -18,9 +18,10 @@ export function setup() {
       .then((config) => {
         let promises = [];
         const addons = [
-          notification.NotificationAddon,
           analytics.AnalyticsAddon,
-          search.SearchAddon,
+          notification.NotificationAddon,
+          // TODO: uncomment when we are ready to deploy
+          // search.SearchAddon,
         ];
 
         for (const addon of addons) {
