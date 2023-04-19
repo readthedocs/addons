@@ -41,6 +41,7 @@ export class SearchElement extends LitElement {
       state: true,
     },
     cssFormFocusClasses: { state: true },
+    showModalKeycode: { type: Number, attribute: "show-modal-keycode" },
   };
 
   static styles = styleSheet;
@@ -63,6 +64,7 @@ export class SearchElement extends LitElement {
     this.currentQueryRequest = null;
     this.defaultFilter = null;
     this.filters = [];
+    this.showModalKeycode = 191;
   }
 
   loadConfig(config) {
@@ -481,7 +483,7 @@ export class SearchElement extends LitElement {
       this.closeModal();
     }
     // Show the modal with `/`
-    else if (e.keyCode === 191 && !this.show) {
+    else if (e.keyCode === this.showModalKeycode && !this.show) {
       // prevent opening "Quick Find" in Firefox
       e.preventDefault();
       this.showModal();
