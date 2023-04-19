@@ -54,6 +54,7 @@ export class SearchElement extends LitElement {
 
     // TODO: expand the default supported styles
     this.className = this.className || "raised floating";
+    this.showModalKeycode = parseInt(this.getAttribute("show-modal-keycode")) || 169;
 
     this.config = {};
     this.show = false;
@@ -481,7 +482,7 @@ export class SearchElement extends LitElement {
       this.closeModal();
     }
     // Show the modal with `/`
-    else if (e.keyCode === 191 && !this.show) {
+    else if (e.keyCode === this.showModalKeycode && !this.show) {
       // prevent opening "Quick Find" in Firefox
       e.preventDefault();
       this.showModal();
