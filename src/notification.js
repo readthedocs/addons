@@ -56,13 +56,13 @@ export class NotificationElement extends LitElement {
       };
     }
 
-    // TODO: uncomment when ready to deploy non-latest version warning
-    // if (
-    //   config.addons.non_latest_version_warning.enabled &&
-    //   config.versions.current.type !== "external"
-    // ) {
-    //   this.calculateHighestVersion();
-    // }
+    if (
+      !IS_PRODUCTION &&
+      config.addons.non_latest_version_warning.enabled &&
+      config.versions.current.type !== "external"
+    ) {
+      this.calculateHighestVersion();
+    }
   }
 
   render() {
@@ -76,14 +76,13 @@ export class NotificationElement extends LitElement {
       if (this.config.addons.external_version_warning.enabled) {
         return this.renderExternalVersionWarning();
       }
+    } else if (
+      !IS_PRODUCTION &&
+      this.config.addons.non_latest_version_warning.enabled &&
+      this.highest_version
+    ) {
+      return this.renderNonLatestVersionWarning();
     }
-    // TODO: uncomment when ready to deploy non-latest version warning
-    // else if (
-    //   this.config.addons.non_latest_version_warning.enabled &&
-    //   this.highest_version
-    // ) {
-    //   return this.renderNonLatestVersionWarning();
-    // }
     return nothing;
   }
 
