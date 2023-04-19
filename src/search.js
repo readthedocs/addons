@@ -41,6 +41,7 @@ export class SearchElement extends LitElement {
       state: true,
     },
     cssFormFocusClasses: { state: true },
+    showModalKeycode: { type: Number, attribute: "show-modal-keycode" },
   };
 
   static styles = styleSheet;
@@ -54,7 +55,6 @@ export class SearchElement extends LitElement {
 
     // TODO: expand the default supported styles
     this.className = this.className || "raised floating";
-    this.showModalKeycode = parseInt(this.getAttribute("show-modal-keycode")) || 169;
 
     this.config = {};
     this.show = false;
@@ -64,6 +64,7 @@ export class SearchElement extends LitElement {
     this.currentQueryRequest = null;
     this.defaultFilter = null;
     this.filters = [];
+    this.showModalKeycode = 191;
   }
 
   loadConfig(config) {
