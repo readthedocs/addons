@@ -1,6 +1,7 @@
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const interceptor = require("express-interceptor");
+const webpack = require("webpack");
 
 // Emulates what CloudFlare will do for us
 // https://github.com/webpack/webpack-dev-server/issues/4508
@@ -68,7 +69,11 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [],
+    plugins: [
+      new webpack.DefinePlugin({
+        IS_PRODUCTION: is_production,
+      }),
+    ],
 
     // Development options
     watchOptions: {
