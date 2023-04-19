@@ -17,12 +17,11 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        const addons = [
-          analytics.AnalyticsAddon,
-          notification.NotificationAddon,
-          // TODO: uncomment when we are ready to deploy
-          // search.SearchAddon,
-        ];
+        let addons = [analytics.AnalyticsAddon, notification.NotificationAddon];
+
+        if (!IS_PRODUCTION) {
+          addons.push(search.SearchAddon);
+        }
 
         for (const addon of addons) {
           if (addon.isEnabled(config)) {
@@ -33,7 +32,6 @@ export function setup() {
             );
           }
         }
-
         return Promise.all(promises);
       })
       .then(() => {
