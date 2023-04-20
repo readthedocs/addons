@@ -42,6 +42,8 @@ export class SearchElement extends LitElement {
     },
     cssFormFocusClasses: { state: true },
     showModalKeycode: { type: Number, attribute: "show-modal-keycode" },
+    showModalSelector: { type: String, attribute: "show-modal-selector" },
+    showModalEvent: { type: String, attribute: "show-modal-event" },
   };
 
   static styles = styleSheet;
@@ -65,6 +67,8 @@ export class SearchElement extends LitElement {
     this.defaultFilter = null;
     this.filters = [];
     this.showModalKeycode = 191;
+    this.showModalSelector = null;
+    this.showModalEvent = null;
   }
 
   loadConfig(config) {
@@ -490,13 +494,28 @@ export class SearchElement extends LitElement {
     }
   };
 
+  _handleShowModalUser = (e) => {
+    e.preventDefault();
+    this.showModal();
+  }
+
   connectedCallback() {
     super.connectedCallback();
     // open search modal if "forward slash" button is pressed
     document.addEventListener("keydown", this._handleShowModal);
+
+    if (this.showModalEvent && this.showModalSelector) {
+      let element = document.querySelector(this.showModalSelector);
+      element.addEventListener(this.showModalEvent, this._handleShowModalUser);
+    }
   }
   disconnectedCallback() {
     document.removeEventListener("keydown", this._handleShowModal);
+    if (this.showModalEvent && this.showModalSelector) {
+      let element = document.querySelector(this.showModalSelector);
+      element.removeEventListener(this.showModalEvent, this._handleShowModalUser);
+    }
+
     super.disconnectedCallback();
   }
 }
