@@ -68,7 +68,7 @@ export class SearchElement extends LitElement {
     this.filters = [];
     this.triggerKeycode = 191;
     this.triggerSelector = null;
-    this.triggerEvent = "focusin" ;
+    this.triggerEvent = "focusin";
   }
 
   loadConfig(config) {
@@ -497,7 +497,7 @@ export class SearchElement extends LitElement {
   _handleShowModalUser = (e) => {
     e.preventDefault();
     this.showModal();
-  }
+  };
 
   connectedCallback() {
     super.connectedCallback();
@@ -511,12 +511,16 @@ export class SearchElement extends LitElement {
       }
     }
   }
+
   disconnectedCallback() {
     document.removeEventListener("keydown", this._handleShowModal);
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
       if (element !== undefined) {
-        element.removeEventListener(this.triggerEvent, this._handleShowModalUser);
+        element.removeEventListener(
+          this.triggerEvent,
+          this._handleShowModalUser
+        );
       }
     }
 
