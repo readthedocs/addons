@@ -1,8 +1,21 @@
-import { compare } from "doc-diff";
 import styleSheet from "./docdiff.css";
+import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
+import { visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
 import { html, nothing, render, LitElement } from "lit";
+
+/**
+ * visual-dom-diff options
+ *
+ * See https://github.com/Teamwork/visual-dom-diff#options
+ */
+const VISUAL_DIFF_OPTIONS = {
+  addedClass: "doc-diff-added",
+  modifiedClass: "doc-diff-modified",
+  removedClass: "doc-diff-removed",
+  skipModified: true,
+};
 
 export class DocDiffElement extends LitElement {
   static elementName = "readthedocs-docdiff";
@@ -43,7 +56,7 @@ export class DocDiffElement extends LitElement {
     this.baseUrl = null;
     this.rootSelector = "[role=main]";
 
-    this.originalBody = document.querySelector(this.rootSelector);
+    this.originalBody = null;
   }
 
   loadConfig(config) {
@@ -54,6 +67,10 @@ export class DocDiffElement extends LitElement {
         this.baseHost = config.addons.doc_diff.base_host;
       }
     }
+
+    // NOTE: maybe there is a better way to inject this styles?
+    // Conditionally inject our base styles
+    document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
   }
 
   render() {
@@ -75,12 +92,40 @@ export class DocDiffElement extends LitElement {
     }
   }
 
-  enableDocDiff() {
-    return compare({
-      base_url: this.baseUrl,
-      root_selector: this.rootSelector,
-      inject_styles: this.injectStyles,
+  compare() {
+    // TODO: handle fetch errors properly
+    return new Promise((resolve, reject) => {
+      fetch(this.baseUrl)
+        .then((response) => response.text())
+        .then((text) => {
+          const parser = new DOMParser();
+          const html_document = parser.parseFromString(text, "text/html");
+          const old_body = html_document.documentElement.querySelector(
+            this.rootSelector,
+          );
+          const new_body = document.querySelector(this.rootSelector);
+
+          if (old_body == null || new_body == null) {
+            reject(new Error("Element not found in both documents."));
+          }
+
+          // After finding the root element, and diffing it, replace it in the DOM
+          // with the resulting visual diff elements instead.
+          const diffNode = visualDomDiff(
+            old_body,
+            new_body,
+            VISUAL_DIFF_OPTIONS
+          );
+          new_body.replaceWith(diffNode.firstElementChild);
+
+          resolve(true);
+        });
     });
+  }
+
+  enableDocDiff() {
+    this.originalBody = document.querySelector(this.rootSelector);
+    return this.compare();
   }
 
   disableDocDiff() {
@@ -95,10 +140,6 @@ export class DocDiffAddon extends AddonBase {
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-docdiff", DocDiffElement);
     let elems = document.querySelectorAll("readthedocs-docdiff");
-    // if (!elems.length) {
-    //   elems = [new DocDiffElement()];
-    //   render(elems[0], document.body);
-    // }
 
     for (const elem of elems) {
       elem.loadConfig(config);
