@@ -41,7 +41,9 @@ export class SearchElement extends LitElement {
       state: true,
     },
     cssFormFocusClasses: { state: true },
-    showModalKeycode: { type: Number, attribute: "show-modal-keycode" },
+    triggerKeycode: { type: Number, attribute: "trigger-keycode" },
+    triggerSelector: { type: String, attribute: "trigger-selector" },
+    triggerEvent: { type: String, attribute: "trigger-event" },
   };
 
   static styles = styleSheet;
@@ -64,7 +66,9 @@ export class SearchElement extends LitElement {
     this.currentQueryRequest = null;
     this.defaultFilter = null;
     this.filters = [];
-    this.showModalKeycode = 191;
+    this.triggerKeycode = 191;
+    this.triggerSelector = null;
+    this.triggerEvent = "focusin";
   }
 
   loadConfig(config) {
@@ -483,20 +487,43 @@ export class SearchElement extends LitElement {
       this.closeModal();
     }
     // Show the modal with `/`
-    else if (e.keyCode === this.showModalKeycode && !this.show) {
+    else if (e.keyCode === this.triggerKeycode && !this.show) {
       // prevent opening "Quick Find" in Firefox
       e.preventDefault();
       this.showModal();
     }
   };
 
+  _handleShowModalUser = (e) => {
+    e.preventDefault();
+    this.showModal();
+  };
+
   connectedCallback() {
     super.connectedCallback();
     // open search modal if "forward slash" button is pressed
     document.addEventListener("keydown", this._handleShowModal);
+
+    if (this.triggerSelector) {
+      let element = document.querySelector(this.triggerSelector);
+      if (element !== undefined) {
+        element.addEventListener(this.triggerEvent, this._handleShowModalUser);
+      }
+    }
   }
+
   disconnectedCallback() {
     document.removeEventListener("keydown", this._handleShowModal);
+    if (this.triggerSelector) {
+      let element = document.querySelector(this.triggerSelector);
+      if (element !== undefined) {
+        element.removeEventListener(
+          this.triggerEvent,
+          this._handleShowModalUser
+        );
+      }
+    }
+
     super.disconnectedCallback();
   }
 }
