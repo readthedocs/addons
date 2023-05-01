@@ -106,33 +106,34 @@ export class DocDiffElement extends LitElement {
 
   compare() {
     // TODO: handle fetch errors properly
-    return new Promise((resolve, reject) => {
-      fetch(this.baseUrl)
-        .then((response) => response.text())
-        .then((text) => {
-          const parser = new DOMParser();
-          const html_document = parser.parseFromString(text, "text/html");
-          const old_body = html_document.documentElement.querySelector(
-            this.rootSelector
-          );
-          const new_body = document.querySelector(this.rootSelector);
+    fetch(this.baseUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error downloading requested base URL.");
+        }
 
-          if (old_body == null || new_body == null) {
-            reject(new Error("Element not found in both documents."));
-          }
+        return response.text();
+      })
+      .then((text) => {
+        const parser = new DOMParser();
+        const html_document = parser.parseFromString(text, "text/html");
+        const old_body = html_document.documentElement.querySelector(
+          this.rootSelector
+        );
+        const new_body = document.querySelector(this.rootSelector);
 
-          // After finding the root element, and diffing it, replace it in the DOM
-          // with the resulting visual diff elements instead.
-          const diffNode = visualDomDiff(
-            old_body,
-            new_body,
-            VISUAL_DIFF_OPTIONS
-          );
-          new_body.replaceWith(diffNode.firstElementChild);
+        if (old_body == null || new_body == null) {
+          throw new Error("Element not found in both documents.");
+        }
 
-          resolve(true);
-        });
-    });
+        // After finding the root element, and diffing it, replace it in the DOM
+        // with the resulting visual diff elements instead.
+        const diffNode = visualDomDiff(old_body, new_body, VISUAL_DIFF_OPTIONS);
+        new_body.replaceWith(diffNode.firstElementChild);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   enableDocDiff() {
