@@ -42,6 +42,24 @@ export class DocDiffElement extends LitElement {
     injectStyles: {
       type: Boolean,
       attribute: "inject-styles",
+      // NOTE: the way that regular `type: Boolean` works is taking a look at
+      // the presence of the attribute, which defaults to `false` and it's not
+      // what we want. I think it's clearer to always use the same API
+      // "key=value" to keep consistency.
+      converter: {
+        fromAttribute: (value, type) => {
+          if (value === "true") {
+            return true;
+          }
+          return false;
+        },
+        toAttribute: (value, type) => {
+          if (value === true) {
+            return "true";
+          }
+          return "false";
+        },
+      },
     },
   };
 
@@ -55,6 +73,7 @@ export class DocDiffElement extends LitElement {
     this.baseHost = null;
     this.baseUrl = null;
     this.rootSelector = "[role=main]";
+    this.injectStyles = true;
 
     this.originalBody = null;
   }
@@ -70,7 +89,10 @@ export class DocDiffElement extends LitElement {
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
-    document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
+    console.log(this.injectStyles);
+    if (this.injectStyles) {
+      document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
+    }
   }
 
   render() {
