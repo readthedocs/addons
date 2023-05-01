@@ -24,16 +24,9 @@ export class DocDiffElement extends LitElement {
     config: {
       state: true,
     },
-    enabled: {
-      state: true,
-    },
     baseUrl: {
       type: String,
       attribute: "base-url",
-    },
-    baseHost: {
-      type: String,
-      attribute: "base-host",
     },
     rootSelector: {
       type: String,
@@ -69,8 +62,6 @@ export class DocDiffElement extends LitElement {
   constructor() {
     super();
 
-    this.enabled = false;
-    this.baseHost = null;
     this.baseUrl = null;
     this.rootSelector = "[role=main]";
     this.injectStyles = true;
@@ -82,8 +73,8 @@ export class DocDiffElement extends LitElement {
     this.config = config;
 
     if (config.addons.doc_diff) {
-      if (!this.baseHost) {
-        this.baseHost = config.addons.doc_diff.base_host;
+      if (!this.baseUrl) {
+        this.baseUrl = config.addons.doc_diff.base_url;
       }
     }
 
@@ -106,8 +97,7 @@ export class DocDiffElement extends LitElement {
   }
 
   handleClick(e) {
-    this.enabled = e.target.checked;
-    if (this.enabled) {
+    if (e.target.checked) {
       this.enableDocDiff();
     } else {
       this.disableDocDiff();
@@ -123,7 +113,7 @@ export class DocDiffElement extends LitElement {
           const parser = new DOMParser();
           const html_document = parser.parseFromString(text, "text/html");
           const old_body = html_document.documentElement.querySelector(
-            this.rootSelector,
+            this.rootSelector
           );
           const new_body = document.querySelector(this.rootSelector);
 
