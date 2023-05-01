@@ -41,6 +41,9 @@ module.exports = (env, argv) => {
         new TerserPlugin({
           // Avoids creating a `.LICENSE.txt` file
           extractComments: false,
+          terserOptions: {
+            sourceMap: true,
+          },
         }),
       ],
     },
@@ -76,6 +79,7 @@ module.exports = (env, argv) => {
     ],
 
     // Development options
+    devtool: "source-map",
     watchOptions: {
       aggregateTimeout: 1000,
       ignored: ["/node_modules/", "**/node_modules/"],
