@@ -79,6 +79,7 @@
       "inject_styles": true
     },
     "flyout": {
+      "enabled": true,
       "translations": [],
       "versions": [
         {

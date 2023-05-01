@@ -1,0 +1,15 @@
+/* New */
+
+:host {
+    position: absolute;
+    right: 200px;
+    bottom: 0;
+
+    width: 350px;
+    height: 250px;
+}
+
+:host .container {
+    background: grey;
+
+}

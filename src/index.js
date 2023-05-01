@@ -2,6 +2,7 @@ import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
+import * as newflyout from "./new-flyout";
 import * as ethicalads from "./ethicalads";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
@@ -23,6 +24,7 @@ export function setup() {
         if (!IS_PRODUCTION) {
           addons.push(search.SearchAddon);
           addons.push(ethicalads.EthicalAdsAddon);
+          addons.push(newflyout.FlyoutAddon);
         }
 
         for (const addon of addons) {
