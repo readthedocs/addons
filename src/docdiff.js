@@ -56,7 +56,6 @@ export class DocDiffElement extends LitElement {
     },
   };
 
-  // NOTE: how do we include the classes from docdiff here as well?
   static styles = styleSheet;
 
   constructor() {
@@ -80,14 +79,12 @@ export class DocDiffElement extends LitElement {
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
-    console.log(this.injectStyles);
     if (this.injectStyles) {
       document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
     }
   }
 
   render() {
-    // TODO
     return html`
       <label class="switch">
         <input @click="${this.handleClick}" type="checkbox" />
@@ -105,7 +102,6 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
-    // TODO: handle fetch errors properly
     fetch(this.baseUrl)
       .then((response) => {
         if (!response.ok) {
