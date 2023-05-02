@@ -51,18 +51,69 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  renderDownloads() {
+    if (!this.config.addons.flyout.downloads) {
+      return nothing;
+    }
+
+    // NOTE: all these `render*()` functions could be merged together and use attributes
+    // to deal with the small differences between each of them
+    return html`
+      <div class="downloads">
+        <h3>Downloads</h3>
+        <ul>
+          ${this.config.addons.flyout.downloads.map(
+            (download, index) => html`
+              <li><a href="${download.url}">${download.name}</a></li>
+            `
+          )}
+        </ul>
+      </div>
+    `;
+  }
+
   renderVersions() {
+    // TODO: use `this.config.versions.flyout` instead here.
+    // This "filter" will implies `active=True and hidden=False`
+    if (!this.config.addons.flyout.versions) {
+      return nothing;
+    }
+
+    // NOTE: all these `render*()` functions could be merged together and use attributes
+    // to deal with the small differences between each of them
     return html`
       <div class="versions">
         <h3>Versions</h3>
         <ul>
-          <li><a href="">7.x</a></li>
+          ${this.config.addons.flyout.versions.map(
+            (version, index) => html`
+              <li><a href="${version.url}">${version.slug}</a></li>
+            `
+          )}
         </ul>
       </div>
     `;
   }
 
   renderLanguages() {
+    if (!this.config.addons.flyout.translations) {
+      return nothing;
+    }
+
+    // NOTE: all these `render*()` functions could be merged together and use attributes
+    // to deal with the small differences between each of them
+    return html`
+      <div class="languages">
+        <h3>Languages</h3>
+        <ul>
+          ${this.config.addons.flyout.translations.map(
+            (translation, index) => html`
+              <li><a href="${translation.url}">${translation.slug}</a></li>
+            `
+          )}
+        </ul>
+      </div>
+    `;
     return html`
       <div class="languages">
         <h3>Languages</h3>
@@ -82,7 +133,7 @@ export class FlyoutElement extends LitElement {
 
     return html`
       <div class="container">
-        <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+        <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
         ${this.renderLanguages()} ${this.renderVersions()}
         ${this.renderDownloads()} ${this.renderReadTheDocs()}
         ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
