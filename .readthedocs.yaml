@@ -19,13 +19,13 @@ build:
     - mkdir --parents $READTHEDOCS_OUTPUT/html/examples
 
     # Copy our client into the output
-    - cp --verbose dist/readthedocs-client.js $READTHEDOCS_OUTPUT/html/examples
+    - cp --verbose dist/addons.js $READTHEDOCS_OUTPUT/html/examples
 
     # Copy all the example sites (Sphinx and Pelican) into the output
     - cp --recursive --verbose public/* $READTHEDOCS_OUTPUT/html/examples/
 
     # Copy a JSON file that acts as the response of the API
-    - cp --verbose public/_/readthedocs-config.json $READTHEDOCS_OUTPUT/html/examples
+    - cp --verbose public/_/readthedocs-addons.json $READTHEDOCS_OUTPUT/html/examples
 
     # Show all the files served by Read the Docs
     - find $READTHEDOCS_OUTPUT/html
