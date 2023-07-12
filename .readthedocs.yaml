@@ -19,7 +19,7 @@ build:
     - mkdir --parents $READTHEDOCS_OUTPUT/html/examples
 
     # Copy our client into the output
-    - cp --verbose dist/addons.js $READTHEDOCS_OUTPUT/html/examples
+    - cp --verbose dist/readthedocs-addons.js $READTHEDOCS_OUTPUT/html/examples
 
     # Copy all the example sites (Sphinx and Pelican) into the output
     - cp --recursive --verbose public/* $READTHEDOCS_OUTPUT/html/examples/
