@@ -6,14 +6,14 @@ import { CLIENT_VERSION } from "./utils";
  */
 export function getReadTheDocsConfig() {
   let url =
-    "/_/readthedocs-config/?" +
+    "/_/addons/?" +
     new URLSearchParams({
       url: window.location.href,
     });
 
   // Retrieve a static JSON file when working in development mode
   if (window.location.href.startsWith("http://localhost")) {
-    url = "/_/readthedocs-config.json";
+    url = "/_/readthedocs-addons.json";
   }
 
   return fetch(url, {
