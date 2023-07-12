@@ -5,7 +5,7 @@ const webpack = require("webpack");
 
 // Emulates what CloudFlare will do for us
 // https://github.com/webpack/webpack-dev-server/issues/4508
-var injectReadTheDocsClient = interceptor(function (req, res) {
+var injectReadTheDocsAddons = interceptor(function (req, res) {
   return {
     // Only HTML responses will be intercepted
     isInterceptable: function () {
@@ -13,10 +13,7 @@ var injectReadTheDocsClient = interceptor(function (req, res) {
     },
     intercept: function (body, send) {
       send(
-        body.replace(
-          "</head>",
-          '<script src="/readthedocs-client.js"></script></head>'
-        )
+        body.replace("</head>", '<script src="/readthedocs-addons.js"></script></head>')
       );
     },
   };
@@ -28,7 +25,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      "readthedocs-client": ["./src/init.js"],
+      "readthedocs-addons": ["./src/init.js"],
     },
     output: {
       filename: "[name].js?[fullhash]",
@@ -107,9 +104,9 @@ module.exports = (env, argv) => {
         // you want to hit.
         // https://docs.readthedocs.io/en/latest/development/install.html
         //
-        // There is also a file at `public/_/readthedocs-config.json` that you can modify
+        // There is also a file at `public/_/readthedocs-addons.json` that you can modify
         // to work locally without a development instance.
-        // "/_/readthedocs-config.json": {
+        // "/_/readthedocs-addons.json": {
         //     target: "http://test-builds.devthedocs.org",
         //     headers: {
         //         host: "test-builds.devthedocs.org",
@@ -123,8 +120,8 @@ module.exports = (env, argv) => {
         );
 
         middlewares.splice(index, 0, {
-          name: "readthedocs-client",
-          middleware: injectReadTheDocsClient,
+          name: "readthedocs-addons",
+          middleware: injectReadTheDocsAddons,
         });
         return middlewares;
       },
