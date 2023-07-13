@@ -5,6 +5,10 @@ import { AddonBase } from "./utils";
 
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
 
+// https://ethical-ad-client.readthedocs.io/en/latest/
+const AD_TYPE = "text";
+const AD_STYLE = "fixedfooter";
+
 /**
  * EthicalAds addon
  *
@@ -25,7 +29,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
-    const data = this.config.addons.EthicalAds;
+    const data = this.config.addons.ethicalads;
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
@@ -43,7 +47,8 @@ export class EthicalAdsAddon extends AddonBase {
 
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
-      placement.setAttribute("data-ea-type", "image");
+      placement.setAttribute("data-ea-type", AD_TYPE);
+      placement.setAttribute("data-ea-style", AD_STYLE);
       if (data.keywords) {
         placement.setAttribute("data-ea-keywords", data.keywords.join("|"));
       }
