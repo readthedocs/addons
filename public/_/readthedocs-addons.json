@@ -31,6 +31,22 @@
     }
   },
   "addons": {
+    "ethicalads": {
+      "ad_free": false,
+      "enabled": true,
+      "publisher": "readthedocs",
+      "campaign_types":	[
+        "community",
+        "house",
+        "paid"
+      ],
+      "keywords":	[
+        "only words",
+        "readthedocs-project-12345",
+        "readthedocs-project-slug",
+        "test"
+      ]
+    },
     "search": {
       "enabled": true,
       "project": "addons",
