@@ -6,8 +6,10 @@ import { AddonBase } from "./utils";
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
-const AD_TYPE = "text";
-const AD_STYLE = "fixedfooter";
+// TODO: consider using "text" and "fixedfooter" when enabling the flyout
+// because the stickybox will collide with the placement of the flyout.
+const AD_TYPE = "image";
+const AD_STYLE = "stickybox";
 
 /**
  * EthicalAds addon
