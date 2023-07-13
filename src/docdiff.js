@@ -162,7 +162,6 @@ export class DocDiffElement extends LitElement {
         this.enableDocDiff();
       }
     }
-    console.log(this.enabled);
   }
 
   connectedCallback() {
