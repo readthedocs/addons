@@ -24,6 +24,9 @@ export class DocDiffElement extends LitElement {
     config: {
       state: true,
     },
+    enabled: {
+      type: Boolean,
+    },
     baseUrl: {
       type: String,
       attribute: "base-url",
@@ -85,12 +88,16 @@ export class DocDiffElement extends LitElement {
   }
 
   render() {
-    return html`
-      <label class="switch">
-        <input @click="${this.handleClick}" type="checkbox" />
-        <span class="slider round"></span>
-      </label>
-    `;
+    return nothing;
+    // TODO: render a checkbox once we are settled on the UI.
+    // For now, we are only enabling/disabling via a hotkey.
+    //
+    // return html`
+    //   <label class="switch">
+    //     <input @click="${this.handleClick}" type="checkbox" />
+    //     <span class="slider round"></span>
+    //   </label>
+    // `;
   }
 
   handleClick(e) {
@@ -133,12 +140,35 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
+    this.enabled = true;
     this.originalBody = document.querySelector(this.rootSelector);
     return this.compare();
   }
 
   disableDocDiff() {
+    this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
+  }
+
+  _handleKeydown = (e) => {
+    // Close the modal with `Ctrl + Shift + f`
+    // (I'm using multiple keys hotkey here to avoid enable/disable while typing)
+    // NOTE: I used "f" because "d" shows the "Add bookmark" dialogue in Firefox
+    // TODO: decide what's the pattern to enable/disable addons via keyboard Read the Docs will stick to
+    if (e.keyCode === 70 && e.ctrlKey && e.shiftKey) {
+      if (this.enabled) {
+        this.disableDocDiff();
+      } else {
+        this.enableDocDiff();
+      }
+    }
+    console.log(this.enabled);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Enable/Disable docdiff when hitting
+    document.addEventListener("keydown", this._handleKeydown);
   }
 }
 
@@ -149,6 +179,10 @@ export class DocDiffAddon extends AddonBase {
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-docdiff", DocDiffElement);
     let elems = document.querySelectorAll("readthedocs-docdiff");
+    if (!elems.length) {
+      elems = [new DocDiffElement()];
+      render(elems[0], document.body);
+    }
 
     for (const elem of elems) {
       elem.loadConfig(config);
