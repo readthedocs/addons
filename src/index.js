@@ -2,7 +2,7 @@ import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
-import * as sponsorship from "./sponsorship";
+import * as ethicalads from "./ethicalads";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -22,7 +22,7 @@ export function setup() {
 
         if (!IS_PRODUCTION) {
           addons.push(search.SearchAddon);
-          addons.push(sponsorship.SponsorshipAddon);
+          addons.push(ethicalads.EthicalAdsAddon);
         }
 
         for (const addon of addons) {

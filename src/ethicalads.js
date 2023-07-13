@@ -6,26 +6,26 @@ import { AddonBase } from "./utils";
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
 
 /**
- * Sponsoship addon
+ * EthicalAds addon
  *
- * Show an Ad in the documentation page.
+ * Show an ad in the documentation page.
  *
  * Read more at:
  *  - https://docs.readthedocs.io/en/stable/advertising/ethical-advertising.html
  *
  * @param {Object} config - Addon configuration object
  */
-export class SponsorshipAddon extends AddonBase {
+export class EthicalAdsAddon extends AddonBase {
   constructor(config) {
     super();
     this.config = config;
 
-    this.injectSponsorship();
+    this.injectEthicalAds();
   }
 
   createAdPlacement() {
     let placement;
-    const data = this.config.addons.ethicalads;
+    const data = this.config.addons.EthicalAds;
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
@@ -66,7 +66,7 @@ export class SponsorshipAddon extends AddonBase {
     return placement;
   }
 
-  injectSponsorship() {
+  injectEthicalAds() {
     this.createAdPlacement();
     // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
     // but we want to call it manually because we need to inject our `div` first.
