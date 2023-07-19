@@ -151,11 +151,10 @@ export class DocDiffElement extends LitElement {
   }
 
   _handleKeydown = (e) => {
-    // Close the modal with `Ctrl + Shift + f`
-    // (I'm using multiple keys hotkey here to avoid enable/disable while typing)
-    // NOTE: I used "f" because "d" shows the "Add bookmark" dialogue in Firefox
-    // TODO: decide what's the pattern to enable/disable addons via keyboard Read the Docs will stick to
-    if (e.keyCode === 70 && e.ctrlKey && e.shiftKey) {
+    // Close the modal with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
+    // (I'm checking `document.activeElement` to check if it's the BODY to avoid enable/disable while typing on forms)
+    // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
+    if (e.keyCode === 68 && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey && document.activeElement.tagName == "BODY") {
       if (this.enabled) {
         this.disableDocDiff();
       } else {
