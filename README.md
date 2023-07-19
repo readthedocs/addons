@@ -65,5 +65,13 @@ Display a nice tooltip when hovering internal links of the same documentation.
 
 ----
 
+## Local Development
+
+- Make sure you have the correct version of Node.js installed (>= 18). You can use [asdf](https://github.com/asdf-vm/asdf) or [nvm](https://github.com/nvm-sh/nvm) for easier management of different Node.js versions.
+- Run `npm install` to install dependencies
+- Run `npm run dev` to start the local dev server. While this can run without a local Read the Docs development instance, not everything will work.
+
+----
+
 > **Note**:
 > This work is under active development and is still in **alpha**.
