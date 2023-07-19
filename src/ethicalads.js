@@ -1,6 +1,6 @@
 // FIXME: how should we remove the `dist/` from this path?
 // NOTE: it requires this PR to work: https://github.com/readthedocs/ethical-ad-client/pull/148
-import { load_placements } from "ethical-ad-client/dist/ethicalads";
+import * as ethicalads from "ethical-ad-client";
 import { AddonBase } from "./utils";
 
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
@@ -44,6 +44,7 @@ export class EthicalAdsAddon extends AddonBase {
     } else {
       // Inject our own floating element
       placement = document.createElement("div");
+      placement.setAttribute("data-ea-manual", "true");
 
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
@@ -59,7 +60,6 @@ export class EthicalAdsAddon extends AddonBase {
         );
       }
 
-      // placement.setAttribute("data-ea-manual", "true");
       placement.classList.add("raised");
 
       // TODO: find the right last resourse to append (probably not `document.body`)
@@ -72,9 +72,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   injectEthicalAds() {
     this.createAdPlacement();
-    // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
-    // but we want to call it manually because we need to inject our `div` first.
-    load_placements();
+    ethicalads.load();
   }
 
   static isEnabled(config) {
