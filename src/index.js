@@ -3,6 +3,7 @@ import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
 import * as ethicalads from "./ethicalads";
+import * as visualstudiocode from "./visual-studio-code";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -23,6 +24,7 @@ export function setup() {
         if (!IS_PRODUCTION) {
           addons.push(search.SearchAddon);
           addons.push(ethicalads.EthicalAdsAddon);
+          addons.push(visualstudiocode.VisualStudioCodeAddon);
         }
 
         for (const addon of addons) {
