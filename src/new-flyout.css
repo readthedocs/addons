@@ -2,14 +2,14 @@
 
 :host {
   position: fixed;
-  right: 150px;
-  bottom: 0;
-  width: 350px;
-  height: 250px;
+  right: 20px;
+  bottom: 50px;
+  max-width: 300px;
+  width: auto;
+  height: auto;
 }
 
 :host > div {
-  border-radius: 0.5rem 0.5rem 0 0;
   font-family: var(
     --readthedocs-flyout-font-family,
     "Lato",
@@ -19,40 +19,56 @@
     "sans-serif"
   );
   font-size: var(--readthedocs-flyout-font-size, 0.8rem);
-  color: var(--readthedocs-flyout-color, rgb(64, 64, 64));
+  color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
   background-color: var(
     --readthedocs-flyout-background-color,
     rgb(234, 234, 234)
   );
-  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12),
-    0 2px 10px 0 rgba(34, 36, 38, 0.15);
   z-index: 3000;
   padding: 10px;
   overflow-y: scroll;
 }
 
-:host header {
+header {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
 }
 
-:host header > span {
+header > span {
   color: var(--readthedocs-flyout-current-version-color, #27AE60);
   font-size: var(--readthedocs-flyout-header-font-size, 0.9rem);
 }
 
-:host header > img.logo {
+header > img.logo {
   text-align: center;
-  width: 150px;
+  width: 40%;
 }
 
-:host li {
-  list-style: none;
+main {
+  padding: 5px;
+  margin-top: 5px;
+}
+
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+dl > dt {
+  font-size: var(--readthedocs-flyout-dt-font-size, 0.9rem);
+}
+
+dl > dd {
   display: inline-block;
+  margin: 0;
+  font-size: var(--readthedocs-flyout-dd-font-size, 0.9rem);
 }
 
-:host li > a {
+dd > a {
   text-decoration: none;
+  color: var(--readthedocs-flyout-link-color, rgb(32, 32, 32));
+  padding: 6px;
+  display: inline-block;
 }

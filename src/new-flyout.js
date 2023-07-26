@@ -50,17 +50,6 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    return html`
-      <div class="downloads">
-        <h3>Downloads</h3>
-        <ul>
-          <li><a href="">PDF</a></li>
-        </ul>
-      </div>
-    `;
-  }
-
-  renderDownloads() {
     if (!this.config.addons.flyout.downloads) {
       return nothing;
     }
@@ -68,16 +57,14 @@ export class FlyoutElement extends LitElement {
     // NOTE: all these `render*()` functions could be merged together and use attributes
     // to deal with the small differences between each of them
     return html`
-      <div class="downloads">
-        <h3>Downloads</h3>
-        <ul>
-          ${this.config.addons.flyout.downloads.map(
-            (download, index) => html`
-              <li><a href="${download.url}">${download.name}</a></li>
-            `
-          )}
-        </ul>
-      </div>
+      <dl class="downloads">
+        <dt>Downloads</dt>
+        ${this.config.addons.flyout.downloads.map(
+          (download, index) => html`
+            <dd><a href="${download.url}">${download.name}</a></dd>
+          `
+        )}
+      </dl>
     `;
   }
 
@@ -91,16 +78,14 @@ export class FlyoutElement extends LitElement {
     // NOTE: all these `render*()` functions could be merged together and use attributes
     // to deal with the small differences between each of them
     return html`
-      <div class="versions">
-        <h3>Versions</h3>
-        <ul>
-          ${this.config.addons.flyout.versions.map(
-            (version, index) => html`
-              <li><a href="${version.url}">${version.slug}</a></li>
-            `
-          )}
-        </ul>
-      </div>
+      <dl class="versions">
+        <dt>Versions</dt>
+        ${this.config.addons.flyout.versions.map(
+          (version, index) => html`
+            <dd><a href="${version.url}">${version.slug}</a></dd>
+          `
+        )}
+      </dl>
     `;
   }
 
@@ -112,24 +97,14 @@ export class FlyoutElement extends LitElement {
     // NOTE: all these `render*()` functions could be merged together and use attributes
     // to deal with the small differences between each of them
     return html`
-      <div class="languages">
-        <h3>Languages</h3>
-        <ul>
-          ${this.config.addons.flyout.translations.map(
-            (translation, index) => html`
-              <li><a href="${translation.url}">${translation.slug}</a></li>
-            `
-          )}
-        </ul>
-      </div>
-    `;
-    return html`
-      <div class="languages">
-        <h3>Languages</h3>
-        <ul>
-          <li><a href="">es</a></li>
-        </ul>
-      </div>
+      <dl class="languages">
+        <dt>Languages</dt>
+        ${this.config.addons.flyout.translations.map(
+          (translation, index) => html`
+            <dd><a href="${translation.url}">${translation.slug}</a></dd>
+          `
+        )}
+      </dl>
     `;
   }
 
@@ -143,9 +118,11 @@ export class FlyoutElement extends LitElement {
     return html`
       <div class="container">
         ${this.renderHeader()}
-        ${this.renderLanguages()} ${this.renderVersions()}
-        ${this.renderDownloads()} ${this.renderReadTheDocs()}
-        ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
+        <main>
+          ${this.renderLanguages()} ${this.renderVersions()}
+          ${this.renderDownloads()} ${this.renderReadTheDocs()}
+          ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
+        </main>
       </div>
     `;
   }
