@@ -31,7 +31,19 @@
   overflow-y: scroll;
 }
 
-:host > div > img.logo {
+:host header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:host header > span {
+  color: var(--readthedocs-flyout-current-version-color, #27AE60);
+  font-size: var(--readthedocs-flyout-header-font-size, 0.9rem);
+}
+
+:host header > img.logo {
   text-align: center;
   width: 150px;
 }

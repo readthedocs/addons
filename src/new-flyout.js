@@ -24,6 +24,15 @@ export class FlyoutElement extends LitElement {
     this.config = config;
   }
 
+  renderHeader() {
+    return html`
+      <header>
+        <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+        <span>v: ${this.config.versions.current.slug}</span>
+      </header>
+    `;
+  }
+
   renderFooter() {
     return nothing;
   }
@@ -133,7 +142,7 @@ export class FlyoutElement extends LitElement {
 
     return html`
       <div class="container">
-        <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+        ${this.renderHeader()}
         ${this.renderLanguages()} ${this.renderVersions()}
         ${this.renderDownloads()} ${this.renderReadTheDocs()}
         ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
