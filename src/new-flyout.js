@@ -46,7 +46,20 @@ export class FlyoutElement extends LitElement {
   }
 
   renderReadTheDocs() {
-    return nothing;
+    return html`
+      <dl>
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/">Project Home</a>
+        </dd>
+        <dd>
+          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/builds/">Builds</a>
+        </dd>
+        <dd>
+          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/downloads/">Downloads</a>
+        </dd>
+      </dl>
+    `;
   }
 
   renderDownloads() {
