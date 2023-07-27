@@ -42,7 +42,18 @@ export class FlyoutElement extends LitElement {
   }
 
   renderVCS() {
-    return nothing;
+    if (!this.config.addons.flyout.vcs) {
+      return nothing;
+    }
+    const { vcs } = this.config.addons.flyout;
+    return html`
+      <dl>
+        <dt>On ${vcs.name}</dt>
+        <dd>
+          <a href="${vcs.view_url}">View</a>
+        </dd>
+      </dl>
+    `;
   }
 
   renderReadTheDocs() {
