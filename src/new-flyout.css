@@ -1,12 +1,30 @@
 /* New */
 
-:host {
+.container {
   position: fixed;
-  right: 20px;
-  bottom: 50px;
   max-width: 300px;
   width: auto;
   height: auto;
+}
+
+.container.bottom-right {
+  right: 20px;
+  bottom: 50px;
+}
+
+.container.bottom-left {
+  left: 20px;
+  bottom: 50px;
+}
+
+.container.top-left {
+  left: 20px;
+  top: 50px;
+}
+
+.container.top-right {
+  right: 20px;
+  top: 50px;
 }
 
 :host > div {
@@ -34,6 +52,7 @@ header {
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 header > span {
@@ -49,6 +68,10 @@ header > img.logo {
 main {
   padding: 5px;
   margin-top: 5px;
+}
+
+main.closed {
+  display: none;
 }
 
 dl {

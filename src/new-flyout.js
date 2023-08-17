@@ -1,5 +1,6 @@
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 import { html, nothing, render, LitElement } from "lit";
+import { classMap } from 'lit/directives/class-map.js';
 
 import styleSheet from "./new-flyout.css";
 import { AddonBase } from "./utils";
@@ -9,6 +10,9 @@ export class FlyoutElement extends LitElement {
 
   static properties = {
     config: { state: true },
+    opened: { type: Boolean },
+    floating: { type: Boolean },
+    position: { type: String },
   };
 
   static styles = styleSheet;
@@ -16,8 +20,10 @@ export class FlyoutElement extends LitElement {
   constructor() {
     super();
 
-    this.className = this.className || "raised floating bottom-right";
     this.config = {};
+    this.opened = false;
+    this.floating = true;
+    this.position = "bottom-right";
   }
 
   loadConfig(config) {
@@ -28,9 +34,13 @@ export class FlyoutElement extends LitElement {
     return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`
   }
 
+  _toggleOpen(e) {
+    this.opened = !this.opened;
+  }
+
   renderHeader() {
     return html`
-      <header>
+      <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
         <span>v: ${this.config.versions.current.slug}</span>
       </header>
@@ -160,10 +170,13 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
+    const classes = { floating: this.floating, container: true };
+    classes[this.position] = true
+
     return html`
-      <div class="container">
+      <div class=${classMap(classes)}>
         ${this.renderHeader()}
-        <main>
+        <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
           ${this.renderDownloads()} ${this.renderReadTheDocs()}
           ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
