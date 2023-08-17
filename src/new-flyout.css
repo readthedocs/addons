@@ -68,7 +68,21 @@ dl > dd {
 
 dd > a {
   text-decoration: none;
-  color: var(--readthedocs-flyout-link-color, rgb(32, 32, 32));
+  color: var(--readthedocs-flyout-item-link-color, rgb(32, 32, 32));
   padding: 6px;
   display: inline-block;
+}
+
+dd form {
+  padding: 6px;
+}
+
+dd input {
+  padding: 6px;
+  font-size: 80%;
+}
+
+small a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
 }

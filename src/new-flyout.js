@@ -24,6 +24,10 @@ export class FlyoutElement extends LitElement {
     this.config = config;
   }
 
+  getProjectUrl() {
+    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`
+  }
+
   renderHeader() {
     return html`
       <header>
@@ -34,11 +38,28 @@ export class FlyoutElement extends LitElement {
   }
 
   renderFooter() {
-    return nothing;
+    return html`
+      <small>
+        <span>Hosted by <a href="https://readthedocs.org">Read the Docs</a></span>
+        <span> &middot; </span>
+        <a href="https://docs.readthedocs.io/page/privacy-policy.html">Privacy Policy</a>
+      </small>
+    `;
   }
 
   renderSearch() {
-    return nothing;
+    // TODO: This is not yet working with the readthedocs-search component yet. The integration
+    // will be handled separately.
+    return html`
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <form id="flyout-search-form" target="_blank" action="${this.getProjectUrl()}search/" method="get">
+            <input type="text" name="q" aria-label="Search docs" placeholder="Search docs" />
+          </form>
+        </dd>
+      </dl>
+    `;
   }
 
   renderVCS() {
@@ -61,13 +82,13 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/">Project Home</a>
+          <a href="${this.getProjectUrl()}">Project Home</a>
         </dd>
         <dd>
-          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/builds/">Builds</a>
+          <a href="${this.getProjectUrl()}builds/">Builds</a>
         </dd>
         <dd>
-          <a href="//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/downloads/">Downloads</a>
+          <a href="${this.getProjectUrl()}downloads/">Downloads</a>
         </dd>
       </dl>
     `;
