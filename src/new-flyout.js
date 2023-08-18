@@ -1,4 +1,4 @@
-import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
+import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -179,7 +179,9 @@ export class FlyoutElement extends LitElement {
         <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
           ${this.renderDownloads()} ${this.renderReadTheDocs()}
-          ${this.renderVCS()} ${this.renderSearch()} ${this.renderFooter()}
+          ${this.renderVCS()} ${this.renderSearch()}
+          <hr>
+          ${this.renderFooter()}
         </main>
       </div>
     `;

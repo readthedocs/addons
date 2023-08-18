@@ -40,7 +40,7 @@
   color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
   background-color: var(
     --readthedocs-flyout-background-color,
-    rgb(234, 234, 234)
+    rgb(39, 39, 37)
   );
   z-index: 3000;
   padding: 10px;
@@ -81,6 +81,7 @@ dl {
 
 dl > dt {
   font-size: var(--readthedocs-flyout-dt-font-size, 0.9rem);
+  color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
 }
 
 dl > dd {
@@ -91,18 +92,30 @@ dl > dd {
 
 dd > a {
   text-decoration: none;
-  color: var(--readthedocs-flyout-item-link-color, rgb(32, 32, 32));
+  color: var(--readthedocs-flyout-item-link-color, rgb(252, 252, 252));
   padding: 6px;
   display: inline-block;
 }
 
 dd form {
   padding: 6px;
+  margin: 0;
 }
 
 dd input {
   padding: 6px;
   font-size: 80%;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  margin: 20px 0;
+  padding: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--readthedocs-flyout-divider-color, #413d3d);
 }
 
 small a {
