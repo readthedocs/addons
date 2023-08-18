@@ -73,10 +73,11 @@ export class FlyoutElement extends LitElement {
   }
 
   renderVCS() {
-    if (!this.config.addons.flyout.vcs) {
+    if (!this.config.addons.flyout.vcs || !this.config.addons.flyout.vcs.view_url) {
       return nothing;
     }
     const { vcs } = this.config.addons.flyout;
+
     return html`
       <dl>
         <dt>On ${vcs.name}</dt>
@@ -105,7 +106,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (!this.config.addons.flyout.downloads) {
+    if (!this.config.addons.flyout.downloads || !this.config.addons.flyout.downloads.length) {
       return nothing;
     }
 
@@ -145,7 +146,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (!this.config.addons.flyout.translations) {
+    if (!this.config.addons.flyout.translations || !this.config.addons.flyout.translations.length) {
       return nothing;
     }
 
