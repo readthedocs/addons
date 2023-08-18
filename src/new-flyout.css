@@ -44,7 +44,7 @@
   );
   z-index: 3000;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 header {
