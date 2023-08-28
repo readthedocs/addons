@@ -31,6 +31,9 @@ export class FlyoutElement extends LitElement {
   }
 
   getProjectUrl() {
+    // TODO: this URL should come from ``this.config.projects.current.urls.dashboard``.
+    // We are not able to use that field because of:
+    // https://github.com/readthedocs/readthedocs-ops/issues/1323
     return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`;
   }
 
@@ -64,6 +67,7 @@ export class FlyoutElement extends LitElement {
   renderSearch() {
     // TODO: This is not yet working with the readthedocs-search component yet. The integration
     // will be handled separately.
+    // See https://github.com/readthedocs/addons/issues/90
     return html`
       <dl>
         <dt>Search</dt>
@@ -130,8 +134,6 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    // NOTE: all these `render*()` functions could be merged together and use attributes
-    // to deal with the small differences between each of them
     return html`
       <dl class="downloads">
         <dt>Downloads</dt>
@@ -151,8 +153,6 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    // NOTE: all these `render*()` functions could be merged together and use attributes
-    // to deal with the small differences between each of them
     return html`
       <dl class="versions">
         <dt>Versions</dt>
@@ -173,8 +173,6 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    // NOTE: all these `render*()` functions could be merged together and use attributes
-    // to deal with the small differences between each of them
     return html`
       <dl class="languages">
         <dt>Languages</dt>
