@@ -27,8 +27,9 @@ export function setup() {
 
         if (!IS_PRODUCTION) {
           // Addons that are only available on development
-          addons.push(search.SearchAddon);
           addons.push(ethicalads.EthicalAdsAddon);
+          // NOTE: Disabling search for now because it's incompatible with Flyout
+          // addons.push(search.SearchAddon);
         }
 
         for (const addon of addons) {
