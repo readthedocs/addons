@@ -147,9 +147,10 @@ export class FlyoutElement extends LitElement {
   }
 
   renderVersions() {
-    // TODO: use `this.config.versions.flyout` instead here.
-    // This "filter" will implies `active=True and hidden=False`
-    if (!this.config.addons.flyout.versions) {
+    if (
+      !this.config.addons.flyout.versions ||
+      !this.config.addons.flyout.versions.length
+    ) {
       return nothing;
     }
 
