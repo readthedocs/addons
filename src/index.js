@@ -19,12 +19,16 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        let addons = [analytics.AnalyticsAddon, notification.NotificationAddon];
+        let addons = [
+          analytics.AnalyticsAddon,
+          notification.NotificationAddon,
+          newflyout.FlyoutAddon,
+        ];
 
         if (!IS_PRODUCTION) {
+          // Addons that are only available on development
           addons.push(search.SearchAddon);
           addons.push(ethicalads.EthicalAdsAddon);
-          addons.push(newflyout.FlyoutAddon);
         }
 
         for (const addon of addons) {
