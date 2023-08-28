@@ -1,6 +1,6 @@
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { html, nothing, render, LitElement } from "lit";
-import { classMap } from 'lit/directives/class-map.js';
+import { classMap } from "lit/directives/class-map.js";
 
 import styleSheet from "./new-flyout.css";
 import { AddonBase } from "./utils";
@@ -31,7 +31,7 @@ export class FlyoutElement extends LitElement {
   }
 
   getProjectUrl() {
-    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`
+    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`;
   }
 
   _toggleOpen(e) {
@@ -50,9 +50,13 @@ export class FlyoutElement extends LitElement {
   renderFooter() {
     return html`
       <small>
-        <span>Hosted by <a href="https://readthedocs.org">Read the Docs</a></span>
+        <span
+          >Hosted by <a href="https://readthedocs.org">Read the Docs</a></span
+        >
         <span> &middot; </span>
-        <a href="https://docs.readthedocs.io/page/privacy-policy.html">Privacy Policy</a>
+        <a href="https://docs.readthedocs.io/page/privacy-policy.html"
+          >Privacy Policy</a
+        >
       </small>
     `;
   }
@@ -64,8 +68,18 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>Search</dt>
         <dd>
-          <form id="flyout-search-form" target="_blank" action="${this.getProjectUrl()}search/" method="get">
-            <input type="text" name="q" aria-label="Search docs" placeholder="Search docs" />
+          <form
+            id="flyout-search-form"
+            target="_blank"
+            action="${this.getProjectUrl()}search/"
+            method="get"
+          >
+            <input
+              type="text"
+              name="q"
+              aria-label="Search docs"
+              placeholder="Search docs"
+            />
           </form>
         </dd>
       </dl>
@@ -73,7 +87,10 @@ export class FlyoutElement extends LitElement {
   }
 
   renderVCS() {
-    if (!this.config.addons.flyout.vcs || !this.config.addons.flyout.vcs.view_url) {
+    if (
+      !this.config.addons.flyout.vcs ||
+      !this.config.addons.flyout.vcs.view_url
+    ) {
       return nothing;
     }
     const { vcs } = this.config.addons.flyout;
@@ -106,7 +123,10 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (!this.config.addons.flyout.downloads || !this.config.addons.flyout.downloads.length) {
+    if (
+      !this.config.addons.flyout.downloads ||
+      !this.config.addons.flyout.downloads.length
+    ) {
       return nothing;
     }
 
@@ -146,7 +166,10 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (!this.config.addons.flyout.translations || !this.config.addons.flyout.translations.length) {
+    if (
+      !this.config.addons.flyout.translations ||
+      !this.config.addons.flyout.translations.length
+    ) {
       return nothing;
     }
 
@@ -172,7 +195,7 @@ export class FlyoutElement extends LitElement {
     }
 
     const classes = { floating: this.floating, container: true };
-    classes[this.position] = true
+    classes[this.position] = true;
 
     return html`
       <div class=${classMap(classes)}>
@@ -181,7 +204,7 @@ export class FlyoutElement extends LitElement {
           ${this.renderLanguages()} ${this.renderVersions()}
           ${this.renderDownloads()} ${this.renderReadTheDocs()}
           ${this.renderVCS()} ${this.renderSearch()}
-          <hr>
+          <hr />
           ${this.renderFooter()}
         </main>
       </div>

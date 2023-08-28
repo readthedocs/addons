@@ -38,10 +38,7 @@
   );
   font-size: var(--readthedocs-flyout-font-size, 0.8rem);
   color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
-  background-color: var(
-    --readthedocs-flyout-background-color,
-    rgb(39, 39, 37)
-  );
+  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   z-index: 3000;
   padding: 10px;
   overflow-y: auto;
@@ -56,7 +53,7 @@ header {
 }
 
 header > span {
-  color: var(--readthedocs-flyout-current-version-color, #27AE60);
+  color: var(--readthedocs-flyout-current-version-color, #27ae60);
   font-size: var(--readthedocs-flyout-header-font-size, 0.9rem);
 }
 
