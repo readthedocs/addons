@@ -2,6 +2,7 @@ import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
+import * as newflyout from "./new-flyout";
 import * as ethicalads from "./ethicalads";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
@@ -18,11 +19,17 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        let addons = [analytics.AnalyticsAddon, notification.NotificationAddon];
+        let addons = [
+          analytics.AnalyticsAddon,
+          notification.NotificationAddon,
+          newflyout.FlyoutAddon,
+        ];
 
         if (!IS_PRODUCTION) {
-          addons.push(search.SearchAddon);
+          // Addons that are only available on development
           addons.push(ethicalads.EthicalAdsAddon);
+          // NOTE: Disabling search for now because it's incompatible with Flyout
+          // addons.push(search.SearchAddon);
         }
 
         for (const addon of addons) {
