@@ -138,7 +138,7 @@ export class FlyoutElement extends LitElement {
       <dl class="downloads">
         <dt>Downloads</dt>
         ${this.config.addons.flyout.downloads.map(
-          (download, index) => html`
+          (download) => html`
             <dd><a href="${download.url}">${download.name}</a></dd>
           `
         )}
@@ -186,7 +186,7 @@ export class FlyoutElement extends LitElement {
       <dl class="languages">
         <dt>Languages</dt>
         ${this.config.addons.flyout.translations.map(
-          (translation, index) => html`
+          (translation) => html`
             <dd><a href="${translation.url}">${translation.slug}</a></dd>
           `
         )}
