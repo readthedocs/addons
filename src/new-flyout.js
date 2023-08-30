@@ -234,7 +234,11 @@ export class FlyoutAddon extends AddonBase {
     let elems = document.querySelectorAll("readthedocs-flyout");
     if (!elems.length) {
       elems = [new FlyoutElement()];
-      render(elems[0], document.body);
+
+      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
+      // So, we append the web-component first and then request an update of it.
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
     for (const elem of elems) {
