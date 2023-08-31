@@ -88,7 +88,7 @@ dl > dd {
   font-size: var(--readthedocs-flyout-dd-font-size, 0.9rem);
 }
 
-dd > a {
+dd a {
   text-decoration: none;
   color: var(--readthedocs-flyout-item-link-color, rgb(252, 252, 252));
   padding: 6px;
