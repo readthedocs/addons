@@ -537,7 +537,8 @@ export class SearchAddon extends AddonBase {
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
       elems = [new SearchElement()];
-      render(elems[0], document.body);
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
     for (const elem of elems) {

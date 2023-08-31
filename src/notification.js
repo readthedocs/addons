@@ -206,7 +206,8 @@ export class NotificationAddon extends AddonBase {
     let elems = document.querySelectorAll("readthedocs-notification");
     if (!elems.length) {
       elems = [new NotificationElement()];
-      render(elems[0], document.body);
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
     for (const elem of elems) {

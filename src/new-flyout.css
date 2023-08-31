@@ -1,0 +1,122 @@
+/* New */
+
+.container {
+  position: fixed;
+  max-width: 300px;
+  width: auto;
+  height: auto;
+}
+
+.container.bottom-right {
+  right: 20px;
+  bottom: 50px;
+}
+
+.container.bottom-left {
+  left: 20px;
+  bottom: 50px;
+}
+
+.container.top-left {
+  left: 20px;
+  top: 50px;
+}
+
+.container.top-right {
+  right: 20px;
+  top: 50px;
+}
+
+:host > div {
+  font-family: var(
+    --readthedocs-flyout-font-family,
+    "Lato",
+    "proxima-nova",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif"
+  );
+  font-size: var(--readthedocs-flyout-font-size, 0.8rem);
+  color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
+  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  z-index: 3000;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+header > span {
+  color: var(--readthedocs-flyout-current-version-color, #27ae60);
+  font-size: var(--readthedocs-flyout-header-font-size, 0.9rem);
+}
+
+header > img.logo {
+  text-align: center;
+  width: 106px;
+  margin-right: 20px;
+}
+
+main {
+  padding: 5px;
+  margin-top: 5px;
+}
+
+main.closed {
+  display: none;
+}
+
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+dl > dt {
+  font-size: var(--readthedocs-flyout-dt-font-size, 0.9rem);
+  color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
+}
+
+dl > dd {
+  display: inline-block;
+  margin: 0;
+  font-size: var(--readthedocs-flyout-dd-font-size, 0.9rem);
+}
+
+dd a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-item-link-color, rgb(252, 252, 252));
+  padding: 6px;
+  display: inline-block;
+}
+
+dd form {
+  padding: 6px;
+  margin: 0;
+}
+
+dd input {
+  padding: 6px;
+  font-size: 80%;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  margin: 20px 0;
+  padding: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--readthedocs-flyout-divider-color, #413d3d);
+}
+
+small a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
+}
