@@ -154,14 +154,21 @@ export class DocDiffElement extends LitElement {
     // Close the modal with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
     // (I'm checking `document.activeElement` to check if it's the BODY to avoid enable/disable while typing on forms)
     // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
-    if (e.keyCode === 68 && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey && document.activeElement.tagName == "BODY") {
+    if (
+      e.keyCode === 68 &&
+      !e.metaKey &&
+      !e.ctrlKey &&
+      !e.altKey &&
+      !e.shiftKey &&
+      document.activeElement.tagName == "BODY"
+    ) {
       if (this.enabled) {
         this.disableDocDiff();
       } else {
         this.enableDocDiff();
       }
     }
-  }
+  };
 
   connectedCallback() {
     super.connectedCallback();
