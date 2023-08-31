@@ -3,7 +3,7 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
 import { visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
-import { html, nothing, render, LitElement } from "lit";
+import { html, nothing, LitElement } from "lit";
 
 /**
  * visual-dom-diff options
@@ -179,7 +179,8 @@ export class DocDiffAddon extends AddonBase {
     let elems = document.querySelectorAll("readthedocs-docdiff");
     if (!elems.length) {
       elems = [new DocDiffElement()];
-      render(elems[0], document.body);
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
     for (const elem of elems) {
