@@ -21,17 +21,16 @@ export function setup() {
       .then((config) => {
         let promises = [];
         let addons = [
-          analytics.AnalyticsAddon,
-          notification.NotificationAddon,
           newflyout.FlyoutAddon,
+          notification.NotificationAddon,
+          analytics.AnalyticsAddon,
+          ethicalads.EthicalAdsAddon,
+          search.SearchAddon,
           docdiff.DocDiffAddon,
         ];
 
         if (!IS_PRODUCTION) {
           // Addons that are only available on development
-          addons.push(ethicalads.EthicalAdsAddon);
-          // NOTE: Disabling search for now because it's incompatible with Flyout
-          addons.push(search.SearchAddon);
         }
 
         for (const addon of addons) {
