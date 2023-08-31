@@ -2,6 +2,7 @@ import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
+import * as docdiff from "./docdiff";
 import * as newflyout from "./new-flyout";
 import * as ethicalads from "./ethicalads";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
@@ -23,6 +24,7 @@ export function setup() {
           analytics.AnalyticsAddon,
           notification.NotificationAddon,
           newflyout.FlyoutAddon,
+          docdiff.DocDiffAddon,
         ];
 
         if (!IS_PRODUCTION) {
