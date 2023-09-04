@@ -1,6 +1,3 @@
-// FIXME: how should we remove the `dist/` from this path?
-// NOTE: it requires this PR to work: https://github.com/readthedocs/ethical-ad-client/pull/148
-import { load_placements } from "ethical-ad-client/dist/ethicalads";
 import { AddonBase } from "./utils";
 
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
@@ -70,11 +67,18 @@ export class EthicalAdsAddon extends AddonBase {
     return placement;
   }
 
+  loadEthicalAdLibrary() {
+    const library = document.createElement("script");
+    library.setAttribute("type", "text/javascript");
+    library.setAttribute("src", "https://media.ethicalads.io/media/client/ethicalads.min.js");
+    document.head.appendChild(library);
+  }
+
   injectEthicalAds() {
+    // Create the placement first and after that load the EthicalAd library.
+    // This will automatically "load_placement" and render the ad properly.
     this.createAdPlacement();
-    // FIXME: the function `ethicalads.load_placements()` is called automatically when the module is imported,
-    // but we want to call it manually because we need to inject our `div` first.
-    load_placements();
+    this.loadEthicalAdLibrary();
   }
 
   static isEnabled(config) {
