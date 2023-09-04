@@ -70,7 +70,10 @@ export class EthicalAdsAddon extends AddonBase {
   loadEthicalAdLibrary() {
     const library = document.createElement("script");
     library.setAttribute("type", "text/javascript");
-    library.setAttribute("src", "https://media.ethicalads.io/media/client/ethicalads.min.js");
+    library.setAttribute(
+      "src",
+      "https://media.ethicalads.io/media/client/ethicalads.min.js"
+    );
     document.head.appendChild(library);
   }
 
