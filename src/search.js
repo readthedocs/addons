@@ -541,6 +541,17 @@ export class SearchElement extends LitElement {
     document.removeEventListener("keydown", this._handleShowModal);
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
+      if (element === undefined || element === null) {
+        for (let shadowRoot of findRoots(document)) {
+          if (
+            shadowRoot.host &&
+            shadowRoot.host.tagName == "READTHEDOCS-FLYOUT"
+          ) {
+            element = shadowRoot.querySelector(this.triggerSelector);
+            break;
+          }
+        }
+      }
       if (element !== undefined && element !== null) {
         element.removeEventListener(
           this.triggerEvent,
