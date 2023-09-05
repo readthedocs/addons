@@ -72,7 +72,9 @@ export class FlyoutElement extends LitElement {
 
     // TODO: find a way to pass the properties in a reliable way.
     // Right now, `triggerSelector` does not work
-    const search = new SearchElement({triggerSelector: "#flyout-search-input"});
+    const search = new SearchElement({
+      triggerSelector: "#flyout-search-input",
+    });
     search.loadConfig(this.config);
 
     return html`
