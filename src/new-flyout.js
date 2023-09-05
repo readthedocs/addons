@@ -3,6 +3,7 @@ import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 
 import styleSheet from "./new-flyout.css";
+import { SearchElement } from "./search";
 import { AddonBase } from "./utils";
 
 export class FlyoutElement extends LitElement {
@@ -69,13 +70,16 @@ export class FlyoutElement extends LitElement {
     // will be handled separately.
     // See https://github.com/readthedocs/addons/issues/90
 
+    // TODO: find a way to pass the properties in a reliable way.
+    // Right now, `triggerSelector` does not work
+    const search = new SearchElement({triggerSelector: "#flyout-search-input"});
+    search.loadConfig(this.config);
+
     return html`
       <dl>
         <dt>Search</dt>
         <dd>
-          <readthedocs-search
-            trigger-selector="#flyout-search-input"
-          ></readthedocs-search>
+          ${search}
           <input
             id="flyout-search-input"
             type="text"

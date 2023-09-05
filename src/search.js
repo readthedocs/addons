@@ -75,6 +75,9 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
+
+    // TODO: find a way to pass these attributes when calling `new SearchElement()`
+    this.triggerSelector = "#flyout-search-input";
   }
 
   loadConfig(config) {
@@ -526,7 +529,7 @@ export class SearchElement extends LitElement {
           }
         }
       }
-      if (element !== undefined || element != null) {
+      if (element !== undefined && element !== null) {
         element.addEventListener(this.triggerEvent, this._handleShowModalUser);
         console.log("Adding event listener on:");
         console.log(element);
@@ -535,10 +538,11 @@ export class SearchElement extends LitElement {
   }
 
   disconnectedCallback() {
+    // TODO: update these methods to make sense when embeding SearchElement into FlyoutElement
     document.removeEventListener("keydown", this._handleShowModal);
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
+      if (element !== undefined && element !== null) {
         element.removeEventListener(
           this.triggerEvent,
           this._handleShowModalUser
@@ -556,14 +560,24 @@ export class SearchAddon extends AddonBase {
 
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-search", SearchElement);
-    let elems = document.querySelectorAll("readthedocs-search");
-    if (!elems.length) {
-      elems = [new SearchElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
+
+    let createDefaultElement = true;
+    for (let shadowRoot of findRoots(document)) {
+      let elems = document.querySelectorAll("readthedocs-search");
+      if (elems.length) {
+        for (const elem of elems) {
+          elem.loadConfig(config);
+        }
+
+        createDefaultElement = false;
+        break;
+      }
     }
 
-    for (const elem of elems) {
+    if (createDefaultElement) {
+      const elem = new SearchElement();
+      document.body.append(elem);
+      elem.requestUpdate();
       elem.loadConfig(config);
     }
   }
