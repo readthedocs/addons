@@ -3,7 +3,7 @@ import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
 import * as docdiff from "./docdiff";
-import * as newflyout from "./new-flyout";
+import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
@@ -21,7 +21,7 @@ export function setup() {
       .then((config) => {
         let promises = [];
         let addons = [
-          newflyout.FlyoutAddon,
+          flyout.FlyoutAddon,
           notification.NotificationAddon,
           analytics.AnalyticsAddon,
           ethicalads.EthicalAdsAddon,

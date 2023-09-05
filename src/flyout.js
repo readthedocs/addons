@@ -2,7 +2,7 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 
-import styleSheet from "./new-flyout.css";
+import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
 
 export class FlyoutElement extends LitElement {
