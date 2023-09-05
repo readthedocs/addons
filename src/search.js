@@ -8,7 +8,13 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
-import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
+import {
+  domReady,
+  CLIENT_VERSION,
+  AddonBase,
+  debounce,
+  findRoots,
+} from "./utils";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -283,7 +289,8 @@ export class SearchElement extends LitElement {
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.renderRoot.querySelector("input[type=search]");
     // FIXME: for some reason it does not get focus
-    input.focus();
+    // input.focus();
+    console.log("Event");
   }
 
   queryInputFocus(e) {
@@ -506,8 +513,23 @@ export class SearchElement extends LitElement {
 
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
+      // if the tiggerSelector is not present in the document,
+      // we find it under the shadowroot named readthedocs-flyout.
+      if (element === undefined || element === null) {
+        for (let shadowRoot of findRoots(document)) {
+          if (
+            shadowRoot.host &&
+            shadowRoot.host.tagName == "READTHEDOCS-FLYOUT"
+          ) {
+            element = shadowRoot.querySelector(this.triggerSelector);
+            break;
+          }
+        }
+      }
+      if (element !== undefined || element != null) {
         element.addEventListener(this.triggerEvent, this._handleShowModalUser);
+        console.log("Adding event listener on:");
+        console.log(element);
       }
     }
   }

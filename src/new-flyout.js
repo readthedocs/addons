@@ -68,23 +68,21 @@ export class FlyoutElement extends LitElement {
     // TODO: This is not yet working with the readthedocs-search component yet. The integration
     // will be handled separately.
     // See https://github.com/readthedocs/addons/issues/90
+
     return html`
       <dl>
         <dt>Search</dt>
         <dd>
-          <form
-            id="flyout-search-form"
-            target="_blank"
-            action="${this.getProjectUrl()}search/"
-            method="get"
-          >
-            <input
-              type="text"
-              name="q"
-              aria-label="Search docs"
-              placeholder="Search docs"
-            />
-          </form>
+          <readthedocs-search
+            trigger-selector="#flyout-search-input"
+          ></readthedocs-search>
+          <input
+            id="flyout-search-input"
+            type="text"
+            name="q"
+            aria-label="Search docs"
+            placeholder="Search docs"
+          />
         </dd>
       </dl>
     `;
