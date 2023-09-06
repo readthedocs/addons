@@ -64,6 +64,12 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  showSearch() {
+    // Dispatch the custom event the search addon is listening to show the modal
+    const event = new CustomEvent("readthedocs-search-show");
+    document.dispatchEvent(event);
+  }
+
   renderSearch() {
     // TODO: This is not yet working with the readthedocs-search component yet. The integration
     // will be handled separately.
@@ -73,10 +79,8 @@ export class FlyoutElement extends LitElement {
         <dt>Search</dt>
         <dd>
           <form
+            @focusin="${this.showSearch}"
             id="flyout-search-form"
-            target="_blank"
-            action="${this.getProjectUrl()}search/"
-            method="get"
           >
             <input
               type="text"

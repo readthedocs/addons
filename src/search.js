@@ -13,7 +13,6 @@ import {
   CLIENT_VERSION,
   AddonBase,
   debounce,
-  findRoots,
 } from "./utils";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
@@ -76,8 +75,8 @@ export class SearchElement extends LitElement {
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
 
-    // TODO: find a way to pass these attributes when calling `new SearchElement()`
-    this.triggerSelector = "#flyout-search-input";
+    // Create the custom event that other addons can trigger to show the search modal
+    new CustomEvent('readthedocs-search-show');
   }
 
   loadConfig(config) {
@@ -515,25 +514,13 @@ export class SearchElement extends LitElement {
 
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      // if the tiggerSelector is not present in the document,
-      // we find it under the shadowroot named readthedocs-flyout.
-      if (element === undefined || element === null) {
-        for (let shadowRoot of findRoots(document)) {
-          if (
-            shadowRoot.host &&
-            shadowRoot.host.tagName == "READTHEDOCS-FLYOUT"
-          ) {
-            element = shadowRoot.querySelector(this.triggerSelector);
-            break;
-          }
-        }
-      }
       if (element !== undefined && element !== null) {
         element.addEventListener(this.triggerEvent, this._handleShowModalUser);
-        console.log("Adding event listener on:");
-        console.log(element);
       }
     }
+
+    // The "readthedocs-search-show" event is triggered by "readthedocs-flyout" input
+    document.addEventListener("readthedocs-search-show", this._handleShowModalUser);
   }
 
   disconnectedCallback() {
@@ -541,17 +528,6 @@ export class SearchElement extends LitElement {
     document.removeEventListener("keydown", this._handleShowModal);
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      if (element === undefined || element === null) {
-        for (let shadowRoot of findRoots(document)) {
-          if (
-            shadowRoot.host &&
-            shadowRoot.host.tagName == "READTHEDOCS-FLYOUT"
-          ) {
-            element = shadowRoot.querySelector(this.triggerSelector);
-            break;
-          }
-        }
-      }
       if (element !== undefined && element !== null) {
         element.removeEventListener(
           this.triggerEvent,
@@ -571,23 +547,18 @@ export class SearchAddon extends AddonBase {
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-search", SearchElement);
 
-    let createDefaultElement = true;
-    for (let shadowRoot of findRoots(document)) {
-      let elems = document.querySelectorAll("readthedocs-search");
-      if (elems.length) {
-        for (const elem of elems) {
-          elem.loadConfig(config);
-        }
+    // If there are no elements found, inject one
+    let elems = document.querySelectorAll("readthedocs-search");
+    if (!elems.length) {
+      elems = [new SearchElement()];
 
-        createDefaultElement = false;
-        break;
-      }
+      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
+      // So, we append the web-component first and then request an update of it.
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
-    if (createDefaultElement) {
-      const elem = new SearchElement();
-      document.body.append(elem);
-      elem.requestUpdate();
+    for (const elem of elems) {
       elem.loadConfig(config);
     }
   }
