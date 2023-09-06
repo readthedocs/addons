@@ -1,118 +1,122 @@
-/*
-CSS required for the flyout
+/* New */
 
-NOTE: this is a simplified version of
-https://github.com/readthedocs/readthedocs.org/blob/761e3b653be9f1ddca2893b161c63150993062d7/media/css/readthedocs-doc-embed.css
- */
-.rst-versions.rst-badge {
-  display: block;
-
-  bottom: 50px;
-
-  /* Workaround for mkdocs which set a specific height for this element */
-  height: auto;
-}
-
-.rst-other-versions {
-  text-align: left;
-}
-
-.rst-other-versions a {
-  border: 0;
-}
-
-.rst-other-versions dl {
-  margin: 0;
-}
-
-.rtd-current-item {
-  font-weight: bold;
-}
-
-/* Fix RTD theme bottom margin */
-.rst-content .line-block {
-  margin-bottom: 24px;
-}
-
-/* Fix for nav bottom padding with flyout */
-nav.wy-nav-side {
-  padding-bottom: 3em;
-}
-
-/* Copied from Sphinx Read the Docs `theme.css` file */
-.rst-versions.rst-badge {
-  width: auto;
-  bottom: 20px;
-  right: 20px;
-  left: auto;
-  border: none;
-  max-width: 300px;
-  max-height: 90%;
-}
-
-.rst-versions.shift-up {
-  height: auto;
-  max-height: 100%;
-  overflow-y: scroll;
-}
-
-.rst-versions {
+.container {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 300px;
-  color: #fcfcfc;
-  background: #1f1d1d;
-  font-family: Lato, proxima-nova, Helvetica Neue, Arial, sans-serif;
-  z-index: 400;
-}
-
-.rst-versions.rst-badge.shift-up .rst-current-version {
-  text-align: right;
-}
-
-.rst-versions.rst-badge > .rst-current-version {
+  max-width: 300px;
   width: auto;
-  height: 30px;
-  line-height: 30px;
-  padding: 0 6px;
-  display: block;
-  text-align: center;
+  height: auto;
 }
 
-.rst-versions .rst-current-version {
-  padding: 12px;
-  background-color: #272525;
-  display: block;
-  text-align: right;
-  font-size: 90%;
+.container.bottom-right {
+  right: 20px;
+  bottom: 50px;
+}
+
+.container.bottom-left {
+  left: 20px;
+  bottom: 50px;
+}
+
+.container.top-left {
+  left: 20px;
+  top: 50px;
+}
+
+.container.top-right {
+  right: 20px;
+  top: 50px;
+}
+
+:host > div {
+  font-family: var(
+    --readthedocs-flyout-font-family,
+    "Lato",
+    "proxima-nova",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif"
+  );
+  font-size: var(--readthedocs-flyout-font-size, 0.8rem);
+  color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
+  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  z-index: 3000;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
-  color: #27ae60;
-  zoom: 1;
-}
-.rst-versions.shift-up .rst-other-versions {
-  display: block;
 }
 
-.rst-versions .rst-other-versions {
-  font-size: 90%;
-  padding: 12px;
-  color: grey;
+header > span {
+  color: var(--readthedocs-flyout-current-version-color, #27ae60);
+  font-size: var(--readthedocs-flyout-header-font-size, 0.9rem);
+}
+
+header > img.logo {
+  text-align: center;
+  width: 106px;
+  margin-right: 20px;
+}
+
+main {
+  padding: 5px;
+  margin-top: 5px;
+}
+
+main.closed {
   display: none;
 }
 
-.rst-other-versions dl {
-  margin: 0px;
+dl {
+  margin: 0;
+  padding: 0;
 }
 
-.rst-versions .rst-other-versions hr {
+dl > dt {
+  font-size: var(--readthedocs-flyout-dt-font-size, 0.9rem);
+  color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
+}
+
+dl > dd {
+  display: inline-block;
+  margin: 0;
+  font-size: var(--readthedocs-flyout-dd-font-size, 0.9rem);
+}
+
+dd a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-item-link-color, rgb(252, 252, 252));
+  padding: 6px;
+  display: inline-block;
+}
+
+dd form {
+  padding: 6px;
+  margin: 0;
+}
+
+dd input {
+  padding: 6px;
+  font-size: 80%;
+}
+
+hr {
   display: block;
   height: 1px;
   border: 0;
-  border-top-color: currentcolor;
-  border-top-style: none;
-  border-top-width: 0px;
   margin: 20px 0;
   padding: 0;
-  border-top: 1px solid #413d3d;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--readthedocs-flyout-divider-color, #413d3d);
+}
+
+small a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
 }
