@@ -531,6 +531,11 @@ export class SearchElement extends LitElement {
       }
     }
 
+    document.removeEventListener(
+      "readthedocs-search-show",
+      this._handleShowModalUser
+    );
+
     super.disconnectedCallback();
   }
 }
