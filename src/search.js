@@ -8,12 +8,7 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
-import {
-  domReady,
-  CLIENT_VERSION,
-  AddonBase,
-  debounce,
-} from "./utils";
+import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -76,7 +71,7 @@ export class SearchElement extends LitElement {
     this.triggerEvent = "focusin";
 
     // Create the custom event that other addons can trigger to show the search modal
-    new CustomEvent('readthedocs-search-show');
+    new CustomEvent("readthedocs-search-show");
   }
 
   loadConfig(config) {
@@ -520,7 +515,10 @@ export class SearchElement extends LitElement {
     }
 
     // The "readthedocs-search-show" event is triggered by "readthedocs-flyout" input
-    document.addEventListener("readthedocs-search-show", this._handleShowModalUser);
+    document.addEventListener(
+      "readthedocs-search-show",
+      this._handleShowModalUser
+    );
   }
 
   disconnectedCallback() {

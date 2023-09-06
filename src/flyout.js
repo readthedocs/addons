@@ -78,10 +78,7 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>Search</dt>
         <dd>
-          <form
-            @focusin="${this.showSearch}"
-            id="flyout-search-form"
-          >
+          <form @focusin="${this.showSearch}" id="flyout-search-form">
             <input
               type="text"
               name="q"
