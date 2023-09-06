@@ -1,0 +1,18 @@
+[bumpver]
+current_version = "0.3.0"
+version_pattern = "MAJOR.MINOR.PATCH[TAG]"
+commit_message = "Release {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+commit = true
+tag = true
+push = true
+
+[bumpver.file_patterns]
+"package.json" = [
+    '"version": "{version}",',
+]
+"bumpver.toml" = [
+    'current_version = "{version}"',
+]
+
