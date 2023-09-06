@@ -69,9 +69,6 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
-
-    // Create the custom event that other addons can trigger to show the search modal
-    new CustomEvent("readthedocs-search-show");
   }
 
   loadConfig(config) {
