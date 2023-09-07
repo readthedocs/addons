@@ -9,6 +9,7 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
 import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
+import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -506,23 +507,35 @@ export class SearchElement extends LitElement {
 
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
+      if (element !== undefined && element !== null) {
         element.addEventListener(this.triggerEvent, this._handleShowModalUser);
       }
     }
+
+    // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
+    document.addEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._handleShowModalUser
+    );
   }
 
   disconnectedCallback() {
+    // TODO: update these methods to make sense when embeding SearchElement into FlyoutElement
     document.removeEventListener("keydown", this._handleShowModal);
     if (this.triggerSelector) {
       let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
+      if (element !== undefined && element !== null) {
         element.removeEventListener(
           this.triggerEvent,
           this._handleShowModalUser
         );
       }
     }
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._handleShowModalUser
+    );
 
     super.disconnectedCallback();
   }
@@ -534,9 +547,14 @@ export class SearchAddon extends AddonBase {
 
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-search", SearchElement);
+
+    // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
       elems = [new SearchElement()];
+
+      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
+      // So, we append the web-component first and then request an update of it.
       document.body.append(elems[0]);
       elems[0].requestUpdate();
     }
