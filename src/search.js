@@ -281,10 +281,20 @@ export class SearchElement extends LitElement {
 
   showModal(e) {
     this.show = true;
-    // https://lit.dev/docs/components/shadow-dom/
     const input = this.renderRoot.querySelector("input[type=search]");
-    // FIXME: for some reason it does not get focus
-    input.focus();
+
+    // HACK: there are multiple themes/sites that capture the "/" to focus the cursor on their search input.
+    // So, I found that calling `.focus()` a little in the future solves this problem.
+    // It works great in our own Sphinx theme for example.
+    // Ideally, we should find the way to disconnect other event listeners of "/" but I didn't find the way yet.
+    setTimeout(
+      function () {
+        // https://lit.dev/docs/components/shadow-dom/
+        input.focus();
+      },
+      50,
+      input
+    );
   }
 
   queryInputFocus(e) {
