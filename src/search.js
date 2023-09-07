@@ -9,6 +9,7 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
 import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
+import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -511,9 +512,9 @@ export class SearchElement extends LitElement {
       }
     }
 
-    // The "readthedocs-search-show" event is triggered by "readthedocs-flyout" input
+    // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
-      "readthedocs-search-show",
+      EVENT_READTHEDOCS_SEARCH_SHOW,
       this._handleShowModalUser
     );
   }
@@ -532,7 +533,7 @@ export class SearchElement extends LitElement {
     }
 
     document.removeEventListener(
-      "readthedocs-search-show",
+      EVENT_READTHEDOCS_SEARCH_SHOW,
       this._handleShowModalUser
     );
 

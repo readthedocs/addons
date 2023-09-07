@@ -4,6 +4,7 @@ import { classMap } from "lit/directives/class-map.js";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
+import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -66,7 +67,7 @@ export class FlyoutElement extends LitElement {
 
   showSearch() {
     // Dispatch the custom event the search addon is listening to show the modal
-    const event = new CustomEvent("readthedocs-search-show");
+    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     document.dispatchEvent(event);
   }
 
