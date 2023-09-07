@@ -1,0 +1,6 @@
+- id: check-build-assets
+  name: ensure assets are bundled
+  description: Make sure that `npm run build` was ran before commiting.
+  language: script
+  types: [css, javascript, svg]
+  entry: check-build-assets.sh
