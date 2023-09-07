@@ -281,6 +281,7 @@ export class SearchElement extends LitElement {
 
   showModal(e) {
     this.show = true;
+    // https://lit.dev/docs/components/shadow-dom/
     const input = this.renderRoot.querySelector("input[type=search]");
 
     // HACK: there are multiple themes/sites that capture the "/" to focus the cursor on their search input.
