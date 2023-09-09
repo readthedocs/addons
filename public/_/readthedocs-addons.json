@@ -35,12 +35,8 @@
       "ad_free": false,
       "enabled": true,
       "publisher": "readthedocs",
-      "campaign_types":	[
-        "community",
-        "house",
-        "paid"
-      ],
-      "keywords":	[
+      "campaign_types": ["community", "house", "paid"],
+      "keywords": [
         "only words",
         "readthedocs-project-12345",
         "readthedocs-project-slug",
@@ -134,6 +130,14 @@
         ["Search subprojects", "subprojects:example/latest"]
       ],
       "default_filter": "subprojects:example/latest"
+    },
+    "announcement": {
+      "enabled": true,
+      "versions": {
+        "all": {
+          "content": "This is a <em>customizable message</em>. The user can choose between showing it on a <strong>specific version</strong> or in all of them. Try out <a href=\"https://docs.readthedocs.io/en/latest/config-file/v2.html#build-commands\">build.commands</a> now!"
+        }
+      }
     }
   }
 }

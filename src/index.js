@@ -5,6 +5,7 @@ import * as search from "./search";
 import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
+import * as announcement from "./announcement";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -27,6 +28,7 @@ export function setup() {
           ethicalads.EthicalAdsAddon,
           search.SearchAddon,
           docdiff.DocDiffAddon,
+          announcement.AnnouncementAddon,
         ];
 
         if (!IS_PRODUCTION) {
