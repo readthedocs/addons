@@ -4,3 +4,4 @@ repos:
     hooks:
       - id: prettier
         args: ["--write", "src/**", "*.js", "*.json"]
+        exclude: "^dist/.*$"

@@ -3,6 +3,10 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
 import { visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
+import {
+  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+  EVENT_READTHEDOCS_DOCDIFF_HIDE,
+} from "./events";
 import { html, nothing, LitElement } from "lit";
 
 /**
@@ -150,30 +154,33 @@ export class DocDiffElement extends LitElement {
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
   }
 
-  _handleKeydown = (e) => {
-    // Close the modal with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
-    // (I'm checking `document.activeElement` to check if it's the BODY to avoid enable/disable while typing on forms)
-    // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
-    if (
-      e.keyCode === 68 &&
-      !e.metaKey &&
-      !e.ctrlKey &&
-      !e.altKey &&
-      !e.shiftKey &&
-      document.activeElement.tagName == "BODY"
-    ) {
-      if (this.enabled) {
-        this.disableDocDiff();
-      } else {
-        this.enableDocDiff();
-      }
-    }
+  _handleShowDocDiff = (e) => {
+    e.preventDefault();
+    this.enableDocDiff();
+  };
+
+  _handleHideDocDiff = (e) => {
+    e.preventDefault();
+    this.disableDocDiff();
   };
 
   connectedCallback() {
     super.connectedCallback();
-    // Enable/Disable docdiff when hitting
-    document.addEventListener("keydown", this._handleKeydown);
+
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleShowDocDiff
+    );
+
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleHideDocDiff
+    );
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("keydown", this._handleShowDocDiff);
+    super.disconnectedCallback();
   }
 }
 

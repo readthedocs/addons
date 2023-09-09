@@ -27,6 +27,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.6.4",
+    "keyboard-event-to-string": "^2.1.0",
     "lit": "^2.7.1",
     "prettier": "^2.8.4",
     "semver": "^7.3.8",
