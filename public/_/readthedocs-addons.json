@@ -136,6 +136,10 @@
       "doc_diff": {
         "enabled": true,
         "trigger": "KeyD"
+      },
+      "search": {
+        "enabled": true,
+        "trigger": "Slash"
       }
     }
   }

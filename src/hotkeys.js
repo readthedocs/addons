@@ -4,6 +4,7 @@ import { AddonBase } from "./utils";
 import { html, nothing, LitElement } from "lit";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_SEARCH_HIDE,
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
@@ -30,12 +31,17 @@ export class HotKeysElement extends LitElement {
     this.config = config;
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
     this.docDiffShowed = false;
+
+    this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
+    this.searchShowed = false;
   }
 
   _handleKeydown = (e) => {
     // Close docdiff with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
     // (I'm checking `document.activeElement` to check if it's the BODY to avoid enable/disable while typing on forms)
     // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
+
+    let event;
     // DocDiff
     if (
       this.docDiffHotKeyEnabled &&
@@ -43,7 +49,6 @@ export class HotKeysElement extends LitElement {
         this.config.addons.hotkeys.doc_diff.trigger &&
       document.activeElement.tagName == "BODY"
     ) {
-      let event;
       if (this.docDiffShowed) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
         this.docDiffShowed = false;
@@ -51,7 +56,28 @@ export class HotKeysElement extends LitElement {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
         this.docDiffShowed = true;
       }
-      console.log(event);
+    }
+
+    // Search
+    if (
+      (this.searchHotKeyEnabled &&
+        keyboardEventToString(e) ===
+          this.config.addons.hotkeys.search.trigger &&
+        document.activeElement.tagName == "BODY") ||
+      document.querySelector("div[role=search] input") ===
+        document.activeElement
+    ) {
+      if (this.searchShowed) {
+        event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
+        this.searchShowed = false;
+      } else {
+        event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+        this.searchShowed = true;
+      }
+    }
+
+    if (event !== undefined) {
+      document.dispatchEvent(event);
     }
   };
 
