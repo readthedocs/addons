@@ -47,39 +47,6 @@ export class AnnouncementElement extends LitElement {
     </div>`;
   }
 
-  // renderExternalVersionWarning() {
-  //   library.add(faCircleXmark);
-  //   library.add(faCodePullRequest);
-  //   const xmark = icon(faCircleXmark, {
-  //     title: "Close notification",
-  //   });
-  //   const iconPullRequest = icon(faCodePullRequest, {
-  //     title: "This version is a pull request version",
-  //     classes: ["header", "icon"],
-  //   });
-
-  //   return html`
-  //     <div>
-  //       ${iconPullRequest.node[0]}
-  //       <div class="title">
-  //         This page was created from a pull request build
-  //         <a href="#" class="right" @click=${this.closeNotification}>
-  //           ${xmark.node[0]}
-  //         </a>
-  //       </div>
-  //       <div class="content">
-  //         See the
-  //         <a href="${this.urls.build}">build's detail page</a>
-  //         or
-  //         <a href="${this.urls.external}"
-  //           >pull request #${this.config.versions.current.slug}</a
-  //         >
-  //         for more information.
-  //       </div>
-  //     </div>
-  //   `;
-  // }
-
   closeAnnouncement(e) {
     this.remove();
     // Avoid event propagation
