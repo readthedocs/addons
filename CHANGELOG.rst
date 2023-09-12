@@ -4,6 +4,16 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.4.0
+--------------
+
+:date: September 12, 2023
+
+* Trigger search addon from flyout input
+* Focus search input in the modal immediately after showing it
+* New addons: hotkeys
+* Migrate search hotkeys to be managed by the new hotkeys addon.
+
 Version v0.3.0
 --------------
 
