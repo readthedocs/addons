@@ -46,7 +46,10 @@ export class FlyoutElement extends LitElement {
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        <span>v: ${this.config.versions.current.slug}</span>
+        <span>
+          <i class="fa-solid fa-code-branch"></i> 
+          ${this.config.versions.current.slug}
+        </span>
       </header>
     `;
   }
