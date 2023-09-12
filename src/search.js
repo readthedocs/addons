@@ -9,7 +9,10 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
 import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
-import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
+import {
+  EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_SEARCH_HIDE,
+} from "./events";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -482,61 +485,39 @@ export class SearchElement extends LitElement {
     }
   }
 
-  // We have to use "arrow function" so `this` refers to the component
-  // https://lit.dev/docs/components/events/#understanding-this-in-event-listeners
-  _handleShowModal = (e) => {
-    // Close the modal with `Esc`
-    if (e.keyCode === 27) {
-      this.closeModal();
-    }
-    // Show the modal with `/`
-    else if (e.keyCode === this.triggerKeycode && !this.show) {
-      // prevent opening "Quick Find" in Firefox
-      e.preventDefault();
-      this.showModal();
-    }
+  _handleCloseModal = (e) => {
+    e.preventDefault();
+    this.closeModal();
   };
 
-  _handleShowModalUser = (e) => {
+  _handleShowModal = (e) => {
     e.preventDefault();
     this.showModal();
   };
 
   connectedCallback() {
     super.connectedCallback();
-    // open search modal if "forward slash" button is pressed
-    document.addEventListener("keydown", this._handleShowModal);
-
-    if (this.triggerSelector) {
-      let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined && element !== null) {
-        element.addEventListener(this.triggerEvent, this._handleShowModalUser);
-      }
-    }
 
     // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModalUser
+      this._handleShowModal
+    );
+    document.addEventListener(
+      EVENT_READTHEDOCS_SEARCH_HIDE,
+      this._handleCloseModal
     );
   }
 
   disconnectedCallback() {
-    // TODO: update these methods to make sense when embeding SearchElement into FlyoutElement
-    document.removeEventListener("keydown", this._handleShowModal);
-    if (this.triggerSelector) {
-      let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined && element !== null) {
-        element.removeEventListener(
-          this.triggerEvent,
-          this._handleShowModalUser
-        );
-      }
-    }
-
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModalUser
+      this._handleShowModal
+    );
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_SEARCH_HIDE,
+      this._handleCloseModal
     );
 
     super.disconnectedCallback();
