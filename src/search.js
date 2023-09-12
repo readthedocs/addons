@@ -281,9 +281,11 @@ export class SearchElement extends LitElement {
 
   showModal(e) {
     this.show = true;
+  }
+
+  updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
-    const input = this.renderRoot.querySelector("input[type=search]");
-    // FIXME: for some reason it does not get focus
+    const input = this.shadowRoot.querySelector("input[type=search]");
     input.focus();
   }
 
