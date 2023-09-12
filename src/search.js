@@ -485,7 +485,7 @@ export class SearchElement extends LitElement {
     }
   }
 
-  _handleShowModal = (e) => {
+  _handleCloseModal = (e) => {
     e.preventDefault();
     this.closeModal();
   };
@@ -505,7 +505,7 @@ export class SearchElement extends LitElement {
     );
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleHideModal
+      this._handleCloseModal
     );
   }
 
@@ -517,7 +517,7 @@ export class SearchElement extends LitElement {
 
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleHideModal
+      this._handleCloseModal
     );
 
     super.disconnectedCallback();
