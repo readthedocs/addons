@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: prettier
         args: ["--write", "src/**", "*.js", "*.json"]
-
+        exclude: "^dist/.*$"
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -19,7 +19,7 @@ repos:
       - id: check-yaml
       - id: destroyed-symlinks
       - id: end-of-file-fixer
-      - id: trailing-whitespace
+        exclude: "^dist/.*$"
 
   - repo: .
     rev: humitos/pre-commit-setup
