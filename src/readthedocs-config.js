@@ -25,7 +25,7 @@ export function getReadTheDocsConfig() {
 
   // Retrieve a static JSON file when working in development mode
   if (window.location.href.startsWith("http://localhost")) {
-    url = "/_/readthedocs-addons.json";
+    url = "http://localhost:8000/_/readthedocs-addons.json";
   }
 
   return fetch(url, {
