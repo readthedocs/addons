@@ -1,213 +1,254 @@
-import styles from "./flyout.css";
+import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
+import { html, nothing, render, LitElement } from "lit";
+import { classMap } from "lit/directives/class-map.js";
 
-/**
-   Injects the footer into the page
+import styleSheet from "./flyout.css";
+import { AddonBase } from "./utils";
+import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
 
-   There are 2 main cases:
-   * EXPLICIT_FLYOUT_PLACEMENT_SELECTOR is defined, inject it there
-   * `div.rst-other-versions` is defined (theme that looks like Read the Docs)
-   * All other pages just get it appended to the <body>
-*/
-export function injectFlyout(config) {
-  // Inject our styles for the flyout
-  document.adoptedStyleSheets.push(styles);
+export class FlyoutElement extends LitElement {
+  static elementName = "readthedocs-flyout";
 
-  const languageTemplate = (translation) =>
-    `
-<dd class="rtd-current-item">
-  <a href="${translation.name}">${translation.code}</a>
-</dd>
-`;
-  const versionTemplate = (version) =>
-    `
-<dd>
-  <a href="${version.url}">${version.slug}</a>
-</dd>
-`;
-  const downloadTemplate = (download) =>
-    `
-<dd>
-  <a href="${download.url}">${download.slug}</a>
-</dd>
-`;
+  static properties = {
+    config: { state: true },
+    opened: { type: Boolean },
+    floating: { type: Boolean },
+    position: { type: String },
+  };
 
-  function get_languages(config) {
-    if (config.addons.flyout.translations.length === 0) {
-      return "";
-    }
+  static styles = styleSheet;
 
-    let result = [
-      // TODO: how do we handle translations here?
-      `<dl><dt>Languages</dt>`,
-    ];
-    for (const language of config.addons.flyout.translations) {
-      result.push(languageTemplate(language));
-    }
-    result.push(`</dl>`);
-    return result.join("");
+  constructor() {
+    super();
+
+    this.config = {};
+    this.opened = false;
+    this.floating = true;
+    this.position = "bottom-right";
   }
 
-  function get_versions(config) {
-    if (config.addons.flyout.versions.length === 0) {
-      return "";
-    }
-
-    let result = [
-      // TODO: how do we handle translations here?
-      `<dl><dt>Versions</dt>`,
-    ];
-    for (const version of config.addons.flyout.versions) {
-      result.push(versionTemplate(version));
-    }
-    result.push(`</dl>`);
-    return result.join("");
+  loadConfig(config) {
+    this.config = config;
   }
 
-  function get_downloads(config) {
-    if (config.addons.flyout.downloads.length === 0) {
-      return "";
-    }
-
-    let result = [
-      // TODO: how do we handle translations here?
-      `<dl><dt>Downloads</dt>`,
-    ];
-    for (const download of config.addons.flyout.downloads) {
-      result.push(downloadTemplate(download));
-    }
-    result.push(`</dl>`);
-    return result.join("");
+  getProjectUrl() {
+    // TODO: this URL should come from ``this.config.projects.current.urls.dashboard``.
+    // We are not able to use that field because of:
+    // https://github.com/readthedocs/readthedocs-ops/issues/1323
+    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`;
   }
 
-  const template = `
-<div class="injected">
-   <div class="rst-versions rst-badge shift-down" data-toggle="rst-versions">
-      <span class="rst-current-version" data-toggle="rst-current-version">
-      <span class="fa fa-book">&nbsp;</span>
-      v: ${config.versions.current.slug}
-      <span class="fa fa-caret-down"></span>
-      </span>
-      <div class="rst-other-versions">
-         ${get_languages(config)}
+  _toggleOpen(e) {
+    this.opened = !this.opened;
+  }
 
-         ${get_versions(config)}
+  renderHeader() {
+    return html`
+      <header @click="${this._toggleOpen}">
+        <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+        <span>v: ${this.config.versions.current.slug}</span>
+      </header>
+    `;
+  }
 
-         ${get_downloads(config)}
+  renderFooter() {
+    return html`
+      <small>
+        <span
+          >Hosted by <a href="https://readthedocs.org">Read the Docs</a></span
+        >
+        <span> &middot; </span>
+        <a href="https://docs.readthedocs.io/page/privacy-policy.html"
+          >Privacy Policy</a
+        >
+      </small>
+    `;
+  }
 
-         <dl>
-            <dt>On Read the Docs</dt>
-            <dd>
-               <a href="//${config.domains.dashboard}/projects/${
-    config.projects.current.slug
-  }/">Project Home</a>
-            </dd>
-            <dd>
-               <a href="//${config.domains.dashboard}/projects/${
-    config.projects.current.slug
-  }/builds/">Builds</a>
-            </dd>
-            <dd>
-               <a href="//${config.domains.dashboard}/projects/${
-    config.projects.current.slug
-  }/downloads/">Downloads</a>
-            </dd>
-         </dl>
+  showSearch() {
+    // Dispatch the custom event the search addon is listening to show the modal
+    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+    document.dispatchEvent(event);
+  }
 
-         <dl>
-            <dt>On GitHub</dt>
-            <dd>
-               <a href="${config.addons.flyout.vcs.url}/${
-    config.addons.flyout.vcs.username
-  }/${config.addons.flyout.vcs.repository}/blob/${
-    config.addons.flyout.vcs.branch
-  }/${config.addons.flyout.vcs.filepath}">View</a>
-            </dd>
-            <dd>
-               <a href="${config.addons.flyout.vcs.url}/${
-    config.addons.flyout.vcs.username
-  }/${config.addons.flyout.vcs.repository}/edit/${
-    config.addons.flyout.vcs.branch
-  }/${config.addons.flyout.vcs.filepath}">Edit</a>
-            </dd>
-         </dl>
+  renderSearch() {
+    // TODO: This is not yet working with the readthedocs-search component yet. The integration
+    // will be handled separately.
+    // See https://github.com/readthedocs/addons/issues/90
+    return html`
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <form @focusin="${this.showSearch}" id="flyout-search-form">
+            <input
+              type="text"
+              name="q"
+              aria-label="Search docs"
+              placeholder="Search docs"
+            />
+          </form>
+        </dd>
+      </dl>
+    `;
+  }
 
-         <dl>
-            <dt>Search</dt>
-            <dd>
-               <div style="padding: 6px;">
-                  <form id="flyout-search-form" class="wy-form" target="_blank" action="//${
-                    config.domains.dashboard
-                  }/projects/${
-    config.projects.current.slug
-  }/search/" method="get">
-                     <input type="text" name="q" aria-label="Search docs" placeholder="Search docs">
-                  </form>
-               </div>
-            </dd>
-         </dl>
+  renderVCS() {
+    if (
+      !this.config.addons.flyout.vcs ||
+      !this.config.addons.flyout.vcs.view_url
+    ) {
+      return nothing;
+    }
+    const { vcs } = this.config.addons.flyout;
 
-         <hr>
-         <small>
-         <span>Hosted by <a href="${
-           config.domains.dashboard
-         }">Read the Docs</a></span>
-         <span> &middot; </span>
-         <a href="https://docs.readthedocs.io/page/privacy-policy.html">Privacy Policy</a>
-         </small>
+    return html`
+      <dl>
+        <dt>On ${vcs.name}</dt>
+        <dd>
+          <a href="${vcs.view_url}">View</a>
+        </dd>
+      </dl>
+    `;
+  }
+
+  renderReadTheDocs() {
+    return html`
+      <dl>
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="${this.getProjectUrl()}">Project Home</a>
+        </dd>
+        <dd>
+          <a href="${this.getProjectUrl()}builds/">Builds</a>
+        </dd>
+        <dd>
+          <a href="${this.getProjectUrl()}downloads/">Downloads</a>
+        </dd>
+      </dl>
+    `;
+  }
+
+  renderDownloads() {
+    if (
+      !this.config.addons.flyout.downloads ||
+      !this.config.addons.flyout.downloads.length
+    ) {
+      return nothing;
+    }
+
+    return html`
+      <dl class="downloads">
+        <dt>Downloads</dt>
+        ${this.config.addons.flyout.downloads.map(
+          (download) => html`
+            <dd><a href="${download.url}">${download.name}</a></dd>
+          `
+        )}
+      </dl>
+    `;
+  }
+
+  renderVersions() {
+    if (
+      !this.config.addons.flyout.versions ||
+      !this.config.addons.flyout.versions.length
+    ) {
+      return nothing;
+    }
+
+    const currentVersion =
+      this.config.versions.current && this.config.versions.current.slug;
+
+    const getVersionLink = (version) => {
+      const link = html`<a href="${version.url}">${version.slug}</a>`;
+      return currentVersion && version.slug === currentVersion
+        ? html`<strong>${link}</strong>`
+        : link;
+    };
+
+    return html`
+      <dl class="versions">
+        <dt>Versions</dt>
+        ${this.config.addons.flyout.versions.map(
+          (version) => html`<dd>${getVersionLink(version)}</dd> `
+        )}
+      </dl>
+    `;
+  }
+
+  renderLanguages() {
+    if (
+      !this.config.addons.flyout.translations ||
+      !this.config.addons.flyout.translations.length
+    ) {
+      return nothing;
+    }
+
+    return html`
+      <dl class="languages">
+        <dt>Languages</dt>
+        ${this.config.addons.flyout.translations.map(
+          (translation) => html`
+            <dd><a href="${translation.url}">${translation.slug}</a></dd>
+          `
+        )}
+      </dl>
+    `;
+  }
+
+  render() {
+    // The element doesn't yet have our config, don't render it.
+    if (!this.config) {
+      // nothing is a special Lit response type
+      return nothing;
+    }
+
+    const classes = { floating: this.floating, container: true };
+    classes[this.position] = true;
+
+    return html`
+      <div class=${classMap(classes)}>
+        ${this.renderHeader()}
+        <main class=${classMap({ closed: !this.opened })}>
+          ${this.renderLanguages()} ${this.renderVersions()}
+          ${this.renderDownloads()} ${this.renderReadTheDocs()}
+          ${this.renderVCS()} ${this.renderSearch()}
+          <hr />
+          ${this.renderFooter()}
+        </main>
       </div>
-   </div>
-</div>
-`;
-
-  // Default placement for the flyout
-  const EXPLICIT_FLYOUT_PLACEMENT_SELECTOR = "#readthedocs-embed-flyout";
-  const placements = [
-    EXPLICIT_FLYOUT_PLACEMENT_SELECTOR,
-    // NOTE: avoid integrating it with Sphinx themes because we need more CSS work for this
-    // "div.rst-other-versions",
-  ];
-
-  for (const query_selector of placements) {
-    let placement = document.querySelector(query_selector);
-    if (placement !== null) {
-      // TODO: does it make sense to implement a new flyout endpoint as suggested in
-      // https://github.com/readthedocs/readthedocs.org/pull/8052
-      placement.innerHTML = template;
-      return;
-    }
-  }
-
-  document.body.insertAdjacentHTML("beforeend", template);
-
-  // Attach event to show/hide the flyout on click
-  const flyout = document.querySelector("[data-toggle='rst-versions']");
-  if (flyout != null) {
-    flyout.addEventListener("click", function () {
-      flyout.classList.toggle("shift-up");
-    });
+    `;
   }
 }
 
 /**
-   Track clicks on flyout.
-*/
-export function trackFlyoutEvents(config) {
-  // TODO: `div.injected` is not the best selector.
-  // We should probably change it to use `EXPLICIT_FLYOUT_PLACEMENT_SELECTOR`
-  const flyout = document.querySelector("[data-toggle='rst-current-version']");
+ * Flyout addon
+ *
+ * @param {Object} config - Addon configuration object
+ */
+export class FlyoutAddon extends AddonBase {
+  constructor(config) {
+    super();
 
-  if (flyout != null) {
-    flyout.addEventListener("click", function () {
-      const state = document
-        .querySelector("[data-toggle='rst-versions']")
-        .classList.contains("shift-up")
-        ? "was_open"
-        : "was_closed";
+    customElements.define("readthedocs-flyout", FlyoutElement);
 
-      // Only report back if analytics is enabled
-      if (typeof window.ga !== "undefined") {
-        window.ga("rtfd.send", "event", "Flyout", "Click", state);
-      }
-    });
+    // If there are no elements found, inject one
+    let elems = document.querySelectorAll("readthedocs-flyout");
+    if (!elems.length) {
+      elems = [new FlyoutElement()];
+
+      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
+      // So, we append the web-component first and then request an update of it.
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
+    }
+
+    for (const elem of elems) {
+      elem.loadConfig(config);
+    }
+  }
+
+  static isEnabled(config) {
+    return config.addons && config.addons.flyout.enabled;
   }
 }

@@ -5,7 +5,7 @@
       "slug": "example",
       "language": "en",
       "repository": {
-        "url": "https://github.com/readthedocs/readthedocs-client",
+        "url": "https://github.com/readthedocs/addons",
         "type": "git"
       },
       "programming_language": "words"
@@ -13,7 +13,7 @@
   },
   "versions": {
     "current": {
-      "slug": "v1",
+      "slug": "v1.0",
       "type": "external"
     }
   },
@@ -31,16 +31,28 @@
     }
   },
   "addons": {
+    "ethicalads": {
+      "ad_free": false,
+      "enabled": true,
+      "publisher": "readthedocs",
+      "campaign_types": ["community", "house", "paid"],
+      "keywords": [
+        "only words",
+        "readthedocs-project-12345",
+        "readthedocs-project-slug",
+        "test"
+      ]
+    },
     "search": {
       "enabled": true,
-      "project": "readthedocs-client",
+      "project": "addons",
       "version": "latest",
       "api_endpoint": "/_/api/v3/search/",
       "filters": [
-        ["Search only in this project", "project:readthedocs-client/latest"],
-        ["Search subprojects", "subprojects:readthedocs-client/latest"]
+        ["Search only in this project", "project:addons/latest"],
+        ["Search subprojects", "subprojects:addons/latest"]
       ],
-      "default_filter": "subprojects:readthedocs-client/latest"
+      "default_filter": "subprojects:addons/latest"
     },
     "analytics": {
       "enabled": true,
@@ -63,7 +75,13 @@
       "inject_styles": true
     },
     "flyout": {
-      "translations": [],
+      "enabled": true,
+      "translations": [
+        {
+          "slug": "es",
+          "url": "/es/"
+        }
+      ],
       "versions": [
         {
           "slug": "stable",
@@ -86,9 +104,16 @@
           "url": "/en/v2.0/"
         }
       ],
-      "downloads": [],
+      "downloads": [
+        {
+          "name": "PDF",
+          "url": "/_/downloads/en/latest/"
+        }
+      ],
       "vcs": {
         "url": "https://github.com",
+        "name": "GitHub",
+        "view_url": "https://github.com/readthedocs/readthedocs-client",
         "username": "readthedocs",
         "repository": "reathedocs-client",
         "branch": "main",
@@ -105,6 +130,17 @@
         ["Search subprojects", "subprojects:example/latest"]
       ],
       "default_filter": "subprojects:example/latest"
+    },
+    "hotkeys": {
+      "enabled": true,
+      "doc_diff": {
+        "enabled": true,
+        "trigger": "KeyD"
+      },
+      "search": {
+        "enabled": true,
+        "trigger": "Slash"
+      }
     }
   }
 }

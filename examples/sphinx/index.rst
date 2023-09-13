@@ -1,7 +1,7 @@
 Example
 =======
 
-Example page to show all ``readthedocs-client.js`` integrations.
+Example page to show all ``readthedocs-addons.js`` integrations.
 
 hoverxref
 ---------

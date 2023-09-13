@@ -2,6 +2,10 @@ import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
+import * as docdiff from "./docdiff";
+import * as flyout from "./flyout";
+import * as ethicalads from "./ethicalads";
+import * as hotkeys from "./hotkeys";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -17,10 +21,18 @@ export function setup() {
       })
       .then((config) => {
         let promises = [];
-        let addons = [analytics.AnalyticsAddon, notification.NotificationAddon];
+        let addons = [
+          flyout.FlyoutAddon,
+          notification.NotificationAddon,
+          analytics.AnalyticsAddon,
+          ethicalads.EthicalAdsAddon,
+          search.SearchAddon,
+          docdiff.DocDiffAddon,
+          hotkeys.HotKeysAddon,
+        ];
 
         if (!IS_PRODUCTION) {
-          addons.push(search.SearchAddon);
+          // Addons that are only available on development
         }
 
         for (const addon of addons) {

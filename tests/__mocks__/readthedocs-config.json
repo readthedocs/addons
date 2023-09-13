@@ -3,7 +3,7 @@
     "project": {
         "slug": "example",
         "language": "en",
-        "repository_url": "https://github.com/humitos/readthedocs-client",
+        "repository_url": "https://github.com/readthedocs/addons",
         "programming_language": "words"
     },
     "version": {

@@ -4,3 +4,24 @@ repos:
     hooks:
       - id: prettier
         args: ["--write", "src/**", "*.js", "*.json"]
+        exclude: "^dist/.*$"
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-vcs-permalinks
+      - id: check-yaml
+      - id: destroyed-symlinks
+      - id: end-of-file-fixer
+        exclude: "^dist/.*$"
+
+  - repo: .
+    rev: 42f16f36916fb79266816d7b7640e468366743b7
+    hooks:
+      - id: check-build-assets

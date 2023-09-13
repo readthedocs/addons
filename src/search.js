@@ -9,6 +9,10 @@ import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
 import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
+import {
+  EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_SEARCH_HIDE,
+} from "./events";
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -280,9 +284,11 @@ export class SearchElement extends LitElement {
 
   showModal(e) {
     this.show = true;
+  }
+
+  updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
-    const input = this.renderRoot.querySelector("input[type=search]");
-    // FIXME: for some reason it does not get focus
+    const input = this.shadowRoot.querySelector("input[type=search]");
     input.focus();
   }
 
@@ -479,50 +485,40 @@ export class SearchElement extends LitElement {
     }
   }
 
-  // We have to use "arrow function" so `this` refers to the component
-  // https://lit.dev/docs/components/events/#understanding-this-in-event-listeners
-  _handleShowModal = (e) => {
-    // Close the modal with `Esc`
-    if (e.keyCode === 27) {
-      this.closeModal();
-    }
-    // Show the modal with `/`
-    else if (e.keyCode === this.triggerKeycode && !this.show) {
-      // prevent opening "Quick Find" in Firefox
-      e.preventDefault();
-      this.showModal();
-    }
+  _handleCloseModal = (e) => {
+    e.preventDefault();
+    this.closeModal();
   };
 
-  _handleShowModalUser = (e) => {
+  _handleShowModal = (e) => {
     e.preventDefault();
     this.showModal();
   };
 
   connectedCallback() {
     super.connectedCallback();
-    // open search modal if "forward slash" button is pressed
-    document.addEventListener("keydown", this._handleShowModal);
 
-    if (this.triggerSelector) {
-      let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
-        element.addEventListener(this.triggerEvent, this._handleShowModalUser);
-      }
-    }
+    // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
+    document.addEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._handleShowModal
+    );
+    document.addEventListener(
+      EVENT_READTHEDOCS_SEARCH_HIDE,
+      this._handleCloseModal
+    );
   }
 
   disconnectedCallback() {
-    document.removeEventListener("keydown", this._handleShowModal);
-    if (this.triggerSelector) {
-      let element = document.querySelector(this.triggerSelector);
-      if (element !== undefined) {
-        element.removeEventListener(
-          this.triggerEvent,
-          this._handleShowModalUser
-        );
-      }
-    }
+    document.removeEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._handleShowModal
+    );
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_SEARCH_HIDE,
+      this._handleCloseModal
+    );
 
     super.disconnectedCallback();
   }
@@ -534,10 +530,16 @@ export class SearchAddon extends AddonBase {
 
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
     customElements.define("readthedocs-search", SearchElement);
+
+    // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
       elems = [new SearchElement()];
-      render(elems[0], document.body);
+
+      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
+      // So, we append the web-component first and then request an update of it.
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
     }
 
     for (const elem of elems) {
