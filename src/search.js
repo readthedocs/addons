@@ -96,18 +96,11 @@ export class SearchElement extends LitElement {
   }
 
   render() {
-    // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
-      return;
-    }
-
-    if (
-      this.config.addons &&
-      this.config.addons.search &&
-      this.config.addons.search.enabled
-    ) {
+    // Don't render anything if the addon is disabled or the configuration is empty
+    if (SearchAddon.isEnabled(this.config)) {
       return this.renderSearchModal();
     }
+    return nothing;
   }
 
   renderSearchModal() {
@@ -289,7 +282,9 @@ export class SearchElement extends LitElement {
   updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.shadowRoot.querySelector("input[type=search]");
-    input.focus();
+    if (input === undefined) {
+      input.focus();
+    }
   }
 
   queryInputFocus(e) {
@@ -528,9 +523,6 @@ export class SearchAddon extends AddonBase {
   constructor(config) {
     super();
 
-    // TODO: is it possible to move this `constructor` to the `AddonBase` class?
-    customElements.define("readthedocs-search", SearchElement);
-
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-search");
     if (!elems.length) {
@@ -548,6 +540,8 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.search.enabled;
+    return config.addons && config.addons.search.enabled === true;
   }
 }
+
+customElements.define("readthedocs-search", SearchElement);

@@ -198,7 +198,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (!FlyoutAddon.isEnabled(this.config)) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -230,8 +230,6 @@ export class FlyoutAddon extends AddonBase {
   constructor(config) {
     super();
 
-    customElements.define("readthedocs-flyout", FlyoutElement);
-
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-flyout");
     if (!elems.length) {
@@ -249,6 +247,8 @@ export class FlyoutAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.flyout.enabled;
+    return config.addons && config.addons.flyout.enabled === true;
   }
 }
+
+customElements.define("readthedocs-flyout", FlyoutElement);

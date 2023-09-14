@@ -29,6 +29,14 @@ export class HotKeysElement extends LitElement {
 
   loadConfig(config) {
     this.config = config;
+
+    // Don't set up hotkeys if disabled
+    // TODO this can be removed when configuration handling is more defensive
+    // against missing configuration values.
+    if (!HotKeysAddon.isEnabled(config)) {
+      return;
+    }
+
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
     this.docDiffShowed = false;
 
@@ -97,7 +105,6 @@ export class HotKeysAddon extends AddonBase {
     super();
 
     // TODO: is it possible to move this `constructor` to the `AddonBase` class?
-    customElements.define("readthedocs-hotkeys", HotKeysElement);
     let elems = document.querySelectorAll("readthedocs-hotkeys");
     if (!elems.length) {
       elems = [new HotKeysElement()];
@@ -111,6 +118,8 @@ export class HotKeysAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.hotkeys.enabled;
+    return config.addons && config.addons.hotkeys.enabled === true;
   }
 }
+
+customElements.define("readthedocs-hotkeys", HotKeysElement);

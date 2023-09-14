@@ -28,6 +28,7 @@
     "@web/test-runner": "^0.16.1",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
+    "diff-match-patch": "1.0.4",
     "express-interceptor": "^1.2.0",
     "jquery": "^3.6.4",
     "keyboard-event-to-string": "^2.1.0",

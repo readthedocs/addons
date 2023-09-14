@@ -10,7 +10,7 @@ const pluginCommonjs = fromRollup(rollupCommonjs);
 export default {
   rootDir: '.',
   files: ['./tests/**/*.test.{js,html}'],
-  nodeResolve: {exportConditions: ['development']},
+  nodeResolve: {exportConditions: ['production']},
   preserveSymlinks: true,
   mimeTypes: {
     '**/*.css': 'js',
@@ -22,7 +22,7 @@ export default {
     rollupAdapter(rollupImage()),
     rollupAdapter(rollupLitCss()),
     pluginCommonjs({
-      include: [],
+      include: 'node_modules/**',
     }),
   ],
 };

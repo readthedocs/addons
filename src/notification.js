@@ -10,6 +10,10 @@ import { html, nothing, render, LitElement } from "lit";
 import styleSheet from "./notification.css";
 import { AddonBase } from "./utils";
 
+// IS_PRODUCTION comes from Webpack and is undeclared otherwise
+const is_production =
+  typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION;
+
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
   static elementName = "readthedocs-notification";
@@ -56,7 +60,7 @@ export class NotificationElement extends LitElement {
     }
 
     if (
-      !IS_PRODUCTION &&
+      !is_production &&
       config.addons.non_latest_version_warning.enabled &&
       config.versions.current.type !== "external"
     ) {
@@ -66,21 +70,25 @@ export class NotificationElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (!NotificationAddon.isEnabled(this.config)) {
       // nothing is a special Lit response type
       return nothing;
     }
 
-    if (this.config.versions.current.type === "external") {
-      if (this.config.addons.external_version_warning.enabled) {
-        return this.renderExternalVersionWarning();
+    try {
+      if (this.config.versions.current.type === "external") {
+        if (this.config.addons.external_version_warning.enabled) {
+          return this.renderExternalVersionWarning();
+        }
+      } else if (
+        !is_production &&
+        this.config.addons.non_latest_version_warning.enabled &&
+        this.highest_version
+      ) {
+        return this.renderNonLatestVersionWarning();
       }
-    } else if (
-      !IS_PRODUCTION &&
-      this.config.addons.non_latest_version_warning.enabled &&
-      this.highest_version
-    ) {
-      return this.renderNonLatestVersionWarning();
+    } catch (exception) {
+      return nothing;
     }
     return nothing;
   }
@@ -177,8 +185,6 @@ export class NotificationElement extends LitElement {
   }
 }
 
-customElements.define("readthedocs-notification", NotificationElement);
-
 /**
  * Notification addon
  *
@@ -218,12 +224,18 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    return (
-      (config.addons &&
-        config.addons.external_version_warning.enabled &&
-        config.versions.current.type === "external") ||
-      (config.addons.non_latest_version_warning.enabled &&
-        config.versions.current.type !== "external")
-    );
+    try {
+      return (
+        (config.addons &&
+          config.addons.external_version_warning.enabled === true &&
+          config.versions.current.type === "external") ||
+        (config.addons.non_latest_version_warning.enabled === true &&
+          config.versions.current.type !== "external")
+      );
+    } catch (exception) {
+      return false;
+    }
   }
 }
+
+customElements.define("readthedocs-notification", NotificationElement);
