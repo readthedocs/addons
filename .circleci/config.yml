@@ -57,5 +57,4 @@ workflows:
     jobs:
       - checks
       - build
-  # TODO re-enable the test suite checks as CI later.
-  #    - test
+      - test
