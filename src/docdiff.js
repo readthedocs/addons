@@ -15,9 +15,9 @@ import { html, nothing, LitElement } from "lit";
  * See https://github.com/Teamwork/visual-dom-diff#options
  */
 const VISUAL_DIFF_OPTIONS = {
-  addedClass: "doc-diff-added",
-  modifiedClass: "doc-diff-modified",
-  removedClass: "doc-diff-removed",
+  addedClass: "readthedocs-doc-diff-added",
+  modifiedClass: "readthedocs-doc-diff-modified",
+  removedClass: "readthedocs-doc-diff-removed",
   skipModified: true,
 };
 
