@@ -1,4 +1,6 @@
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -59,13 +61,15 @@ export class FlyoutElement extends LitElement {
   }
 
   renderHeader() {
+    library.add(faCodeBranch);
+    const iconCodeBranch = icon(faCodeBranch, {
+      classes: ["icon"],
+    });
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        <span>
-          <i class="fa-solid fa-code-branch"></i> 
-          ${this.config.versions.current.slug}
-        </span>
+        ${iconCodeBranch.node[0]}
+        <span> ${this.config.versions.current.slug} </span>
       </header>
     `;
   }
