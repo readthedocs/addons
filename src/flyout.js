@@ -42,6 +42,22 @@ export class FlyoutElement extends LitElement {
     this.opened = !this.opened;
   }
 
+  _onOutsideClick = (e) => {
+    if (e.target !== this) {
+      this.opened = false;
+    }
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener("click", this._onOutsideClick);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("click", this._onOutsideClick);
+    super.disconnectedCallback();
+  }
+
   renderHeader() {
     return html`
       <header @click="${this._toggleOpen}">
