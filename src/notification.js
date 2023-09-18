@@ -1,7 +1,7 @@
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
-  faVial,
+  faFlask,
   faCodePullRequest,
   faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
@@ -114,18 +114,18 @@ export class NotificationElement extends LitElement {
   renderStableLatestVersionWarning() {
     library.add(faCircleXmark);
     library.add(faHourglassHalf);
-    library.add(faVial);
+    library.add(faFlask);
     const xmark = icon(faCircleXmark, {
       title: "Close notification",
     });
     if (this.reading_latest_version) {
-      const iconVial = icon(faVial, {
+      const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
       });
 
       return html`
         <div>
-          ${iconVial.node[0]}
+          ${iconFlask.node[0]}
           <div class="title">
             This is the <span>latest development version</span>
             <a href="#" class="right" @click=${this.closeNotification}>
