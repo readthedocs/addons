@@ -46,15 +46,15 @@ export class FlyoutElement extends LitElement {
     if (e.target !== this) {
       this.opened = false;
     }
-  }
+  };
 
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('click', this._onOutsideClick);
+    window.addEventListener("click", this._onOutsideClick);
   }
 
   disconnectedCallback() {
-    window.removeEventListener('click', this._onOutsideClick);
+    window.removeEventListener("click", this._onOutsideClick);
     super.disconnectedCallback();
   }
 
