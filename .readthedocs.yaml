@@ -11,7 +11,7 @@ build:
     - sphinx-build -b html docs/ $READTHEDOCS_OUTPUT/html
 
     # Bundle the current version
-    - npm install -g npm@latest
+    - npm install -g npm@next-9
     - npm install
     - npm run build
 
