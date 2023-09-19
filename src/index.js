@@ -6,7 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { domReady, isReadTheDocsEmbedPresent } from "./utils";
+import { domReady, isReadTheDocsEmbedPresent, isProduction } from "./utils";
 
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
@@ -31,7 +31,7 @@ export function setup() {
           hotkeys.HotKeysAddon,
         ];
 
-        if (!IS_PRODUCTION) {
+        if (!isProduction) {
           // Addons that are only available on development
         }
 
