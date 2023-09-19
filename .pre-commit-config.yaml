@@ -22,7 +22,7 @@ repos:
         exclude: "^dist/.*$"
 
   - repo: .
-    rev: 823fd71
+    rev: 8009448ebb4fb1e133674921404bf6c53cc3a96a
     hooks:
       - id: check-build-assets
         exclude: "^dist/.*$"
