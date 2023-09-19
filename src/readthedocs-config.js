@@ -1,11 +1,14 @@
 import { CLIENT_VERSION } from "./utils";
+import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
 
 /**
  * Get the Read the Docs API version supported by user's integrations.
  *
  */
-function _getMetadataAPIVersion() {
-  const meta = document.querySelector("meta[name=readthedocs-api-version]");
+function _getMetadataAddonsAPIVersion() {
+  const meta = document.querySelector(
+    "meta[name=readthedocs-addons-api-version]"
+  );
   if (meta !== undefined) {
     return meta.getAttribute("content");
   }
@@ -42,9 +45,9 @@ export function getReadTheDocsConfig() {
     .then((data) => {
       // We force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
       // This is to keep forward/backward compatibility without breaking integrations.
-      const metadataAPIVersion = _getMetadataAPIVersion();
-      if (metadataAPIVersion !== undefined) {
-        if (metadataAPIVersion !== data.api_version) {
+      const metadataAddonsAPIVersion = _getMetadataAddonsAPIVersion();
+      if (metadataAddonsAPIVersion !== undefined) {
+        if (metadataAddonsAPIVersion !== data.api_version) {
           // When the API scheme version returned doesn't match the one defined via `<meta>` tag by the user,
           // we perform another request to get the Read the Docs response in the structure
           // that's supported by the user and dispatch a custom event letting them know
@@ -52,8 +55,11 @@ export function getReadTheDocsConfig() {
           fetch(url, {
             method: "GET",
             headers: {
+              // TODO: make these headers to be querystring.
+              // It's better for caching (see https://github.com/readthedocs/readthedocs.org/issues/10536)
               "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
-              "X-RTD-Hosting-Integrations-API-Version": metadataAPIVersion,
+              "X-RTD-Hosting-Integrations-API-Version":
+                metadataAddonsAPIVersion,
             },
           })
             .then((response) => {
@@ -65,16 +71,19 @@ export function getReadTheDocsConfig() {
             })
             .then((data) => {
               const readthedocsDataReady = new CustomEvent(
-                "readthedocsdataready",
+                EVENT_READTHEDOCS_ADDONS_DATA_READY,
                 { detail: data }
               );
               document.dispatchEvent(readthedocsDataReady);
               return undefined;
             });
         } else {
-          const readthedocsDataReady = new CustomEvent("readthedocsdataready", {
-            detail: data,
-          });
+          const readthedocsDataReady = new CustomEvent(
+            EVENT_READTHEDOCS_ADDONS_DATA_READY,
+            {
+              detail: data,
+            }
+          );
           document.dispatchEvent(readthedocsDataReady);
         }
       }

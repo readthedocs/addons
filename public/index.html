@@ -1,21 +1,23 @@
 <html>
   <head>
-    <meta name="readthedocs-api-version" content="1">
+    <meta name="readthedocs-addons-api-version" content="1" />
     <title>Documentation Addons - Read the Docs</title>
     <script>
-        // Example of using "readthedocsdataready" with a different API version supported
-        document.addEventListener("readthedocsdataready", function(event) {
+      // Example of using "readthedocsdataready" with a different API version supported
+      document.addEventListener(
+        "readthedocs-addons-data-ready",
+        function (event) {
           console.debug(event.detail);
-        });
+        }
+      );
     </script>
   </head>
   <body>
-
     <h1>Documentation Addons</h1>
 
     <p>
-      Below are some test cases for addon display and interaction.
-      We also have specific tool test cases:
+      Below are some test cases for addon display and interaction. We also have
+      specific tool test cases:
     </p>
 
     <ul>
@@ -29,23 +31,38 @@
 
     <h2>Search</h2>
 
-    <p>Nothing to see here, just a placeholder to put the <code>readthedocs-search</code> tag.</p>
-    <p>Currently, it modifies the tag to be shown when pressing <code>\</code> (keycode 220) instead of <code>/</code> (keycode 191)</p>
+    <p>
+      Nothing to see here, just a placeholder to put the
+      <code>readthedocs-search</code> tag.
+    </p>
+    <p>
+      Currently, it modifies the tag to be shown when pressing
+      <code>\</code> (keycode 220) instead of <code>/</code> (keycode 191)
+    </p>
     <readthedocs-search
-        trigger-keycode="220"
-        trigger-selector="#search-input"
+      trigger-keycode="220"
+      trigger-selector="#search-input"
     ></readthedocs-search>
 
-    <p>Clicking in the following input should show the search modal: <input id="search-input" placeholder="Search docs" /></p>
+    <p>
+      Clicking in the following input should show the search modal:
+      <input id="search-input" placeholder="Search docs" />
+    </p>
 
     <h2>Notification</h2>
 
     <readthedocs-notification class="raised toast"></readthedocs-notification>
     <readthedocs-notification class="inverted"></readthedocs-notification>
-    <readthedocs-notification class="inverted raised"></readthedocs-notification>
-    <readthedocs-notification class="inverted" style="--readthedocs-notification-background-color: purple;"></readthedocs-notification>
+    <readthedocs-notification
+      class="inverted raised"
+    ></readthedocs-notification>
+    <readthedocs-notification
+      class="inverted"
+      style="--readthedocs-notification-background-color: purple"
+    ></readthedocs-notification>
     <readthedocs-notification class="titled raised"></readthedocs-notification>
-    <readthedocs-notification class="titled inverted raised"></readthedocs-notification>
-
+    <readthedocs-notification
+      class="titled inverted raised"
+    ></readthedocs-notification>
   </body>
 </html>
