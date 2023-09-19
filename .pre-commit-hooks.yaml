@@ -2,5 +2,5 @@
   name: ensure assets are bundled
   description: Make sure that `npm run build` was ran before commiting.
   language: script
-  types_or: [css, javascript, svg]
+  types_or: [css, javascript, svg, json]
   entry: check-build-assets.sh
