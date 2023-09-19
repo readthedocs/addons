@@ -10,6 +10,7 @@
     "lint": "prettier --check 'src/**' 'tests/**/*.js' '*.js' '*.json'",
     "format": "prettier --write 'src/**' 'tests/**/*.js' '*.js' '*.json'",
     "test": "web-test-runner",
+    "test:dev": "web-test-runner --watch",
     "test:debug": "web-test-runner --manual --open"
   },
   "author": "Read the Docs, Inc",

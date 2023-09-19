@@ -10,8 +10,8 @@ const pluginCommonjs = fromRollup(rollupCommonjs);
 export default {
   rootDir: '.',
   files: ['./tests/**/*.test.{js,html}'],
-  nodeResolve: {exportConditions: ['production']},
   preserveSymlinks: true,
+  nodeResolve: {},
   mimeTypes: {
     '**/*.css': 'js',
     '**/*.svg': 'js',
@@ -23,6 +23,7 @@ export default {
     rollupAdapter(rollupLitCss()),
     pluginCommonjs({
       include: 'node_modules/**',
+      requireReturnsDefault: "preferred",
     }),
   ],
 };
