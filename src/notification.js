@@ -1,18 +1,14 @@
-import * as semver from "semver";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
+  faFlask,
   faCodePullRequest,
-  faLayerGroup,
+  faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./notification.css";
 import { AddonBase } from "./utils";
-
-// IS_PRODUCTION comes from Webpack and is undeclared otherwise
-const is_production =
-  typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION;
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -36,8 +32,10 @@ export class NotificationElement extends LitElement {
     this.urls = {
       build: null,
       external: null,
+      stable: null,
     };
-    this.highest_version = null;
+    this.reading_latest_version = null;
+    this.stable_version_available = null;
   }
 
   loadConfig(config) {
@@ -60,11 +58,10 @@ export class NotificationElement extends LitElement {
     }
 
     if (
-      !is_production &&
       config.addons.non_latest_version_warning.enabled &&
       config.versions.current.type !== "external"
     ) {
-      this.calculateHighestVersion();
+      this.calculateStableLatestVersionWarning();
     }
   }
 
@@ -81,11 +78,10 @@ export class NotificationElement extends LitElement {
           return this.renderExternalVersionWarning();
         }
       } else if (
-        !is_production &&
         this.config.addons.non_latest_version_warning.enabled &&
-        this.highest_version
+        (this.reading_latest_version || this.stable_version_available)
       ) {
-        return this.renderNonLatestVersionWarning();
+        return this.renderStableLatestVersionWarning();
       }
     } catch (exception) {
       return nothing;
@@ -93,53 +89,90 @@ export class NotificationElement extends LitElement {
     return nothing;
   }
 
-  calculateHighestVersion() {
-    // Convert versions like `v1` into `1.0.0` to be able to compare them
+  calculateStableLatestVersionWarning() {
+    // The logic is pretty simple:
+    //  - if the user is reading the "latest" version: shows a notification to warn
+    //    the user about reading the latest development version.
+    //  - if the user is reading a non-"stable" version: shows a notification to warn
+    //    the user about reading a version that may be old.
+    //
+    // This does not cover all the cases where this notification could be useful,
+    // but users with different needs should be able to implement their own custom logic.
     const versions = this.config.addons.non_latest_version_warning.versions;
-    const coercedVersions = versions.map((v) => semver.coerce(v));
-    const coercedHighest = semver.maxSatisfying(coercedVersions, ">=0.0.0");
+    const latest_index = versions.indexOf("latest");
+    const stable_index = versions.indexOf("stable");
+    const current_version = this.config.versions.current;
+    const current_project = this.config.projects.current;
 
-    // Get back the original `v1` to generate the URLs and display the correct name
-    const index = coercedVersions.indexOf(coercedHighest);
-    const highest = versions[index];
+    if (current_version.slug === "latest") {
+      this.reading_latest_version = true;
+    } else if (stable_index && current_version.slug !== "stable") {
+      this.stable_version_available = true;
+    }
 
-    if (highest && highest !== this.config.versions.current.slug) {
-      this.highest_version = {
-        name: highest,
-        // TODO: get this URL from the API
-        url: `${window.location.protocol}//${window.location.hostname}/${this.config.projects.current.language}/${highest}/`,
-      };
+    if (stable_index) {
+      this.urls.stable = `/${current_project.language.code}/stable/`;
     }
   }
 
-  renderNonLatestVersionWarning() {
+  renderStableLatestVersionWarning() {
     library.add(faCircleXmark);
-    library.add(faLayerGroup);
+    library.add(faHourglassHalf);
+    library.add(faFlask);
     const xmark = icon(faCircleXmark, {
       title: "Close notification",
     });
-    const iconLayerGroup = icon(faLayerGroup, {
-      title: "This version is not the latest one",
-      classes: ["header", "icon"],
-    });
+    if (this.reading_latest_version) {
+      const iconFlask = icon(faFlask, {
+        classes: ["header", "icon"],
+      });
 
-    return html`
-      <div>
-        ${iconLayerGroup.node[0]}
-        <div class="title">
-          This is an <span>old version</span>
-          <a href="#" class="right" @click=${this.closeNotification}>
-            ${xmark.node[0]}
-          </a>
+      return html`
+        <div>
+          ${iconFlask.node[0]}
+          <div class="title">
+            This is the <span>latest development version</span>
+            <a href="#" class="right" @click=${this.closeNotification}>
+              ${xmark.node[0]}
+            </a>
+          </div>
+          <div class="content">
+            Some features may not be yet available in the publised stable
+            version. Read the
+            <a href="${this.urls.stable}"
+              >stable version of this documentation</a
+            >.
+          </div>
         </div>
-        <div class="content">
-          You are reading an old version of this documentation. The latest
-          stable version is
-          <a href="${this.highest_version.url}">${this.highest_version.name}</a
-          >.
+      `;
+    }
+
+    if (this.stable_version_available) {
+      const iconHourglassHalf = icon(faHourglassHalf, {
+        classes: ["header", "icon"],
+      });
+
+      return html`
+        <div>
+          ${iconHourglassHalf.node[0]}
+          <div class="title">
+            This <em>may</em> be an
+            <span>old version of this documentation</span>
+            <a href="#" class="right" @click=${this.closeNotification}>
+              ${xmark.node[0]}
+            </a>
+          </div>
+          <div class="content">
+            You may be reading and old version of this documentation. Read the
+            <a href="${this.urls.stable}"
+              >latest stable version of this documentation</a
+            >.
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
+
+    return nothing;
   }
 
   renderExternalVersionWarning() {

@@ -4,6 +4,16 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.5.0
+--------------
+
+:date: September 17, 2023
+
+* Add support for scrolling vertically the flyout when there are too many versions
+* Collapse flyout when clicking outside of it
+* Change warning notification logic to show a notification on ``latest`` and non-``stable`` versions
+
+
 Version v0.4.0
 --------------
 
