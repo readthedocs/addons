@@ -1,9 +1,5 @@
 import packagejson from "../package.json";
 
-// IS_PRODUCTION comes from Webpack and is undeclared otherwise
-export const isProduction =
-  typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION;
-
 export function isReadTheDocsEmbedPresent() {
   const urls = [
     "/_/static/javascript/readthedocs-doc-embed.js",

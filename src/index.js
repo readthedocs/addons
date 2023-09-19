@@ -6,7 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { domReady, isReadTheDocsEmbedPresent, isProduction } from "./utils";
+import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
@@ -31,7 +31,8 @@ export function setup() {
           hotkeys.HotKeysAddon,
         ];
 
-        if (!isProduction) {
+        // IS_PRODUCTION comes from Webpack and is undeclared otherwise
+        if (typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION) {
           // Addons that are only available on development
         }
 
