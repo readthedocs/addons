@@ -11,6 +11,7 @@ export function isReadTheDocsEmbedPresent() {
 }
 
 export const CLIENT_VERSION = packagejson.version;
+export const ADDONS_API_VERSION = "0";
 
 export const domReady = new Promise((resolve) => {
   if (
