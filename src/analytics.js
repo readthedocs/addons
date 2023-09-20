@@ -86,6 +86,6 @@ export class AnalyticsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.analytics.enabled;
+    return config.addons && config.addons.analytics.enabled === true;
   }
 }
