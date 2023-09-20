@@ -67,20 +67,24 @@ export class NotificationElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (!NotificationAddon.isEnabled(this.config)) {
       // nothing is a special Lit response type
       return nothing;
     }
 
-    if (this.config.versions.current.type === "external") {
-      if (this.config.addons.external_version_warning.enabled) {
-        return this.renderExternalVersionWarning();
+    try {
+      if (this.config.versions.current.type === "external") {
+        if (this.config.addons.external_version_warning.enabled) {
+          return this.renderExternalVersionWarning();
+        }
+      } else if (
+        this.config.addons.non_latest_version_warning.enabled &&
+        (this.reading_latest_version || this.stable_version_available)
+      ) {
+        return this.renderStableLatestVersionWarning();
       }
-    } else if (
-      this.config.addons.non_latest_version_warning.enabled &&
-      (this.reading_latest_version || this.stable_version_available)
-    ) {
-      return this.renderStableLatestVersionWarning();
+    } catch (exception) {
+      return nothing;
     }
     return nothing;
   }
@@ -234,10 +238,6 @@ export class NotificationAddon extends AddonBase {
   constructor(config) {
     super();
 
-    // Load this first as it is illegal to instantiate the element class without
-    // defining the custom element first.
-    customElements.define("readthedocs-notification", NotificationElement);
-
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-notification");
     if (!elems.length) {
@@ -257,12 +257,18 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    return (
-      (config.addons &&
-        config.addons.external_version_warning.enabled &&
-        config.versions.current.type === "external") ||
-      (config.addons.non_latest_version_warning.enabled &&
-        config.versions.current.type !== "external")
-    );
+    try {
+      return (
+        (config.addons &&
+          config.addons.external_version_warning.enabled === true &&
+          config.versions.current.type === "external") ||
+        (config.addons.non_latest_version_warning.enabled === true &&
+          config.versions.current.type !== "external")
+      );
+    } catch (exception) {
+      return false;
+    }
   }
 }
+
+customElements.define("readthedocs-notification", NotificationElement);
