@@ -27,7 +27,6 @@ export class NotificationElement extends LitElement {
   constructor() {
     super();
 
-    this.className = this.className || "raised floating";
     this.config = {};
     this.urls = {
       build: null,
@@ -39,6 +38,8 @@ export class NotificationElement extends LitElement {
   }
 
   loadConfig(config) {
+    this.className = this.className || "raised floating";
+
     this.config = config;
 
     if (

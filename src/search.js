@@ -59,9 +59,6 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
 
-    // TODO: expand the default supported styles
-    this.className = this.className || "raised floating";
-
     this.config = {};
     this.show = false;
     this.cssFormFocusClasses = {};
@@ -76,8 +73,12 @@ export class SearchElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.config = config;
+    // Define element attributes outside the ``contructor`` because it's not
+    // allowed to add an element to the DOM with attributes.
+    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+    this.className = this.className || "raised floating";
 
+    this.config = config;
     if (config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
