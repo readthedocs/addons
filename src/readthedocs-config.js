@@ -1,4 +1,4 @@
-import { CLIENT_VERSION } from "./utils";
+import { CLIENT_VERSION, ADDONS_API_VERSION } from "./utils";
 
 /**
  * Load Read the Docs configuration from API endpoint.
@@ -9,6 +9,8 @@ export function getReadTheDocsConfig() {
     "/_/addons/?" +
     new URLSearchParams({
       url: window.location.href,
+      "client-version": CLIENT_VERSION,
+      "api-version": ADDONS_API_VERSION,
     });
 
   // Retrieve a static JSON file when working in development mode
@@ -18,7 +20,6 @@ export function getReadTheDocsConfig() {
 
   return fetch(url, {
     method: "GET",
-    headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
   }).then((response) => {
     if (!response.ok) {
       console.debug("Error parsing configuration data");
