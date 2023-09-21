@@ -1,4 +1,5 @@
 {
+  "api_version": "0",
   "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
   "projects": {
     "current": {
@@ -8,7 +9,8 @@
         "url": "https://github.com/readthedocs/addons",
         "type": "git"
       },
-      "programming_language": "words"
+      "programming_language": "words",
+      "single_version": false
     }
   },
   "versions": {

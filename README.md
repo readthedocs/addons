@@ -70,6 +70,7 @@ Display a nice tooltip when hovering internal links of the same documentation.
 - Make sure you have the correct version of Node.js installed (>= 18). You can use [asdf](https://github.com/asdf-vm/asdf) or [nvm](https://github.com/nvm-sh/nvm) for easier management of different Node.js versions.
 - Run `npm install` to install dependencies
 - Run `npm run dev` to start the local dev server. While this can run without a local Read the Docs development instance, not everything will work.
+- Run `npm test` to run the test suite, using web-test-runner. You can run also `npm run test:dev` to leave tests running in watch mode or `npm run test:debug` to manually test the suite in a browser.
 
 ----
 

@@ -24,6 +24,8 @@ export function getReadTheDocsConfig() {
     "/_/addons/?" +
     new URLSearchParams({
       url: window.location.href,
+      "client-version": CLIENT_VERSION,
+      "api-version": ADDONS_API_VERSION,
     });
 
   // Retrieve a static JSON file when working in development mode
@@ -33,7 +35,6 @@ export function getReadTheDocsConfig() {
 
   return fetch(url, {
     method: "GET",
-    headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
   })
     .then((response) => {
       if (!response.ok) {
@@ -52,15 +53,16 @@ export function getReadTheDocsConfig() {
           // we perform another request to get the Read the Docs response in the structure
           // that's supported by the user and dispatch a custom event letting them know
           // this data is ready to be consumed under `event.detail`.
+
+          url =
+            "/_/addons/?" +
+            new URLSearchParams({
+              url: window.location.href,
+              "client-version": CLIENT_VERSION,
+              "api-version": metadataAddonsAPIVersion,
+            });
           fetch(url, {
             method: "GET",
-            headers: {
-              // TODO: make these headers to be querystring.
-              // It's better for caching (see https://github.com/readthedocs/readthedocs.org/issues/10536)
-              "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
-              "X-RTD-Hosting-Integrations-API-Version":
-                metadataAddonsAPIVersion,
-            },
           })
             .then((response) => {
               if (!response.ok) {
