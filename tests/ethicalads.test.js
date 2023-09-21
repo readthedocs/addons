@@ -18,6 +18,7 @@ describe("EthicalAds addon", () => {
         addons: {
           ethicalads: {
             enabled: true,
+            publisher: "readthedocs",
           },
         },
       })
