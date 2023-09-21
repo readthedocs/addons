@@ -1,5 +1,6 @@
 import { AddonBase } from "./utils";
 import { CLIENT_VERSION } from "./utils";
+import { default as objectPath } from "object-path";
 
 const API_ENDPOINT = "/_/api/v2/analytics/";
 
@@ -52,7 +53,26 @@ export class AnalyticsAddon extends AddonBase {
     if (navigator.doNotTrack === "1") {
       console.debug("Respecting DNT with respect to analytics...");
     } else {
-      if (this.config.readthedocs.analytics.code) {
+      const readthedocsAnalyticsCode = objectPath.get(
+        this.config,
+        "readthedocs.analytics.code",
+        undefined
+      );
+      const projectLanguage = objectPath.get(
+        this.config,
+        "projects.current.language",
+        undefined
+      );
+      const projectProgrammingLanguage = objectPath.get(
+        this.config,
+        "projects.current.programming_language",
+        undefined
+      );
+      if (
+        readthedocsAnalyticsCode &&
+        projectLanguage &&
+        projectProgrammingLanguage
+      ) {
         (function () {
           // New Google Site Tag (gtag.js) tagging/analytics framework
           // https://developers.google.com/gtagjs
@@ -72,13 +92,13 @@ export class AnalyticsAddon extends AddonBase {
         gtag("js", new Date());
 
         // Setup the Read the Docs global analytics code and send a pageview
-        gtag("config", this.config.readthedocs.analytics.code, {
+        gtag("config", readthedocsAnalyticsCode, {
           anonymize_ip: true,
           cookie_expires: 0, // Session cookie (non-persistent)
           dimension1: this.config.projects.current.slug,
           dimension2: this.config.versions.current.slug,
-          dimension3: this.config.projects.current.language,
-          dimension5: this.config.projects.current.programming_language,
+          dimension3: projectLanguage,
+          dimension5: projectProgrammingLanguage,
           groups: "rtfd",
         });
       }
@@ -86,6 +106,11 @@ export class AnalyticsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.analytics.enabled === true;
+    return (
+      objectPath.get(config, "addons.analytics.enabled", false) === true &&
+      objectPath.get(config, "projects.current.slug", undefined) !==
+        undefined &&
+      objectPath.get(config, "versions.current.slug", undefined) !== undefined
+    );
   }
 }

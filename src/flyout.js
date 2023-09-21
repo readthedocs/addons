@@ -5,6 +5,7 @@ import { classMap } from "lit/directives/class-map.js";
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
 import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
+import { default as objectPath } from "object-path";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -115,8 +116,10 @@ export class FlyoutElement extends LitElement {
 
   renderVCS() {
     if (
-      !this.config.addons.flyout.vcs ||
-      !this.config.addons.flyout.vcs.view_url
+      objectPath.get(this.config, "addons.flyout.vcs.view_url", undefined) ===
+        undefined ||
+      objectPath.get(this.config, "addons.flyout.vcs.name", undefined) ===
+        undefined
     ) {
       return nothing;
     }
@@ -150,10 +153,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (
-      !this.config.addons.flyout.downloads ||
-      !this.config.addons.flyout.downloads.length
-    ) {
+    if (!objectPath.get(this.config, "addons.flyout.downloads", []).length) {
       return nothing;
     }
 
@@ -170,19 +170,13 @@ export class FlyoutElement extends LitElement {
   }
 
   renderVersions() {
-    if (
-      !this.config.addons.flyout.versions ||
-      !this.config.addons.flyout.versions.length
-    ) {
+    if (!objectPath.get(this.config, "addons.flyout.versions", []).length) {
       return nothing;
     }
 
-    const currentVersion =
-      this.config.versions.current && this.config.versions.current.slug;
-
     const getVersionLink = (version) => {
       const link = html`<a href="${version.url}">${version.slug}</a>`;
-      return currentVersion && version.slug === currentVersion
+      return version.slug === this.config.versions.current.slug
         ? html`<strong>${link}</strong>`
         : link;
     };
@@ -198,10 +192,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (
-      !this.config.addons.flyout.translations ||
-      !this.config.addons.flyout.translations.length
-    ) {
+    if (!objectPath.get(this.config, "addons.flyout.translations", []).length) {
       return nothing;
     }
 
@@ -219,7 +210,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!FlyoutAddon.isEnabled(this.config)) {
+    if (!this.config) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -268,7 +259,15 @@ export class FlyoutAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.flyout.enabled === true;
+    return (
+      objectPath.get(config, "addons.flyout.enabled", false) === true &&
+      objectPath.get(config, "domains.dashboard", undefined) !== undefined &&
+      objectPath.get(config, "projects.current.slug", undefined) !==
+        undefined &&
+      objectPath.get(config, "projects.current.single_version", undefined) !==
+        undefined &&
+      objectPath.get(config, "versions.current.slug", undefined) !== undefined
+    );
   }
 }
 
