@@ -172,7 +172,8 @@ export class FlyoutElement extends LitElement {
   renderVersions() {
     if (
       !this.config.addons.flyout.versions ||
-      !this.config.addons.flyout.versions.length
+      !this.config.addons.flyout.versions.length ||
+      this.config.projects.current.single_version
     ) {
       return nothing;
     }
