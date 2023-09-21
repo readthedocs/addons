@@ -59,10 +59,15 @@ export class FlyoutElement extends LitElement {
   }
 
   renderHeader() {
+    let version = nothing;
+    if (!this.config.projects.current.single_version) {
+      version = html`<span>v: ${this.config.versions.current.slug}</span>`;
+    }
+
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        <span>v: ${this.config.versions.current.slug}</span>
+        ${version}
       </header>
     `;
   }

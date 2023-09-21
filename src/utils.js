@@ -1,4 +1,6 @@
-import packagejson from "../package.json";
+export const ADDONS_API_VERSION = "0";
+// This is managed by bumpver automatically
+export const CLIENT_VERSION = "0.5.0";
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [
@@ -9,9 +11,6 @@ export function isReadTheDocsEmbedPresent() {
     return document.querySelectorAll(`script[src="${url}"]`).length > 0;
   }
 }
-
-export const CLIENT_VERSION = packagejson.version;
-export const ADDONS_API_VERSION = "0";
 
 export const domReady = new Promise((resolve) => {
   if (
