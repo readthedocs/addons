@@ -38,6 +38,18 @@
   z-index: 1750;
   font-size: 0.85rem;
   width: 35rem;
+  max-width: calc(100vw - 4rem);
+}
+
+@media (max-width: 640px) {
+  :host(.toast) > div {
+    right: 0.5rem;
+  }
+
+  :host(.floating) > div {
+    width: 95%;
+    left: 2%;
+  }
 }
 
 :host(.raised) > div {
@@ -90,6 +102,7 @@
 :host > div > div.content {
   line-height: 1rem;
   font-size: 0.85em;
+  padding: 0 1.5rem;
 }
 
 :host(.toast) > div > .title {
