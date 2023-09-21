@@ -59,10 +59,15 @@ export class FlyoutElement extends LitElement {
   }
 
   renderHeader() {
+    let version = nothing;
+    if (!this.config.projects.current.single_version) {
+      version = html`<span>v: ${this.config.versions.current.slug}</span>`;
+    }
+
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        <span>v: ${this.config.versions.current.slug}</span>
+        ${version}
       </header>
     `;
   }
@@ -214,7 +219,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (!FlyoutAddon.isEnabled(this.config)) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -246,8 +251,6 @@ export class FlyoutAddon extends AddonBase {
   constructor(config) {
     super();
 
-    customElements.define("readthedocs-flyout", FlyoutElement);
-
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-flyout");
     if (!elems.length) {
@@ -265,6 +268,8 @@ export class FlyoutAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.flyout.enabled;
+    return config.addons && config.addons.flyout.enabled === true;
   }
 }
+
+customElements.define("readthedocs-flyout", FlyoutElement);

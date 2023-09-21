@@ -2,7 +2,7 @@
 
 npm run build
 
-if [[ `git status dist/ --porcelain` ]]
+if [[ `git diff dist/` ]]
 then
     echo "ERROR: assets are out of date."
     echo "Run 'git add dist/*' to stash the changes before commiting."

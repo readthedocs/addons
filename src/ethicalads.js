@@ -1,4 +1,5 @@
 import { AddonBase } from "./utils";
+import { default as objectPath } from "object-path";
 
 const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
 
@@ -26,7 +27,12 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
+
+    // Optional attributes coming from the API JSON response.
+    // We get them if exists or return default values otherwise.
     const data = this.config.addons.ethicalads;
+    const keywords = objectPath.get(data, "keywords", []);
+    const campaign_types = objectPath.get(data, "campaign_types", []);
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
@@ -46,13 +52,13 @@ export class EthicalAdsAddon extends AddonBase {
       placement.setAttribute("data-ea-publisher", data.publisher);
       placement.setAttribute("data-ea-type", AD_TYPE);
       placement.setAttribute("data-ea-style", AD_STYLE);
-      if (data.keywords) {
-        placement.setAttribute("data-ea-keywords", data.keywords.join("|"));
+      if (keywords.length) {
+        placement.setAttribute("data-ea-keywords", keywords.join("|"));
       }
-      if (data.campaign_types) {
+      if (campaign_types.length) {
         placement.setAttribute(
           "data-ea-campaign-types",
-          data.campaign_types.join("|")
+          campaign_types.join("|")
         );
       }
 
@@ -86,9 +92,11 @@ export class EthicalAdsAddon extends AddonBase {
 
   static isEnabled(config) {
     return (
-      config.addons &&
-      config.addons.ethicalads.enabled &&
-      !config.addons.ethicalads.ad_free
+      objectPath.get(config, "addons.ethicalads.enabled", false) === true &&
+      // Mandatory attributes for this addon to render properly
+      objectPath.get(config, "addons.ethicalads.ad_free", false) !== true &&
+      objectPath.get(config, "addons.ethicalads.publisher", undefined) !==
+        undefined
     );
   }
 }

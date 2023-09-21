@@ -15,3 +15,6 @@ push = true
 "bumpver.toml" = [
     'current_version = "{version}"',
 ]
+"src/utils.js" = [
+    'export const CLIENT_VERSION = "{version}";',
+]

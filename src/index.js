@@ -31,7 +31,8 @@ export function setup() {
           hotkeys.HotKeysAddon,
         ];
 
-        if (!IS_PRODUCTION) {
+        // IS_PRODUCTION comes from Webpack and is undeclared otherwise
+        if (typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION) {
           // Addons that are only available on development
         }
 
