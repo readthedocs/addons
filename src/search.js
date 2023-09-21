@@ -73,11 +73,6 @@ export class SearchElement extends LitElement {
   }
 
   loadConfig(config) {
-    // Define element attributes outside the ``contructor`` because it's not
-    // allowed to add an element to the DOM with attributes.
-    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
-    this.className = this.className || "raised floating";
-
     this.config = config;
     if (config.addons.search) {
       this.defaultFilter = {
@@ -94,6 +89,14 @@ export class SearchElement extends LitElement {
       }
       this.filters = userFilters;
     }
+  }
+
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    // See https://lit.dev/docs/components/lifecycle/#firstupdated
+    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+    this.className = this.className || "raised floating";
   }
 
   render() {

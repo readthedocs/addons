@@ -38,8 +38,6 @@ export class NotificationElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.className = this.className || "raised floating";
-
     this.config = config;
 
     if (
@@ -65,6 +63,12 @@ export class NotificationElement extends LitElement {
     ) {
       this.calculateStableLatestVersionWarning();
     }
+  }
+
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    this.className = this.className || "raised floating";
   }
 
   render() {
