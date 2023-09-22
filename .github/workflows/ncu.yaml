@@ -1,0 +1,49 @@
+# Action to run "ncu -u" weekly and create a pull request with the changes.
+name: Update packages with "npm-check-updates"
+
+on:
+  schedule:
+    # Run weekly on day 0 at 00:00 UTC
+    - cron: "0 0 * * 0"
+
+permissions:
+  contents: read
+
+jobs:
+  update-dependencies:
+    permissions:
+      contents: write # to create branch (peter-evans/create-pull-request)
+      pull-requests: write # to create a PR (peter-evans/create-pull-request)
+
+    name: Update packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18.15.0"
+
+      - name: Install "npm-check-updates"
+        run: npm install -g npm-check-updates
+
+      - name: Update packages
+        run: ncu --upgrade
+
+      - name: Install them and update "package-lock.json"
+        run: npm install
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          add-paths: |
+            package*.json
+
+          title: |
+            Packages: updated via `ncu -u`
+          body: |
+            Packages: updated via `ncu -u`
+          commit-message: |
+            Packages: updated via `ncu -u`
+          delete-branch: true
+          branch: dependencies/pip-tools
+          branch-suffix: short-commit-hash
