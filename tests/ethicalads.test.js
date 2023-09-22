@@ -8,7 +8,7 @@ describe("EthicalAds addon", () => {
         addons: {
           ethicalads: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -21,7 +21,7 @@ describe("EthicalAds addon", () => {
             publisher: "readthedocs",
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 
@@ -34,7 +34,7 @@ describe("EthicalAds addon", () => {
             ad_free: true,
           },
         },
-      })
+      }),
     ).to.be.false;
   });
 });

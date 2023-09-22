@@ -202,7 +202,7 @@ export class SearchElement extends LitElement {
             />
             <label for="filter-${index}"> ${filter.name} </label>
           </li>
-        `
+        `,
       )}
     `;
   }
@@ -223,9 +223,9 @@ export class SearchElement extends LitElement {
                   html`${this.renderBlockResult(
                     block,
                     rindex + bindex + 1,
-                    result
-                  )}`
-              )}`
+                    result,
+                  )}`,
+              )}`,
         )}
       </div>
     `;
@@ -347,7 +347,7 @@ export class SearchElement extends LitElement {
 
     // Add class for active element and scroll to it
     const newActive = this.renderRoot.querySelector(
-      `#hit-${nextId}`
+      `#hit-${nextId}`,
     ).parentNode;
     newActive.classList.add("active");
     newActive.scrollIntoView({
@@ -442,7 +442,7 @@ export class SearchElement extends LitElement {
   getCurrentFilter() {
     let filters = [];
     const filterElements = this.renderRoot.querySelectorAll(
-      ".filters input[type=checkbox]:checked"
+      ".filters input[type=checkbox]:checked",
     );
     for (const e of filterElements) {
       filters.push(e.value);
@@ -500,23 +500,23 @@ export class SearchElement extends LitElement {
     // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
 
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
 
     super.disconnectedCallback();

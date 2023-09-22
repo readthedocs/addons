@@ -8,7 +8,7 @@ describe("Flyout addon", () => {
         addons: {
           flyout: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -20,7 +20,7 @@ describe("Flyout addon", () => {
             enabled: true,
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 });

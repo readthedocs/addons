@@ -125,7 +125,7 @@ export class DocDiffElement extends LitElement {
         const parser = new DOMParser();
         const html_document = parser.parseFromString(text, "text/html");
         const old_body = html_document.documentElement.querySelector(
-          this.rootSelector
+          this.rootSelector,
         );
         const new_body = document.querySelector(this.rootSelector);
 
@@ -169,12 +169,12 @@ export class DocDiffElement extends LitElement {
 
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      this._handleShowDocDiff
+      this._handleShowDocDiff,
     );
 
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
-      this._handleHideDocDiff
+      this._handleHideDocDiff,
     );
   }
 

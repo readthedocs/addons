@@ -15,8 +15,8 @@ var injectReadTheDocsAddons = interceptor(function (req, res) {
       send(
         body.replace(
           "</head>",
-          '<script src="/readthedocs-addons.js"></script></head>'
-        )
+          '<script src="/readthedocs-addons.js"></script></head>',
+        ),
       );
     },
   };
@@ -119,7 +119,7 @@ module.exports = (env, argv) => {
       },
       setupMiddlewares: (middlewares, devServer) => {
         const index = middlewares.findIndex(
-          (middleware) => middleware.name === "webpack-dev-middleware"
+          (middleware) => middleware.name === "webpack-dev-middleware",
         );
 
         middlewares.splice(index, 0, {

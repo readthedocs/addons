@@ -58,7 +58,7 @@ export class EthicalAdsAddon extends AddonBase {
       if (campaign_types.length) {
         placement.setAttribute(
           "data-ea-campaign-types",
-          campaign_types.join("|")
+          campaign_types.join("|"),
         );
       }
 
@@ -78,7 +78,7 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("type", "text/javascript");
     library.setAttribute(
       "src",
-      "https://media.ethicalads.io/media/client/ethicalads.min.js"
+      "https://media.ethicalads.io/media/client/ethicalads.min.js",
     );
     document.head.appendChild(library);
   }

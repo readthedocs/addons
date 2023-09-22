@@ -41,7 +41,7 @@ export function setup() {
             promises.push(
               new Promise((resolve) => {
                 resolve(new addon(config));
-              })
+              }),
             );
           }
         }
