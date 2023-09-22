@@ -33,7 +33,7 @@ export const domReady = new Promise((resolve) => {
         capture: true,
         once: true,
         passive: true,
-      }
+      },
     );
   }
 });

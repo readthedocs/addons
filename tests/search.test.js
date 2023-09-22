@@ -8,7 +8,7 @@ describe("Search addon", () => {
         addons: {
           search: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -20,7 +20,7 @@ describe("Search addon", () => {
             enabled: true,
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 });
