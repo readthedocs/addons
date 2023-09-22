@@ -56,8 +56,5 @@
         ]
       }
     }
-  },
-  "dependencies": {
-    "npm-check-updates": "^16.14.4"
   }
 }
