@@ -1,2 +1,5 @@
+public/
+dist/
+package-lock.json
 *.svg
 *.orig

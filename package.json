@@ -7,8 +7,8 @@
     "build": "webpack --mode=production --progress",
     "clean": "rm -rfv dist/*; exit 0",
     "dev": "webpack-dev-server --mode=development",
-    "lint": "prettier --check 'src/**' 'tests/**/*.js' '*.js' '*.json'",
-    "format": "prettier --write 'src/**' 'tests/**/*.js' '*.js' '*.json'",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
     "test": "web-test-runner",
     "test:dev": "web-test-runner --watch",
     "test:debug": "web-test-runner --manual --open"
