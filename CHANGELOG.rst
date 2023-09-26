@@ -4,6 +4,21 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.6.0
+--------------
+
+:date: September 26, 2023
+
+* Update ``pre-commit`` configuration
+* Update all the NPM package dependencies
+* Don't show "Versions" section in flyout if the project is single version
+* Make notification style better on mobile
+* Don't show notification on single version projects
+* Don't show version name on closed flyout when project is single version
+* Use ``bumpver`` to update version on ``src/utils.js``
+* Move HTTP header on requests to API endpoint to GET attribute
+* Switch to ``web-test-runner`` to run tests
+
 Version v0.5.0
 --------------
 
