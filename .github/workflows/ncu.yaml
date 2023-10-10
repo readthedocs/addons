@@ -32,6 +32,9 @@ jobs:
       - name: Install them and update "package-lock.json"
         run: npm install
 
+      - name: Build files with newer dependencies
+        run: npm run build
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
