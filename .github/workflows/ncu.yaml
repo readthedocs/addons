@@ -48,5 +48,5 @@ jobs:
           commit-message: |
             Packages: updated via `ncu -u`
           delete-branch: true
-          branch: dependencies/pip-tools
+          branch: dependencies/ncu
           branch-suffix: short-commit-hash
