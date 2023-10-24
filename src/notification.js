@@ -9,6 +9,7 @@ import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./notification.css";
 import { AddonBase } from "./utils";
+import { default as objectPath } from "object-path";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -263,17 +264,22 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    try {
-      return (
-        (config.addons &&
-          config.addons.external_version_warning.enabled === true &&
-          config.versions.current.type === "external") ||
-        (config.addons.non_latest_version_warning.enabled === true &&
-          config.versions.current.type !== "external")
-      );
-    } catch (exception) {
-      return false;
-    }
+    return (
+      (objectPath.get(
+        config,
+        "addons.external_version_warning.enabled",
+        false,
+      ) === true &&
+        objectPath.get(config, "addons.versions.current.type", "") ===
+          "external") ||
+      (objectPath.get(
+        config,
+        "addons.non_latest_version_warning.enabled",
+        false,
+      ) === true &&
+        objectPath.get(config, "addons.versions.current.type", "") !==
+          "external")
+    );
   }
 }
 

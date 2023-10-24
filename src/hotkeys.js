@@ -1,4 +1,5 @@
 import { toString as keyboardEventToString } from "keyboard-event-to-string";
+import { default as objectPath } from "object-path";
 
 import { AddonBase } from "./utils";
 import { html, nothing, LitElement } from "lit";
@@ -118,7 +119,7 @@ export class HotKeysAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.hotkeys.enabled === true;
+    return objectPath.get(config, "addons.hotkeys.enabled", false) === true;
   }
 }
 

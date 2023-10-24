@@ -213,7 +213,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (!FlyoutAddon.isEnabled(this.config)) {
       // nothing is a special Lit response type
       return nothing;
     }

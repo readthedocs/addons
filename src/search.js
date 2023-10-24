@@ -16,6 +16,7 @@ import {
 import { html, nothing, render, LitElement } from "lit";
 import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { classMap } from "lit/directives/class-map.js";
+import { default as objectPath } from "object-path";
 
 // TODO: play more with the substring limit.
 // The idea is to try to fit most of the results in one line.
@@ -544,7 +545,7 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.search.enabled === true;
+    return objectPath.get(config, "addons.search.enabled", false) === true;
   }
 }
 
