@@ -49,17 +49,17 @@ export class AnalyticsAddon extends AddonBase {
 
   injectGlobalAnalytics() {
     // Skip analytics for users with Do Not Track enabled
-    const google_code = this.config.readthedocs.analytics.code;
-
     if (navigator.doNotTrack === "1") {
       console.debug("Respecting DNT with respect to analytics...");
     } else {
-      if (google_code) {
+      if (this.config.readthedocs.analytics.code) {
         (function () {
           // New Google Site Tag (gtag.js) tagging/analytics framework
           // https://developers.google.com/gtagjs
           let script = document.createElement("script");
-          script.src = `https://www.googletagmanager.com/gtag/js?id=${google_code}`;
+          script.src =
+            "https://www.googletagmanager.com/gtag/js?id=" +
+            this.config.readthedocs.analytics.code;
           script.type = "text/javascript";
           script.async = true;
           document.getElementsByTagName("head")[0].appendChild(script);
