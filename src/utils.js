@@ -1,6 +1,6 @@
 export const ADDONS_API_VERSION = "0";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.5.0";
+export const CLIENT_VERSION = "0.7.0";
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [
@@ -33,7 +33,7 @@ export const domReady = new Promise((resolve) => {
         capture: true,
         once: true,
         passive: true,
-      }
+      },
     );
   }
 });
@@ -46,6 +46,14 @@ export const domReady = new Promise((resolve) => {
  */
 export class AddonBase {
   static isEnabled(config) {
+    return false;
+  }
+
+  static requiresUrlParam() {
+    // Decide whether or not this addons requires sending `url=` parameter to the API endpoint.
+    // Sending this attribute will make the API response to contain extra data (e.g. resolved URLs that depend on the exact URL)
+    //
+    // Note that sending `url=` attribute reduces the possibilities to use a cached response accross all the pages for the same project/version.
     return false;
   }
 }

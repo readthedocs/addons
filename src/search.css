@@ -69,7 +69,8 @@
   border-radius: 0.7rem;
   line-height: 1.875;
   background-color: #fcfcfc;
-  box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
+  box-shadow:
+    rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
     rgba(0, 0, 0, 0.05) -5px -5px 5px 5px;
   text-align: left;
 }

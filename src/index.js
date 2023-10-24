@@ -14,22 +14,31 @@ export function setup() {
     return false;
   }
 
+  const addons = [
+    flyout.FlyoutAddon,
+    notification.NotificationAddon,
+    analytics.AnalyticsAddon,
+    ethicalads.EthicalAdsAddon,
+    search.SearchAddon,
+    docdiff.DocDiffAddon,
+    hotkeys.HotKeysAddon,
+  ];
+
   return new Promise((resolve) => {
     domReady
       .then(() => {
-        return getReadTheDocsConfig();
+        let sendUrlParam = false;
+        for (const addon of addons) {
+          if (addon.requiresUrlParam()) {
+            sendUrlParam = true;
+            break;
+          }
+        }
+
+        return getReadTheDocsConfig(sendUrlParam);
       })
       .then((config) => {
         let promises = [];
-        let addons = [
-          flyout.FlyoutAddon,
-          notification.NotificationAddon,
-          analytics.AnalyticsAddon,
-          ethicalads.EthicalAdsAddon,
-          search.SearchAddon,
-          docdiff.DocDiffAddon,
-          hotkeys.HotKeysAddon,
-        ];
 
         // IS_PRODUCTION comes from Webpack and is undeclared otherwise
         if (typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION) {
@@ -41,7 +50,7 @@ export function setup() {
             promises.push(
               new Promise((resolve) => {
                 resolve(new addon(config));
-              })
+              }),
             );
           }
         }

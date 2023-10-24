@@ -8,7 +8,7 @@ describe("Doc diff addon", () => {
         addons: {
           doc_diff: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -20,7 +20,7 @@ describe("Doc diff addon", () => {
             enabled: true,
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 });

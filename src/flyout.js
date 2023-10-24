@@ -163,14 +163,17 @@ export class FlyoutElement extends LitElement {
         ${this.config.addons.flyout.downloads.map(
           (download) => html`
             <dd><a href="${download.url}">${download.name}</a></dd>
-          `
+          `,
         )}
       </dl>
     `;
   }
 
   renderVersions() {
-    if (!objectPath.get(this.config, "addons.flyout.versions", []).length) {
+    if (
+      !objectPath.get(this.config, "addons.flyout.versions", []).length ||
+      this.config.projects.current.single_version
+    ) {
       return nothing;
     }
 
@@ -185,7 +188,7 @@ export class FlyoutElement extends LitElement {
       <dl class="versions">
         <dt>Versions</dt>
         ${this.config.addons.flyout.versions.map(
-          (version) => html`<dd>${getVersionLink(version)}</dd> `
+          (version) => html`<dd>${getVersionLink(version)}</dd> `,
         )}
       </dl>
     `;
@@ -202,7 +205,7 @@ export class FlyoutElement extends LitElement {
         ${this.config.addons.flyout.translations.map(
           (translation) => html`
             <dd><a href="${translation.url}">${translation.slug}</a></dd>
-          `
+          `,
         )}
       </dl>
     `;

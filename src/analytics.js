@@ -56,17 +56,17 @@ export class AnalyticsAddon extends AddonBase {
       const readthedocsAnalyticsCode = objectPath.get(
         this.config,
         "readthedocs.analytics.code",
-        undefined
+        undefined,
       );
       const projectLanguage = objectPath.get(
         this.config,
         "projects.current.language",
-        undefined
+        undefined,
       );
       const projectProgrammingLanguage = objectPath.get(
         this.config,
         "projects.current.programming_language",
-        undefined
+        undefined,
       );
       if (
         readthedocsAnalyticsCode &&

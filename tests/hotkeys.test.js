@@ -8,7 +8,7 @@ describe("Hotkeys addon", () => {
         addons: {
           hotkeys: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -20,7 +20,7 @@ describe("Hotkeys addon", () => {
             enabled: true,
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 });
@@ -28,14 +28,14 @@ describe("Hotkeys addon", () => {
 describe("Hotkeys element", () => {
   it("is defined", async () => {
     const elem = await fixture(
-      html`<readthedocs-hotkeys></readthedocs-hotkeys>`
+      html`<readthedocs-hotkeys></readthedocs-hotkeys>`,
     );
     assert.instanceOf(elem, HotKeysElement);
   });
 
   it("doesn't render if the config is missing", async () => {
     const elem = await fixture(
-      html`<readthedocs-hotkeys></readthedocs-hotkeys>`
+      html`<readthedocs-hotkeys></readthedocs-hotkeys>`,
     );
     assert.shadowDom.equal(elem, ``);
   });

@@ -59,9 +59,6 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
 
-    // TODO: expand the default supported styles
-    this.className = this.className || "raised floating";
-
     this.config = {};
     this.show = false;
     this.cssFormFocusClasses = {};
@@ -77,7 +74,6 @@ export class SearchElement extends LitElement {
 
   loadConfig(config) {
     this.config = config;
-
     if (config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
@@ -93,6 +89,14 @@ export class SearchElement extends LitElement {
       }
       this.filters = userFilters;
     }
+  }
+
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    // See https://lit.dev/docs/components/lifecycle/#firstupdated
+    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+    this.className = this.className || "raised floating";
   }
 
   render() {
@@ -198,7 +202,7 @@ export class SearchElement extends LitElement {
             />
             <label for="filter-${index}"> ${filter.name} </label>
           </li>
-        `
+        `,
       )}
     `;
   }
@@ -219,9 +223,9 @@ export class SearchElement extends LitElement {
                   html`${this.renderBlockResult(
                     block,
                     rindex + bindex + 1,
-                    result
-                  )}`
-              )}`
+                    result,
+                  )}`,
+              )}`,
         )}
       </div>
     `;
@@ -343,7 +347,7 @@ export class SearchElement extends LitElement {
 
     // Add class for active element and scroll to it
     const newActive = this.renderRoot.querySelector(
-      `#hit-${nextId}`
+      `#hit-${nextId}`,
     ).parentNode;
     newActive.classList.add("active");
     newActive.scrollIntoView({
@@ -438,7 +442,7 @@ export class SearchElement extends LitElement {
   getCurrentFilter() {
     let filters = [];
     const filterElements = this.renderRoot.querySelectorAll(
-      ".filters input[type=checkbox]:checked"
+      ".filters input[type=checkbox]:checked",
     );
     for (const e of filterElements) {
       filters.push(e.value);
@@ -496,23 +500,23 @@ export class SearchElement extends LitElement {
     // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
 
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
 
     super.disconnectedCallback();

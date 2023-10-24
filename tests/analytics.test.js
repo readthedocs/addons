@@ -8,7 +8,7 @@ describe("Analytics addon", () => {
         addons: {
           analytics: {},
         },
-      })
+      }),
     ).to.be.false;
   });
 
@@ -20,7 +20,7 @@ describe("Analytics addon", () => {
             enabled: true,
           },
         },
-      })
+      }),
     ).to.be.true;
   });
 });
