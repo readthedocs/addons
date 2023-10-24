@@ -205,4 +205,8 @@ export class DocDiffAddon extends AddonBase {
   static isEnabled(config) {
     return config.addons && config.addons.doc_diff.enabled === true;
   }
+
+  static requiresUrlParam() {
+    return window.location.host.endsWith(".readthedocs.build");
+  }
 }
