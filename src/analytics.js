@@ -53,7 +53,7 @@ export class AnalyticsAddon extends AddonBase {
       console.debug("Respecting DNT with respect to analytics...");
     } else {
       if (this.config.readthedocs.analytics.code) {
-        (function () {
+        (() => {
           // New Google Site Tag (gtag.js) tagging/analytics framework
           // https://developers.google.com/gtagjs
           let script = document.createElement("script");
