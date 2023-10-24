@@ -15,6 +15,16 @@ describe("Analytics addon", () => {
   it("is enabled with configuration", () => {
     expect(
       AnalyticsAddon.isEnabled({
+        projects: {
+          current: {
+            slug: "project-slug",
+          },
+        },
+        versions: {
+          current: {
+            slug: "version-slug",
+          },
+        },
         addons: {
           analytics: {
             enabled: true,

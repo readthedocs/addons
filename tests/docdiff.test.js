@@ -18,6 +18,8 @@ describe("Doc diff addon", () => {
         addons: {
           doc_diff: {
             enabled: true,
+            base_url:
+              "https://project-slug.readthedocs.io/en/latest/index.html",
           },
         },
       }),

@@ -15,6 +15,20 @@ describe("Flyout addon", () => {
   it("is enabled with configuration", () => {
     expect(
       FlyoutAddon.isEnabled({
+        projects: {
+          current: {
+            slug: "project-slug",
+            single_version: false,
+          },
+        },
+        versions: {
+          current: {
+            slug: "version-slug",
+          },
+        },
+        domains: {
+          dashboard: "readthedocs.org",
+        },
         addons: {
           flyout: {
             enabled: true,
