@@ -77,8 +77,8 @@ export class AnalyticsAddon extends AddonBase {
           cookie_expires: 0, // Session cookie (non-persistent)
           dimension1: this.config.projects.current.slug,
           dimension2: this.config.versions.current.slug,
-          dimension3: this.config.projects.current.language,
-          dimension5: this.config.projects.current.programming_language,
+          dimension3: this.config.projects.current.language.code,
+          dimension5: this.config.projects.current.programming_language.code,
           groups: "rtfd",
         });
       }
