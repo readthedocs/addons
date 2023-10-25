@@ -4,6 +4,15 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.7.1
+--------------
+
+:date: October 25, 2023
+
+* Show non-stable notification only if ``stable`` is enabled
+* Fix issue shown on JS console for global Read the Docs analytics
+* Handle ``/`` keyboard shortcut properly when inside on an input
+
 Version v0.7.0
 --------------
 
