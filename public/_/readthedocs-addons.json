@@ -29,7 +29,7 @@
   },
   "readthedocs": {
     "analytics": {
-      "code": null
+      "code": "UA-12345"
     }
   },
   "addons": {
