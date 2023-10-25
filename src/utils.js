@@ -1,6 +1,6 @@
 export const ADDONS_API_VERSION = "0";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.6.0";
+export const CLIENT_VERSION = "0.7.0";
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [

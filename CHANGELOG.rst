@@ -4,6 +4,15 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.7.0
+--------------
+
+:date: October 24, 2023
+
+* Use ``objectPath`` on DocDiff addon to protect ourselves on ``isEnabled``
+* Grab ``project-slug=`` and ``version-slug=`` from ``meta`` HTML tags and send them to the API.
+* Update all the NPM package dependencies
+
 Version v0.6.0
 --------------
 
