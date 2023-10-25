@@ -1,6 +1,6 @@
 {
   "name": "@readthedocs/addons",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Read the Docs Addons to embed into documentation pages",
   "main": "dist/readthedocs-addons.js",
   "scripts": {
@@ -22,10 +22,10 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@open-wc/testing": "^3.2.0",
-    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.0.1",
-    "@web/dev-server-import-maps": "^0.1.1",
+    "@web/dev-server-import-maps": "^0.1.3",
     "@web/test-runner": "^0.17.2",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.8.1",

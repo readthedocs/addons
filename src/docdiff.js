@@ -8,6 +8,7 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
 import { html, nothing, LitElement } from "lit";
+import { default as objectPath } from "object-path";
 
 /**
  * visual-dom-diff options
@@ -78,10 +79,8 @@ export class DocDiffElement extends LitElement {
   loadConfig(config) {
     this.config = config;
 
-    if (config.addons.doc_diff) {
-      if (!this.baseUrl) {
-        this.baseUrl = config.addons.doc_diff.base_url;
-      }
+    if (!this.baseUrl) {
+      this.baseUrl = objectPath.get(config, "addons.doc_diff.base_url", null);
     }
 
     // NOTE: maybe there is a better way to inject this styles?
@@ -203,6 +202,10 @@ export class DocDiffAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.doc_diff.enabled === true;
+    return objectPath.get(config, "addons.doc_diff.enabled", false) === true;
+  }
+
+  static requiresUrlParam() {
+    return window.location.host.endsWith(".readthedocs.build");
   }
 }
