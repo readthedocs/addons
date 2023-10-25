@@ -286,7 +286,7 @@ export class SearchElement extends LitElement {
   updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.shadowRoot.querySelector("input[type=search]");
-    if (input === undefined) {
+    if (input !== undefined && input !== null) {
       input.focus();
     }
   }
