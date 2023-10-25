@@ -33,8 +33,9 @@ export class NotificationElement extends LitElement {
       external: null,
       stable: null,
     };
-    this.reading_latest_version = null;
-    this.stable_version_available = null;
+    this.reading_latest_version = false;
+    this.reading_stable_version = false;
+    this.stable_version_available = false;
   }
 
   loadConfig(config) {
@@ -109,13 +110,18 @@ export class NotificationElement extends LitElement {
     const current_version = this.config.versions.current;
     const current_project = this.config.projects.current;
 
+    // TODO: support aliases here
+    // https://github.com/readthedocs/addons/issues/132
     if (current_version.slug === "latest") {
       this.reading_latest_version = true;
-    } else if (stable_index !== -1 && current_version.slug !== "stable") {
-      this.stable_version_available = true;
+    }
+
+    if (current_version.slug === "stable") {
+      this.reading_stable_version = true;
     }
 
     if (stable_index !== -1) {
+      this.stable_version_available = true;
       // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
       // to support all the posibilities. Those cases won't work for now until we find a proper solution.
       this.urls.stable = `/${current_project.language.code}/stable/`;
@@ -129,7 +135,7 @@ export class NotificationElement extends LitElement {
     const xmark = icon(faCircleXmark, {
       title: "Close notification",
     });
-    if (this.reading_latest_version) {
+    if (this.reading_latest_version && this.stable_version_available) {
       const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
       });
@@ -154,7 +160,7 @@ export class NotificationElement extends LitElement {
       `;
     }
 
-    if (this.stable_version_available) {
+    if (!this.reading_stable_version && this.stable_version_available) {
       const iconHourglassHalf = icon(faHourglassHalf, {
         classes: ["header", "icon"],
       });
