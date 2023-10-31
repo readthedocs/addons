@@ -33,9 +33,9 @@ export class NotificationElement extends LitElement {
       external: null,
       stable: null,
     };
-    this.reading_latest_version = false;
-    this.reading_stable_version = false;
-    this.stable_version_available = false;
+    this.readingLatestVersion = false;
+    this.readingStableVersion = false;
+    this.stableVersionAvailable = false;
   }
 
   loadConfig(config) {
@@ -86,7 +86,7 @@ export class NotificationElement extends LitElement {
         }
       } else if (
         this.config.addons.non_latest_version_warning.enabled &&
-        (this.reading_latest_version || this.stable_version_available)
+        (this.readingLatestVersion || this.stableVersionAvailable)
       ) {
         return this.renderStableLatestVersionWarning();
       }
@@ -113,15 +113,15 @@ export class NotificationElement extends LitElement {
     // TODO: support aliases here
     // https://github.com/readthedocs/addons/issues/132
     if (current_version.slug === "latest") {
-      this.reading_latest_version = true;
+      this.readingLatestVersion = true;
     }
 
     if (current_version.slug === "stable") {
-      this.reading_stable_version = true;
+      this.readingStableVersion = true;
     }
 
     if (stable_index !== -1) {
-      this.stable_version_available = true;
+      this.stableVersionAvailable = true;
       // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
       // to support all the posibilities. Those cases won't work for now until we find a proper solution.
       this.urls.stable = `/${current_project.language.code}/stable/`;
@@ -135,7 +135,7 @@ export class NotificationElement extends LitElement {
     const xmark = icon(faCircleXmark, {
       title: "Close notification",
     });
-    if (this.reading_latest_version && this.stable_version_available) {
+    if (this.readingLatestVersion && this.stableVersionAvailable) {
       const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
       });
@@ -160,7 +160,7 @@ export class NotificationElement extends LitElement {
       `;
     }
 
-    if (!this.reading_stable_version && this.stable_version_available) {
+    if (!this.readingStableVersion && this.stableVersionAvailable) {
       const iconHourglassHalf = icon(faHourglassHalf, {
         classes: ["header", "icon"],
       });
