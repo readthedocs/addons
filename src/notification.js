@@ -144,7 +144,7 @@ export class NotificationElement extends LitElement {
             </a>
           </div>
           <div class="content">
-            Some features may not be yet available in the published stable
+            Some features may not yet be available in the published stable
             version. Read the
             <a href="${this.urls.stable}"
               >stable version of this documentation</a
