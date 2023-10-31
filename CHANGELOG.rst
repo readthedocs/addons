@@ -4,6 +4,15 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.7.2
+--------------
+
+:date: October 31, 2023
+
+* Show notification only if ``stable`` version is available (bugfix in logic)
+* Typos on notification
+* NodeJS packages updated
+
 Version v0.7.1
 --------------
 
