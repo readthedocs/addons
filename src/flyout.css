@@ -42,7 +42,7 @@
   color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   z-index: 3000;
-  padding: 10px;
+  padding: 0 10px;
   overflow-y: auto;
 }
 
@@ -52,6 +52,10 @@ header {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  position: sticky;
+  top: 0;
+  padding: 10px 0;
 }
 
 header > span {
@@ -67,6 +71,7 @@ header > img.logo {
 
 main {
   padding: 5px;
+  padding-bottom: 15px;
   margin-top: 5px;
 }
 
