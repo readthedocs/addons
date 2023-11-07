@@ -64,7 +64,10 @@ header {
 
 header > span {
   color: var(--readthedocs-flyout-current-version-color, #27ae60);
-  font-size: var(--readthedocs-flyout-header-font-size, calc(var(--readthedocs-flyout-font-size) * 1.125));
+  font-size: var(
+    --readthedocs-flyout-header-font-size,
+    calc(var(--readthedocs-flyout-font-size) * 1.125)
+  );
 }
 
 header > img.logo {
@@ -89,14 +92,20 @@ dl {
 }
 
 dl > dt {
-  font-size: var(--readthedocs-flyout-dt-font-size, calc(var(--readthedocs-flyout-font-size) * 1.125));
+  font-size: var(
+    --readthedocs-flyout-dt-font-size,
+    calc(var(--readthedocs-flyout-font-size) * 1.125)
+  );
   color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
 }
 
 dl > dd {
   display: inline-block;
   margin: 0;
-  font-size: var(--readthedocs-flyout-dd-font-size, calc(var(--readthedocs-flyout-font-size) * 1.125));
+  font-size: var(
+    --readthedocs-flyout-dd-font-size,
+    calc(var(--readthedocs-flyout-font-size) * 1.125)
+  );
 }
 
 dd a {
