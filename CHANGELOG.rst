@@ -4,6 +4,14 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.8.0
+--------------
+
+:date: November 7, 2023
+
+* Make flyout header sticky when there are many versions
+* NodeJS packages updated
+
 Version v0.7.2
 --------------
 
