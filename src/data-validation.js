@@ -4,12 +4,15 @@ import Ajv from "ajv";
 const addons_analytics = {
   $id: "https://readthedocs.org/schemas/addons.analytics.json",
   type: "object",
+  required: ["addons", "projects", "versions"],
   properties: {
     addons: {
       type: "object",
+      required: ["analytics"],
       properties: {
         analytics: {
           type: "object",
+          required: ["code", "enabled"],
           properties: {
             code: { type: ["string", "null"] },
             enabled: { type: "boolean" },
@@ -19,20 +22,24 @@ const addons_analytics = {
     },
     projects: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
+          required: ["slug", "language", "programming_language"],
           properties: {
             slug: { type: "string" },
             // Optional
             language: {
               type: "object",
+              required: ["code"],
               properties: {
                 code: { type: "string" },
               },
             },
             programming_language: {
               type: "object",
+              required: ["code"],
               properties: {
                 code: { type: "string" },
               },
@@ -43,9 +50,11 @@ const addons_analytics = {
     },
     versions: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
+          required: ["slug"],
           properties: {
             slug: { type: "string" },
           },
