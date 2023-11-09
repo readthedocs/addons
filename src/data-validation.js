@@ -119,6 +119,75 @@ const addons_ethicalads = {
   },
 };
 
+// Validator for Notifications Addon
+const addons_notifications = {
+  $id: "https://readthedocs.org/schemas/addons.notifications.json",
+  type: "object",
+  properties: {
+    addons: {
+      type: "object",
+      properties: {
+        external_version_warning: {
+          type: "object",
+          properties: {
+            enabled: { type: "boolean" },
+          },
+        },
+        non_latest_version_warning: {
+          type: "object",
+          properties: {
+            enabled: { type: "boolean" },
+            versions: { type: "array" },
+          },
+        },
+      },
+    },
+    builds: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+          },
+        },
+      },
+    },
+    domains: {
+      type: "object",
+      properties: {
+        dashboard: { type: "string" },
+      },
+    },
+    projects: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+            single_version: { type: "boolean" },
+            // TODO: use ajv-formats URI type
+            repository_url: { type: "string" },
+          },
+        },
+      },
+    },
+    versions: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+            type: { enum: ["internal", "external"] },
+          },
+        },
+      },
+    },
+  },
+};
+
 const builds = {
   $id: "https://readthedocs.org/schemas/builds.json",
   type: "object",
@@ -152,15 +221,16 @@ const versions = {
 export const ajv = new Ajv({
   allErrors: true,
   schemas: [
-    schema,
-    addons,
+    // schema,
+    // addons,
     addons_analytics,
     addons_ethicalads,
-    builds,
-    domains,
-    projects,
-    readthedocs,
-    versions,
+    addons_notifications,
+    // builds,
+    // domains,
+    // projects,
+    // readthedocs,
+    // versions,
   ],
 });
 
