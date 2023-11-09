@@ -82,7 +82,7 @@ export class NotificationElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (this.config === null){
+    if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }

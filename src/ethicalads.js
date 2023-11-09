@@ -92,7 +92,13 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    const validate = ajv.getSchema("https://readthedocs.org/schemas/addons.ethicalads.json");
-    return validate(config) && config.addons.ethicalads.enabled === true && config.addons.ethicalads.ad_free === false;
+    const validate = ajv.getSchema(
+      "https://readthedocs.org/schemas/addons.ethicalads.json",
+    );
+    return (
+      validate(config) &&
+      config.addons.ethicalads.enabled === true &&
+      config.addons.ethicalads.ad_free === false
+    );
   }
 }
