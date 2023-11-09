@@ -68,12 +68,21 @@ const addons_analytics = {
 const addons_ethicalads = {
   $id: "https://readthedocs.org/schemas/addons.ethicalads.json",
   type: "object",
+  required: ["addons"],
   properties: {
     addons: {
       type: "object",
+      required: ["ethicalads"],
       properties: {
         ethicalads: {
           type: "object",
+          required: [
+            "ad_free",
+            "campaign_types",
+            "enabled",
+            "keywords",
+            "publisher",
+          ],
           properties: {
             ad_free: { type: "boolean" },
             campaign_types: { type: "array" },
