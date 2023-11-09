@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { CLIENT_VERSION } from "./utils";
 
@@ -86,6 +87,9 @@ export class AnalyticsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.analytics.enabled === true;
+    const validate = ajv.getSchema(
+      "https://readthedocs.org/schemas/addons.analytics.json",
+    );
+    return validate(config) && config.addons.analytics.enabled === true;
   }
 }

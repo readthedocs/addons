@@ -6,7 +6,6 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { ajv } from "./data-validation";
 import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 
 export function setup() {
@@ -39,13 +38,6 @@ export function setup() {
         return getReadTheDocsConfig(sendUrlParam);
       })
       .then((config) => {
-        const validate = ajv.getSchema(
-          "https://readthedocs.org/schemas/response.json",
-        );
-        if (!validate(config)) {
-          throw new Error("JSON response does not validate.");
-        }
-
         let promises = [];
 
         // IS_PRODUCTION comes from Webpack and is undeclared otherwise

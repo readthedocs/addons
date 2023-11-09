@@ -41,15 +41,59 @@ const addons = {
   additionalProperties: true,
 };
 
+// Validator for Analytics Addon
 const addons_analytics = {
   $id: "https://readthedocs.org/schemas/addons.analytics.json",
   type: "object",
   properties: {
-    code: { type: "string" },
-    enabled: { type: "boolean" },
+    addons: {
+      type: "object",
+      properties: {
+        analytics: {
+          type: "object",
+          properties: {
+            code: { type: ["string", "null"] },
+            enabled: { type: "boolean" },
+          },
+        },
+      },
+    },
+    projects: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+            // Optional
+            language: {
+              type: "object",
+              properties: {
+                code: { type: "string" },
+              },
+            },
+            programming_language: {
+              type: "object",
+              properties: {
+                code: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+    versions: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+          },
+        },
+      },
+    },
   },
-  required: ["enabled"],
-  additionalProperties: false,
 };
 
 const addons_ethicalads = {
