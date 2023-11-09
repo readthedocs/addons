@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 
@@ -91,12 +92,7 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return (
-      objectPath.get(config, "addons.ethicalads.enabled", false) === true &&
-      // Mandatory attributes for this addon to render properly
-      objectPath.get(config, "addons.ethicalads.ad_free", false) !== true &&
-      objectPath.get(config, "addons.ethicalads.publisher", undefined) !==
-        undefined
-    );
+    const validate = ajv.getSchema("https://readthedocs.org/schemas/addons.ethicalads.json");
+    return validate(config) && config.addons.ethicalads.enabled === true && config.addons.ethicalads.ad_free === false;
   }
 }

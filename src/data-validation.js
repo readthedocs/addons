@@ -96,18 +96,27 @@ const addons_analytics = {
   },
 };
 
+// Validator for EthicalAds Addon
 const addons_ethicalads = {
   $id: "https://readthedocs.org/schemas/addons.ethicalads.json",
   type: "object",
   properties: {
-    ad_free: { type: "boolean" },
-    campaign_types: { type: "array" },
-    enabled: { type: "boolean" },
-    keywords: { type: "array" },
-    publisher: { type: "string" },
+    addons: {
+      type: "object",
+      properties: {
+        ethicalads: {
+          type: "object",
+          properties: {
+            ad_free: { type: "boolean" },
+            campaign_types: { type: "array" },
+            enabled: { type: "boolean" },
+            keywords: { type: "array" },
+            publisher: { type: "string" },
+          },
+        },
+      },
+    },
   },
-  required: ["ad_free", "enabled", "publisher"],
-  additionalProperties: false,
 };
 
 const builds = {
