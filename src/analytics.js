@@ -88,7 +88,7 @@ export class AnalyticsAddon extends AddonBase {
 
   static isEnabled(config) {
     const validate = ajv.getSchema(
-      "https://readthedocs.org/schemas/addons.analytics.json",
+      "http://v1.schemas.readthedocs.org/addons.analytics.json",
     );
     return validate(config) && config.addons.analytics.enabled === true;
   }

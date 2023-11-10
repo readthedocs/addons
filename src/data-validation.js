@@ -2,7 +2,7 @@ import Ajv from "ajv";
 
 // Validator for Analytics Addon
 const addons_analytics = {
-  $id: "https://readthedocs.org/schemas/addons.analytics.json",
+  $id: "http://v1.schemas.readthedocs.org/addons.analytics.json",
   type: "object",
   required: ["addons", "projects", "versions"],
   properties: {
@@ -66,7 +66,7 @@ const addons_analytics = {
 
 // Validator for EthicalAds Addon
 const addons_ethicalads = {
-  $id: "https://readthedocs.org/schemas/addons.ethicalads.json",
+  $id: "http://v1.schemas.readthedocs.org/addons.ethicalads.json",
   type: "object",
   required: ["addons"],
   properties: {
@@ -98,7 +98,7 @@ const addons_ethicalads = {
 
 // Validator for Notifications Addon
 const addons_notifications = {
-  $id: "https://readthedocs.org/schemas/addons.notifications.json",
+  $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
   type: "object",
   properties: {
     addons: {

@@ -93,7 +93,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   static isEnabled(config) {
     const validate = ajv.getSchema(
-      "https://readthedocs.org/schemas/addons.ethicalads.json",
+      "http://v1.schemas.readthedocs.org/addons.ethicalads.json",
     );
     return (
       validate(config) &&

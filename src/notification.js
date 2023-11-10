@@ -275,7 +275,7 @@ export class NotificationAddon extends AddonBase {
    */
   static isEnabled(config) {
     const validate = ajv.getSchema(
-      "https://readthedocs.org/schemas/addons.notifications.json",
+      "http://v1.schemas.readthedocs.org/addons.notifications.json",
     );
     return (
       (validate(config) &&
