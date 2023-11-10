@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
@@ -69,6 +70,7 @@ export class DocDiffElement extends LitElement {
   constructor() {
     super();
 
+    this.config = null;
     this.baseUrl = null;
     this.rootSelector = "[role=main]";
     this.injectStyles = true;
@@ -77,11 +79,10 @@ export class DocDiffElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.config = config;
-
-    if (!this.baseUrl) {
-      this.baseUrl = objectPath.get(config, "addons.doc_diff.base_url", null);
+    if (!DocDiffAddon.isEnabled(config)) {
+      return;
     }
+    this.config = config;
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
@@ -143,6 +144,10 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
+    if (this.config === null) {
+      return null;
+    }
+
     this.enabled = true;
     this.originalBody = document.querySelector(this.rootSelector);
     return this.compare();
@@ -202,7 +207,10 @@ export class DocDiffAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return objectPath.get(config, "addons.doc_diff.enabled", false) === true;
+    const validate = ajv.getSchema(
+      "http://v1.schemas.readthedocs.org/addons.docdiff.json",
+    );
+    return validate(config) && config.addons.doc_diff.enabled === true;
   }
 
   static requiresUrlParam() {

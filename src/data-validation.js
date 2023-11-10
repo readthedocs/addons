@@ -64,6 +64,29 @@ const addons_analytics = {
   },
 };
 
+// Validator for DocDiff Addon
+const addons_docdiff = {
+  $id: "http://v1.schemas.readthedocs.org/addons.docdiff.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["doc_diff"],
+      properties: {
+        doc_diff: {
+          type: "object",
+          required: ["base_url", "enabled"],
+          properties: {
+            base_url: { type: "string" },
+            enabled: { type: "boolean" },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for EthicalAds Addon
 const addons_ethicalads = {
   $id: "http://v1.schemas.readthedocs.org/addons.ethicalads.json",
@@ -167,7 +190,12 @@ const addons_notifications = {
 
 export const ajv = new Ajv({
   allErrors: true,
-  schemas: [addons_analytics, addons_ethicalads, addons_notifications],
+  schemas: [
+    addons_analytics,
+    addons_docdiff,
+    addons_ethicalads,
+    addons_notifications,
+  ],
 });
 
 // NOTE: export the ajv object for debugging purposes only.
