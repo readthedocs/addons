@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { toString as keyboardEventToString } from "keyboard-event-to-string";
 
 import { AddonBase } from "./utils";
@@ -24,18 +25,19 @@ export class HotKeysElement extends LitElement {
   constructor() {
     super();
 
+    this.config = null;
     this.docDiffShow = false;
   }
 
   loadConfig(config) {
-    this.config = config;
-
-    // Don't set up hotkeys if disabled
-    // TODO this can be removed when configuration handling is more defensive
-    // against missing configuration values.
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
     if (!HotKeysAddon.isEnabled(config)) {
       return;
     }
+
+    this.config = config;
 
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
     this.docDiffShowed = false;
@@ -117,7 +119,10 @@ export class HotKeysAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.hotkeys.enabled === true;
+    const validate = ajv.getSchema(
+      "http://v1.schemas.readthedocs.org/addons.hotkeys.json",
+    );
+    return validate(config) && config.addons.hotkeys.enabled === true;
   }
 }
 

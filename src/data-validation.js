@@ -186,6 +186,44 @@ const addons_flyout = {
   },
 };
 
+// Validator for Hotkeys Addon
+const addons_hotkeys = {
+  $id: "http://v1.schemas.readthedocs.org/addons.hotkeys.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["doc_diff", "search"],
+      properties: {
+        hotkeys: {
+          type: "object",
+          required: ["enabled", "doc_diff", "search"],
+          properties: {
+            enabled: { type: "boolean" },
+            doc_diff: {
+              type: "object",
+              required: ["enabled", "trigger"],
+              properties: {
+                enabled: { type: "boolean" },
+                trigger: { type: "string" },
+              },
+            },
+            search: {
+              type: "object",
+              required: ["enabled", "trigger"],
+              properties: {
+                enabled: { type: "boolean" },
+                trigger: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for Notifications Addon
 const addons_notifications = {
   $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
@@ -262,6 +300,7 @@ export const ajv = new Ajv({
     addons_docdiff,
     addons_ethicalads,
     addons_flyout,
+    addons_hotkeys,
     addons_notifications,
   ],
 });
