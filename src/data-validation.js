@@ -119,6 +119,73 @@ const addons_ethicalads = {
   },
 };
 
+// Validator for Flyout Addon
+const addons_flyout = {
+  $id: "http://v1.schemas.readthedocs.org/addons.flyout.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["flyout"],
+      properties: {
+        flyout: {
+          type: "object",
+          required: [
+            "enabled",
+            "downloads",
+            "translations",
+            "versions",
+            // TODO: make it required when we support VCS links
+            // "vcs",
+          ],
+          properties: {
+            enabled: { type: "boolean" },
+            downloads: { type: "array" },
+            translations: { type: "array" },
+            versions: { type: "array" },
+            vcs: {
+              type: "object",
+              properties: {
+                view_url: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+    domains: {
+      type: "object",
+      properties: {
+        dashboard: { type: "string" },
+      },
+    },
+    projects: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+            single_version: { type: "boolean" },
+          },
+        },
+      },
+    },
+    versions: {
+      type: "object",
+      properties: {
+        current: {
+          type: "object",
+          properties: {
+            slug: { type: "string" },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for Notifications Addon
 const addons_notifications = {
   $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
@@ -194,6 +261,7 @@ export const ajv = new Ajv({
     addons_analytics,
     addons_docdiff,
     addons_ethicalads,
+    addons_flyout,
     addons_notifications,
   ],
 });
