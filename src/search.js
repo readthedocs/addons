@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
@@ -59,7 +60,7 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
 
-    this.config = {};
+    this.config = null;
     this.show = false;
     this.cssFormFocusClasses = {};
     this.results = null;
@@ -73,6 +74,13 @@ export class SearchElement extends LitElement {
   }
 
   loadConfig(config) {
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!SearchAddon.isEnabled(config)) {
+      return;
+    }
+
     this.config = config;
     if (config.addons.search) {
       this.defaultFilter = {
@@ -100,11 +108,12 @@ export class SearchElement extends LitElement {
   }
 
   render() {
-    // Don't render anything if the addon is disabled or the configuration is empty
-    if (SearchAddon.isEnabled(this.config)) {
-      return this.renderSearchModal();
+    // The element doesn't yet have our config, don't render it.
+    if (this.config === null) {
+      // nothing is a special Lit response type
+      return nothing;
     }
-    return nothing;
+    return this.renderSearchModal();
   }
 
   renderSearchModal() {
@@ -544,7 +553,10 @@ export class SearchAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    return config.addons && config.addons.search.enabled === true;
+    const validate = ajv.getSchema(
+      "http://v1.schemas.readthedocs.org/addons.search.json",
+    );
+    return validate(config) && config.addons.search.enabled === true;
   }
 }
 

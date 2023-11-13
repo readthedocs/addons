@@ -293,6 +293,43 @@ const addons_notifications = {
   },
 };
 
+// Validator for Search Addon
+const addons_search = {
+  $id: "http://v1.schemas.readthedocs.org/addons.search.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["search"],
+      properties: {
+        search: {
+          type: "object",
+          required: ["enabled", "default_filter", "filters"],
+          properties: {
+            enabled: { type: "boolean" },
+            default_filter: { type: "string" },
+            filters: { type: "array" },
+          },
+        },
+      },
+    },
+    projects: {
+      type: "object",
+      required: ["current"],
+      properties: {
+        current: {
+          type: "object",
+          required: ["slug"],
+          properties: {
+            slug: { type: "string" },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const ajv = new Ajv({
   allErrors: true,
   schemas: [
@@ -302,6 +339,7 @@ export const ajv = new Ajv({
     addons_flyout,
     addons_hotkeys,
     addons_notifications,
+    addons_search,
   ],
 });
 
