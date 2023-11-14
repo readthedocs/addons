@@ -1,0 +1,115 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as notification from "../src/notification.js";
+
+      // Define the config globally to be able to override on ``beforeEach`` and inside each test
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          config = {
+            addons: {
+              external_version_warning: {
+                enabled: true,
+              },
+              non_latest_version_warning: {
+                enabled: true,
+                versions: ["latest", "stable"],
+              },
+            },
+            builds: {
+              current: {
+                id: 1,
+              },
+            },
+            domains: {
+              dashboard: "readthedocs.org",
+            },
+            projects: {
+              current: {
+                slug: "project",
+                single_version: false,
+                repository: {
+                  url: "https://github.com/readthedocs/addons",
+                },
+                language: {
+                  code: "en",
+                },
+              },
+            },
+            versions: {
+              current: {
+                slug: "stable",
+                type: "branch",
+              },
+            },
+          };
+        });
+
+        describe("Notification addon", () => {
+          it("on stable version", async () => {
+            // Set current version as non-stable and non-latest
+            config.versions.current.slug = "v3.x";
+            config.versions.current.type = "tag";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            const title = element.shadowRoot.querySelector("div.title");
+            expect(title.innerText).to.be.equal(
+              "This may be an old version of this documentation",
+            );
+          });
+
+          it("on latest version", async () => {
+            config.versions.current.slug = "latest";
+            console.log(config);
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            const title = element.shadowRoot.querySelector("div.title");
+            expect(title.innerText).to.be.equal(
+              "This is the latest development version",
+            );
+          });
+
+          it("on external version", async () => {
+            config.versions.current.slug = "381";
+            config.versions.current.type = "external";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            const title = element.shadowRoot.querySelector("div.title");
+            expect(title.innerText).to.be.equal(
+              "This page was created from a pull request build",
+            );
+          });
+
+          it("check default CSS classes", async () => {
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            expect(element).to.have.attribute("class", "raised floating");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

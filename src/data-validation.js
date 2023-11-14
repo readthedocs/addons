@@ -278,7 +278,20 @@ const addons_notifications = {
             slug: { type: "string" },
             single_version: { type: "boolean" },
             // TODO: use ajv-formats URI type
-            repository_url: { type: "string" },
+            repository: {
+              type: "object",
+              required: ["url"],
+              properties: {
+                url: { type: "string" },
+              },
+            },
+            language: {
+              type: "object",
+              required: ["code"],
+              properties: {
+                code: { type: "string" },
+              },
+            },
           },
         },
       },
