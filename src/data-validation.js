@@ -194,7 +194,7 @@ const addons_hotkeys = {
   properties: {
     addons: {
       type: "object",
-      required: ["doc_diff", "search"],
+      required: ["hotkeys"],
       properties: {
         hotkeys: {
           type: "object",
@@ -285,7 +285,7 @@ const addons_notifications = {
           type: "object",
           properties: {
             slug: { type: "string" },
-            type: { enum: ["internal", "external"] },
+            type: { enum: ["branch", "tag", "external"] },
           },
         },
       },
