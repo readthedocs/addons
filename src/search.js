@@ -416,8 +416,13 @@ export class SearchElement extends LitElement {
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
-      const url =
+      let url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
+
+      // Retrieve a static JSON file when working in development mode
+      if (window.location.href.startsWith("http://localhost")) {
+        url = "/_/readthedocs-search.json";
+      }
 
       fetch(url, {
         method: "GET",
