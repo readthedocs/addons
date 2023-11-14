@@ -98,7 +98,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   static isEnabled(config) {
     return (
-      super.isConfigValid(config) && config.addons.ethicalads.ad_free === false
+      super.isEnabled(config) && config.addons.ethicalads.ad_free === false
     );
   }
 }

@@ -123,7 +123,7 @@ const addons_ethicalads = {
 const addons_flyout = {
   $id: "http://v1.schemas.readthedocs.org/addons.flyout.json",
   type: "object",
-  required: ["addons"],
+  required: ["addons", "domains", "projects", "versions"],
   properties: {
     addons: {
       type: "object",
@@ -156,15 +156,18 @@ const addons_flyout = {
     },
     domains: {
       type: "object",
+      required: ["dashboard"],
       properties: {
         dashboard: { type: "string" },
       },
     },
     projects: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
+          required: ["slug", "single_version"],
           properties: {
             slug: { type: "string" },
             single_version: { type: "boolean" },
@@ -174,9 +177,11 @@ const addons_flyout = {
     },
     versions: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
+          required: ["slug"],
           properties: {
             slug: { type: "string" },
           },
