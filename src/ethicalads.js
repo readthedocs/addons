@@ -19,6 +19,11 @@ const AD_STYLE = "fixedfooter";
  * @param {Object} config - Addon configuration object
  */
 export class EthicalAdsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.ethicalads.json";
+  static addonEnabledPath = "addons.ethicalads.enabled";
+  static addonName = "EthicalAds";
+
   constructor(config) {
     super();
     this.config = config;
@@ -92,13 +97,8 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   static isEnabled(config) {
-    const validate = ajv.getSchema(
-      "http://v1.schemas.readthedocs.org/addons.ethicalads.json",
-    );
     return (
-      validate(config) &&
-      config.addons.ethicalads.enabled === true &&
-      config.addons.ethicalads.ad_free === false
+      super.isConfigValid(config) && config.addons.ethicalads.ad_free === false
     );
   }
 }

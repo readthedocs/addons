@@ -249,6 +249,11 @@ export class FlyoutElement extends LitElement {
  * @param {Object} config - Addon configuration object
  */
 export class FlyoutAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.flyout.json";
+  static addonEnabledPath = "addons.flyout.enabled";
+  static addonName = "Flyout";
+
   constructor(config) {
     super();
 
@@ -266,13 +271,6 @@ export class FlyoutAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    const validate = ajv.getSchema(
-      "http://v1.schemas.readthedocs.org/addons.flyout.json",
-    );
-    return validate(config) && config.addons.flyout.enabled === true;
   }
 }
 

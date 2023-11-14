@@ -102,6 +102,11 @@ export class HotKeysElement extends LitElement {
 }
 
 export class HotKeysAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.hotkeys.json";
+  static addonEnabledPath = "addons.hotkeys.enabled";
+  static addonName = "HotKeys";
+
   constructor(config) {
     super();
 
@@ -116,13 +121,6 @@ export class HotKeysAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    const validate = ajv.getSchema(
-      "http://v1.schemas.readthedocs.org/addons.hotkeys.json",
-    );
-    return validate(config) && config.addons.hotkeys.enabled === true;
   }
 }
 

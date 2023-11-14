@@ -189,6 +189,11 @@ export class DocDiffElement extends LitElement {
 }
 
 export class DocDiffAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.docdiff.json";
+  static addonEnabledPath = "addons.doc_diff.enabled";
+  static addonName = "DocDiff";
+
   constructor(config) {
     super();
 
@@ -204,13 +209,6 @@ export class DocDiffAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    const validate = ajv.getSchema(
-      "http://v1.schemas.readthedocs.org/addons.docdiff.json",
-    );
-    return validate(config) && config.addons.doc_diff.enabled === true;
   }
 
   static requiresUrlParam() {

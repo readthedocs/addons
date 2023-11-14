@@ -538,6 +538,11 @@ export class SearchElement extends LitElement {
 }
 
 export class SearchAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.search.json";
+  static addonEnabledPath = "addons.search.enabled";
+  static addonName = "Search";
+
   constructor(config) {
     super();
 
@@ -555,13 +560,6 @@ export class SearchAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    const validate = ajv.getSchema(
-      "http://v1.schemas.readthedocs.org/addons.search.json",
-    );
-    return validate(config) && config.addons.search.enabled === true;
   }
 }
 

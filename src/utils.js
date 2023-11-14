@@ -1,3 +1,5 @@
+import { ajv } from "./data-validation";
+import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "0";
 // This is managed by bumpver automatically
 export const CLIENT_VERSION = "0.8.0";
@@ -45,8 +47,25 @@ export const domReady = new Promise((resolve) => {
  * and loading.
  */
 export class AddonBase {
+  static jsonValidationURI = null;
+  static addonName = null;
+  static addonEnabledPath = null;
+
+  static isConfigValid(config) {
+    const validate = ajv.getSchema(this.jsonValidationURI);
+    const valid = validate(config);
+    if (!valid) {
+      console.debug(`Validation error on addon "${this.addonName}":`);
+      console.debug(validate.errors);
+    }
+    return valid;
+  }
+
   static isEnabled(config) {
-    return false;
+    return (
+      this.isConfigValid(config) &&
+      objectPath.get(config, this.addonEnabledPath, false) === true
+    );
   }
 
   static requiresUrlParam() {
