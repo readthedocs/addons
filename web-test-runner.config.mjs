@@ -23,7 +23,9 @@ export default {
     rollupAdapter(rollupLitCss()),
     pluginCommonjs({
       include: "node_modules/**",
-      requireReturnsDefault: "preferred",
+      esmExternals: true,
+      defaultIsModuleExports: true,
+      requireReturnsDefault: true,
     }),
   ],
 };
