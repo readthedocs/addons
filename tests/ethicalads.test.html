@@ -65,6 +65,16 @@
           // It's not a Read the Docs-like theme
           expect(element).to.have.class("ethical-alabaster");
         });
+
+        it("inject ethicalads.min.js", async () => {
+          const addon = new ethicalads.EthicalAdsAddon(config);
+
+          const element = document.querySelector(
+            'script[src="https://media.ethicalads.io/media/client/ethicalads.min.js"]',
+          );
+          expect(element).to.exist;
+          expect(element).to.have.attribute("type", "text/javascript");
+        });
       });
     </script>
   </body>
