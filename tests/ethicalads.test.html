@@ -1,7 +1,7 @@
 <html>
   <body>
     <script type="module">
-      import { expect, elementUpdated } from "@open-wc/testing";
+      import { expect, fixture, fixtureCleanup } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as ethicalads from "../src/ethicalads.js";
 
@@ -21,6 +21,11 @@
               },
             },
           };
+        });
+
+        afterEach(() => {
+          // Remove all the fixtures added by each test.
+          fixtureCleanup();
         });
 
         describe("EthicalAd addon", () => {
@@ -44,6 +49,21 @@
             );
             expect(element).to.have.class("raised");
           });
+        });
+
+        it("ad placement defined by the user", async () => {
+          await fixture('<div id="ethical-ad-placement"></div>');
+          const addon = new ethicalads.EthicalAdsAddon(config);
+
+          const element = document.querySelector("div[data-ea-publisher]");
+          expect(element).to.have.attribute("data-ea-publisher", "readthedocs");
+          expect(element).to.have.attribute(
+            "data-ea-type",
+            "readthedocs-sidebar",
+          );
+
+          // It's not a Read the Docs-like theme
+          expect(element).to.have.class("ethical-alabaster");
         });
       });
     </script>
