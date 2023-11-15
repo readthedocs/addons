@@ -1,72 +1,73 @@
 <html>
   <body>
     <script type="module">
-                  import { expect, elementUpdated } from "@open-wc/testing";
-                  import { runTests } from "@web/test-runner-mocha";
-                  import * as flyout from "../src/flyout";
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as flyout from "../src/flyout";
 
-                  let config;
+      let config;
 
-                  runTests(async () => {
-                    beforeEach(() => {
-                      config = {
-                        addons: {
-                          flyout: {
-                            enabled: true,
-                            downloads: [
-                                {
-                                    "name": "PDF",
-                                    "url": "/_/downloads/en/latest/",
-                                },
-                            ],
-                            translations: [
-                                {
-                                    slug: "es",
-                                    url: "/es/",
-                                },
-                            ],
-                            versions: [
-                                {
-                                    slug: "stable",
-                                    url: "/en/stable/",
-                                },
-                                {
-                                    slug: "latest",
-                                    url: "/en/latest/",
-                                },
-                                {
-                                    slug: "v1.0",
-                                    url: "/en/v1.0/",
-                                },
-                            ],
-                          },
-                        },
-                        domains: {
-                          dashboard: "readthedocs.org",
-                        },
-                        projects: {
-                          current: {
-                            slug: "project",
-                            single_version: false,
-                          },
-                        },
-                        versions: {
-                          current: {
-                            slug: "latest",
-                          },
-                        },
-                      };
-                    });
+      runTests(async () => {
+        beforeEach(() => {
+          config = {
+            addons: {
+              flyout: {
+                enabled: true,
+                downloads: [
+                  {
+                    name: "PDF",
+                    url: "/_/downloads/en/latest/",
+                  },
+                ],
+                translations: [
+                  {
+                    slug: "es",
+                    url: "/es/",
+                  },
+                ],
+                versions: [
+                  {
+                    slug: "stable",
+                    url: "/en/stable/",
+                  },
+                  {
+                    slug: "latest",
+                    url: "/en/latest/",
+                  },
+                  {
+                    slug: "v1.0",
+                    url: "/en/v1.0/",
+                  },
+                ],
+              },
+            },
+            domains: {
+              dashboard: "readthedocs.org",
+            },
+            projects: {
+              current: {
+                slug: "project",
+                single_version: false,
+              },
+            },
+            versions: {
+              current: {
+                slug: "latest",
+              },
+            },
+          };
+        });
 
-                    describe("Flyout addon", () => {
+        describe("Flyout addon", () => {
+          it("render languages section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                        it("render languages section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
-
-                            const section = element.shadowRoot.querySelector("main > dl.languages")
-                            expect(section).dom.to.equal(`
+            const section = element.shadowRoot.querySelector(
+              "main > dl.languages",
+            );
+            expect(section).dom.to.equal(`
       <dl class="languages">
         <dt>Languages</dt>
         <dd>
@@ -74,15 +75,16 @@
         </dd>
       </dl>
       `);
-                        });
+          });
 
-                        it("render versions section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render versions section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            const section = element.shadowRoot.querySelector("main > dl.versions")
-                            expect(section).dom.to.equal(`
+            const section =
+              element.shadowRoot.querySelector("main > dl.versions");
+            expect(section).dom.to.equal(`
       <dl class="versions">
         <dt>Versions</dt>
         <dd>
@@ -98,15 +100,17 @@
         </dd>
       </dl>
       `);
-                        });
+          });
 
-                        it("render downloads section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render downloads section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            const section = element.shadowRoot.querySelector("main > dl.downloads")
-                            expect(section).dom.to.equal(`
+            const section = element.shadowRoot.querySelector(
+              "main > dl.downloads",
+            );
+            expect(section).dom.to.equal(`
       <dl class="downloads">
         <dt>Downloads</dt>
         <dd>
@@ -114,17 +118,19 @@
         </dd>
       </dl>
       `);
-                        });
+          });
 
-                        it("render on read the docs section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render on read the docs section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            // NOTE: I'd like to make this "querySelector" not that fragile.
-                            // Does it make sense to add `id=` or `class=` to these sections?
-                            const section = element.shadowRoot.querySelector("main > dl:nth-child(4)")
-                            expect(section).dom.to.equal(`
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector(
+              "main > dl:nth-child(4)",
+            );
+            expect(section).dom.to.equal(`
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
@@ -138,17 +144,19 @@
         </dd>
       </dl>
       `);
-                        });
+          });
 
-                        it("render search section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render search section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            // NOTE: I'd like to make this "querySelector" not that fragile.
-                            // Does it make sense to add `id=` or `class=` to these sections?
-                            const section = element.shadowRoot.querySelector("main > dl:nth-child(5)")
-                            expect(section).dom.to.equal(`
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector(
+              "main > dl:nth-child(5)",
+            );
+            expect(section).dom.to.equal(`
       <dl>
         <dt>Search</dt>
         <dd>
@@ -163,43 +171,43 @@
         </dd>
       </dl>
       `);
-                        });
+          });
 
-                        it("render header section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render header section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            const section = element.shadowRoot.querySelector("header")
-                            expect(section).dom.to.equal(`
+            const section = element.shadowRoot.querySelector("header");
+            expect(section).dom.to.equal(
+              `
       <header>
         <img class="logo" alt="Read the Docs" />
         <span>v: latest</span>
       </header>
-      `, { ignoreAttributes: [{ tags: ["img"], attributes: ["src"] }]});
-                        });
+      `,
+              { ignoreAttributes: [{ tags: ["img"], attributes: ["src"] }] },
+            );
+          });
 
-                        it("render footer section", async () => {
-                            const addon = new flyout.FlyoutAddon(config);
-                            const element = document.querySelector("readthedocs-flyout");
-                            await elementUpdated(element);
+          it("render footer section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
 
-                            // NOTE: I'd like to make this "querySelector" not that fragile.
-                            // Does it make sense to add `id=` or `class=` to these sections?
-                            const section = element.shadowRoot.querySelector("main > small")
-                            expect(section).dom.to.equal(`
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector("main > small");
+            expect(section).dom.to.equal(`
       <small>
         <span>Hosted by <a href="https://readthedocs.org">Read the Docs</a></span>
         <span> &middot; </span>
         <a href="https://docs.readthedocs.io/page/privacy-policy.html">Privacy Policy</a>
       </small>
       `);
-                        });
-
-
-
-                  });
-              });
+          });
+        });
+      });
     </script>
   </body>
 </html>
