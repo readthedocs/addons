@@ -2,7 +2,8 @@ import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 
-const EXPLICIT_PLACEMENT_SELECTOR = "[data-ea-publisher]";
+// https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
+const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_TYPE = "text";
@@ -31,6 +32,18 @@ export class EthicalAdsAddon extends AddonBase {
     this.injectEthicalAds();
   }
 
+  // Borrowed from:
+  // https://github.com/readthedocs/readthedocs.org/blob/6538d987c2fd26ef7ac38d35f135e52f43a9c6d0/readthedocs/core/static-src/core/js/doc-embed/rtd-data.js#L10-L18
+  isReadTheDocsLikeTheme() {
+    // Returns true for the Read the Docs theme on both sphinx and mkdocs
+    if (document.querySelectorAll("div.rst-other-versions").length === 1) {
+      // Crappy heuristic, but people change the theme name
+      // So we have to do some duck typing.
+      return true;
+    }
+    return false;
+  }
+
   createAdPlacement() {
     let placement;
 
@@ -43,12 +56,17 @@ export class EthicalAdsAddon extends AddonBase {
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
       placement.setAttribute("data-ea-publisher", data.publisher);
-      placement.setAttribute("data-ea-manual", "true");
       if (
         placement.getAttribute("data-ea-type") !== "image" &&
         placement.getAttribute("data-ea-type") !== "text"
       ) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+      }
+      if (this.isReadTheDocsLikeTheme()) {
+        placement.classList.add("ethical-rtd");
+        placement.classList.add("ethical-dark-theme");
+      } else {
+        placement.classList.add("ethical-alabaster");
       }
     } else {
       // Inject our own floating element
