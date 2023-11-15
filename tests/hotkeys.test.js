@@ -2,17 +2,7 @@ import { expect, assert, fixture, html } from "@open-wc/testing";
 import { HotKeysElement, HotKeysAddon } from "../src/hotkeys";
 
 describe("Hotkeys addon", () => {
-  it("is disabled by default", () => {
-    expect(
-      HotKeysAddon.isEnabled({
-        addons: {
-          hotkeys: {},
-        },
-      }),
-    ).to.be.false;
-  });
-
-  it("is enabled with configuration", () => {
+  it("invalid configuration disables the addon", () => {
     expect(
       HotKeysAddon.isEnabled({
         addons: {
@@ -21,7 +11,47 @@ describe("Hotkeys addon", () => {
           },
         },
       }),
+    ).to.be.false;
+  });
+
+  it("is enabled", () => {
+    expect(
+      HotKeysAddon.isEnabled({
+        addons: {
+          hotkeys: {
+            enabled: true,
+            doc_diff: {
+              enabled: true,
+              trigger: "Key D",
+            },
+            search: {
+              enabled: true,
+              trigger: "Slash",
+            },
+          },
+        },
+      }),
     ).to.be.true;
+  });
+
+  it("is disabled", () => {
+    expect(
+      HotKeysAddon.isEnabled({
+        addons: {
+          hotkeys: {
+            enabled: false,
+            doc_diff: {
+              enabled: true,
+              trigger: "Key D",
+            },
+            search: {
+              enabled: true,
+              trigger: "Slash",
+            },
+          },
+        },
+      }),
+    ).to.be.false;
   });
 });
 

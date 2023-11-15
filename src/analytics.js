@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { CLIENT_VERSION } from "./utils";
 
@@ -16,6 +17,11 @@ const API_ENDPOINT = "/_/api/v2/analytics/";
  * @param {Object} config - Addon configuration object
  */
 export class AnalyticsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.analytics.json";
+  static addonEnabledPath = "addons.analytics.enabled";
+  static addonName = "Analytics";
+
   constructor(config) {
     super();
     this.config = config;
@@ -83,9 +89,5 @@ export class AnalyticsAddon extends AddonBase {
         });
       }
     }
-  }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.analytics.enabled === true;
   }
 }

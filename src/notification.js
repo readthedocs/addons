@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
@@ -27,7 +28,7 @@ export class NotificationElement extends LitElement {
   constructor() {
     super();
 
-    this.config = {};
+    this.config = null;
     this.urls = {
       build: null,
       external: null,
@@ -39,6 +40,13 @@ export class NotificationElement extends LitElement {
   }
 
   loadConfig(config) {
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!NotificationAddon.isEnabled(config)) {
+      return;
+    }
+
     this.config = config;
 
     if (
@@ -74,24 +82,20 @@ export class NotificationElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!NotificationAddon.isEnabled(this.config)) {
+    if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
 
-    try {
-      if (this.config.versions.current.type === "external") {
-        if (this.config.addons.external_version_warning.enabled) {
-          return this.renderExternalVersionWarning();
-        }
-      } else if (
-        this.config.addons.non_latest_version_warning.enabled &&
-        (this.readingLatestVersion || this.stableVersionAvailable)
-      ) {
-        return this.renderStableLatestVersionWarning();
+    if (this.config.versions.current.type === "external") {
+      if (this.config.addons.external_version_warning.enabled) {
+        return this.renderExternalVersionWarning();
       }
-    } catch (exception) {
-      return nothing;
+    } else if (
+      this.config.addons.non_latest_version_warning.enabled &&
+      (this.readingLatestVersion || this.stableVersionAvailable)
+    ) {
+      return this.renderStableLatestVersionWarning();
     }
     return nothing;
   }
@@ -248,6 +252,10 @@ export class NotificationElement extends LitElement {
  * @param {Object} config - Addon configuration object
  */
 export class NotificationAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.notifications.json";
+  static addonName = "HotKeys";
+
   constructor(config) {
     super();
 
@@ -270,17 +278,13 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
-    try {
-      return (
-        (config.addons &&
-          config.addons.external_version_warning.enabled === true &&
-          config.versions.current.type === "external") ||
-        (config.addons.non_latest_version_warning.enabled === true &&
-          config.versions.current.type !== "external")
-      );
-    } catch (exception) {
-      return false;
-    }
+    return (
+      (super.isConfigValid(config) &&
+        config.addons.external_version_warning.enabled === true &&
+        config.versions.current.type === "external") ||
+      (config.addons.non_latest_version_warning.enabled === true &&
+        config.versions.current.type !== "external")
+    );
   }
 }
 

@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 
@@ -18,6 +19,11 @@ const AD_STYLE = "fixedfooter";
  * @param {Object} config - Addon configuration object
  */
 export class EthicalAdsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.ethicalads.json";
+  static addonEnabledPath = "addons.ethicalads.enabled";
+  static addonName = "EthicalAds";
+
   constructor(config) {
     super();
     this.config = config;
@@ -92,11 +98,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   static isEnabled(config) {
     return (
-      objectPath.get(config, "addons.ethicalads.enabled", false) === true &&
-      // Mandatory attributes for this addon to render properly
-      objectPath.get(config, "addons.ethicalads.ad_free", false) !== true &&
-      objectPath.get(config, "addons.ethicalads.publisher", undefined) !==
-        undefined
+      super.isEnabled(config) && config.addons.ethicalads.ad_free === false
     );
   }
 }

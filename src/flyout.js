@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
@@ -21,13 +22,19 @@ export class FlyoutElement extends LitElement {
   constructor() {
     super();
 
-    this.config = {};
+    this.config = null;
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
   }
 
   loadConfig(config) {
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!FlyoutAddon.isEnabled(config)) {
+      return;
+    }
     this.config = config;
   }
 
@@ -115,6 +122,7 @@ export class FlyoutElement extends LitElement {
 
   renderVCS() {
     if (
+      // TODO: remove this check when ``vcs`` property becomes required
       !this.config.addons.flyout.vcs ||
       !this.config.addons.flyout.vcs.view_url
     ) {
@@ -150,10 +158,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (
-      !this.config.addons.flyout.downloads ||
-      !this.config.addons.flyout.downloads.length
-    ) {
+    if (!this.config.addons.flyout.downloads.length) {
       return nothing;
     }
 
@@ -171,15 +176,13 @@ export class FlyoutElement extends LitElement {
 
   renderVersions() {
     if (
-      !this.config.addons.flyout.versions ||
       !this.config.addons.flyout.versions.length ||
       this.config.projects.current.single_version
     ) {
       return nothing;
     }
 
-    const currentVersion =
-      this.config.versions.current && this.config.versions.current.slug;
+    const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
       const link = html`<a href="${version.url}">${version.slug}</a>`;
@@ -199,10 +202,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (
-      !this.config.addons.flyout.translations ||
-      !this.config.addons.flyout.translations.length
-    ) {
+    if (!this.config.addons.flyout.translations.length) {
       return nothing;
     }
 
@@ -220,7 +220,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!FlyoutAddon.isEnabled(this.config)) {
+    if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -249,6 +249,11 @@ export class FlyoutElement extends LitElement {
  * @param {Object} config - Addon configuration object
  */
 export class FlyoutAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.flyout.json";
+  static addonEnabledPath = "addons.flyout.enabled";
+  static addonName = "Flyout";
+
   constructor(config) {
     super();
 
@@ -266,10 +271,6 @@ export class FlyoutAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.flyout.enabled === true;
   }
 }
 

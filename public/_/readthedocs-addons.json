@@ -58,7 +58,7 @@
     },
     "analytics": {
       "enabled": true,
-      "code": null
+      "code": "UA-12345"
     },
     "external_version_warning": {
       "enabled": true,

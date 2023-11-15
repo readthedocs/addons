@@ -2,22 +2,50 @@ import { expect, assert, fixture, html } from "@open-wc/testing";
 import { SearchElement, SearchAddon } from "../src/search";
 
 describe("Search addon", () => {
-  it("is disabled by default", () => {
-    expect(
-      SearchAddon.isEnabled({
-        addons: {
-          search: {},
-        },
-      }),
-    ).to.be.false;
-  });
-
-  it("is enabled with configuration", () => {
+  it("invalid configuration disables the addon", () => {
     expect(
       SearchAddon.isEnabled({
         addons: {
           search: {
             enabled: true,
+          },
+        },
+      }),
+    ).to.be.false;
+  });
+
+  it("is disabled with valid data", () => {
+    expect(
+      SearchAddon.isEnabled({
+        addons: {
+          search: {
+            enabled: false,
+            default_filter: "project:project",
+            filters: [],
+          },
+        },
+        projects: {
+          current: {
+            slug: "project",
+          },
+        },
+      }),
+    ).to.be.false;
+  });
+
+  it("is enabled with valid data", () => {
+    expect(
+      SearchAddon.isEnabled({
+        addons: {
+          search: {
+            enabled: true,
+            default_filter: "project:project",
+            filters: [],
+          },
+        },
+        projects: {
+          current: {
+            slug: "project",
           },
         },
       }),
