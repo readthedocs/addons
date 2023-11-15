@@ -1,0 +1,51 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as ethicalads from "../src/ethicalads.js";
+
+      // Define the config globally to be able to override on ``beforeEach`` and inside each test
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          config = {
+            addons: {
+              ethicalads: {
+                enabled: true,
+                ad_free: false,
+                campaign_types: ["community", "paid"],
+                keywords: ["docs", "data-science"],
+                publisher: "readthedocs",
+              },
+            },
+          };
+        });
+
+        describe("EthicalAd addon", () => {
+          it("ad placement is auto-injected", async () => {
+            const addon = new ethicalads.EthicalAdsAddon(config);
+
+            const element = document.querySelector("div[data-ea-publisher]");
+            expect(element).to.have.attribute("data-ea-type", "text");
+            expect(element).to.have.attribute("data-ea-style", "fixedfooter");
+            expect(element).to.have.attribute(
+              "data-ea-keywords",
+              "docs|data-science",
+            );
+            expect(element).to.have.attribute(
+              "data-ea-campaign-types",
+              "community|paid",
+            );
+            expect(element).to.have.attribute(
+              "data-ea-publisher",
+              "readthedocs",
+            );
+            expect(element).to.have.class("raised");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
