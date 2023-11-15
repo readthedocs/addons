@@ -52,7 +52,9 @@
         });
 
         it("ad placement defined by the user", async () => {
-          await fixture('<div id="ethical-ad-placement"></div>');
+          await fixture(
+            '<div id="ethical-ad-placement" class="ad-flat"></div>',
+          );
           const addon = new ethicalads.EthicalAdsAddon(config);
 
           const element = document.querySelector("div[data-ea-publisher]");
@@ -64,6 +66,9 @@
 
           // It's not a Read the Docs-like theme
           expect(element).to.have.class("ethical-alabaster");
+
+          // Keep the CSS classes added manually by the user
+          expect(element).to.have.class("ad-flat");
         });
 
         it("inject ethicalads.min.js", async () => {
