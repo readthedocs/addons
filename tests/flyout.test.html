@@ -206,6 +206,17 @@
       </small>
       `);
           });
+
+          // Use a snapshot saved into a file to compare against.
+          // The snapshot file is generated automatically if it doesn't exist,
+          // or loaded and compare against if it's found already.
+          // It matches the full name of the test: "Flyout addon snapshot flyout completely".
+          // https://open-wc.org/docs/testing/semantic-dom-diff/#snapshot-testing
+          it("snapshot flyout completely", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            expect(element).shadowDom.to.equalSnapshot();
+          });
         });
       });
     </script>
