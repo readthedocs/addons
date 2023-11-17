@@ -9,6 +9,8 @@ const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 const AD_TYPE = "text";
 const AD_STYLE = "fixedfooter";
 
+const AD_SCRIPT_ID = "ethicaladsjs";
+
 /**
  * EthicalAds addon
  *
@@ -86,7 +88,6 @@ export class EthicalAdsAddon extends AddonBase {
         );
       }
 
-      // placement.setAttribute("data-ea-manual", "true");
       placement.classList.add("raised");
 
       // TODO: find the right last resourse to append (probably not `document.body`)
@@ -94,17 +95,29 @@ export class EthicalAdsAddon extends AddonBase {
       main.insertBefore(placement, main.lastChild);
       console.log("EthicalAd placement injected.");
     }
+
+    // Always load the ad manually after ethicalad library is injected.
+    // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+    placement.setAttribute("data-ea-manual", "true");
     return placement;
   }
 
   loadEthicalAdLibrary() {
     const library = document.createElement("script");
+    library.setAttribute("id", AD_SCRIPT_ID);
     library.setAttribute("type", "text/javascript");
+    library.setAttribute("async", true);
     library.setAttribute(
       "src",
       "https://media.ethicalads.io/media/client/ethicalads.min.js",
     );
     document.head.appendChild(library);
+
+    document.getElementById(AD_SCRIPT_ID).addEventListener("load", function () {
+      if (typeof ethicalads !== "undefined") {
+        ethicalads.load();
+      }
+    });
   }
 
   injectEthicalAds() {
