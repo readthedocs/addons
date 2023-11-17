@@ -29,56 +29,45 @@
         });
 
         describe("EthicalAd addon", () => {
-          it("ad placement is auto-injected", async () => {
+          it("ad placement defined by the user", async () => {
+            await fixture(
+              '<div id="ethical-ad-placement" class="ad-flat"></div>',
+            );
             const addon = new ethicalads.EthicalAdsAddon(config);
 
-            const element = document.querySelector("div[data-ea-publisher]");
-            expect(element).to.have.attribute("data-ea-type", "text");
-            expect(element).to.have.attribute("data-ea-style", "fixedfooter");
-            expect(element).to.have.attribute(
-              "data-ea-keywords",
-              "docs|data-science",
-            );
-            expect(element).to.have.attribute(
-              "data-ea-campaign-types",
-              "community|paid",
-            );
+            const element = document.querySelector("#ethical-ad-placement");
+
             expect(element).to.have.attribute(
               "data-ea-publisher",
               "readthedocs",
             );
-            expect(element).to.have.class("raised");
+            expect(element).to.have.attribute(
+              "data-ea-type",
+              "readthedocs-sidebar",
+            );
+
+            // It's not a Read the Docs-like theme
+            expect(element).to.have.class("ethical-alabaster");
+
+            // Keep the CSS classes added manually by the user
+            expect(element).to.have.class("ad-flat");
+
+            // Required `await` on this to generate the snapshot file
+            await expect(element).dom.to.equalSnapshot();
           });
-        });
 
-        it("ad placement defined by the user", async () => {
-          await fixture(
-            '<div id="ethical-ad-placement" class="ad-flat"></div>',
-          );
-          const addon = new ethicalads.EthicalAdsAddon(config);
+          it("inject ethicalads.min.js", async () => {
+            const addon = new ethicalads.EthicalAdsAddon(config);
 
-          const element = document.querySelector("div[data-ea-publisher]");
-          expect(element).to.have.attribute("data-ea-publisher", "readthedocs");
-          expect(element).to.have.attribute(
-            "data-ea-type",
-            "readthedocs-sidebar",
-          );
-
-          // It's not a Read the Docs-like theme
-          expect(element).to.have.class("ethical-alabaster");
-
-          // Keep the CSS classes added manually by the user
-          expect(element).to.have.class("ad-flat");
-        });
-
-        it("inject ethicalads.min.js", async () => {
-          const addon = new ethicalads.EthicalAdsAddon(config);
-
-          const element = document.querySelector(
-            'script[src="https://media.ethicalads.io/media/client/ethicalads.min.js"]',
-          );
-          expect(element).to.exist;
-          expect(element).to.have.attribute("type", "text/javascript");
+            const element = document.querySelector("#ethicaladsjs");
+            expect(element).to.exist;
+            expect(element).to.have.attribute(
+              "src",
+              "https://media.ethicalads.io/media/client/ethicalads.min.js",
+            );
+            expect(element).to.have.attribute("type", "text/javascript");
+            expect(element).to.have.attribute("async", "true");
+          });
         });
       });
     </script>

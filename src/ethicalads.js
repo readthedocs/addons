@@ -103,9 +103,12 @@ export class EthicalAdsAddon extends AddonBase {
     //   console.log("EthicalAd placement injected.");
     // }
 
-    // Always load the ad manually after ethicalad library is injected.
-    // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
-    placement.setAttribute("data-ea-manual", "true");
+    if (placement) {
+      // Always load the ad manually after ethicalad library is injected.
+      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+      placement.setAttribute("data-ea-manual", "true");
+    }
+
     return placement;
   }
 
