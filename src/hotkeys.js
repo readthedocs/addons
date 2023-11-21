@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { toString as keyboardEventToString } from "keyboard-event-to-string";
 
 import { AddonBase } from "./utils";
@@ -24,18 +25,19 @@ export class HotKeysElement extends LitElement {
   constructor() {
     super();
 
+    this.config = null;
     this.docDiffShow = false;
   }
 
   loadConfig(config) {
-    this.config = config;
-
-    // Don't set up hotkeys if disabled
-    // TODO this can be removed when configuration handling is more defensive
-    // against missing configuration values.
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
     if (!HotKeysAddon.isEnabled(config)) {
       return;
     }
+
+    this.config = config;
 
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
     this.docDiffShowed = false;
@@ -46,7 +48,7 @@ export class HotKeysElement extends LitElement {
 
   _handleKeydown = (e) => {
     // Close docdiff with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
-    // (I'm checking `document.activeElement` to check if it's the BODY to avoid enable/disable while typing on forms)
+    // (I'm checking `document.activeElement` to check if it not inside an INPUT to avoid enable/disable while typing on forms)
     // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
 
     let event;
@@ -55,7 +57,7 @@ export class HotKeysElement extends LitElement {
       this.docDiffHotKeyEnabled &&
       keyboardEventToString(e) ===
         this.config.addons.hotkeys.doc_diff.trigger &&
-      document.activeElement.tagName == "BODY"
+      document.activeElement.tagName !== "INPUT"
     ) {
       if (this.docDiffShowed) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
@@ -68,12 +70,10 @@ export class HotKeysElement extends LitElement {
 
     // Search
     if (
-      (this.searchHotKeyEnabled &&
-        keyboardEventToString(e) ===
-          this.config.addons.hotkeys.search.trigger &&
-        document.activeElement.tagName == "BODY") ||
-      document.querySelector("div[role=search] input") ===
-        document.activeElement
+      this.searchHotKeyEnabled &&
+      keyboardEventToString(e) === this.config.addons.hotkeys.search.trigger &&
+      document.activeElement.tagName !== "INPUT" &&
+      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
       if (this.searchShowed) {
         event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
@@ -86,6 +86,7 @@ export class HotKeysElement extends LitElement {
 
     if (event !== undefined) {
       document.dispatchEvent(event);
+      e.preventDefault();
     }
   };
 
@@ -101,6 +102,11 @@ export class HotKeysElement extends LitElement {
 }
 
 export class HotKeysAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.hotkeys.json";
+  static addonEnabledPath = "addons.hotkeys.enabled";
+  static addonName = "HotKeys";
+
   constructor(config) {
     super();
 
@@ -115,10 +121,6 @@ export class HotKeysAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.hotkeys.enabled === true;
   }
 }
 

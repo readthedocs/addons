@@ -1,9 +1,10 @@
 [bumpver]
-current_version = "0.5.0"
+current_version = "0.8.0"
 version_pattern = "MAJOR.MINOR.PATCH[TAG]"
 commit_message = "Release {new_version}"
 tag_message = "{new_version}"
 tag_scope = "default"
+pre_commit_hook = "./.pre-commit/build-assets-and-add.sh"
 commit = true
 tag = true
 push = true

@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { CLIENT_VERSION } from "./utils";
 
@@ -16,6 +17,11 @@ const API_ENDPOINT = "/_/api/v2/analytics/";
  * @param {Object} config - Addon configuration object
  */
 export class AnalyticsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.analytics.json";
+  static addonEnabledPath = "addons.analytics.enabled";
+  static addonName = "Analytics";
+
   constructor(config) {
     super();
     this.config = config;
@@ -53,7 +59,7 @@ export class AnalyticsAddon extends AddonBase {
       console.debug("Respecting DNT with respect to analytics...");
     } else {
       if (this.config.readthedocs.analytics.code) {
-        (function () {
+        (() => {
           // New Google Site Tag (gtag.js) tagging/analytics framework
           // https://developers.google.com/gtagjs
           let script = document.createElement("script");
@@ -77,15 +83,11 @@ export class AnalyticsAddon extends AddonBase {
           cookie_expires: 0, // Session cookie (non-persistent)
           dimension1: this.config.projects.current.slug,
           dimension2: this.config.versions.current.slug,
-          dimension3: this.config.projects.current.language,
-          dimension5: this.config.projects.current.programming_language,
+          dimension3: this.config.projects.current.language.code,
+          dimension5: this.config.projects.current.programming_language.code,
           groups: "rtfd",
         });
       }
     }
-  }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.analytics.enabled === true;
   }
 }

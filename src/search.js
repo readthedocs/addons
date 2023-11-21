@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
@@ -59,10 +60,7 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
 
-    // TODO: expand the default supported styles
-    this.className = this.className || "raised floating";
-
-    this.config = {};
+    this.config = null;
     this.show = false;
     this.cssFormFocusClasses = {};
     this.results = null;
@@ -76,8 +74,14 @@ export class SearchElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.config = config;
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!SearchAddon.isEnabled(config)) {
+      return;
+    }
 
+    this.config = config;
     if (config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
@@ -95,12 +99,21 @@ export class SearchElement extends LitElement {
     }
   }
 
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    // See https://lit.dev/docs/components/lifecycle/#firstupdated
+    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+    this.className = this.className || "raised floating";
+  }
+
   render() {
-    // Don't render anything if the addon is disabled or the configuration is empty
-    if (SearchAddon.isEnabled(this.config)) {
-      return this.renderSearchModal();
+    // The element doesn't yet have our config, don't render it.
+    if (this.config === null) {
+      // nothing is a special Lit response type
+      return nothing;
     }
-    return nothing;
+    return this.renderSearchModal();
   }
 
   renderSearchModal() {
@@ -198,7 +211,7 @@ export class SearchElement extends LitElement {
             />
             <label for="filter-${index}"> ${filter.name} </label>
           </li>
-        `
+        `,
       )}
     `;
   }
@@ -219,9 +232,9 @@ export class SearchElement extends LitElement {
                   html`${this.renderBlockResult(
                     block,
                     rindex + bindex + 1,
-                    result
-                  )}`
-              )}`
+                    result,
+                  )}`,
+              )}`,
         )}
       </div>
     `;
@@ -282,7 +295,7 @@ export class SearchElement extends LitElement {
   updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.shadowRoot.querySelector("input[type=search]");
-    if (input === undefined) {
+    if (input !== undefined && input !== null) {
       input.focus();
     }
   }
@@ -343,7 +356,7 @@ export class SearchElement extends LitElement {
 
     // Add class for active element and scroll to it
     const newActive = this.renderRoot.querySelector(
-      `#hit-${nextId}`
+      `#hit-${nextId}`,
     ).parentNode;
     newActive.classList.add("active");
     newActive.scrollIntoView({
@@ -403,8 +416,13 @@ export class SearchElement extends LitElement {
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
-      const url =
+      let url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
+
+      // Retrieve a static JSON file when working in development mode
+      if (window.location.href.startsWith("http://localhost")) {
+        url = "/_/readthedocs-search.json";
+      }
 
       fetch(url, {
         method: "GET",
@@ -438,7 +456,7 @@ export class SearchElement extends LitElement {
   getCurrentFilter() {
     let filters = [];
     const filterElements = this.renderRoot.querySelectorAll(
-      ".filters input[type=checkbox]:checked"
+      ".filters input[type=checkbox]:checked",
     );
     for (const e of filterElements) {
       filters.push(e.value);
@@ -496,23 +514,23 @@ export class SearchElement extends LitElement {
     // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
 
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
 
     super.disconnectedCallback();
@@ -520,6 +538,11 @@ export class SearchElement extends LitElement {
 }
 
 export class SearchAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.search.json";
+  static addonEnabledPath = "addons.search.enabled";
+  static addonName = "Search";
+
   constructor(config) {
     super();
 
@@ -537,10 +560,6 @@ export class SearchAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.search.enabled === true;
   }
 }
 

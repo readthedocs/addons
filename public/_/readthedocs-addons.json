@@ -4,12 +4,16 @@
   "projects": {
     "current": {
       "slug": "example",
-      "language": "en",
+      "language": {
+        "code": "en"
+      },
       "repository": {
         "url": "https://github.com/readthedocs/addons",
         "type": "git"
       },
-      "programming_language": "words",
+      "programming_language": {
+        "code": "words"
+      },
       "single_version": false
     }
   },
@@ -29,7 +33,7 @@
   },
   "readthedocs": {
     "analytics": {
-      "code": null
+      "code": "UA-12345"
     }
   },
   "addons": {
@@ -58,7 +62,7 @@
     },
     "analytics": {
       "enabled": true,
-      "code": null
+      "code": "UA-12345"
     },
     "external_version_warning": {
       "enabled": true,
