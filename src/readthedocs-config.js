@@ -1,4 +1,9 @@
-import { CLIENT_VERSION, ADDONS_API_VERSION } from "./utils";
+import { default as fetch } from "unfetch";
+import {
+  CLIENT_VERSION,
+  ADDONS_API_VERSION,
+  ADDONS_API_ENDPOINT,
+} from "./utils";
 
 /**
  * Load Read the Docs configuration from API endpoint.
@@ -31,12 +36,14 @@ export function getReadTheDocsConfig(sendUrlParam) {
     params["version-slug"] = versionSlug;
   }
 
-  let url = "/_/addons/?" + new URLSearchParams(params);
+  let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
+  // TODO: find a way to disable this when running on test environment
+  //
   // Retrieve a static JSON file when working in development mode
-  if (window.location.href.startsWith("http://localhost")) {
-    url = "/_/readthedocs-addons.json";
-  }
+  // if (window.location.href.startsWith("http://localhost")) {
+  //   url = "/_/readthedocs-addons.json";
+  // }
 
   return fetch(url, {
     method: "GET",

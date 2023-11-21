@@ -1,6 +1,7 @@
 import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "0";
+export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
 export const CLIENT_VERSION = "0.8.0";
 
