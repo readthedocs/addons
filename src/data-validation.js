@@ -233,9 +233,11 @@ const addons_hotkeys = {
 const addons_notifications = {
   $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
   type: "object",
+  required: ["addons"],
   properties: {
     addons: {
       type: "object",
+      required: ["external_version_warning", "non_latest_version_warning"],
       properties: {
         external_version_warning: {
           type: "object",
