@@ -11,6 +11,7 @@ import { domReady, isReadTheDocsEmbedPresent } from "./utils";
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
     console.debug("Read the Docs Embed is present. Skipping...");
+    // TODO: return ``Promise.reject()`` or similar here to avoid hybrid async/sync functions.
     return false;
   }
 
