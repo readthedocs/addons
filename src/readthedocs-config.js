@@ -38,12 +38,15 @@ export function getReadTheDocsConfig(sendUrlParam) {
 
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
-  // TODO: find a way to disable this when running on test environment
-  //
   // Retrieve a static JSON file when working in development mode
-  // if (window.location.href.startsWith("http://localhost")) {
-  //   url = "/_/readthedocs-addons.json";
-  // }
+  if (
+    window.location.href.startsWith("http://localhost") &&
+    typeof IS_TESTING === "undefined"
+      ? false
+      : !IS_TESTING
+  ) {
+    url = "/_/readthedocs-addons.json";
+  }
 
   return fetch(url, {
     method: "GET",
