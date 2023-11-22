@@ -1,9 +1,8 @@
 /* @web/test-runner snapshot v1 */
 export const snapshots = {};
 
-snapshots[
-  "Flyout addon snapshot flyout completely"
-] = `<div class="bottom-right container floating">
+snapshots["Flyout addon snapshot flyout completely"] =
+  `<div class="bottom-right container floating">
   <header>
     <img
       alt="Read the Docs"
