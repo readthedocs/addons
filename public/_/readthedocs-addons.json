@@ -14,7 +14,7 @@
       "programming_language": {
         "code": "words"
       },
-      "single_version": false
+      "version_schema": "multiple_versions_with_translations"
     }
   },
   "versions": {

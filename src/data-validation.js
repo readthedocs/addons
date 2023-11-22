@@ -167,10 +167,15 @@ const addons_flyout = {
       properties: {
         current: {
           type: "object",
-          required: ["slug", "single_version"],
+          required: ["slug", "versioning_schema"],
           properties: {
             slug: { type: "string" },
-            single_version: { type: "boolean" },
+            versioning_schema: {
+              enum: [
+                "multiple_versions_with_translations",
+                "single_version_without_translations",
+              ],
+            },
           },
         },
       },
@@ -276,7 +281,12 @@ const addons_notifications = {
           type: "object",
           properties: {
             slug: { type: "string" },
-            single_version: { type: "boolean" },
+            versioning_schema: {
+              enum: [
+                "multiple_versions_with_translations",
+                "single_version_without_translations",
+              ],
+            },
             // TODO: use ajv-formats URI type
             repository: {
               type: "object",
