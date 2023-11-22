@@ -69,7 +69,6 @@
 
           it("on latest version", async () => {
             config.versions.current.slug = "latest";
-            console.log(config);
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");

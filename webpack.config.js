@@ -74,7 +74,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        IS_PRODUCTION: is_production,
+        IS_PRODUCTION: JSON.stringify(is_production),
+        IS_TESTING: JSON.stringify(false),
       }),
     ],
 
