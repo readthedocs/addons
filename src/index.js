@@ -41,9 +41,10 @@ export function setup() {
       .then((config) => {
         let promises = [];
 
-        // IS_PRODUCTION comes from Webpack and is undeclared otherwise
-        if (typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION) {
+        // IS_PRODUCTION comes from Webpack/Web Test Runner and is undeclared otherwise
+        if (typeof IS_PRODUCTION === "undefined" ? false : !IS_PRODUCTION) {
           // Addons that are only available on development
+          console.log("Development mode.");
         }
 
         for (const addon of addons) {

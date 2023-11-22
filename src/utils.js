@@ -55,7 +55,7 @@ export class AddonBase {
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
-    if (!valid) {
+    if (!valid && typeof IS_TESTING === "undefined" ? true : false) {
       console.debug(`Validation error on addon "${this.addonName}":`);
       console.debug(validate.errors);
     }
