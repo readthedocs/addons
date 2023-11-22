@@ -68,7 +68,7 @@ export class FlyoutElement extends LitElement {
   renderHeader() {
     let version = nothing;
     if (
-      this.config.projects.current.versioning_schema !==
+      this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
       version = html`<span>v: ${this.config.versions.current.slug}</span>`;
@@ -180,7 +180,7 @@ export class FlyoutElement extends LitElement {
   renderVersions() {
     if (
       !this.config.addons.flyout.versions.length ||
-      this.config.projects.current.versioning_schema ===
+      this.config.projects.current.versioning_scheme ===
         "single_version_without_translations"
     ) {
       return nothing;

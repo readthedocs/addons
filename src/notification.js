@@ -67,7 +67,7 @@ export class NotificationElement extends LitElement {
 
     if (
       config.addons.non_latest_version_warning.enabled &&
-      config.projects.current.versioning_schema !==
+      config.projects.current.versioning_scheme !==
         "single_version_without_translations" &&
       config.versions.current.type !== "external"
     ) {

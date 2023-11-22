@@ -31,7 +31,7 @@ describe("Flyout addon", () => {
         projects: {
           current: {
             slug: "project",
-            versioning_schema: "multiple_versions_with_translations",
+            versioning_scheme: "multiple_versions_with_translations",
           },
         },
         versions: {
@@ -60,7 +60,7 @@ describe("Flyout addon", () => {
         projects: {
           current: {
             slug: "project",
-            versioning_schema: "multiple_versions_with_translations",
+            versioning_scheme: "multiple_versions_with_translations",
           },
         },
         versions: {

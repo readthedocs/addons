@@ -167,10 +167,10 @@ const addons_flyout = {
       properties: {
         current: {
           type: "object",
-          required: ["slug", "versioning_schema"],
+          required: ["slug", "versioning_scheme"],
           properties: {
             slug: { type: "string" },
-            versioning_schema: {
+            versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
                 "single_version_without_translations",
@@ -281,7 +281,7 @@ const addons_notifications = {
           type: "object",
           properties: {
             slug: { type: "string" },
-            versioning_schema: {
+            versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
                 "single_version_without_translations",
