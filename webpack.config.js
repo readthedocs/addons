@@ -15,7 +15,7 @@ var injectReadTheDocsAddons = interceptor(function (req, res) {
       send(
         body.replace(
           "</head>",
-          '<script src="/readthedocs-addons.js"></script></head>',
+          '<script async type="text/javascript" src="/readthedocs-addons.js"></script></head>',
         ),
       );
     },
