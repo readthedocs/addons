@@ -124,14 +124,16 @@
             expect(server.requests[0].url).to.be.equal(url);
           });
 
-          it("skip everything because Read the Docs Embed is present", async () => {
+          it("skip everything because Read the Docs Embed is present", () => {
             const script = document.createElement("script");
             script.src = "/_/static/javascript/readthedocs-doc-embed.js";
             document.body.append(script);
 
-            // Our .setup() returns "false" when old embed js is present
-            const result = readthedocs.setup();
-            expect(result).to.be.false;
+            return readthedocs
+              .setup()
+              .catch((error) =>
+                expect(error.message).to.equal("Skipping injection"),
+              );
           });
         });
       });
