@@ -141,7 +141,7 @@
             // Read more at https://www.chaijs.com/plugins/chai-as-promised/
             readthedocs
               .setup()
-              .should.be.rejectedWith(Error("Skip"))
+              .should.be.rejectedWith("Skipping injection")
               .and.notify(done);
           });
         });
