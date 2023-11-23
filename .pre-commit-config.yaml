@@ -3,12 +3,13 @@ repos:
     rev: "v3.1.0"
     hooks:
       - id: prettier
-        args: ["--write", "."]
+        args: ["--ignore-path", ".prettierignore"]
         types_or: [css, javascript, json]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
+        exclude: "^(dist/|public/).*$"
       - id: check-added-large-files
       - id: check-case-conflict
       - id: check-executables-have-shebangs
@@ -19,7 +20,7 @@ repos:
       - id: check-yaml
       - id: destroyed-symlinks
       - id: end-of-file-fixer
-        exclude: "^dist/.*$"
+        exclude: "^(dist/|public/).*$"
   - repo: local
     hooks:
       - id: check-build-assets
@@ -27,4 +28,5 @@ repos:
         description: Ensure that `npm run build` was run before commiting.
         language: script
         types_or: [css, javascript, svg, json]
+        pass_filenames: false
         entry: .pre-commit/check-build-assets.sh
