@@ -1,0 +1,84 @@
+<html>
+  <body>
+    <script type="module">
+      import { default as sinon } from "sinon";
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as analytics from "../src/analytics";
+
+      let server;
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Create a sinon fake server to mock requests
+          server = sinon.fakeServer.create();
+
+          config = {
+            addons: {
+              analytics: {
+                enabled: true,
+                code: "UA-12345",
+              },
+            },
+            readthedocs: {
+              analytics: {
+                code: "UA-99999",
+              },
+            },
+            projects: {
+              current: {
+                slug: "project",
+                language: {
+                  code: "es",
+                },
+                programming_language: {
+                  code: "py",
+                },
+              },
+            },
+            versions: {
+              current: {
+                slug: "version",
+              },
+            },
+          };
+        });
+
+        afterEach(() => {
+          // Restore the fake server to its original state
+          server.restore();
+        });
+
+        describe("Analytics addon", () => {
+          it("hits Read the Docs pageview API", async () => {
+            // Response 204 on requests made to Read the Docs analytics' API
+            const matchUrl = new RegExp(`^${analytics.API_ENDPOINT}`, "g");
+            server.respondWith("GET", matchUrl, [204, {}, ""]);
+
+            const addon = new analytics.AnalyticsAddon(config);
+
+            // Respond to all the request waiting for a response
+            server.respond();
+
+            expect(server.requests).to.have.length(1);
+            expect(server.requests[0].status).to.be.equal(204);
+            expect(server.requests[0].method).to.be.equal("GET");
+
+            const params = {
+              project: "project",
+              version: "version",
+              absolute_uri: window.location.href,
+            };
+
+            const url =
+              analytics.API_ENDPOINT +
+              "?" +
+              new URLSearchParams(params).toString();
+            expect(server.requests[0].url).to.be.equal(url);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

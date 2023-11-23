@@ -15,7 +15,7 @@ var injectReadTheDocsAddons = interceptor(function (req, res) {
       send(
         body.replace(
           "</head>",
-          '<script src="/readthedocs-addons.js"></script></head>',
+          '<script async type="text/javascript" src="/readthedocs-addons.js"></script></head>',
         ),
       );
     },
@@ -74,7 +74,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        IS_PRODUCTION: is_production,
+        IS_PRODUCTION: JSON.stringify(is_production),
+        IS_TESTING: JSON.stringify(false),
       }),
     ],
 

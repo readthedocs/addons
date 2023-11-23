@@ -1,8 +1,12 @@
+// Using unfetch 4.2.0 because 5.0.0 has a bug
+// https://github.com/developit/unfetch/pull/164
+import { default as fetch } from "unfetch";
+
 import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { CLIENT_VERSION } from "./utils";
 
-const API_ENDPOINT = "/_/api/v2/analytics/";
+export const API_ENDPOINT = "/_/api/v2/analytics/";
 
 /**
  * Analytics addon
@@ -41,7 +45,6 @@ export class AnalyticsAddon extends AddonBase {
     fetch(url, {
       method: "GET",
       cache: "no-store",
-      headers: { "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION },
     })
       .then((response) => {
         if (!response.ok) {

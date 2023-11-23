@@ -255,7 +255,7 @@ export class NotificationElement extends LitElement {
 export class NotificationAddon extends AddonBase {
   static jsonValidationURI =
     "http://v1.schemas.readthedocs.org/addons.notifications.json";
-  static addonName = "HotKeys";
+  static addonName = "Notification";
 
   constructor(config) {
     super();
@@ -279,9 +279,12 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
+    if (!super.isConfigValid(config)) {
+      return false;
+    }
+
     return (
-      (super.isConfigValid(config) &&
-        config.addons.external_version_warning.enabled === true &&
+      (config.addons.external_version_warning.enabled === true &&
         config.versions.current.type === "external") ||
       (config.addons.non_latest_version_warning.enabled === true &&
         config.versions.current.type !== "external")
