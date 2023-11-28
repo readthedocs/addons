@@ -57,7 +57,9 @@ export class HotKeysElement extends LitElement {
       this.docDiffHotKeyEnabled &&
       keyboardEventToString(e) ===
         this.config.addons.hotkeys.doc_diff.trigger &&
-      document.activeElement.tagName !== "INPUT"
+      document.activeElement.tagName !== "INPUT" &&
+      document.activeElement.tagName !== "TEXTAREA" &&
+      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
       if (this.docDiffShowed) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
@@ -73,6 +75,7 @@ export class HotKeysElement extends LitElement {
       this.searchHotKeyEnabled &&
       keyboardEventToString(e) === this.config.addons.hotkeys.search.trigger &&
       document.activeElement.tagName !== "INPUT" &&
+      document.activeElement.tagName !== "TEXTAREA" &&
       document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
       if (this.searchShowed) {
