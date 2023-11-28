@@ -4,7 +4,8 @@
   <body>
     <script type="module">
       import { default as sinon } from "sinon";
-      import { expect, elementUpdated } from "@open-wc/testing";
+      import { default as chaiAsPromised } from "chai-as-promised";
+      import { expect, elementUpdated, chai } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import {
         ADDONS_API_VERSION,
@@ -16,6 +17,11 @@
 
       let server;
       let config;
+
+      // Install "chai-as-promised" plugin
+      // https://www.chaijs.com/plugins/chai-as-promised/
+      chai.use(chaiAsPromised);
+      chai.should();
 
       runTests(async () => {
         beforeEach(() => {
@@ -124,16 +130,19 @@
             expect(server.requests[0].url).to.be.equal(url);
           });
 
-          it("skip everything because Read the Docs Embed is present", () => {
+          // The last call of "done" function is required here because is how Mocha works with async code.
+          // Read more at https://mochajs.org/#asynchronous-code
+          it("skip everything because Read the Docs Embed is present", (done) => {
             const script = document.createElement("script");
             script.src = "/_/static/javascript/readthedocs-doc-embed.js";
             document.body.append(script);
 
-            return readthedocs
+            // NOTE: there is no need to use "expect" here when using "Promise.should"
+            // Read more at https://www.chaijs.com/plugins/chai-as-promised/
+            readthedocs
               .setup()
-              .catch((error) =>
-                expect(error.message).to.equal("Skipping injection"),
-              );
+              .should.be.rejectedWith("Skipping injection")
+              .and.notify(done);
           });
         });
       });
