@@ -3,7 +3,7 @@ import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "0";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.8.0";
+export const CLIENT_VERSION = "0.9.0";
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [
