@@ -132,7 +132,7 @@
 
           // The last call of "done" function is required here because is how Mocha works with async code.
           // Read more at https://mochajs.org/#asynchronous-code
-          it("skip everything because Read the Docs Embed is present", function (done) {
+          it("skip everything because Read the Docs Embed is present", (done) => {
             const script = document.createElement("script");
             script.src = "/_/static/javascript/readthedocs-doc-embed.js";
             document.body.append(script);
