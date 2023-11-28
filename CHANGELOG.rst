@@ -4,6 +4,19 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.9.0
+--------------
+
+:date: November 28, 2023
+
+* Customize flyout font size via CSS variables
+* NPM packages updated to their latest versions
+* Use JSON schema to validate data from the API
+* Increase test suite for all the addons.
+  Test running inside the browser, checks for HTML and DOM changes,
+  mocked requests and more!
+* Read ``version_schema`` field instead ``single_version`` from addons API response.
+
 Version v0.8.0
 --------------
 
