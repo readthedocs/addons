@@ -6,7 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { domReady, isReadTheDocsEmbedPresent } from "./utils";
+import { domReady, isReadTheDocsEmbedPresent, IS_PRODUCTION } from "./utils";
 
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
@@ -41,8 +41,7 @@ export function setup() {
       .then((config) => {
         let promises = [];
 
-        // IS_PRODUCTION comes from Webpack/Web Test Runner and is undeclared otherwise
-        if (typeof IS_PRODUCTION === "undefined" ? false : !IS_PRODUCTION) {
+        if (!IS_PRODUCTION) {
           // Addons that are only available on development
           console.log("Development mode.");
         }
