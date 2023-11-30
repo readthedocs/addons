@@ -4,6 +4,14 @@ CHANGELOG
 .. The text for the changelog is manually generated for now.
 
 
+Version v0.9.1
+--------------
+
+:date: November 30, 2023
+
+* Fix issue with ``IS_TESTING`` variable that made the production javascript to
+  hit ``localhost:`` for the JSON response instead of production API.
+
 Version v0.9.0
 --------------
 
