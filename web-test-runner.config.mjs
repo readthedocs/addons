@@ -33,8 +33,8 @@ export default {
     replace({
       preventAssignment: true,
       include: ["src/**/*.js"],
-      IS_TESTING: JSON.stringify(true),
-      IS_PRODUCTION: JSON.stringify(false),
+      WEBPACK_IS_TESTING: JSON.stringify(true),
+      WEBPACK_IS_PRODUCTION: JSON.stringify(false),
     }),
   ],
 };

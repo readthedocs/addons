@@ -3,6 +3,7 @@ import {
   CLIENT_VERSION,
   ADDONS_API_VERSION,
   ADDONS_API_ENDPOINT,
+  IS_TESTING,
 } from "./utils";
 
 /**
@@ -39,12 +40,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
   // Retrieve a static JSON file when working in development mode
-  if (
-    window.location.href.startsWith("http://localhost") &&
-    typeof IS_TESTING === "undefined"
-      ? false
-      : !IS_TESTING
-  ) {
+  if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
     url = "/_/readthedocs-addons.json";
   }
 

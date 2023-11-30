@@ -5,6 +5,12 @@ export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
 export const CLIENT_VERSION = "0.9.0";
 
+// WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
+export const IS_TESTING =
+  typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
+export const IS_PRODUCTION =
+  typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
+
 export function isReadTheDocsEmbedPresent() {
   const urls = [
     "/_/static/javascript/readthedocs-doc-embed.js",
