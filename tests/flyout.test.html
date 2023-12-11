@@ -218,6 +218,18 @@
           it("snapshot flyout completely", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("snapshot flyout with search disabled", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            /* console.log(document.querySelectorAll("readthedocs-flyout").length); */
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
             await expect(element).shadowDom.to.equalSnapshot();
           });
         });
