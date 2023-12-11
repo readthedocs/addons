@@ -218,7 +218,7 @@
           it("snapshot flyout completely", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot();
           });
         });
       });
