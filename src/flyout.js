@@ -2,6 +2,7 @@ import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
+import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
@@ -103,24 +104,33 @@ export class FlyoutElement extends LitElement {
   }
 
   renderSearch() {
-    // TODO: This is not yet working with the readthedocs-search component yet. The integration
-    // will be handled separately.
-    // See https://github.com/readthedocs/addons/issues/90
-    return html`
-      <dl>
-        <dt>Search</dt>
-        <dd>
-          <form @focusin="${this.showSearch}" id="flyout-search-form">
-            <input
-              type="text"
-              name="q"
-              aria-label="Search docs"
-              placeholder="Search docs"
-            />
-          </form>
-        </dd>
-      </dl>
-    `;
+    // Display the search input only if the search is enabled for this project
+    // Note we use ``objectPath`` here instead of validating via JSON schema
+    // because this value is optional: even if the search API response is broken,
+    // we want to keep showing the flyout but without the search input.
+    const search_enabled = objectPath.get(
+      this.config,
+      "addons.search.enabled",
+      false,
+    );
+    if (search_enabled) {
+      return html`
+        <dl>
+          <dt>Search</dt>
+          <dd>
+            <form @focusin="${this.showSearch}" id="flyout-search-form">
+              <input
+                type="text"
+                name="q"
+                aria-label="Search docs"
+                placeholder="Search docs"
+              />
+            </form>
+          </dd>
+        </dl>
+      `;
+    }
+    return nothing;
   }
 
   renderVCS() {
