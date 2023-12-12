@@ -49,17 +49,6 @@
         "test"
       ]
     },
-    "search": {
-      "enabled": true,
-      "project": "addons",
-      "version": "latest",
-      "api_endpoint": "/_/api/v3/search/",
-      "filters": [
-        ["Search only in this project", "project:addons/latest"],
-        ["Search subprojects", "subprojects:addons/latest"]
-      ],
-      "default_filter": "subprojects:addons/latest"
-    },
     "analytics": {
       "enabled": true,
       "code": "UA-12345"
