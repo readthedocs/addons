@@ -11,6 +11,9 @@
         beforeEach(() => {
           config = {
             addons: {
+              search: {
+                enabled: true,
+              },
               flyout: {
                 enabled: true,
                 downloads: [
@@ -215,7 +218,31 @@
           it("snapshot flyout completely", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            expect(element).shadowDom.to.equalSnapshot();
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("snapshot flyout with search disabled", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("flyout with search disabled does not contain the search input", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const searchForm = element.shadowRoot.querySelector(
+              '#flyout-search-form > input[name="q"',
+            );
+            expect(searchForm).to.not.exist;
           });
         });
       });

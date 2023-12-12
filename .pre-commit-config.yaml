@@ -9,7 +9,7 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
-        exclude: "^(dist/|public/).*$"
+        exclude: "^(dist/|public/|tests/__snapshots__/).*$"
       - id: check-added-large-files
       - id: check-case-conflict
       - id: check-executables-have-shebangs
@@ -20,7 +20,7 @@ repos:
       - id: check-yaml
       - id: destroyed-symlinks
       - id: end-of-file-fixer
-        exclude: "^(dist/|public/).*$"
+        exclude: "^(dist/|public/|tests/__snapshots__/).*$"
   - repo: local
     hooks:
       - id: check-build-assets
