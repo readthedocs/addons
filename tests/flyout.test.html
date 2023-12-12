@@ -239,7 +239,9 @@
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
             await elementUpdated(element);
-            const searchForm = element.shadowRoot.querySelector('#flyout-search-form > input[name="q"');
+            const searchForm = element.shadowRoot.querySelector(
+              '#flyout-search-form > input[name="q"',
+            );
             expect(searchForm).to.not.exist;
           });
         });
