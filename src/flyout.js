@@ -108,12 +108,12 @@ export class FlyoutElement extends LitElement {
     // Note we use ``objectPath`` here instead of validating via JSON schema
     // because this value is optional: even if the search API response is broken,
     // we want to keep showing the flyout but without the search input.
-    const search_enabled = objectPath.get(
+    const searchEnabled = objectPath.get(
       this.config,
       "addons.search.enabled",
       false,
     );
-    if (search_enabled) {
+    if (searchEnabled) {
       return html`
         <dl>
           <dt>Search</dt>
