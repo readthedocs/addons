@@ -226,11 +226,21 @@
             // Disable the search from the config object
             config.addons.search.enabled = false;
 
-            /* console.log(document.querySelectorAll("readthedocs-flyout").length); */
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
             await elementUpdated(element);
             await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("flyout with search disabled does not contain the search input", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const searchForm = element.shadowRoot.querySelector('#flyout-search-form > input[name="q"');
+            expect(searchForm).to.not.exist;
           });
         });
       });
