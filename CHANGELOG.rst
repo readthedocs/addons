@@ -7,6 +7,14 @@ CHANGELOG
 Version v0.9.1
 --------------
 
+:date: December 19, 2023
+
+* Don't show search input on flyout when search is disabled
+* Update all ``npm`` dependencies with
+
+Version v0.9.1
+--------------
+
 :date: November 30, 2023
 
 * Fix issue with ``IS_TESTING`` variable that made the production javascript to
