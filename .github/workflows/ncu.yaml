@@ -27,7 +27,8 @@ jobs:
         run: npm install -g npm-check-updates
 
       - name: Update packages
-        run: ncu --upgrade
+        # ``unfetch`` is rejected here because its latest version is not compatible with our project
+        run: ncu --upgrade --reject unfetch
 
       - name: Install them and update "package-lock.json"
         run: npm install
@@ -40,6 +41,7 @@ jobs:
         with:
           add-paths: |
             package*.json
+            dist/readthedocs-addons.js*
 
           title: |
             Packages: updated via `ncu -u`
