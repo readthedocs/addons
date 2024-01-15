@@ -2,7 +2,7 @@ import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
-import { visualDomDiff } from "visual-dom-diff";
+import { default as visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
