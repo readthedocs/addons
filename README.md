@@ -59,10 +59,6 @@ powered by Elasticsearch.
 
 ![EthicalAds](docs/ethical-ads-example.png)
 
-### Tooltips
-
-Display a nice tooltip when hovering internal links of the same documentation.
-
 ---
 
 ## Local Development
