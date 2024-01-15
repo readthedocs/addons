@@ -253,8 +253,8 @@ export class SearchElement extends LitElement {
       if (content.length > MAX_SUBSTRING_LIMIT) {
         content = unsafeHTML(
           "... " +
-          block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
-          " ..."
+            block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+            " ...",
         );
       } else {
         content = unsafeHTML(block.highlights.content[0]);
