@@ -8,7 +8,7 @@ Version v0.9.2
 
 :date: Jan 15, 2024
 
-* Security fix, more information in `GHSA-9v45-336h-5xw5 <https://github.com/readthedocs/readthedocs-sphinx-search/security/advisories/GHSA-9v45-336h-5xw5>`__.
+* Security fix, more information in `GHSA-9v45-336h-5xw5 <https://github.com/readthedocs/addons/security/advisories/GHSA-9v45-336h-5xw5>`__.
 
 Version v0.9.1
 --------------
