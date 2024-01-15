@@ -241,23 +241,23 @@ export class SearchElement extends LitElement {
   }
 
   renderBlockResult(block, index, result) {
-    // TODO: distinguish between `block.type` (section or domain)
-
     // TODO: take a substring of the title as well in case it's too long?
     let title = block.title;
     if (block.highlights.title.length) {
-      title = block.highlights.title[0];
+      title = unsafeHTML(block.highlights.title[0]);
     }
 
     let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
     if (block.highlights.content.length) {
       // TODO: with this logic it could happen the highlighted part is outside of the substring
-      content = block.highlights.content[0];
       if (content.length > MAX_SUBSTRING_LIMIT) {
-        content =
+        content = unsafeHTML(
           "... " +
           block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
-          " ...";
+          " ..."
+        );
+      } else {
+        content = unsafeHTML(block.highlights.content[0]);
       }
     }
 
@@ -268,8 +268,8 @@ export class SearchElement extends LitElement {
         href="${result.path}#${block.id}"
       >
         <div id="hit-${index}">
-          <p class="hit subheading">${unsafeHTML(title)}</p>
-          <p class="hit content">${unsafeHTML(content)}</p>
+          <p class="hit subheading">${title}</p>
+          <p class="hit content">${content}</p>
         </div>
       </a>
     `;
