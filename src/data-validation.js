@@ -76,9 +76,10 @@ const addons_docdiff = {
       properties: {
         doc_diff: {
           type: "object",
-          required: ["base_url", "enabled"],
+          required: ["base_url", "root_selector", "enabled"],
           properties: {
             base_url: { type: "string" },
+            root_selector: { type: "string" },
             enabled: { type: "boolean" },
           },
         },
