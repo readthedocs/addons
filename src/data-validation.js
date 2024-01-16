@@ -174,6 +174,7 @@ const addons_flyout = {
             versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
+                "multiple_versions_without_translations",
                 "single_version_without_translations",
               ],
             },
@@ -287,6 +288,7 @@ const addons_notifications = {
             versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
+                "multiple_versions_without_translations",
                 "single_version_without_translations",
               ],
             },
