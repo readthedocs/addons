@@ -71,6 +71,38 @@ describe("Flyout addon", () => {
       }),
     ).to.be.true;
   });
+
+  // This test is a copy of the previous one.
+  // We should probably create a `config` variable and adapt it depending on the test,
+  // instead of duplicating the whole object.
+  it("enabled with multiple_versions_without_translations", () => {
+    expect(
+      FlyoutAddon.isEnabled({
+        addons: {
+          flyout: {
+            enabled: true,
+            downloads: [],
+            translations: [],
+            versions: [],
+          },
+        },
+        domains: {
+          dashboard: "readthedocs.org",
+        },
+        projects: {
+          current: {
+            slug: "project",
+            versioning_scheme: "multiple_versions_without_translations",
+          },
+        },
+        versions: {
+          current: {
+            slug: "latest",
+          },
+        },
+      }),
+    ).to.be.true;
+  });
 });
 
 describe("Flyout element", () => {
