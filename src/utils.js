@@ -3,7 +3,7 @@ import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "0";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.9.3";
+export const CLIENT_VERSION = "0.9.4";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =

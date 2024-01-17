@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.9.4
+--------------
+
+:date: Jan 17, 2024
+
+* Log debug data about validation when running the client in production
+* Allow projects with ``multiple_versions_without_translations`` to show the flyout
+
 Version v0.9.3
 --------------
 
