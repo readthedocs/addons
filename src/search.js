@@ -5,6 +5,7 @@ import {
   faMagnifyingGlass,
   faCircleNotch,
   faBinoculars,
+  faBarsStaggered,
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
@@ -59,6 +60,7 @@ export class SearchElement extends LitElement {
     library.add(faMagnifyingGlass);
     library.add(faCircleNotch);
     library.add(faBinoculars);
+    library.add(faBarsStaggered);
 
     this.config = null;
     this.show = false;
@@ -217,13 +219,19 @@ export class SearchElement extends LitElement {
   }
 
   renderResults(data) {
+    const listIcon = icon(faBarsStaggered, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     this.results = html`
       <div class="hit">
         ${data.results.map(
           (result, rindex) =>
-            html` <a href="${result.path}">
+            html`<div class="hit-block">
+              <a class="hit-block-heading" href="${result.path}">
+                <i>${listIcon.node[0]}</i>
                 <h2>${result.title} ${this.renderExternalProject(result)}</h2>
               </a>
 
@@ -234,7 +242,8 @@ export class SearchElement extends LitElement {
                     rindex + bindex + 1,
                     result,
                   )}`,
-              )}`,
+              )}
+            </div>`,
         )}
       </div>
     `;
