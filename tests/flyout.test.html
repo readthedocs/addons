@@ -51,6 +51,9 @@
               current: {
                 slug: "project",
                 versioning_scheme: "multiple_versions_with_translations",
+                language: {
+                  code: "en",
+                },
               },
             },
             versions: {
@@ -62,6 +65,30 @@
         });
 
         describe("Flyout addon", () => {
+          it("render languages section translation selected", async () => {
+
+            // Select one of the translations as current project's language
+            config.projects.current.language.code = "es";
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            const section = element.shadowRoot.querySelector(
+              "main > dl.languages",
+            );
+            expect(section).dom.to.equal(`
+      <dl class="languages">
+        <dt>Languages</dt>
+        <dd>
+          <strong>
+            <a href="/es/">es</a>
+          </strong>
+        </dd>
+      </dl>
+      `);
+          });
+
           it("render languages section", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
