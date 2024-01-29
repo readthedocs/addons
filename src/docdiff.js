@@ -2,7 +2,7 @@ import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
-import * as visualDomDiff from "visual-dom-diff";
+import { default as visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -113,7 +113,7 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
-    fetch(this.baseUrl)
+    fetch(this.config.addons.doc_diff.base_url)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error downloading requested base URL.");
@@ -125,9 +125,11 @@ export class DocDiffElement extends LitElement {
         const parser = new DOMParser();
         const html_document = parser.parseFromString(text, "text/html");
         const old_body = html_document.documentElement.querySelector(
-          this.rootSelector,
+          this.config.addons.doc_diff.root_selector,
         );
-        const new_body = document.querySelector(this.rootSelector);
+        const new_body = document.querySelector(
+          this.config.addons.doc_diff.root_selector,
+        );
 
         if (old_body == null || new_body == null) {
           throw new Error("Element not found in both documents.");

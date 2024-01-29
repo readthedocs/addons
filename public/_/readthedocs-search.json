@@ -233,6 +233,34 @@
       "version": {
         "slug": "stable"
       }
+    },
+    {
+      "blocks": [
+        {
+          "content": "Test content for <strong>XSS</strong>",
+          "highlights": {
+            "content": [],
+            "title": []
+          },
+          "id": "deleting-offline-formats",
+          "title": "Test title for <strong>XSS</strong>",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/<strong>XSS</strong>.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Test for <strong>XSS</strong>",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
     }
   ]
 }

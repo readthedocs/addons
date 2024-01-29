@@ -32,9 +32,19 @@ Shows a banner at the top of the documentation communicating the build was perfo
 _Authentic_ Read the Docs' flyout that shows all the available versions,
 links to download the offline formats, view and edit on GitHub and more.
 
-### Non-latest version warning banner
+![Flyout](docs/flyout-example.png)
 
-Shows a banner at the top telling readers they are not reading the latest stable version of the documentation.
+### Non-stable version warning banner
+
+Shows a banner at the top telling readers they may be reading an outdated version.
+
+![Non-stable version warining banner](docs/non-stable-warning-banner-example.png)
+
+### Latest version warning banner
+
+Shows a banner at the top telling readers they are reading the latest un-released version of the documentation.
+
+![Latest version warning banner](docs/latest-warning-banner-example.png)
 
 ### Search as you type
 
@@ -48,10 +58,6 @@ powered by Elasticsearch.
 [EthicalAds](https://www.ethicalads.io/) to support Read the Docs Community being free for everybody.
 
 ![EthicalAds](docs/ethical-ads-example.png)
-
-### Tooltips
-
-Display a nice tooltip when hovering internal links of the same documentation.
 
 ---
 

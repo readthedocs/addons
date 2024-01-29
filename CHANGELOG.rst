@@ -3,14 +3,29 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.9.4
+--------------
 
-Version v0.9.1
+:date: Jan 17, 2024
+
+* Log debug data about validation when running the client in production
+* Allow projects with ``multiple_versions_without_translations`` to show the flyout
+
+Version v0.9.3
+--------------
+
+:date: Jan 15, 2024
+
+* Security fix, more information in `GHSA-9v45-336h-5xw5 <https://github.com/readthedocs/addons/security/advisories/GHSA-9v45-336h-5xw5>`__.
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.2
 --------------
 
 :date: December 19, 2023
 
 * Don't show search input on flyout when search is disabled
-* Update all ``npm`` dependencies with
+* Update all ``npm`` dependencies with with ``ncu -u``
 
 Version v0.9.1
 --------------
