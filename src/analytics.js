@@ -30,7 +30,10 @@ export class AnalyticsAddon extends AddonBase {
     super();
     this.config = config;
 
-    this.registerPageView();
+    // Only register pageviews on non-external versions
+    if (this.config.versions.current.type !== "external") {
+      this.registerPageView();
+    }
     this.injectGlobalAnalytics();
   }
 

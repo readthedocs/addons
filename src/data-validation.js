@@ -54,9 +54,10 @@ const addons_analytics = {
       properties: {
         current: {
           type: "object",
-          required: ["slug"],
+          required: ["slug", "type"],
           properties: {
             slug: { type: "string" },
+            type: { type: "string" },
           },
         },
       },

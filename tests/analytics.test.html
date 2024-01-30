@@ -40,6 +40,7 @@
             versions: {
               current: {
                 slug: "version",
+                type: "branch",
               },
             },
           };
@@ -76,6 +77,21 @@
               "?" +
               new URLSearchParams(params).toString();
             expect(server.requests[0].url).to.be.equal(url);
+          });
+
+          it("don't hit API if version is external", async () => {
+            config.versions.current.type = "external"
+
+            // Response 204 on requests made to Read the Docs analytics' API
+            const matchUrl = new RegExp(`^${analytics.API_ENDPOINT}`, "g");
+            server.respondWith("GET", matchUrl, [204, {}, ""]);
+
+            const addon = new analytics.AnalyticsAddon(config);
+
+            // Respond to all the request waiting for a response
+            server.respond();
+
+            expect(server.requests).to.have.length(0);
           });
         });
       });
