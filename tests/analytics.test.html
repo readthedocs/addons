@@ -80,7 +80,7 @@
           });
 
           it("don't hit API if version is external", async () => {
-            config.versions.current.type = "external"
+            config.versions.current.type = "external";
 
             // Response 204 on requests made to Read the Docs analytics' API
             const matchUrl = new RegExp(`^${analytics.API_ENDPOINT}`, "g");
