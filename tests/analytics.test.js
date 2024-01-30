@@ -37,6 +37,7 @@ describe("Analytics addon", () => {
         versions: {
           current: {
             slug: "project",
+            type: "branch",
           },
         },
       }),
@@ -66,6 +67,7 @@ describe("Analytics addon", () => {
         versions: {
           current: {
             slug: "project",
+            type: "branch",
           },
         },
       }),
