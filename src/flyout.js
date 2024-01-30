@@ -209,7 +209,7 @@ export class FlyoutElement extends LitElement {
       <dl class="versions">
         <dt>Versions</dt>
         ${this.config.addons.flyout.versions.map(
-          (version) => html`<dd>${getVersionLink(version)}</dd> `,
+          (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>
     `;
@@ -220,13 +220,20 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
+    const currentTranslation = this.config.projects.current.language.code;
+
+    const getLanguageLink = (translation) => {
+      const link = html`<a href="${translation.url}">${translation.slug}</a>`;
+      return currentTranslation && translation.slug === currentTranslation
+        ? html`<strong>${link}</strong>`
+        : link;
+    };
+
     return html`
       <dl class="languages">
         <dt>Languages</dt>
         ${this.config.addons.flyout.translations.map(
-          (translation) => html`
-            <dd><a href="${translation.url}">${translation.slug}</a></dd>
-          `,
+          (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>
     `;
