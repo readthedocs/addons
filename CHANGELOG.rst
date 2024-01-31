@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.9.5
+--------------
+
+:date: Jan 31, 2024
+
+* Improve search modal UI design
+* Surround with ``<strong>`` the selected language in the flyout
+* Skip pageviews analytics on external versions
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.9.4
 --------------
 
