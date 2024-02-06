@@ -36,3 +36,4 @@ This is the release process for the Read the Docs Addons client.
 
       It requires defining AWS environment variables (``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``) and
       also a Cloudflare token (``CLOUDFLARE_API_TOKEN``).
+      You can get that token here: https://dash.cloudflare.com/profile/api-tokens.
