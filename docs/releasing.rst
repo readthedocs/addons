@@ -30,4 +30,9 @@ This is the release process for the Read the Docs Addons client.
 
       bumpver update --allow-dirty --patch  # use --minor if it introduces new features
 
-#. Deploy (if needed) the new files using Read the Docs's ``deploy-addons.sh`` script.
+#. Deploy (if needed) the new files using Read the Docs's `deploy-addons.sh <https://github.com/readthedocs/readthedocs-ops/blob/main/deploy/deploy-addons.sh>`_ script.
+
+   .. note::
+
+      It requires defining AWS environment variables (``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``) and
+      also a Cloudflare token (``CLOUDFLARE_API_TOKEN``).
