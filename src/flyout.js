@@ -187,6 +187,30 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  _getFlyoutLinkWithFilename = (url) => {
+    // Get the resolver's filename returned by the application (as HTTP header)
+    // and injected by Cloudflare Worker as a meta HTML tag
+    const metaFilename = document.querySelector(
+      "meta[name='readthedocs-resolver-filename']",
+    );
+
+    // Remove trailing slashes from the version's URL and append the
+    // resolver's filename after removing trailing ``index.html``.
+    // Examples:
+    //
+    //   URL: https://docs.readthedocs.io/en/latest/
+    //   Filename: /index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/latest/
+    //
+    //   URL: https://docs.readthedocs.io/en/stable/
+    //   Filename: /guides/access/index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/stable/guides/access/
+    return (
+      url.replace(/\/+$/, "") +
+      metaFilename.content.replace(/\/index.html$/, "")
+    );
+  };
+
   renderVersions() {
     if (
       !this.config.addons.flyout.versions.length ||
@@ -199,7 +223,8 @@ export class FlyoutElement extends LitElement {
     const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
-      const link = html`<a href="${version.url}">${version.slug}</a>`;
+      const url = this._getFlyoutLinkWithFilename(version.url);
+      const link = html`<a href="${url}">${version.slug}</a>`;
       return currentVersion && version.slug === currentVersion
         ? html`<strong>${link}</strong>`
         : link;
@@ -223,7 +248,8 @@ export class FlyoutElement extends LitElement {
     const currentTranslation = this.config.projects.current.language.code;
 
     const getLanguageLink = (translation) => {
-      const link = html`<a href="${translation.url}">${translation.slug}</a>`;
+      const url = this._getFlyoutLinkWithFilename(translation.url);
+      const link = html`<a href="${url}">${translation.slug}</a>`;
       return currentTranslation && translation.slug === currentTranslation
         ? html`<strong>${link}</strong>`
         : link;
