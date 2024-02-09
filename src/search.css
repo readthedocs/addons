@@ -159,7 +159,8 @@ div.hit-block a.hit-block-heading i svg {
   box-sizing: border-box;
 }
 
-:host > div .results a.hit:hover {
+:host > div .results a.hit:hover,
+:host > div .results .hit .active {
   background-color: rgb(245, 245, 245);
 }
 
@@ -219,10 +220,6 @@ div.hit-block a.hit-block-heading i svg {
   color: #6ea0ec;
   font-style: italic;
   font-weight: bold;
-}
-
-:host > div .results .hit .active {
-  background-color: rgb(245, 245, 245);
 }
 
 :host div.content > div.footer {
