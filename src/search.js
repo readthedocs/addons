@@ -2,6 +2,7 @@ import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
+  faClockRotateLeft,
   faMagnifyingGlass,
   faCircleNotch,
   faBinoculars,
@@ -73,6 +74,7 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
+    this.recentSearchesKey = "readthedocs_search_recent_searches"
   }
 
   loadConfig(config) {
@@ -136,7 +138,7 @@ export class SearchElement extends LitElement {
             />
           </form>
           <div class="filters">${this.renderFilters()}</div>
-          <div class="results">${this.results}</div>
+          <div class="results">${this.results || this.renderRecentSearches()}</div>
           <div class="footer">
             <ul class="help">
               <li><code>Enter</code> to select</li>
@@ -273,6 +275,7 @@ export class SearchElement extends LitElement {
     return html`
       <a
         @mouseenter=${this.mouseenterResultHit}
+        @click=${() => this.storeRecentSearch(block, result)}
         class="hit"
         href="${result.path}#${block.id}"
       >
@@ -282,6 +285,52 @@ export class SearchElement extends LitElement {
         </div>
       </a>
     `;
+  }
+
+  renderRecentSearches() {
+    const recentSearches = this.getRecentSearches();
+    if (!recentSearches || !recentSearches.length) {
+      return html`<p>No Recent Searches</p>`
+    }
+    console.log(recentSearches);
+    const listIcon = icon(faClockRotateLeft, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div class="hit">
+        <p>Recent Searches:</p>
+        ${recentSearches.map(
+          ({block, result}) =>
+            html`<div class="hit-block">
+              <a class="hit-block-heading" href="${result.path}">
+                <i>${listIcon.node[0]}</i>
+                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+              </a>
+
+              ${html`${this.renderBlockResult(
+                    block,
+                    1,
+                    result,
+                  )}`}
+            </div>`,
+        )}
+      </div>
+    `;
+  }
+
+  getRecentSearches() {
+    const recentSearchesString = localStorage.getItem(this.recentSearchesKey);
+    return recentSearchesString ? JSON.parse(recentSearchesString) : [];
+  }
+
+  storeRecentSearch(block, result) {
+    const recentSearches = this.getRecentSearches();
+    // TODO Avoid duplicates
+    // TODO Maybe add some limit to the total number of recent searches
+    recentSearches.push({block, result});
+    localStorage.setItem(this.recentSearchesKey, JSON.stringify(recentSearches));
   }
 
   renderExternalProject(result) {
