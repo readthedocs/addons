@@ -37,7 +37,7 @@
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.1.2",
     "object-path": "^0.11.8",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "rollup-plugin-lit-css": "^4.0.1",
     "sinon": "^17.0.1",
     "tippy.js": "^6.3.7",
