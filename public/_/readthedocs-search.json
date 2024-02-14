@@ -1,0 +1,266 @@
+{
+  "count": 6,
+  "next": null,
+  "previous": null,
+  "projects": [
+    {
+      "slug": "docs",
+      "versions": [
+        {
+          "slug": "stable"
+        }
+      ]
+    }
+  ],
+  "query": "\"config file\"",
+  "results": [
+    {
+      "blocks": [
+        {
+          "content": "The entries in the Downloads section of your project dashboard reflect the formats specified in your config file for each active version. This means that if you wish to remove downloadable content for a given version, you can do so by removing the matching formats key from your config file.",
+          "highlights": {
+            "content": [
+              "entries in the Downloads section of your project dashboard reflect the formats specified in your <span>config file</span>"
+            ],
+            "title": []
+          },
+          "id": "deleting-offline-formats",
+          "title": "Deleting offline formats",
+          "type": "section"
+        },
+        {
+          "content": "Offline formats are enabled by the formats key in our config file. A simple example is here: # Build PDF & ePub formats: - epub - pdf",
+          "highlights": {
+            "content": [
+              "Offline formats are enabled by the formats key in our <span>config file</span>."
+            ],
+            "title": []
+          },
+          "id": "enabling-offline-formats",
+          "title": "Enabling offline formats",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/guides/enable-offline-formats.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "How to enable offline formats",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "Here are some configuration file examples to help you get started. Pick an example based on the tool that your project is using, copy its contents to .readthedocs.yaml and add the file to your Git repository. SphinxMkDocsIf your project uses Sphinx, we offer a special builder optimized for Sphinx projects. .readthedocs.yaml # Read the Docs configuration file for Sphinx projects # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details # Required version: 2 # Set the OS, Python version and other tools you might need build: os: ubuntu-22.04 tools: python: \"3.12\" # You can also specify other tool versions: # nodejs: \"20\" # rust: \"1.70\" # golang: \"1.20\" # Build documentation in the \"docs/\" directory with Sphinx sphinx: configuration: docs/conf.py # You can configure Sphinx to use a different builder, for instance use the dirhtml builder for simpler URLs # builder: \"dirhtml\" # Fail on all warnings to avoid broken references # fail_on_warning: true # Optionally build your docs in additional formats such as PDF and ePub # formats: # - pdf # - epub # Optional but recommended, declare the Python requirements required # to build your documentation # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html # python: # install: # - requirements: docs/requirements.txtIf your project uses MkDocs, we offer a special builder optimized for MkDocs projects. .readthedocs.yaml # Read the Docs configuration file for MkDocs projects # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details # Required version: 2 # Set the version of Python and other tools you might need build: os: ubuntu-22.04 tools: python: \"3.12\" mkdocs: configuration: mkdocs.yml # Optionally declare the Python requirements required to build your docs python: install: - requirements: docs/requirements.txt",
+          "highlights": {
+            "content": [
+              "Read the Docs configuration file for Sphinx projects # See https:&#x2F;&#x2F;docs.readthedocs.io&#x2F;en&#x2F;stable&#x2F;<span>config-file</span>"
+            ],
+            "title": []
+          },
+          "id": "getting-started-with-a-template",
+          "title": "Getting started with a template",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": [
+          "Configuration <span>file</span> tutorial"
+        ]
+      },
+      "path": "/en/stable/config-file/index.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Configuration file tutorial",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "We recommend using a configuration file to manage your documentation. Our config file provides you per version settings, and those settings live in your Git repository. This allows you to validate changes using pull requests, and ensures that all your versions can be rebuilt from a reproducible configuration.",
+          "highlights": {
+            "content": [
+              "Our <span>config file</span> provides you per version settings, and those settings live in your Git repository."
+            ],
+            "title": []
+          },
+          "id": "use-a-readthedocs-yaml-configuration-file",
+          "title": "Use a .readthedocs.yaml configuration file",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/guides/reproducible-builds.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "How to create reproducible builds",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "Read the Docs supports configuring your documentation builds with a configuration file. This file is named .readthedocs.yaml and should be placed in the top level of your Git repository. The .readthedocs.yaml file can contain a number of settings that are not accessible through the Read the Docs website. Because the file is stored in Git, the configuration will apply to the exact version that is being built. This allows you to store different configurations for different versions of your documentation. Below is an example YAML file which shows the most common configuration options: SphinxMkDocs.readthedocs.yaml # Read the Docs configuration file for Sphinx projects # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details # Required version: 2 # Set the OS, Python version and other tools you might need build: os: ubuntu-22.04 tools: python: \"3.12\" # You can also specify other tool versions: # nodejs: \"20\" # rust: \"1.70\" # golang: \"1.20\" # Build documentation in the \"docs/\" directory with Sphinx sphinx: configuration: docs/conf.py # You can configure Sphinx to use a different builder, for instance use the dirhtml builder for simpler URLs # builder: \"dirhtml\" # Fail on all warnings to avoid broken references # fail_on_warning: true # Optionally build your docs in additional formats such as PDF and ePub # formats: # - pdf # - epub # Optional but recommended, declare the Python requirements required # to build your documentation # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html # python: # install: # - requirements: docs/requirements.txt.readthedocs.yaml # Read the Docs configuration file for MkDocs projects # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details # Required version: 2 # Set the version of Python and other tools you might need build: os: ubuntu-22.04 tools: python: \"3.12\" mkdocs: configuration: mkdocs.yml # Optionally declare the Python requirements required to build your docs python: install: - requirements: docs/requirements.txt See also Configuration file tutorialPractical steps to add a configuration file to your documentation project.",
+          "highlights": {
+            "content": [
+              "Read the Docs configuration file for Sphinx projects # See https:&#x2F;&#x2F;docs.readthedocs.io&#x2F;en&#x2F;stable&#x2F;<span>config-file</span>"
+            ],
+            "title": []
+          },
+          "id": "configuration-file-v2-readthedocs-yaml",
+          "title": "Configuration file v2 (.readthedocs.yaml)",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": [
+          "Configuration <span>file</span> v2 (.readthedocs.yaml)"
+        ]
+      },
+      "path": "/en/stable/config-file/v2.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Configuration file v2 (.readthedocs.yaml)",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "The Admin tab of the project home allows you to change some global configuration values of your project. In addition, you can further customize the building process using the .readthedocs.yaml configuration file. This has several advantages: The configuration lives next to your code and documentation, tracked by version control. It can be different for every version (more on versioning in the next section). Some configurations are only available using the config file. This configuration file should be part of your Git repository. It should be located in the base folder of the repository and be named .readthedocs.yaml. In this section, we will show you some examples of what a configuration file should contain. Tip Settings that apply to the entire project are controlled in the web dashboard, while settings that are version or build specific are better in the YAML file.",
+          "highlights": {
+            "content": [
+              "Some configurations are only available using the <span>config file</span>."
+            ],
+            "title": []
+          },
+          "id": "adding-a-configuration-file",
+          "title": "Adding a configuration file",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/tutorial/index.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Read the Docs tutorial",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "Date: June 06, 2023 @stsewd: Build: pass environment explicitly (#10388) @agjohnson: Try to bump up config file search in ranking (#10387) @benjaoming: Dev: invoke options –no-django-debug and –http-domain (#10384) @benjaoming: Doc: Remove broken reference (#10382) @github-actions[bot]: Dependencies: all packages updated via pip-tools (#10380) @stsewd: Logs: remove caching without tags log warning (#10376) @stsewd: Build: merge BaseEnvironment with BuildEnvironment (#10375) @stsewd: Build: avoid breaking builds when a new argument is added to a task (#10374) @stsewd: Remove unused permission classes (#10373) @benjaoming: Build: Bug in target_url, failure to add “success” status if no external version exists (#10369) @ericholscher: Release 9.13.1 (#10366) @benjaoming: Small index page tweak (#10358) @humitos: Project: suggest a simple config file on project import wizard (#10356) @humitos: Config: deprecated notification for projects without config file (#10354)",
+          "highlights": {
+            "content": [
+              ": June 06, 2023 @stsewd: Build: pass environment explicitly (#10388) @agjohnson: Try to bump up <span>config file</span>"
+            ],
+            "title": []
+          },
+          "id": "version-9-13-2",
+          "title": "Version 9.13.2",
+          "type": "section"
+        },
+        {
+          "content": "Date: April 20, 2021 @stsewd: OAuth: check if user exists (#8115) @stsewd: Sync versions: don’t fetch/return all versions (#8114) @astrojuanlu: Improve contributing docs, take 2 (#8113) @stsewd: ImportedFile: remove md5 field (#8111) @stsewd: Config file: improve docs and help text (#8110) @stsewd: Docs: add warning about design docs (#8104) @Harmon758: Docs: fix typo in config-file/v2.rst (#8102) @cocobennett: Improve documentation on contributing to documentation (#8082)",
+          "highlights": {
+            "content": [
+              "text (#8110) @stsewd: Docs: add warning about design docs (#8104) @Harmon758: Docs: fix typo in <span>config-file</span>"
+            ],
+            "title": []
+          },
+          "id": "version-5-14-2",
+          "title": "Version 5.14.2",
+          "type": "section"
+        },
+        {
+          "content": "Date: June 20, 2023 @stsewd: Test with explicit number of concurrent builds (#10444) @benjaoming: Do not show paths in 404s (#10443) @humitos: Deprecation: opt-out from config file email (#10440) @humitos: Deprecation: send emails to “active projects” only (#10439) @humitos: Use latest common/ (#10436) @benjaoming: Docs: Add email template to report abandoned projects (#10435) @rffontenelle: Update instructions for using transifex client tool (#10434) @stsewd: CI: trigger circleci job on readthedocs-ext on merge (#10433) @humitos: Deprecation: show the project slug/link correctly on email (#10432) @ericholscher: Add the api_client into the sync_repo task (#10431) @humitos: Release 9.13.3 (#10428) @humitos: Analytics: create DB index on PageView.date (#10426) @humitos: Celery: increase frequency of delete_closed_external_versions task (#10425) @humitos: Feature flag: remove unused ones (#10423) @benjaoming: Docs: Configuration file pages as explanation and reference (Diátaxis) (#10416) @ericholscher: Deprecation: send email notifications for config file v2 (#10415) @ericholscher: Add a cat command and note in the build output when a config file is properly used. (#10413) @humitos: Build: fail builds without configuration file or using v1 (#10355) @stsewd: Design doc: secure access to APIs from builders (#10289)",
+          "highlights": {
+            "content": [
+              "v2 (#10415) @ericholscher: Add a cat command and note in the build output when a <span>config file</span> is"
+            ],
+            "title": []
+          },
+          "id": "version-9-14-0",
+          "title": "Version 9.14.0",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/changelog.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Changelog",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    },
+    {
+      "blocks": [
+        {
+          "content": "Test content for <strong>XSS</strong>",
+          "highlights": {
+            "content": [],
+            "title": []
+          },
+          "id": "deleting-offline-formats",
+          "title": "Test title for <strong>XSS</strong>",
+          "type": "section"
+        }
+      ],
+      "domain": "https://docs.readthedocs.io",
+      "highlights": {
+        "title": []
+      },
+      "path": "/en/stable/<strong>XSS</strong>.html",
+      "project": {
+        "alias": null,
+        "slug": "docs"
+      },
+      "title": "Test for <strong>XSS</strong>",
+      "type": "page",
+      "version": {
+        "slug": "stable"
+      }
+    }
+  ]
+}

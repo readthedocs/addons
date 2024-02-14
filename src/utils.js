@@ -1,4 +1,15 @@
-import packagejson from "../package.json";
+import { ajv } from "./data-validation";
+import { default as objectPath } from "object-path";
+export const ADDONS_API_VERSION = "0";
+export const ADDONS_API_ENDPOINT = "/_/addons/";
+// This is managed by bumpver automatically
+export const CLIENT_VERSION = "0.9.5";
+
+// WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
+export const IS_TESTING =
+  typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
+export const IS_PRODUCTION =
+  typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [
@@ -9,8 +20,6 @@ export function isReadTheDocsEmbedPresent() {
     return document.querySelectorAll(`script[src="${url}"]`).length > 0;
   }
 }
-
-export const CLIENT_VERSION = packagejson.version;
 
 export const domReady = new Promise((resolve) => {
   if (
@@ -33,7 +42,7 @@ export const domReady = new Promise((resolve) => {
         capture: true,
         once: true,
         passive: true,
-      }
+      },
     );
   }
 });
@@ -45,7 +54,32 @@ export const domReady = new Promise((resolve) => {
  * and loading.
  */
 export class AddonBase {
+  static jsonValidationURI = null;
+  static addonName = null;
+  static addonEnabledPath = null;
+
+  static isConfigValid(config) {
+    const validate = ajv.getSchema(this.jsonValidationURI);
+    const valid = validate(config);
+    if (!valid && !IS_TESTING) {
+      console.debug(`Validation error on addon "${this.addonName}":`);
+      console.debug(validate.errors);
+    }
+    return valid;
+  }
+
   static isEnabled(config) {
+    return (
+      this.isConfigValid(config) &&
+      objectPath.get(config, this.addonEnabledPath, false) === true
+    );
+  }
+
+  static requiresUrlParam() {
+    // Decide whether or not this addons requires sending `url=` parameter to the API endpoint.
+    // Sending this attribute will make the API response to contain extra data (e.g. resolved URLs that depend on the exact URL)
+    //
+    // Note that sending `url=` attribute reduces the possibilities to use a cached response accross all the pages for the same project/version.
     return false;
   }
 }

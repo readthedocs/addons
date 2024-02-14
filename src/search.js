@@ -1,9 +1,11 @@
+import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
   faMagnifyingGlass,
   faCircleNotch,
   faBinoculars,
+  faBarsStaggered,
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
@@ -58,11 +60,9 @@ export class SearchElement extends LitElement {
     library.add(faMagnifyingGlass);
     library.add(faCircleNotch);
     library.add(faBinoculars);
+    library.add(faBarsStaggered);
 
-    // TODO: expand the default supported styles
-    this.className = this.className || "raised floating";
-
-    this.config = {};
+    this.config = null;
     this.show = false;
     this.cssFormFocusClasses = {};
     this.results = null;
@@ -76,8 +76,14 @@ export class SearchElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.config = config;
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!SearchAddon.isEnabled(config)) {
+      return;
+    }
 
+    this.config = config;
     if (config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
@@ -95,19 +101,21 @@ export class SearchElement extends LitElement {
     }
   }
 
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    // See https://lit.dev/docs/components/lifecycle/#firstupdated
+    // See https://stackoverflow.com/questions/43836886/failed-to-construct-customelement-error-when-javascript-file-is-placed-in-head
+    this.className = this.className || "raised floating";
+  }
+
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
-      return;
+    if (this.config === null) {
+      // nothing is a special Lit response type
+      return nothing;
     }
-
-    if (
-      this.config.addons &&
-      this.config.addons.search &&
-      this.config.addons.search.enabled
-    ) {
-      return this.renderSearchModal();
-    }
+    return this.renderSearchModal();
   }
 
   renderSearchModal() {
@@ -205,19 +213,25 @@ export class SearchElement extends LitElement {
             />
             <label for="filter-${index}"> ${filter.name} </label>
           </li>
-        `
+        `,
       )}
     `;
   }
 
   renderResults(data) {
+    const listIcon = icon(faBarsStaggered, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     this.results = html`
       <div class="hit">
         ${data.results.map(
           (result, rindex) =>
-            html` <a href="${result.path}">
+            html`<div class="hit-block">
+              <a class="hit-block-heading" href="${result.path}">
+                <i>${listIcon.node[0]}</i>
                 <h2>${result.title} ${this.renderExternalProject(result)}</h2>
               </a>
 
@@ -226,32 +240,33 @@ export class SearchElement extends LitElement {
                   html`${this.renderBlockResult(
                     block,
                     rindex + bindex + 1,
-                    result
-                  )}`
-              )}`
+                    result,
+                  )}`,
+              )}
+            </div>`,
         )}
       </div>
     `;
   }
 
   renderBlockResult(block, index, result) {
-    // TODO: distinguish between `block.type` (section or domain)
-
     // TODO: take a substring of the title as well in case it's too long?
     let title = block.title;
     if (block.highlights.title.length) {
-      title = block.highlights.title[0];
+      title = unsafeHTML(block.highlights.title[0]);
     }
 
     let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
     if (block.highlights.content.length) {
       // TODO: with this logic it could happen the highlighted part is outside of the substring
-      content = block.highlights.content[0];
       if (content.length > MAX_SUBSTRING_LIMIT) {
-        content =
+        content = unsafeHTML(
           "... " +
-          block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
-          " ...";
+            block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+            " ...",
+        );
+      } else {
+        content = unsafeHTML(block.highlights.content[0]);
       }
     }
 
@@ -262,8 +277,8 @@ export class SearchElement extends LitElement {
         href="${result.path}#${block.id}"
       >
         <div id="hit-${index}">
-          <p class="hit subheading">${unsafeHTML(title)}</p>
-          <p class="hit content">${unsafeHTML(content)}</p>
+          <p class="hit subheading">${title}</p>
+          <p class="hit content">${content}</p>
         </div>
       </a>
     `;
@@ -289,7 +304,9 @@ export class SearchElement extends LitElement {
   updated(changedProperties) {
     // https://lit.dev/docs/components/shadow-dom/
     const input = this.shadowRoot.querySelector("input[type=search]");
-    input.focus();
+    if (input !== undefined && input !== null) {
+      input.focus();
+    }
   }
 
   queryInputFocus(e) {
@@ -348,7 +365,7 @@ export class SearchElement extends LitElement {
 
     // Add class for active element and scroll to it
     const newActive = this.renderRoot.querySelector(
-      `#hit-${nextId}`
+      `#hit-${nextId}`,
     ).parentNode;
     newActive.classList.add("active");
     newActive.scrollIntoView({
@@ -408,8 +425,13 @@ export class SearchElement extends LitElement {
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
-      const url =
+      let url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
+
+      // Retrieve a static JSON file when working in development mode
+      if (window.location.href.startsWith("http://localhost")) {
+        url = "/_/readthedocs-search.json";
+      }
 
       fetch(url, {
         method: "GET",
@@ -443,7 +465,7 @@ export class SearchElement extends LitElement {
   getCurrentFilter() {
     let filters = [];
     const filterElements = this.renderRoot.querySelectorAll(
-      ".filters input[type=checkbox]:checked"
+      ".filters input[type=checkbox]:checked",
     );
     for (const e of filterElements) {
       filters.push(e.value);
@@ -501,23 +523,23 @@ export class SearchElement extends LitElement {
     // The READTHEDOCS_SEARCH_SHOW event is triggered by "readthedocs-flyout" input
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
     document.addEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_SHOW,
-      this._handleShowModal
+      this._handleShowModal,
     );
 
     document.removeEventListener(
       EVENT_READTHEDOCS_SEARCH_HIDE,
-      this._handleCloseModal
+      this._handleCloseModal,
     );
 
     super.disconnectedCallback();
@@ -525,11 +547,13 @@ export class SearchElement extends LitElement {
 }
 
 export class SearchAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.search.json";
+  static addonEnabledPath = "addons.search.enabled";
+  static addonName = "Search";
+
   constructor(config) {
     super();
-
-    // TODO: is it possible to move this `constructor` to the `AddonBase` class?
-    customElements.define("readthedocs-search", SearchElement);
 
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-search");
@@ -546,8 +570,6 @@ export class SearchAddon extends AddonBase {
       elem.loadConfig(config);
     }
   }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.search.enabled;
-  }
 }
+
+customElements.define("readthedocs-search", SearchElement);

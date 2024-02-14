@@ -1,13 +1,15 @@
+import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
-import { visualDomDiff } from "visual-dom-diff";
+import { default as visualDomDiff } from "visual-dom-diff";
 import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
 import { html, nothing, LitElement } from "lit";
+import { default as objectPath } from "object-path";
 
 /**
  * visual-dom-diff options
@@ -68,6 +70,7 @@ export class DocDiffElement extends LitElement {
   constructor() {
     super();
 
+    this.config = null;
     this.baseUrl = null;
     this.rootSelector = "[role=main]";
     this.injectStyles = true;
@@ -76,13 +79,10 @@ export class DocDiffElement extends LitElement {
   }
 
   loadConfig(config) {
-    this.config = config;
-
-    if (config.addons.doc_diff) {
-      if (!this.baseUrl) {
-        this.baseUrl = config.addons.doc_diff.base_url;
-      }
+    if (!DocDiffAddon.isEnabled(config)) {
+      return;
     }
+    this.config = config;
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
@@ -113,7 +113,7 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
-    fetch(this.baseUrl)
+    fetch(this.config.addons.doc_diff.base_url)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error downloading requested base URL.");
@@ -125,9 +125,11 @@ export class DocDiffElement extends LitElement {
         const parser = new DOMParser();
         const html_document = parser.parseFromString(text, "text/html");
         const old_body = html_document.documentElement.querySelector(
-          this.rootSelector
+          this.config.addons.doc_diff.root_selector,
         );
-        const new_body = document.querySelector(this.rootSelector);
+        const new_body = document.querySelector(
+          this.config.addons.doc_diff.root_selector,
+        );
 
         if (old_body == null || new_body == null) {
           throw new Error("Element not found in both documents.");
@@ -144,6 +146,10 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
+    if (this.config === null) {
+      return null;
+    }
+
     this.enabled = true;
     this.originalBody = document.querySelector(this.rootSelector);
     return this.compare();
@@ -169,12 +175,12 @@ export class DocDiffElement extends LitElement {
 
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      this._handleShowDocDiff
+      this._handleShowDocDiff,
     );
 
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
-      this._handleHideDocDiff
+      this._handleHideDocDiff,
     );
   }
 
@@ -185,6 +191,11 @@ export class DocDiffElement extends LitElement {
 }
 
 export class DocDiffAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.docdiff.json";
+  static addonEnabledPath = "addons.doc_diff.enabled";
+  static addonName = "DocDiff";
+
   constructor(config) {
     super();
 
@@ -202,7 +213,7 @@ export class DocDiffAddon extends AddonBase {
     }
   }
 
-  static isEnabled(config) {
-    return config.addons && config.addons.doc_diff.enabled;
+  static requiresUrlParam() {
+    return window.location.host.endsWith(".readthedocs.build");
   }
 }

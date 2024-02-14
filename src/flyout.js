@@ -1,8 +1,10 @@
+import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
+import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
@@ -23,13 +25,19 @@ export class FlyoutElement extends LitElement {
   constructor() {
     super();
 
-    this.config = {};
+    this.config = null;
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
   }
 
   loadConfig(config) {
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!FlyoutAddon.isEnabled(config)) {
+      return;
+    }
     this.config = config;
   }
 
@@ -65,11 +73,18 @@ export class FlyoutElement extends LitElement {
     const iconCodeBranch = icon(faCodeBranch, {
       classes: ["icon"],
     });
+    let version = nothing;
+    if (
+      this.config.projects.current.versioning_scheme !==
+      "single_version_without_translations"
+    ) {
+      version = html`<span>${this.config.versions.current.slug}</span>`;
+    }
+
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        ${iconCodeBranch.node[0]}
-        <span> ${this.config.versions.current.slug} </span>
+        ${iconCodeBranch.node[0]} ${version}
       </header>
     `;
   }
@@ -95,28 +110,38 @@ export class FlyoutElement extends LitElement {
   }
 
   renderSearch() {
-    // TODO: This is not yet working with the readthedocs-search component yet. The integration
-    // will be handled separately.
-    // See https://github.com/readthedocs/addons/issues/90
-    return html`
-      <dl>
-        <dt>Search</dt>
-        <dd>
-          <form @focusin="${this.showSearch}" id="flyout-search-form">
-            <input
-              type="text"
-              name="q"
-              aria-label="Search docs"
-              placeholder="Search docs"
-            />
-          </form>
-        </dd>
-      </dl>
-    `;
+    // Display the search input only if the search is enabled for this project
+    // Note we use ``objectPath`` here instead of validating via JSON schema
+    // because this value is optional: even if the search API response is broken,
+    // we want to keep showing the flyout but without the search input.
+    const searchEnabled = objectPath.get(
+      this.config,
+      "addons.search.enabled",
+      false,
+    );
+    if (searchEnabled) {
+      return html`
+        <dl>
+          <dt>Search</dt>
+          <dd>
+            <form @focusin="${this.showSearch}" id="flyout-search-form">
+              <input
+                type="text"
+                name="q"
+                aria-label="Search docs"
+                placeholder="Search docs"
+              />
+            </form>
+          </dd>
+        </dl>
+      `;
+    }
+    return nothing;
   }
 
   renderVCS() {
     if (
+      // TODO: remove this check when ``vcs`` property becomes required
       !this.config.addons.flyout.vcs ||
       !this.config.addons.flyout.vcs.view_url
     ) {
@@ -152,10 +177,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (
-      !this.config.addons.flyout.downloads ||
-      !this.config.addons.flyout.downloads.length
-    ) {
+    if (!this.config.addons.flyout.downloads.length) {
       return nothing;
     }
 
@@ -165,7 +187,7 @@ export class FlyoutElement extends LitElement {
         ${this.config.addons.flyout.downloads.map(
           (download) => html`
             <dd><a href="${download.url}">${download.name}</a></dd>
-          `
+          `,
         )}
       </dl>
     `;
@@ -173,14 +195,14 @@ export class FlyoutElement extends LitElement {
 
   renderVersions() {
     if (
-      !this.config.addons.flyout.versions ||
-      !this.config.addons.flyout.versions.length
+      !this.config.addons.flyout.versions.length ||
+      this.config.projects.current.versioning_scheme ===
+        "single_version_without_translations"
     ) {
       return nothing;
     }
 
-    const currentVersion =
-      this.config.versions.current && this.config.versions.current.slug;
+    const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
       const link = html`<a href="${version.url}">${version.slug}</a>`;
@@ -193,27 +215,31 @@ export class FlyoutElement extends LitElement {
       <dl class="versions">
         <dt>Versions</dt>
         ${this.config.addons.flyout.versions.map(
-          (version) => html`<dd>${getVersionLink(version)}</dd> `
+          (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>
     `;
   }
 
   renderLanguages() {
-    if (
-      !this.config.addons.flyout.translations ||
-      !this.config.addons.flyout.translations.length
-    ) {
+    if (!this.config.addons.flyout.translations.length) {
       return nothing;
     }
+
+    const currentTranslation = this.config.projects.current.language.code;
+
+    const getLanguageLink = (translation) => {
+      const link = html`<a href="${translation.url}">${translation.slug}</a>`;
+      return currentTranslation && translation.slug === currentTranslation
+        ? html`<strong>${link}</strong>`
+        : link;
+    };
 
     return html`
       <dl class="languages">
         <dt>Languages</dt>
         ${this.config.addons.flyout.translations.map(
-          (translation) => html`
-            <dd><a href="${translation.url}">${translation.slug}</a></dd>
-          `
+          (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>
     `;
@@ -221,7 +247,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -250,10 +276,13 @@ export class FlyoutElement extends LitElement {
  * @param {Object} config - Addon configuration object
  */
 export class FlyoutAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.flyout.json";
+  static addonEnabledPath = "addons.flyout.enabled";
+  static addonName = "Flyout";
+
   constructor(config) {
     super();
-
-    customElements.define("readthedocs-flyout", FlyoutElement);
 
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-flyout");
@@ -270,8 +299,6 @@ export class FlyoutAddon extends AddonBase {
       elem.loadConfig(config);
     }
   }
-
-  static isEnabled(config) {
-    return config.addons && config.addons.flyout.enabled;
-  }
 }
+
+customElements.define("readthedocs-flyout", FlyoutElement);

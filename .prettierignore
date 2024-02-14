@@ -1,2 +1,6 @@
+public/
+dist/
+package-lock.json
 *.svg
 *.orig
+tests/__snapshots__/

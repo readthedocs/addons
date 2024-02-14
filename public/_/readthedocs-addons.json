@@ -1,14 +1,20 @@
 {
+  "api_version": "0",
   "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
   "projects": {
     "current": {
       "slug": "example",
-      "language": "en",
+      "language": {
+        "code": "en"
+      },
       "repository": {
         "url": "https://github.com/readthedocs/addons",
         "type": "git"
       },
-      "programming_language": "words"
+      "programming_language": {
+        "code": "words"
+      },
+      "versioning_scheme": "multiple_versions_with_translations"
     }
   },
   "versions": {
@@ -27,7 +33,7 @@
   },
   "readthedocs": {
     "analytics": {
-      "code": null
+      "code": "UA-12345"
     }
   },
   "addons": {
@@ -43,20 +49,9 @@
         "test"
       ]
     },
-    "search": {
-      "enabled": true,
-      "project": "addons",
-      "version": "latest",
-      "api_endpoint": "/_/api/v3/search/",
-      "filters": [
-        ["Search only in this project", "project:addons/latest"],
-        ["Search subprojects", "subprojects:addons/latest"]
-      ],
-      "default_filter": "subprojects:addons/latest"
-    },
     "analytics": {
       "enabled": true,
-      "code": null
+      "code": "UA-12345"
     },
     "external_version_warning": {
       "enabled": true,

@@ -1,9 +1,10 @@
 [bumpver]
-current_version = "0.4.0"
+current_version = "0.9.5"
 version_pattern = "MAJOR.MINOR.PATCH[TAG]"
 commit_message = "Release {new_version}"
 tag_message = "{new_version}"
 tag_scope = "default"
+pre_commit_hook = "./.pre-commit/build-assets-and-add.sh"
 commit = true
 tag = true
 push = true
@@ -14,4 +15,7 @@ push = true
 ]
 "bumpver.toml" = [
     'current_version = "{version}"',
+]
+"src/utils.js" = [
+    'export const CLIENT_VERSION = "{version}";',
 ]

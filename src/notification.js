@@ -1,3 +1,4 @@
+import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
@@ -27,18 +28,25 @@ export class NotificationElement extends LitElement {
   constructor() {
     super();
 
-    this.className = this.className || "raised floating";
-    this.config = {};
+    this.config = null;
     this.urls = {
       build: null,
       external: null,
       stable: null,
     };
-    this.reading_latest_version = null;
-    this.stable_version_available = null;
+    this.readingLatestVersion = false;
+    this.readingStableVersion = false;
+    this.stableVersionAvailable = false;
   }
 
   loadConfig(config) {
+    // Validate the config object before assigning it to the Addon.
+    // Later, ``render()`` method will check whether this object exists and (not) render
+    // accordingly
+    if (!NotificationAddon.isEnabled(config)) {
+      return;
+    }
+
     this.config = config;
 
     if (
@@ -59,15 +67,23 @@ export class NotificationElement extends LitElement {
 
     if (
       config.addons.non_latest_version_warning.enabled &&
+      config.projects.current.versioning_scheme !==
+        "single_version_without_translations" &&
       config.versions.current.type !== "external"
     ) {
       this.calculateStableLatestVersionWarning();
     }
   }
 
+  firstUpdated() {
+    // Add CSS classes to the element on ``firstUpdated`` because we need the
+    // HTML element to exist in the DOM before being able to add tag attributes.
+    this.className = this.className || "raised floating";
+  }
+
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (!this.config) {
+    if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
@@ -78,7 +94,7 @@ export class NotificationElement extends LitElement {
       }
     } else if (
       this.config.addons.non_latest_version_warning.enabled &&
-      (this.reading_latest_version || this.stable_version_available)
+      (this.readingLatestVersion || this.stableVersionAvailable)
     ) {
       return this.renderStableLatestVersionWarning();
     }
@@ -95,18 +111,24 @@ export class NotificationElement extends LitElement {
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
     const versions = this.config.addons.non_latest_version_warning.versions;
-    const latest_index = versions.indexOf("latest");
     const stable_index = versions.indexOf("stable");
     const current_version = this.config.versions.current;
     const current_project = this.config.projects.current;
 
+    // TODO: support aliases here
+    // https://github.com/readthedocs/addons/issues/132
     if (current_version.slug === "latest") {
-      this.reading_latest_version = true;
-    } else if (stable_index && current_version.slug !== "stable") {
-      this.stable_version_available = true;
+      this.readingLatestVersion = true;
     }
 
-    if (stable_index) {
+    if (current_version.slug === "stable") {
+      this.readingStableVersion = true;
+    }
+
+    if (stable_index !== -1) {
+      this.stableVersionAvailable = true;
+      // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
+      // to support all the posibilities. Those cases won't work for now until we find a proper solution.
       this.urls.stable = `/${current_project.language.code}/stable/`;
     }
   }
@@ -118,7 +140,7 @@ export class NotificationElement extends LitElement {
     const xmark = icon(faCircleXmark, {
       title: "Close notification",
     });
-    if (this.reading_latest_version) {
+    if (this.readingLatestVersion && this.stableVersionAvailable) {
       const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
       });
@@ -133,7 +155,7 @@ export class NotificationElement extends LitElement {
             </a>
           </div>
           <div class="content">
-            Some features may not be yet available in the publised stable
+            Some features may not yet be available in the published stable
             version. Read the
             <a href="${this.urls.stable}"
               >stable version of this documentation</a
@@ -143,7 +165,7 @@ export class NotificationElement extends LitElement {
       `;
     }
 
-    if (this.stable_version_available) {
+    if (!this.readingStableVersion && this.stableVersionAvailable) {
       const iconHourglassHalf = icon(faHourglassHalf, {
         classes: ["header", "icon"],
       });
@@ -159,7 +181,7 @@ export class NotificationElement extends LitElement {
             </a>
           </div>
           <div class="content">
-            You may be reading and old version of this documentation. Read the
+            You may be reading an old version of this documentation. Read the
             <a href="${this.urls.stable}"
               >latest stable version of this documentation</a
             >.
@@ -231,12 +253,12 @@ export class NotificationElement extends LitElement {
  * @param {Object} config - Addon configuration object
  */
 export class NotificationAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.notifications.json";
+  static addonName = "Notification";
+
   constructor(config) {
     super();
-
-    // Load this first as it is illegal to instantiate the element class without
-    // defining the custom element first.
-    customElements.define("readthedocs-notification", NotificationElement);
 
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-notification");
@@ -257,12 +279,17 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
+    if (!super.isConfigValid(config)) {
+      return false;
+    }
+
     return (
-      (config.addons &&
-        config.addons.external_version_warning.enabled &&
+      (config.addons.external_version_warning.enabled === true &&
         config.versions.current.type === "external") ||
-      (config.addons.non_latest_version_warning.enabled &&
+      (config.addons.non_latest_version_warning.enabled === true &&
         config.versions.current.type !== "external")
     );
   }
 }
+
+customElements.define("readthedocs-notification", NotificationElement);

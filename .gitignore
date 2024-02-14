@@ -1,2 +1,5 @@
 node_modules/
 .direnv/
+.envrc
+.tool-versions
+/coverage/
