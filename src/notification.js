@@ -227,6 +227,9 @@ export class NotificationElement extends LitElement {
   }
 
   closeNotification(e) {
+    // Avoid going back to the top of the page when closing the notification
+    e.preventDefault();
+
     // TODO add cookie to allow closing this notification for all page views on this
     // PR build.
     this.remove();
