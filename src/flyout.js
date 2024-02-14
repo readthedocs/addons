@@ -1,5 +1,7 @@
 import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
@@ -67,18 +69,22 @@ export class FlyoutElement extends LitElement {
   }
 
   renderHeader() {
+    library.add(faCodeBranch);
+    const iconCodeBranch = icon(faCodeBranch, {
+      classes: ["icon"],
+    });
     let version = nothing;
     if (
       this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
-      version = html`<span>v: ${this.config.versions.current.slug}</span>`;
+      version = html`<span>${this.config.versions.current.slug}</span>`;
     }
 
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        ${version}
+        ${iconCodeBranch.node[0]} ${version}
       </header>
     `;
   }
