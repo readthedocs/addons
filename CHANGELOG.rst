@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.9.6
+--------------
+
+:date: Feb 20, 2024
+
+* Replace the ``v:`` in the flyout for a ``code-branch`` icon
+* Don't loose page position when closing notifications
+
 Version v0.9.5
 --------------
 
