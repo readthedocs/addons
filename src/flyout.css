@@ -70,7 +70,7 @@ header > span {
   );
 }
 
-header > svg.icon {
+header > span svg.icon {
   color: rgb(128, 128, 128);
   height: 1rem;
   padding-right: 5px;

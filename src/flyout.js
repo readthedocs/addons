@@ -78,13 +78,15 @@ export class FlyoutElement extends LitElement {
       this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
-      version = html`<span>${this.config.versions.current.slug}</span>`;
+      version = html`<span
+        >${iconCodeBranch.node[0]} ${this.config.versions.current.slug}</span
+      >`;
     }
 
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
-        ${iconCodeBranch.node[0]} ${version}
+        ${version}
       </header>
     `;
   }
