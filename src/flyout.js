@@ -211,10 +211,16 @@ export class FlyoutElement extends LitElement {
     //   URL: https://docs.readthedocs.io/en/stable/
     //   Filename: /guides/access/index.html
     //   Flyuout URL: https://docs.readthedocs.io/en/stable/guides/access/
-    return (
-      url.replace(/\/+$/, "") +
-      metaFilename.content.replace(/\/index.html$/, "")
-    );
+
+    // Keep only one trailing slash
+    const base = url.replace(/\/+$/, "/");
+
+    // 1. remove initial slash to make it relative to the base
+    // 2. remove the trailing "index.html"
+    const filename = metaFilename.content
+      .replace(/^\//, "")
+      .replace(/\/index.html$/, "/");
+    return new URL(filename, base);
   };
 
   renderVersions() {
