@@ -74,7 +74,7 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
-    this.recentSearchesKey = "readthedocs_search_recent_searches"
+    this.recentSearchesLocalStorageKey = "readthedocs-search-recent-searches"
   }
 
   loadConfig(config) {
