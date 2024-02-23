@@ -74,7 +74,8 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
-    this.recentSearchesLocalStorageKey = "readthedocs-search-recent-searches"
+    this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches"
+    this.recentSearchesLocalStorageLimit = 20  // Control how many recent searches we store in localStorage
   }
 
   loadConfig(config) {
@@ -292,7 +293,7 @@ export class SearchElement extends LitElement {
     if (!recentSearches || !recentSearches.length) {
       return html`<p>No Recent Searches</p>`
     }
-    console.log(recentSearches);
+    recentSearches.reverse();
     const listIcon = icon(faClockRotateLeft, {
       title: "Result",
       classes: ["header", "icon"],
@@ -311,7 +312,7 @@ export class SearchElement extends LitElement {
 
               ${html`${this.renderBlockResult(
                     block,
-                    1,
+                    `recent-search-${block.id}`,
                     result,
                   )}`}
             </div>`,
@@ -321,16 +322,26 @@ export class SearchElement extends LitElement {
   }
 
   getRecentSearches() {
-    const recentSearchesString = localStorage.getItem(this.recentSearchesKey);
+    const recentSearchesString = localStorage.getItem(this.recentSearchesLocalStorageKey);
     return recentSearchesString ? JSON.parse(recentSearchesString) : [];
   }
 
   storeRecentSearch(block, result) {
-    const recentSearches = this.getRecentSearches();
-    // TODO Avoid duplicates
-    // TODO Maybe add some limit to the total number of recent searches
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Remove any duplicates, since this search result will be appended again
+      return (r.domain !== result.domain || r.path !== r.path || b.id !== block.id);
+    });
+
     recentSearches.push({block, result});
-    localStorage.setItem(this.recentSearchesKey, JSON.stringify(recentSearches));
+    let recentSearchesLimited = recentSearches;
+    // If we've stored more results than the limit, let's slice to get rid of the oldest result first
+    if (recentSearches.length > this.recentSearchesLocalStorageLimit) {
+      recentSearchesLimited = recentSearches.slice(recentSearches.length - this.recentSearchesLocalStorageLimit);
+    }
+
+    localStorage.setItem(this.recentSearchesLocalStorageKey, JSON.stringify(recentSearchesLimited));
   }
 
   renderExternalProject(result) {
