@@ -74,8 +74,8 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
-    this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches"
-    this.recentSearchesLocalStorageLimit = 20  // Control how many recent searches we store in localStorage
+    this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches";
+    this.recentSearchesLocalStorageLimit = 20; // Control how many recent searches we store in localStorage
   }
 
   loadConfig(config) {
@@ -139,7 +139,9 @@ export class SearchElement extends LitElement {
             />
           </form>
           <div class="filters">${this.renderFilters()}</div>
-          <div class="results">${this.results || this.renderRecentSearches()}</div>
+          <div class="results">
+            ${this.results || this.renderRecentSearches()}
+          </div>
           <div class="footer">
             <ul class="help">
               <li><code>Enter</code> to select</li>
@@ -291,7 +293,7 @@ export class SearchElement extends LitElement {
   renderRecentSearches() {
     const recentSearches = this.getRecentSearches();
     if (!recentSearches || !recentSearches.length) {
-      return html`<p>No Recent Searches</p>`
+      return html`<p>No Recent Searches</p>`;
     }
     recentSearches.reverse();
     const listIcon = icon(faClockRotateLeft, {
@@ -303,7 +305,7 @@ export class SearchElement extends LitElement {
       <div class="hit">
         <p>Recent:</p>
         ${recentSearches.map(
-          ({block, result}) =>
+          ({ block, result }) =>
             html`<div class="hit-block">
               <a class="hit-block-heading" href="${result.path}">
                 <i>${listIcon.node[0]}</i>
@@ -311,10 +313,10 @@ export class SearchElement extends LitElement {
               </a>
 
               ${html`${this.renderBlockResult(
-                    block,
-                    `recent-search-${block.id}`,
-                    result,
-                  )}`}
+                block,
+                `recent-search-${block.id}`,
+                result,
+              )}`}
             </div>`,
         )}
       </div>
@@ -322,7 +324,9 @@ export class SearchElement extends LitElement {
   }
 
   getRecentSearches() {
-    const recentSearchesString = localStorage.getItem(this.recentSearchesLocalStorageKey);
+    const recentSearchesString = localStorage.getItem(
+      this.recentSearchesLocalStorageKey,
+    );
     return recentSearchesString ? JSON.parse(recentSearchesString) : [];
   }
 
@@ -331,17 +335,24 @@ export class SearchElement extends LitElement {
       const b = recentSearch.block;
       const r = recentSearch.result;
       // Remove any duplicates, since this search result will be appended again
-      return (r.domain !== result.domain || r.path !== r.path || b.id !== block.id);
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
     });
 
-    recentSearches.push({block, result});
+    recentSearches.push({ block, result });
     let recentSearchesLimited = recentSearches;
     // If we've stored more results than the limit, let's slice to get rid of the oldest result first
     if (recentSearches.length > this.recentSearchesLocalStorageLimit) {
-      recentSearchesLimited = recentSearches.slice(recentSearches.length - this.recentSearchesLocalStorageLimit);
+      recentSearchesLimited = recentSearches.slice(
+        recentSearches.length - this.recentSearchesLocalStorageLimit,
+      );
     }
 
-    localStorage.setItem(this.recentSearchesLocalStorageKey, JSON.stringify(recentSearchesLimited));
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearchesLimited),
+    );
   }
 
   renderExternalProject(result) {
