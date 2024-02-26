@@ -1,6 +1,6 @@
 {
   "name": "@readthedocs/addons",
-  "version": "0.9.5",
+  "version": "0.9.7",
   "description": "Read the Docs Addons to embed into documentation pages",
   "main": "dist/readthedocs-addons.js",
   "scripts": {
@@ -37,16 +37,16 @@
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.1.2",
     "object-path": "^0.11.8",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "rollup-plugin-lit-css": "^4.0.1",
     "sinon": "^17.0.1",
     "tippy.js": "^6.3.7",
     "tslib": "^2.6.2",
     "unfetch": "^4.2.0",
     "visual-dom-diff": "^0.7.2",
-    "webpack": "^5.90.1",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.0.2"
   },
   "babel": {
     "plugins": [

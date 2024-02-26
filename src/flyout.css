@@ -70,6 +70,13 @@ header > span {
   );
 }
 
+header > span svg.icon {
+  color: rgb(128, 128, 128);
+  height: 1rem;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+
 header > img.logo {
   text-align: center;
   width: 106px;
