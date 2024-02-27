@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.9.7
+--------------
+
+:date: Feb 22, 2024
+
+* Fix the flyout ``code-branch`` icon position
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.9.6
 --------------
 
