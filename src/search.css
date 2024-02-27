@@ -140,7 +140,14 @@ div.hit-block a.hit-block-heading {
   align-items: center;
 }
 
-div.hit-block a.hit-block-heading i {
+div.hit-block .hit-block-heading-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.hit-block a.hit-block-heading i,
+div.hit-block .hit-block-heading-container .close-icon {
   font-size: 1.15em;
   width: 1em;
   padding-right: 10px;
@@ -148,7 +155,30 @@ div.hit-block a.hit-block-heading i {
   color: #333;
 }
 
-div.hit-block a.hit-block-heading i svg {
+button.close-icon {
+  border: none;
+  margin: 0;
+  padding: 0;
+  padding-right: 10px;
+  margin-bottom: 15px;
+  overflow: visible;
+
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+
+  background: transparent;
+  cursor: pointer;
+}
+
+button.close-icon svg {
+  pointer-events: none
+}
+
+
+div.hit-block a.hit-block-heading i svg,
+div.hit-block .hit-block-heading-container svg {
   width: 1em;
 }
 

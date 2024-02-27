@@ -62,6 +62,7 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
     library.add(faBarsStaggered);
+    library.add(faCircleXmark);
 
     this.config = null;
     this.show = false;
@@ -299,16 +300,26 @@ export class SearchElement extends LitElement {
       classes: ["header", "icon"],
     });
 
+    const xmark = icon(faCircleXmark, {
+      title: "Clear recent search",
+      classes: ["header", "icon"],
+    });
+
     return html`
       <div class="hit">
         <p>Recent:</p>
         ${recentSearches.map(
           ({block, result}) =>
             html`<div class="hit-block">
-              <a class="hit-block-heading" href="${result.path}">
-                <i>${listIcon.node[0]}</i>
-                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
-              </a>
+              <div class="hit-block-heading-container">
+                <a class="hit-block-heading" href="${result.path}">
+                  <i>${listIcon.node[0]}</i>
+                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                </a>
+                <button class="close-icon" @click=${() => this.removeRecentSearch(block, result)}>
+                  ${xmark.node[0]}
+                </button>
+              </div>
 
               ${html`${this.renderBlockResult(
                     block,
@@ -342,6 +353,18 @@ export class SearchElement extends LitElement {
     }
 
     localStorage.setItem(this.recentSearchesLocalStorageKey, JSON.stringify(recentSearchesLimited));
+  }
+
+  removeRecentSearch(block, result) {
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Return everything except this search result
+      return (r.domain !== result.domain || r.path !== r.path || b.id !== block.id);
+    });
+
+    localStorage.setItem(this.recentSearchesLocalStorageKey, JSON.stringify(recentSearches));
+    this.requestUpdate();
   }
 
   renderExternalProject(result) {
