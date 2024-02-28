@@ -91,33 +91,7 @@ module.exports = (env, argv) => {
       hot: false,
       liveReload: true,
       allowedHosts: "all",
-      proxy: {
-        // Useful to hit API in a local development instance.
-        // Our extension uses it for traffic/search analytics.
-        // It's not required to do QA on this JavaScript project,
-        // but note that some API request will fail.
-        "/_/api/": {
-          target: "http://test-builds.devthedocs.org",
-          headers: {
-            host: "test-builds.devthedocs.org",
-          },
-        },
-        // NOTE: uncomment this chunk of code if you want to use the API response
-        // from the local Read the Docs development instance.
-        // Make sure to change the `headers.referer` to match the language and version
-        // you want to hit.
-        // https://docs.readthedocs.io/en/latest/development/install.html
-        //
-        // There is also a file at `public/_/readthedocs-addons.json` that you can modify
-        // to work locally without a development instance.
-        // "/_/readthedocs-addons.json": {
-        //     target: "http://test-builds.devthedocs.org",
-        //     headers: {
-        //         host: "test-builds.devthedocs.org",
-        //         referer: "http://test-builds.devthedocs.org/en/latest/",
-        //     },
-        // },
-      },
+
       setupMiddlewares: (middlewares, devServer) => {
         const index = middlewares.findIndex(
           (middleware) => middleware.name === "webpack-dev-middleware",
