@@ -318,7 +318,10 @@ export class SearchElement extends LitElement {
                   <i>${listIcon.node[0]}</i>
                   <h2>${result.title} ${this.renderExternalProject(result)}</h2>
                 </a>
-                <button class="close-icon" @click=${() => this.removeRecentSearch(block, result)}>
+                <button
+                  class="close-icon"
+                  @click=${() => this.removeRecentSearch(block, result)}
+                >
                   ${xmark.node[0]}
                 </button>
               </div>
@@ -371,10 +374,15 @@ export class SearchElement extends LitElement {
       const b = recentSearch.block;
       const r = recentSearch.result;
       // Return everything except this search result
-      return (r.domain !== result.domain || r.path !== r.path || b.id !== block.id);
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
     });
 
-    localStorage.setItem(this.recentSearchesLocalStorageKey, JSON.stringify(recentSearches));
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearches),
+    );
     this.requestUpdate();
   }
 

@@ -173,9 +173,8 @@ button.close-icon {
 }
 
 button.close-icon svg {
-  pointer-events: none
+  pointer-events: none;
 }
-
 
 div.hit-block a.hit-block-heading i svg,
 div.hit-block .hit-block-heading-container svg {
