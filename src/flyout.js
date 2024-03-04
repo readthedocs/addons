@@ -221,7 +221,8 @@ export class FlyoutElement extends LitElement {
     // 2. remove the trailing "index.html"
     const filename = metaFilename.content
       .replace(/^\//, "")
-      .replace(/\/index.html$/, "/");
+      .replace(/index.html$/, "");
+
     return new URL(filename, base);
   };
 
