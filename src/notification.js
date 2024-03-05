@@ -60,6 +60,9 @@ export class NotificationElement extends LitElement {
         .replace("git@github.com:", "https://github.com/");
 
       this.urls = {
+        // TODO: "build URL" should come from the backend API.
+        // However, we are blocked on this due the API running in El Proxito instead of Web instance.
+        // See https://github.com/readthedocs/readthedocs-ops/issues/1323
         build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.builds.current.id}/`,
         external: `${vcs_external_url}/pull/${config.versions.current.slug}`,
       };
@@ -127,9 +130,22 @@ export class NotificationElement extends LitElement {
 
     if (stable_index !== -1) {
       this.stableVersionAvailable = true;
-      // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
+      // TODO: use the URL comming from the backend under `addons.versions.stable.urls.documentation` or similar
+      // We need to use, somehow, the "resolver.resolve" logic from the Python backend
       // to support all the posibilities. Those cases won't work for now until we find a proper solution.
-      this.urls.stable = `/${current_project.language.code}/stable/`;
+      // For now, we are poorly re-implementing this in the frontend as a workaround, but this is not ideal.
+      // See https://github.com/readthedocs/readthedocs-ops/issues/1323
+      if (
+        current_project.versioning_scheme ==
+        "multiple_versions_with_translations"
+      ) {
+        this.urls.stable = `/${current_project.language.code}/stable/`;
+      } else if (
+        current_project.versioning_scheme ==
+        "multiple_versions_without_translations"
+      ) {
+        this.urls.stable = "/stable/";
+      }
     }
   }
 
