@@ -74,7 +74,7 @@
       "translations": [
         {
           "slug": "es",
-          "url": "http://localhost:8000/es/stable/"
+          "url": "http://localhost:8000/es/v1.0/"
         }
       ],
       "versions": [
