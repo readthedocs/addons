@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.10.0
+---------------
+
+:date: Mar 5, 2024
+
+* Flyout links keeps the page when switching versions/languages
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.9.7
 --------------
 
