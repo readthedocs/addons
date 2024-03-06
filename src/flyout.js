@@ -8,7 +8,11 @@ import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
-import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
+import {
+  EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_FLYOUT_HIDE,
+  EVENT_READTHEDOCS_FLYOUT_SHOW,
+} from "./events";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -106,9 +110,13 @@ export class FlyoutElement extends LitElement {
   }
 
   showSearch() {
+    // Dispatch the custom event to hide/collapse the flyout when showing the search modal
+    const flyoutEvent = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
+    document.dispatchEvent(flyoutEvent);
+
     // Dispatch the custom event the search addon is listening to show the modal
-    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-    document.dispatchEvent(event);
+    const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+    document.dispatchEvent(searchEvent);
   }
 
   renderSearch() {
@@ -302,6 +310,36 @@ export class FlyoutElement extends LitElement {
         </main>
       </div>
     `;
+  }
+
+  _showFlyout = (e) => {
+    this.opened = true;
+  };
+
+  _hideFlyout = (e) => {
+    this.opened = false;
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_SHOW,
+      this.showFlyout,
+    );
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_HIDE,
+      this.hideFlyout,
+    );
+
+    super.disconnectedCallback();
   }
 }
 
