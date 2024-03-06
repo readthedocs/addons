@@ -19,7 +19,7 @@ snapshots["Flyout addon snapshot flyout completely"] =
         Languages
       </dt>
       <dd>
-        <a href="/es/">
+        <a href="https://project.readthedocs.io/es/latest/">
           es
         </a>
       </dd>
@@ -29,19 +29,19 @@ snapshots["Flyout addon snapshot flyout completely"] =
         Versions
       </dt>
       <dd>
-        <a href="/en/stable/">
+        <a href="https://project.readthedocs.io/en/stable/">
           stable
         </a>
       </dd>
       <dd>
         <strong>
-          <a href="/en/latest/">
+          <a href="https://project.readthedocs.io/en/latest/">
             latest
           </a>
         </strong>
       </dd>
       <dd>
-        <a href="/en/v1.0/">
+        <a href="https://project.readthedocs.io/en/v1.0/">
           v1.0
         </a>
       </dd>
@@ -129,7 +129,7 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
         Languages
       </dt>
       <dd>
-        <a href="/es/">
+        <a href="https://project.readthedocs.io/es/latest/">
           es
         </a>
       </dd>
@@ -139,19 +139,19 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
         Versions
       </dt>
       <dd>
-        <a href="/en/stable/">
+        <a href="https://project.readthedocs.io/en/stable/">
           stable
         </a>
       </dd>
       <dd>
         <strong>
-          <a href="/en/latest/">
+          <a href="https://project.readthedocs.io/en/latest/">
             latest
           </a>
         </strong>
       </dd>
       <dd>
-        <a href="/en/v1.0/">
+        <a href="https://project.readthedocs.io/en/v1.0/">
           v1.0
         </a>
       </dd>

@@ -74,29 +74,29 @@
       "translations": [
         {
           "slug": "es",
-          "url": "/es/"
+          "url": "http://localhost:8000/es/v1.0/"
         }
       ],
       "versions": [
         {
           "slug": "stable",
-          "url": "/en/stable/"
+          "url": "http://localhost:8000/en/stable/"
         },
         {
           "slug": "latest",
-          "url": "/en/latest/"
+          "url": "http://localhost:8000/en/latest/"
         },
         {
           "slug": "v1.0",
-          "url": "/en/v1.0/"
+          "url": "http://localhost:8000/en/v1.0/"
         },
         {
           "slug": "v1.4",
-          "url": "/en/v1.4/"
+          "url": "http://localhost:8000/en/v1.4/"
         },
         {
           "slug": "v2.0",
-          "url": "/en/v2.0/"
+          "url": "http://localhost:8000/en/v2.0/"
         }
       ],
       "downloads": [
