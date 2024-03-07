@@ -37,10 +37,6 @@ export class DocDiffElement extends LitElement {
       type: String,
       attribute: "base-url",
     },
-    rootSelector: {
-      type: String,
-      attribute: "root-selector",
-    },
     injectStyles: {
       type: Boolean,
       attribute: "inject-styles",
@@ -72,7 +68,7 @@ export class DocDiffElement extends LitElement {
 
     this.config = null;
     this.baseUrl = null;
-    this.rootSelector = "[role=main]";
+    this.rootSelector = null;
     this.injectStyles = true;
 
     this.originalBody = null;
@@ -83,6 +79,8 @@ export class DocDiffElement extends LitElement {
       return;
     }
     this.config = config;
+    this.rootSelector =
+      this.config.addons.doc_diff.root_selector || "[role=main]";
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
@@ -125,11 +123,9 @@ export class DocDiffElement extends LitElement {
         const parser = new DOMParser();
         const html_document = parser.parseFromString(text, "text/html");
         const old_body = html_document.documentElement.querySelector(
-          this.config.addons.doc_diff.root_selector,
+          this.rootSelector,
         );
-        const new_body = document.querySelector(
-          this.config.addons.doc_diff.root_selector,
-        );
+        const new_body = document.querySelector(this.rootSelector);
 
         if (old_body == null || new_body == null) {
           throw new Error("Element not found in both documents.");

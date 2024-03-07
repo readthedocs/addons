@@ -1,4 +1,7 @@
 <html>
+  <head>
+    <meta name="readthedocs-resolver-filename" content="/" />
+  </head>
   <body>
     <script type="module">
       import { expect, elementUpdated } from "@open-wc/testing";
@@ -25,21 +28,21 @@
                 translations: [
                   {
                     slug: "es",
-                    url: "/es/",
+                    url: "https://project.readthedocs.io/es/latest/",
                   },
                 ],
                 versions: [
                   {
                     slug: "stable",
-                    url: "/en/stable/",
+                    url: "https://project.readthedocs.io/en/stable/",
                   },
                   {
                     slug: "latest",
-                    url: "/en/latest/",
+                    url: "https://project.readthedocs.io/en/latest/",
                   },
                   {
                     slug: "v1.0",
-                    url: "/en/v1.0/",
+                    url: "https://project.readthedocs.io/en/v1.0/",
                   },
                 ],
               },
@@ -81,7 +84,7 @@
         <dt>Languages</dt>
         <dd>
           <strong>
-            <a href="/es/">es</a>
+            <a href="https://project.readthedocs.io/es/latest/">es</a>
           </strong>
         </dd>
       </dl>
@@ -100,7 +103,7 @@
       <dl class="languages">
         <dt>Languages</dt>
         <dd>
-          <a href="/es/">es</a>
+          <a href="https://project.readthedocs.io/es/latest/">es</a>
         </dd>
       </dl>
       `);
@@ -117,15 +120,15 @@
       <dl class="versions">
         <dt>Versions</dt>
         <dd>
-          <a href="/en/stable/">stable</a>
+          <a href="https://project.readthedocs.io/en/stable/">stable</a>
         </dd>
         <dd>
           <strong>
-            <a href="/en/latest/">latest</a>
+            <a href="https://project.readthedocs.io/en/latest/">latest</a>
           </strong>
         </dd>
         <dd>
-          <a href="/en/v1.0/">v1.0</a>
+          <a href="https://project.readthedocs.io/en/v1.0/">v1.0</a>
         </dd>
       </dl>
       `);

@@ -80,7 +80,7 @@ const addons_docdiff = {
           required: ["base_url", "root_selector", "enabled"],
           properties: {
             base_url: { type: "string" },
-            root_selector: { type: "string" },
+            root_selector: { type: ["string", "null"] },
             enabled: { type: "boolean" },
           },
         },

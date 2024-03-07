@@ -236,7 +236,11 @@ export class SearchElement extends LitElement {
         ${data.results.map(
           (result, rindex) =>
             html`<div class="hit-block">
-              <a class="hit-block-heading" href="${result.path}">
+              <a
+                @click=${this.followResultLink}
+                class="hit-block-heading"
+                href="${result.path}"
+              >
                 <i>${listIcon.node[0]}</i>
                 <h2>${result.title} ${this.renderExternalProject(result)}</h2>
               </a>
@@ -253,6 +257,12 @@ export class SearchElement extends LitElement {
         )}
       </div>
     `;
+  }
+
+  followResultLink(e) {
+    // Close the modal if the link is on the same page
+    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
+    document.dispatchEvent(event);
   }
 
   renderBlockResult(block, index, result) {
@@ -278,6 +288,7 @@ export class SearchElement extends LitElement {
 
     return html`
       <a
+        @click=${this.followResultLink}
         @mouseenter=${this.mouseenterResultHit}
         @click=${() => this.storeRecentSearch(block, result)}
         class="hit"

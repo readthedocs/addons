@@ -8,7 +8,11 @@ import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
-import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
+import {
+  EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_FLYOUT_HIDE,
+  EVENT_READTHEDOCS_FLYOUT_SHOW,
+} from "./events";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -106,9 +110,13 @@ export class FlyoutElement extends LitElement {
   }
 
   showSearch() {
+    // Dispatch the custom event to hide/collapse the flyout when showing the search modal
+    const flyoutEvent = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
+    document.dispatchEvent(flyoutEvent);
+
     // Dispatch the custom event the search addon is listening to show the modal
-    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-    document.dispatchEvent(event);
+    const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+    document.dispatchEvent(searchEvent);
   }
 
   renderSearch() {
@@ -195,6 +203,37 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  _getFlyoutLinkWithFilename = (url) => {
+    // Get the resolver's filename returned by the application (as HTTP header)
+    // and injected by Cloudflare Worker as a meta HTML tag
+    const metaFilename = document.querySelector(
+      "meta[name='readthedocs-resolver-filename']",
+    );
+
+    // Remove trailing slashes from the version's URL and append the
+    // resolver's filename after removing trailing ``index.html``.
+    // Examples:
+    //
+    //   URL: https://docs.readthedocs.io/en/latest/
+    //   Filename: /index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/latest/
+    //
+    //   URL: https://docs.readthedocs.io/en/stable/
+    //   Filename: /guides/access/index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/stable/guides/access/
+
+    // Keep only one trailing slash
+    const base = url.replace(/\/+$/, "/");
+
+    // 1. remove initial slash to make it relative to the base
+    // 2. remove the trailing "index.html"
+    const filename = metaFilename.content
+      .replace(/\/index.html$/, "/")
+      .replace(/^\//, "");
+
+    return new URL(filename, base);
+  };
+
   renderVersions() {
     if (
       !this.config.addons.flyout.versions.length ||
@@ -207,7 +246,8 @@ export class FlyoutElement extends LitElement {
     const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
-      const link = html`<a href="${version.url}">${version.slug}</a>`;
+      const url = this._getFlyoutLinkWithFilename(version.url);
+      const link = html`<a href="${url}">${version.slug}</a>`;
       return currentVersion && version.slug === currentVersion
         ? html`<strong>${link}</strong>`
         : link;
@@ -231,7 +271,8 @@ export class FlyoutElement extends LitElement {
     const currentTranslation = this.config.projects.current.language.code;
 
     const getLanguageLink = (translation) => {
-      const link = html`<a href="${translation.url}">${translation.slug}</a>`;
+      const url = this._getFlyoutLinkWithFilename(translation.url);
+      const link = html`<a href="${url}">${translation.slug}</a>`;
       return currentTranslation && translation.slug === currentTranslation
         ? html`<strong>${link}</strong>`
         : link;
@@ -269,6 +310,36 @@ export class FlyoutElement extends LitElement {
         </main>
       </div>
     `;
+  }
+
+  _showFlyout = (e) => {
+    this.opened = true;
+  };
+
+  _hideFlyout = (e) => {
+    this.opened = false;
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_SHOW,
+      this.showFlyout,
+    );
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_HIDE,
+      this.hideFlyout,
+    );
+
+    super.disconnectedCallback();
   }
 }
 
