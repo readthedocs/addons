@@ -294,7 +294,7 @@ export class SearchElement extends LitElement {
   renderRecentSearches() {
     const recentSearches = this.getRecentSearches();
     if (!recentSearches || !recentSearches.length) {
-      return html`<p>No Recent Searches</p>`;
+      return html`<p>No recent searches</p>`;
     }
     recentSearches.reverse();
     const listIcon = icon(faClockRotateLeft, {
