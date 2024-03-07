@@ -2,6 +2,7 @@ import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
+  faClockRotateLeft,
   faMagnifyingGlass,
   faCircleNotch,
   faBinoculars,
@@ -61,6 +62,7 @@ export class SearchElement extends LitElement {
     library.add(faCircleNotch);
     library.add(faBinoculars);
     library.add(faBarsStaggered);
+    library.add(faCircleXmark);
 
     this.config = null;
     this.show = false;
@@ -73,6 +75,8 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
+    this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches";
+    this.recentSearchesLocalStorageLimit = 20; // Control how many recent searches we store in localStorage
   }
 
   loadConfig(config) {
@@ -136,7 +140,9 @@ export class SearchElement extends LitElement {
             />
           </form>
           <div class="filters">${this.renderFilters()}</div>
-          <div class="results">${this.results}</div>
+          <div class="results">
+            ${this.results || this.renderRecentSearches()}
+          </div>
           <div class="footer">
             <ul class="help">
               <li><code>Enter</code> to select</li>
@@ -284,6 +290,7 @@ export class SearchElement extends LitElement {
       <a
         @click=${this.followResultLink}
         @mouseenter=${this.mouseenterResultHit}
+        @click=${() => this.storeRecentSearch(block, result)}
         class="hit"
         href="${result.path}#${block.id}"
       >
@@ -293,6 +300,101 @@ export class SearchElement extends LitElement {
         </div>
       </a>
     `;
+  }
+
+  renderRecentSearches() {
+    const recentSearches = this.getRecentSearches();
+    if (!recentSearches || !recentSearches.length) {
+      return html`<p>No recent searches</p>`;
+    }
+    recentSearches.reverse();
+    const listIcon = icon(faClockRotateLeft, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
+
+    const xmark = icon(faCircleXmark, {
+      title: "Clear recent search",
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div class="hit">
+        <p>Recent:</p>
+        ${recentSearches.map(
+          ({ block, result }) =>
+            html`<div class="hit-block">
+              <div class="hit-block-heading-container">
+                <a class="hit-block-heading" href="${result.path}">
+                  <i>${listIcon.node[0]}</i>
+                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                </a>
+                <button
+                  class="close-icon"
+                  @click=${() => this.removeRecentSearch(block, result)}
+                >
+                  ${xmark.node[0]}
+                </button>
+              </div>
+
+              ${html`${this.renderBlockResult(
+                block,
+                `recent-search-${block.id}`,
+                result,
+              )}`}
+            </div>`,
+        )}
+      </div>
+    `;
+  }
+
+  getRecentSearches() {
+    const recentSearchesString = localStorage.getItem(
+      this.recentSearchesLocalStorageKey,
+    );
+    return recentSearchesString ? JSON.parse(recentSearchesString) : [];
+  }
+
+  storeRecentSearch(block, result) {
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Remove any duplicates, since this search result will be appended again
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
+    });
+
+    recentSearches.push({ block, result });
+    let recentSearchesLimited = recentSearches;
+    // If we've stored more results than the limit, let's slice to get rid of the oldest result first
+    if (recentSearches.length > this.recentSearchesLocalStorageLimit) {
+      recentSearchesLimited = recentSearches.slice(
+        recentSearches.length - this.recentSearchesLocalStorageLimit,
+      );
+    }
+
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearchesLimited),
+    );
+  }
+
+  removeRecentSearch(block, result) {
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Return everything except this search result
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
+    });
+
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearches),
+    );
+    this.requestUpdate();
   }
 
   renderExternalProject(result) {
