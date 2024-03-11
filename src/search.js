@@ -288,7 +288,6 @@ export class SearchElement extends LitElement {
 
     return html`
       <a
-        @click=${this.followResultLink}
         @mouseenter=${this.mouseenterResultHit}
         @click=${() => this.storeRecentSearch(block, result)}
         class="hit"
@@ -356,6 +355,8 @@ export class SearchElement extends LitElement {
   }
 
   storeRecentSearch(block, result) {
+    this.followResultLink();
+
     const recentSearches = this.getRecentSearches().filter((recentSearch) => {
       const b = recentSearch.block;
       const r = recentSearch.result;

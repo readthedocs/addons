@@ -69,9 +69,13 @@ export class AddonBase {
   }
 
   static isEnabled(config) {
+    // Validate the addons is enabled before validating the config itself. This
+    // allows us to omit returning a field completely when the addon is not
+    // allowed for page the user is reading. Example: `doc_diff` is not returned
+    // when `url=` is not sent.
     return (
-      this.isConfigValid(config) &&
-      objectPath.get(config, this.addonEnabledPath, false) === true
+      objectPath.get(config, this.addonEnabledPath, false) === true &&
+      this.isConfigValid(config)
     );
   }
 
@@ -117,4 +121,18 @@ export function debounce(func, wait) {
   };
 
   return debounced;
+}
+
+/**
+ * Setup logging based on query argument.
+ *
+ * Add `?logging=DEBUG` to the URL to expose logs in the console.
+ *
+ */
+export function setupLogging() {
+  const url = new URL(window.location.href);
+  const debug = url.searchParams.get("logging");
+  if (debug === null || debug.toLowerCase() !== "debug") {
+    console.debug = () => {};
+  }
 }
