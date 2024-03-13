@@ -2,7 +2,16 @@ import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
-import { visualDomDiff } from "visual-dom-diff";
+// Note that it took as a while to make it work on production and also on tests.
+// We have to import it as:
+//   import * as  visualDomDiff from "visual-dom-diff";
+//
+// We have to use it as:
+//   visualDomDiff.visualDomDiff();
+//
+// See https://github.com/readthedocs/addons/pull/234
+import * as visualDomDiff from "visual-dom-diff";
+
 import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -133,7 +142,11 @@ export class DocDiffElement extends LitElement {
 
         // After finding the root element, and diffing it, replace it in the DOM
         // with the resulting visual diff elements instead.
-        const diffNode = visualDomDiff(old_body, new_body, VISUAL_DIFF_OPTIONS);
+        const diffNode = visualDomDiff.visualDomDiff(
+          old_body,
+          new_body,
+          VISUAL_DIFF_OPTIONS,
+        );
         new_body.replaceWith(diffNode.firstElementChild);
       })
       .catch((error) => {
