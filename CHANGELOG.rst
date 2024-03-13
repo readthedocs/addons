@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.11.1
+---------------
+
+:date: Mar 13, 2024
+
+* Change how ``visualDomDiff`` is imported to make it compatible between testing
+  and production environments
+
 Version v0.11.0
 ---------------
 
