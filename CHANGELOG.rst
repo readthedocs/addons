@@ -3,7 +3,7 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
-Version v0.11.1
+Version v0.11.3
 ---------------
 
 :date: Mar 13, 2024
