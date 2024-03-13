@@ -6,7 +6,12 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { domReady, isReadTheDocsEmbedPresent, IS_PRODUCTION } from "./utils";
+import {
+  domReady,
+  isReadTheDocsEmbedPresent,
+  IS_PRODUCTION,
+  setupLogging,
+} from "./utils";
 
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
@@ -28,6 +33,8 @@ export function setup() {
   return new Promise((resolve) => {
     domReady
       .then(() => {
+        setupLogging();
+
         let sendUrlParam = false;
         for (const addon of addons) {
           if (addon.requiresUrlParam()) {

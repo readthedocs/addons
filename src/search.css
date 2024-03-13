@@ -115,40 +115,107 @@
 
 :host > div .results {
   margin-top: 10px;
-  padding: 5px;
-  margin: 1.15em;
+  padding: 1.15em;
   overflow-y: scroll;
   height: 100%;
   hyphens: auto;
 }
 
+div.hit-block {
+  padding: 10px;
+  border-radius: 0.3rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #80808057;
+  margin-bottom: 5px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 2px 2px 8px 0 rgba(34, 36, 38, 0.08);
+}
+
+div.hit-block a.hit-block-heading {
+  display: flex;
+  align-items: center;
+}
+
+div.hit-block .hit-block-heading-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.hit-block a.hit-block-heading i,
+div.hit-block .hit-block-heading-container .close-icon {
+  font-size: 1.15em;
+  width: 1em;
+  padding-right: 10px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+button.close-icon {
+  border: none;
+  margin: 0;
+  padding: 0;
+  padding-right: 10px;
+  margin-bottom: 15px;
+  overflow: visible;
+
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+
+  background: transparent;
+  cursor: pointer;
+}
+
+button.close-icon svg {
+  pointer-events: none;
+}
+
+div.hit-block a.hit-block-heading i svg,
+div.hit-block .hit-block-heading-container svg {
+  width: 1em;
+}
+
 :host > div .results a.hit {
   width: 100%;
   display: inline-block;
-  padding: 0 1.15em;
+  padding: 0.15em calc(1.15em + 10px);
   box-sizing: border-box;
 }
 
-:host > div .results a.hit:hover {
+:host > div .results a.hit:hover,
+:host > div .results .hit .active {
   background-color: rgb(245, 245, 245);
 }
 
 :host > div .results h2 {
   display: inline-block;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 15px;
   margin-top: 0;
-  font-size: 15px;
-  color: #6ea0ec;
-  border-bottom: 1px solid #6ea0ec;
+  font-size: 1.15em;
+  color: black;
+  border-bottom: 1px solid #80808057;
   line-height: inherit;
 }
 
+:host > div .results h2:hover {
+  border-bottom-color: black;
+}
+
+:host > div .results a.hit > div {
+  display: flex;
+  flex-direction: column;
+}
+
 :host > div .results .hit .subheading {
-  color: black;
+  color: #999;
   font-weight: 700;
-  float: left;
-  width: 20%;
   font-size: 15px;
   margin-right: 10px;
   overflow-x: hidden;
@@ -165,8 +232,6 @@
   margin-bottom: 5px;
   margin-bottom: 0;
   line-height: inherit;
-  float: right;
-  width: calc(80% - 15px);
   text-align: left;
 }
 
@@ -184,10 +249,6 @@
   color: #6ea0ec;
   font-style: italic;
   font-weight: bold;
-}
-
-:host > div .results .hit .active {
-  background-color: rgb(245, 245, 245);
 }
 
 :host div.content > div.footer {

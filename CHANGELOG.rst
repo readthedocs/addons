@@ -3,6 +3,51 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.11.0
+---------------
+
+:date: Mar 12, 2024
+
+* Hide flyout when triggering the search modal from the flyout input
+* Close the search modal when clicking on a result
+* Allow users to define a custom ``rootSelector`` for docdiff
+* Initial implementation for recent searches when opening the search modal
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.10.0
+---------------
+
+:date: Mar 5, 2024
+
+* Flyout links keeps the page when switching versions/languages
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.7
+--------------
+
+:date: Feb 22, 2024
+
+* Fix the flyout ``code-branch`` icon position
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.6
+--------------
+
+:date: Feb 20, 2024
+
+* Replace the ``v:`` in the flyout for a ``code-branch`` icon
+* Don't loose page position when closing notifications
+
+Version v0.9.5
+--------------
+
+:date: Jan 31, 2024
+
+* Improve search modal UI design
+* Surround with ``<strong>`` the selected language in the flyout
+* Skip pageviews analytics on external versions
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.9.4
 --------------
 
