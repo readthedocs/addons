@@ -64,10 +64,8 @@
     },
     "doc_diff": {
       "enabled": true,
-      "base_host": "http://localhost:8000/",
       "base_url": "http://localhost:8000/docdiff.changed.html",
-      "root_selector": "#main",
-      "inject_styles": true
+      "root_selector": "#main"
     },
     "flyout": {
       "enabled": true,
