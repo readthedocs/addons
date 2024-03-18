@@ -60,10 +60,7 @@ export class NotificationElement extends LitElement {
         .replace("git@github.com:", "https://github.com/");
 
       this.urls = {
-        // TODO: "build URL" should come from the backend API.
-        // However, we are blocked on this due the API running in El Proxito instead of Web instance.
-        // See https://github.com/readthedocs/readthedocs-ops/issues/1323
-        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.builds.current.id}/`,
+        build: config.builds.current.urls.build,
         external: `${vcs_external_url}/pull/${config.versions.current.slug}`,
       };
     }
