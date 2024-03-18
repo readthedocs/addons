@@ -1,7 +1,7 @@
 import { default as fetch } from "unfetch";
 import { CLIENT_VERSION } from "./utils";
 import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
-import { ADDONS_API_VERSION } from "./utils";
+import { ADDONS_API_VERSION, ADDONS_API_ENDPOINT } from "./utils";
 
 /**
  * Get the Read the Docs API version supported by user's integrations.
