@@ -3,6 +3,103 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.11.3
+---------------
+
+:date: Mar 13, 2024
+
+* Change how ``visualDomDiff`` is imported to make it compatible between testing
+  and production environments
+
+Version v0.11.0
+---------------
+
+:date: Mar 12, 2024
+
+* Hide flyout when triggering the search modal from the flyout input
+* Close the search modal when clicking on a result
+* Allow users to define a custom ``rootSelector`` for docdiff
+* Initial implementation for recent searches when opening the search modal
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.10.0
+---------------
+
+:date: Mar 5, 2024
+
+* Flyout links keeps the page when switching versions/languages
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.7
+--------------
+
+:date: Feb 22, 2024
+
+* Fix the flyout ``code-branch`` icon position
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.6
+--------------
+
+:date: Feb 20, 2024
+
+* Replace the ``v:`` in the flyout for a ``code-branch`` icon
+* Don't loose page position when closing notifications
+
+Version v0.9.5
+--------------
+
+:date: Jan 31, 2024
+
+* Improve search modal UI design
+* Surround with ``<strong>`` the selected language in the flyout
+* Skip pageviews analytics on external versions
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.4
+--------------
+
+:date: Jan 17, 2024
+
+* Log debug data about validation when running the client in production
+* Allow projects with ``multiple_versions_without_translations`` to show the flyout
+
+Version v0.9.3
+--------------
+
+:date: Jan 15, 2024
+
+* Security fix, more information in `GHSA-9v45-336h-5xw5 <https://github.com/readthedocs/addons/security/advisories/GHSA-9v45-336h-5xw5>`__.
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.2
+--------------
+
+:date: December 19, 2023
+
+* Don't show search input on flyout when search is disabled
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.9.1
+--------------
+
+:date: November 30, 2023
+
+* Fix issue with ``IS_TESTING`` variable that made the production javascript to
+  hit ``localhost:`` for the JSON response instead of production API.
+
+Version v0.9.0
+--------------
+
+:date: November 28, 2023
+
+* Customize flyout font size via CSS variables
+* NPM packages updated to their latest versions
+* Use JSON schema to validate data from the API
+* Increase test suite for all the addons.
+  Test running inside the browser, checks for HTML and DOM changes,
+  mocked requests and more!
+* Read ``version_schema`` field instead ``single_version`` from addons API response.
 
 Version v0.8.0
 --------------

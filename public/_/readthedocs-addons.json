@@ -14,7 +14,7 @@
       "programming_language": {
         "code": "words"
       },
-      "single_version": false
+      "versioning_scheme": "multiple_versions_with_translations"
     }
   },
   "versions": {
@@ -49,17 +49,6 @@
         "test"
       ]
     },
-    "search": {
-      "enabled": true,
-      "project": "addons",
-      "version": "latest",
-      "api_endpoint": "/_/api/v3/search/",
-      "filters": [
-        ["Search only in this project", "project:addons/latest"],
-        ["Search subprojects", "subprojects:addons/latest"]
-      ],
-      "default_filter": "subprojects:addons/latest"
-    },
     "analytics": {
       "enabled": true,
       "code": "UA-12345"
@@ -75,39 +64,37 @@
     },
     "doc_diff": {
       "enabled": true,
-      "base_host": "http://test-builds.devthedocs.org",
-      "base_url": "http://test-builds.devthedocs.org/en/latest/index.html",
-      "root_selector": "[role=main]",
-      "inject_styles": true
+      "base_url": "http://localhost:8000/docdiff.changed.html",
+      "root_selector": "#main"
     },
     "flyout": {
       "enabled": true,
       "translations": [
         {
           "slug": "es",
-          "url": "/es/"
+          "url": "http://localhost:8000/es/v1.0/"
         }
       ],
       "versions": [
         {
           "slug": "stable",
-          "url": "/en/stable/"
+          "url": "http://localhost:8000/en/stable/"
         },
         {
           "slug": "latest",
-          "url": "/en/latest/"
+          "url": "http://localhost:8000/en/latest/"
         },
         {
           "slug": "v1.0",
-          "url": "/en/v1.0/"
+          "url": "http://localhost:8000/en/v1.0/"
         },
         {
           "slug": "v1.4",
-          "url": "/en/v1.4/"
+          "url": "http://localhost:8000/en/v1.4/"
         },
         {
           "slug": "v2.0",
-          "url": "/en/v2.0/"
+          "url": "http://localhost:8000/en/v2.0/"
         }
       ],
       "downloads": [

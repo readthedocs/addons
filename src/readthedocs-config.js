@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import { CLIENT_VERSION } from "./utils";
 import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
 import { ADDONS_API_VERSION } from "./utils";
@@ -47,11 +48,11 @@ export function getReadTheDocsConfig(sendUrlParam) {
     params["version-slug"] = versionSlug;
   }
 
-  let url = "/_/addons/?" + new URLSearchParams(params);
+  let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
   // Retrieve a static JSON file when working in development mode
-  if (window.location.href.startsWith("http://localhost")) {
-    url = "http://localhost:8000/_/readthedocs-addons.json";
+  if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
+    url = "/_/readthedocs-addons.json";
   }
 
   return fetch(url, {

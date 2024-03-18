@@ -6,11 +6,17 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { domReady, isReadTheDocsEmbedPresent } from "./utils";
+import {
+  domReady,
+  isReadTheDocsEmbedPresent,
+  IS_PRODUCTION,
+  setupLogging,
+} from "./utils";
 
 export function setup() {
   if (isReadTheDocsEmbedPresent()) {
     console.debug("Read the Docs Embed is present. Skipping...");
+    // TODO: return ``Promise.reject()`` or similar here to avoid hybrid async/sync functions.
     return false;
   }
 
@@ -27,6 +33,8 @@ export function setup() {
   return new Promise((resolve) => {
     domReady
       .then(() => {
+        setupLogging();
+
         let sendUrlParam = false;
         for (const addon of addons) {
           if (addon.requiresUrlParam()) {
@@ -40,9 +48,9 @@ export function setup() {
       .then((config) => {
         let promises = [];
 
-        // IS_PRODUCTION comes from Webpack and is undeclared otherwise
-        if (typeof IS_PRODUCTION === "undefined" ? false : IS_PRODUCTION) {
+        if (!IS_PRODUCTION) {
           // Addons that are only available on development
+          console.log("Development mode.");
         }
 
         for (const addon of addons) {

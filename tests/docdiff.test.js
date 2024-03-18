@@ -34,6 +34,7 @@ describe("Doc diff addon", () => {
           doc_diff: {
             enabled: true,
             base_url: "http://project.readthedocs.io/en/latest/index.html",
+            root_selector: "[role=main]",
           },
         },
       }),

@@ -2,9 +2,11 @@ import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
+  faClockRotateLeft,
   faMagnifyingGlass,
   faCircleNotch,
   faBinoculars,
+  faBarsStaggered,
 } from "@fortawesome/free-solid-svg-icons";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
@@ -59,6 +61,8 @@ export class SearchElement extends LitElement {
     library.add(faMagnifyingGlass);
     library.add(faCircleNotch);
     library.add(faBinoculars);
+    library.add(faBarsStaggered);
+    library.add(faCircleXmark);
 
     this.config = null;
     this.show = false;
@@ -71,6 +75,8 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
+    this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches";
+    this.recentSearchesLocalStorageLimit = 20; // Control how many recent searches we store in localStorage
   }
 
   loadConfig(config) {
@@ -134,7 +140,9 @@ export class SearchElement extends LitElement {
             />
           </form>
           <div class="filters">${this.renderFilters()}</div>
-          <div class="results">${this.results}</div>
+          <div class="results">
+            ${this.results || this.renderRecentSearches()}
+          </div>
           <div class="footer">
             <ul class="help">
               <li><code>Enter</code> to select</li>
@@ -217,13 +225,23 @@ export class SearchElement extends LitElement {
   }
 
   renderResults(data) {
+    const listIcon = icon(faBarsStaggered, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     this.results = html`
       <div class="hit">
         ${data.results.map(
           (result, rindex) =>
-            html` <a href="${result.path}">
+            html`<div class="hit-block">
+              <a
+                @click=${this.followResultLink}
+                class="hit-block-heading"
+                href="${result.path}"
+              >
+                <i>${listIcon.node[0]}</i>
                 <h2>${result.title} ${this.renderExternalProject(result)}</h2>
               </a>
 
@@ -234,45 +252,150 @@ export class SearchElement extends LitElement {
                     rindex + bindex + 1,
                     result,
                   )}`,
-              )}`,
+              )}
+            </div>`,
         )}
       </div>
     `;
   }
 
-  renderBlockResult(block, index, result) {
-    // TODO: distinguish between `block.type` (section or domain)
+  followResultLink(e) {
+    // Close the modal if the link is on the same page
+    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
+    document.dispatchEvent(event);
+  }
 
+  renderBlockResult(block, index, result) {
     // TODO: take a substring of the title as well in case it's too long?
     let title = block.title;
     if (block.highlights.title.length) {
-      title = block.highlights.title[0];
+      title = unsafeHTML(block.highlights.title[0]);
     }
 
     let content = block.content.substring(0, MAX_SUBSTRING_LIMIT) + " ...";
     if (block.highlights.content.length) {
       // TODO: with this logic it could happen the highlighted part is outside of the substring
-      content = block.highlights.content[0];
       if (content.length > MAX_SUBSTRING_LIMIT) {
-        content =
+        content = unsafeHTML(
           "... " +
-          block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
-          " ...";
+            block.highlights.content[0].substring(0, MAX_SUBSTRING_LIMIT) +
+            " ...",
+        );
+      } else {
+        content = unsafeHTML(block.highlights.content[0]);
       }
     }
 
     return html`
       <a
         @mouseenter=${this.mouseenterResultHit}
+        @click=${() => this.storeRecentSearch(block, result)}
         class="hit"
         href="${result.path}#${block.id}"
       >
         <div id="hit-${index}">
-          <p class="hit subheading">${unsafeHTML(title)}</p>
-          <p class="hit content">${unsafeHTML(content)}</p>
+          <p class="hit subheading">${title}</p>
+          <p class="hit content">${content}</p>
         </div>
       </a>
     `;
+  }
+
+  renderRecentSearches() {
+    const recentSearches = this.getRecentSearches();
+    if (!recentSearches || !recentSearches.length) {
+      return html`<p>No recent searches</p>`;
+    }
+    recentSearches.reverse();
+    const listIcon = icon(faClockRotateLeft, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
+
+    const xmark = icon(faCircleXmark, {
+      title: "Clear recent search",
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div class="hit">
+        <p>Recent:</p>
+        ${recentSearches.map(
+          ({ block, result }) =>
+            html`<div class="hit-block">
+              <div class="hit-block-heading-container">
+                <a class="hit-block-heading" href="${result.path}">
+                  <i>${listIcon.node[0]}</i>
+                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                </a>
+                <button
+                  class="close-icon"
+                  @click=${() => this.removeRecentSearch(block, result)}
+                >
+                  ${xmark.node[0]}
+                </button>
+              </div>
+
+              ${html`${this.renderBlockResult(
+                block,
+                `recent-search-${block.id}`,
+                result,
+              )}`}
+            </div>`,
+        )}
+      </div>
+    `;
+  }
+
+  getRecentSearches() {
+    const recentSearchesString = localStorage.getItem(
+      this.recentSearchesLocalStorageKey,
+    );
+    return recentSearchesString ? JSON.parse(recentSearchesString) : [];
+  }
+
+  storeRecentSearch(block, result) {
+    this.followResultLink();
+
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Remove any duplicates, since this search result will be appended again
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
+    });
+
+    recentSearches.push({ block, result });
+    let recentSearchesLimited = recentSearches;
+    // If we've stored more results than the limit, let's slice to get rid of the oldest result first
+    if (recentSearches.length > this.recentSearchesLocalStorageLimit) {
+      recentSearchesLimited = recentSearches.slice(
+        recentSearches.length - this.recentSearchesLocalStorageLimit,
+      );
+    }
+
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearchesLimited),
+    );
+  }
+
+  removeRecentSearch(block, result) {
+    const recentSearches = this.getRecentSearches().filter((recentSearch) => {
+      const b = recentSearch.block;
+      const r = recentSearch.result;
+      // Return everything except this search result
+      return (
+        r.domain !== result.domain || r.path !== r.path || b.id !== block.id
+      );
+    });
+
+    localStorage.setItem(
+      this.recentSearchesLocalStorageKey,
+      JSON.stringify(recentSearches),
+    );
+    this.requestUpdate();
   }
 
   renderExternalProject(result) {

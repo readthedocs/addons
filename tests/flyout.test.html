@@ -1,4 +1,7 @@
 <html>
+  <head>
+    <meta name="readthedocs-resolver-filename" content="/" />
+  </head>
   <body>
     <script type="module">
       import { expect, elementUpdated } from "@open-wc/testing";
@@ -11,6 +14,9 @@
         beforeEach(() => {
           config = {
             addons: {
+              search: {
+                enabled: true,
+              },
               flyout: {
                 enabled: true,
                 downloads: [
@@ -22,21 +28,21 @@
                 translations: [
                   {
                     slug: "es",
-                    url: "/es/",
+                    url: "https://project.readthedocs.io/es/latest/",
                   },
                 ],
                 versions: [
                   {
                     slug: "stable",
-                    url: "/en/stable/",
+                    url: "https://project.readthedocs.io/en/stable/",
                   },
                   {
                     slug: "latest",
-                    url: "/en/latest/",
+                    url: "https://project.readthedocs.io/en/latest/",
                   },
                   {
                     slug: "v1.0",
-                    url: "/en/v1.0/",
+                    url: "https://project.readthedocs.io/en/v1.0/",
                   },
                 ],
               },
@@ -47,7 +53,10 @@
             projects: {
               current: {
                 slug: "project",
-                single_version: false,
+                versioning_scheme: "multiple_versions_with_translations",
+                language: {
+                  code: "en",
+                },
               },
             },
             versions: {
@@ -59,6 +68,29 @@
         });
 
         describe("Flyout addon", () => {
+          it("render languages section translation selected", async () => {
+            // Select one of the translations as current project's language
+            config.projects.current.language.code = "es";
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            const section = element.shadowRoot.querySelector(
+              "main > dl.languages",
+            );
+            expect(section).dom.to.equal(`
+      <dl class="languages">
+        <dt>Languages</dt>
+        <dd>
+          <strong>
+            <a href="https://project.readthedocs.io/es/latest/">es</a>
+          </strong>
+        </dd>
+      </dl>
+      `);
+          });
+
           it("render languages section", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
@@ -71,7 +103,7 @@
       <dl class="languages">
         <dt>Languages</dt>
         <dd>
-          <a href="/es/">es</a>
+          <a href="https://project.readthedocs.io/es/latest/">es</a>
         </dd>
       </dl>
       `);
@@ -88,15 +120,15 @@
       <dl class="versions">
         <dt>Versions</dt>
         <dd>
-          <a href="/en/stable/">stable</a>
+          <a href="https://project.readthedocs.io/en/stable/">stable</a>
         </dd>
         <dd>
           <strong>
-            <a href="/en/latest/">latest</a>
+            <a href="https://project.readthedocs.io/en/latest/">latest</a>
           </strong>
         </dd>
         <dd>
-          <a href="/en/v1.0/">v1.0</a>
+          <a href="https://project.readthedocs.io/en/v1.0/">v1.0</a>
         </dd>
       </dl>
       `);
@@ -183,7 +215,7 @@
               `
       <header>
         <img class="logo" alt="Read the Docs" />
-        <span>v: latest</span>
+        <span>latest</span>
       </header>
       `,
               { ignoreAttributes: [{ tags: ["img"], attributes: ["src"] }] },
@@ -215,7 +247,31 @@
           it("snapshot flyout completely", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            expect(element).shadowDom.to.equalSnapshot();
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("snapshot flyout with search disabled", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("flyout with search disabled does not contain the search input", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const searchForm = element.shadowRoot.querySelector(
+              '#flyout-search-form > input[name="q"',
+            );
+            expect(searchForm).to.not.exist;
           });
         });
       });

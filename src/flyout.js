@@ -1,11 +1,18 @@
 import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
+import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
 import { AddonBase } from "./utils";
-import { EVENT_READTHEDOCS_SEARCH_SHOW } from "./events";
+import {
+  EVENT_READTHEDOCS_SEARCH_SHOW,
+  EVENT_READTHEDOCS_FLYOUT_HIDE,
+  EVENT_READTHEDOCS_FLYOUT_SHOW,
+} from "./events";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -66,9 +73,18 @@ export class FlyoutElement extends LitElement {
   }
 
   renderHeader() {
+    library.add(faCodeBranch);
+    const iconCodeBranch = icon(faCodeBranch, {
+      classes: ["icon"],
+    });
     let version = nothing;
-    if (!this.config.projects.current.single_version) {
-      version = html`<span>v: ${this.config.versions.current.slug}</span>`;
+    if (
+      this.config.projects.current.versioning_scheme !==
+      "single_version_without_translations"
+    ) {
+      version = html`<span
+        >${iconCodeBranch.node[0]} ${this.config.versions.current.slug}</span
+      >`;
     }
 
     return html`
@@ -94,30 +110,43 @@ export class FlyoutElement extends LitElement {
   }
 
   showSearch() {
+    // Dispatch the custom event to hide/collapse the flyout when showing the search modal
+    const flyoutEvent = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
+    document.dispatchEvent(flyoutEvent);
+
     // Dispatch the custom event the search addon is listening to show the modal
-    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-    document.dispatchEvent(event);
+    const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+    document.dispatchEvent(searchEvent);
   }
 
   renderSearch() {
-    // TODO: This is not yet working with the readthedocs-search component yet. The integration
-    // will be handled separately.
-    // See https://github.com/readthedocs/addons/issues/90
-    return html`
-      <dl>
-        <dt>Search</dt>
-        <dd>
-          <form @focusin="${this.showSearch}" id="flyout-search-form">
-            <input
-              type="text"
-              name="q"
-              aria-label="Search docs"
-              placeholder="Search docs"
-            />
-          </form>
-        </dd>
-      </dl>
-    `;
+    // Display the search input only if the search is enabled for this project
+    // Note we use ``objectPath`` here instead of validating via JSON schema
+    // because this value is optional: even if the search API response is broken,
+    // we want to keep showing the flyout but without the search input.
+    const searchEnabled = objectPath.get(
+      this.config,
+      "addons.search.enabled",
+      false,
+    );
+    if (searchEnabled) {
+      return html`
+        <dl>
+          <dt>Search</dt>
+          <dd>
+            <form @focusin="${this.showSearch}" id="flyout-search-form">
+              <input
+                type="text"
+                name="q"
+                aria-label="Search docs"
+                placeholder="Search docs"
+              />
+            </form>
+          </dd>
+        </dl>
+      `;
+    }
+    return nothing;
   }
 
   renderVCS() {
@@ -174,10 +203,42 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  _getFlyoutLinkWithFilename = (url) => {
+    // Get the resolver's filename returned by the application (as HTTP header)
+    // and injected by Cloudflare Worker as a meta HTML tag
+    const metaFilename = document.querySelector(
+      "meta[name='readthedocs-resolver-filename']",
+    );
+
+    // Remove trailing slashes from the version's URL and append the
+    // resolver's filename after removing trailing ``index.html``.
+    // Examples:
+    //
+    //   URL: https://docs.readthedocs.io/en/latest/
+    //   Filename: /index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/latest/
+    //
+    //   URL: https://docs.readthedocs.io/en/stable/
+    //   Filename: /guides/access/index.html
+    //   Flyuout URL: https://docs.readthedocs.io/en/stable/guides/access/
+
+    // Keep only one trailing slash
+    const base = url.replace(/\/+$/, "/");
+
+    // 1. remove initial slash to make it relative to the base
+    // 2. remove the trailing "index.html"
+    const filename = metaFilename.content
+      .replace(/\/index.html$/, "/")
+      .replace(/^\//, "");
+
+    return new URL(filename, base);
+  };
+
   renderVersions() {
     if (
       !this.config.addons.flyout.versions.length ||
-      this.config.projects.current.single_version
+      this.config.projects.current.versioning_scheme ===
+        "single_version_without_translations"
     ) {
       return nothing;
     }
@@ -185,7 +246,8 @@ export class FlyoutElement extends LitElement {
     const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
-      const link = html`<a href="${version.url}">${version.slug}</a>`;
+      const url = this._getFlyoutLinkWithFilename(version.url);
+      const link = html`<a href="${url}">${version.slug}</a>`;
       return currentVersion && version.slug === currentVersion
         ? html`<strong>${link}</strong>`
         : link;
@@ -195,7 +257,7 @@ export class FlyoutElement extends LitElement {
       <dl class="versions">
         <dt>Versions</dt>
         ${this.config.addons.flyout.versions.map(
-          (version) => html`<dd>${getVersionLink(version)}</dd> `,
+          (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>
     `;
@@ -206,13 +268,21 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
+    const currentTranslation = this.config.projects.current.language.code;
+
+    const getLanguageLink = (translation) => {
+      const url = this._getFlyoutLinkWithFilename(translation.url);
+      const link = html`<a href="${url}">${translation.slug}</a>`;
+      return currentTranslation && translation.slug === currentTranslation
+        ? html`<strong>${link}</strong>`
+        : link;
+    };
+
     return html`
       <dl class="languages">
         <dt>Languages</dt>
         ${this.config.addons.flyout.translations.map(
-          (translation) => html`
-            <dd><a href="${translation.url}">${translation.slug}</a></dd>
-          `,
+          (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>
     `;
@@ -240,6 +310,36 @@ export class FlyoutElement extends LitElement {
         </main>
       </div>
     `;
+  }
+
+  _showFlyout = (e) => {
+    this.opened = true;
+  };
+
+  _hideFlyout = (e) => {
+    this.opened = false;
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
+
+    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_SHOW,
+      this.showFlyout,
+    );
+
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_HIDE,
+      this.hideFlyout,
+    );
+
+    super.disconnectedCallback();
   }
 }
 

@@ -4,7 +4,6 @@
     <title>Documentation Addons - Read the Docs</title>
     <meta name="readthedocs-project-slug" content="test-builds" />
     <meta name="readthedocs-version-slug" content="latest" />
-
     <script>
       // Example of using "readthedocs-addons-data-ready" with a different API version supported
       document.addEventListener(
@@ -14,26 +13,28 @@
         }
       );
     </script>
+    <meta name="readthedocs-resolver-filename" content="/index.html" />
   </head>
   <body>
 
-    <h1>Documentation Addons</h1>
+      <h1 id="documentation-addons">Documentation Addons</h1>
 
-    <p>
-      Below are some test cases for addon display and interaction.
-      We also have specific tool test cases:
-    </p>
+      <p>
+          Below are some test cases for addon display and interaction.
+          We also have specific tool test cases:
+      </p>
 
-    <ul>
-      <li><a href="/sphinx">Sphinx</a></li>
-      <li><a href="/pelican">Pelican</a></li>
+      <ul>
+          <li><a href="/sphinx">Sphinx</a></li>
+          <li><a href="/pelican">Pelican</a></li>
+          <li><a href="/mkdocs-material">Material for MkDocs</a></li>
     </ul>
 
-    <h2>DocDiff</h2>
+    <h2 id="docdiff">DocDiff</h2>
 
     <p>Visit <a href="docdiff.html">this page</a> to take a look at it.</p>
 
-    <h2>Ethical Ad placement manual</h2>
+    <h2 id="ethicalads">Ethical Ad placement manual</h2>
     <div
         id="ethical-ad-placement"
         class="flat"
@@ -41,7 +42,7 @@
         data-ea-type="readthedocs-sidebar">
     </div>
 
-    <h2>Search</h2>
+    <h2 id="search">Search</h2>
 
     <p>Nothing to see here, just a placeholder to put the <code>readthedocs-search</code> tag.</p>
     <p>Currently, it modifies the tag to be shown when pressing <code>\</code> (keycode 220) instead of <code>/</code> (keycode 191)</p>
@@ -52,7 +53,7 @@
 
     <p>Clicking in the following input should show the search modal: <input id="search-input" placeholder="Search docs" /></p>
 
-    <h2>Notification</h2>
+    <h2 id="notification">Notification</h2>
 
     <readthedocs-notification class="raised toast"></readthedocs-notification>
     <readthedocs-notification class="inverted"></readthedocs-notification>

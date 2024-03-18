@@ -54,9 +54,10 @@ const addons_analytics = {
       properties: {
         current: {
           type: "object",
-          required: ["slug"],
+          required: ["slug", "type"],
           properties: {
             slug: { type: "string" },
+            type: { type: "string" },
           },
         },
       },
@@ -76,9 +77,10 @@ const addons_docdiff = {
       properties: {
         doc_diff: {
           type: "object",
-          required: ["base_url", "enabled"],
+          required: ["base_url", "root_selector", "enabled"],
           properties: {
             base_url: { type: "string" },
+            root_selector: { type: ["string", "null"] },
             enabled: { type: "boolean" },
           },
         },
@@ -167,10 +169,16 @@ const addons_flyout = {
       properties: {
         current: {
           type: "object",
-          required: ["slug", "single_version"],
+          required: ["slug", "versioning_scheme"],
           properties: {
             slug: { type: "string" },
-            single_version: { type: "boolean" },
+            versioning_scheme: {
+              enum: [
+                "multiple_versions_with_translations",
+                "multiple_versions_without_translations",
+                "single_version_without_translations",
+              ],
+            },
           },
         },
       },
@@ -233,9 +241,11 @@ const addons_hotkeys = {
 const addons_notifications = {
   $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
   type: "object",
+  required: ["addons"],
   properties: {
     addons: {
       type: "object",
+      required: ["external_version_warning", "non_latest_version_warning"],
       properties: {
         external_version_warning: {
           type: "object",
@@ -276,7 +286,13 @@ const addons_notifications = {
           type: "object",
           properties: {
             slug: { type: "string" },
-            single_version: { type: "boolean" },
+            versioning_scheme: {
+              enum: [
+                "multiple_versions_with_translations",
+                "multiple_versions_without_translations",
+                "single_version_without_translations",
+              ],
+            },
             // TODO: use ajv-formats URI type
             repository: {
               type: "object",

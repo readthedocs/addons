@@ -1,8 +1,15 @@
 import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "0";
+export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.8.0";
+export const CLIENT_VERSION = "0.11.3";
+
+// WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
+export const IS_TESTING =
+  typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
+export const IS_PRODUCTION =
+  typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
 
 export function isReadTheDocsEmbedPresent() {
   const urls = [
@@ -54,7 +61,7 @@ export class AddonBase {
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
-    if (!valid) {
+    if (!valid && !IS_TESTING) {
       console.debug(`Validation error on addon "${this.addonName}":`);
       console.debug(validate.errors);
     }
@@ -62,9 +69,13 @@ export class AddonBase {
   }
 
   static isEnabled(config) {
+    // Validate the addons is enabled before validating the config itself. This
+    // allows us to omit returning a field completely when the addon is not
+    // allowed for page the user is reading. Example: `doc_diff` is not returned
+    // when `url=` is not sent.
     return (
-      this.isConfigValid(config) &&
-      objectPath.get(config, this.addonEnabledPath, false) === true
+      objectPath.get(config, this.addonEnabledPath, false) === true &&
+      this.isConfigValid(config)
     );
   }
 
@@ -110,4 +121,18 @@ export function debounce(func, wait) {
   };
 
   return debounced;
+}
+
+/**
+ * Setup logging based on query argument.
+ *
+ * Add `?logging=DEBUG` to the URL to expose logs in the console.
+ *
+ */
+export function setupLogging() {
+  const url = new URL(window.location.href);
+  const debug = url.searchParams.get("logging");
+  if (debug === null || debug.toLowerCase() !== "debug") {
+    console.debug = () => {};
+  }
 }

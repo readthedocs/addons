@@ -67,7 +67,8 @@ export class NotificationElement extends LitElement {
 
     if (
       config.addons.non_latest_version_warning.enabled &&
-      !config.projects.current.single_version &&
+      config.projects.current.versioning_scheme !==
+        "single_version_without_translations" &&
       config.versions.current.type !== "external"
     ) {
       this.calculateStableLatestVersionWarning();
@@ -226,6 +227,9 @@ export class NotificationElement extends LitElement {
   }
 
   closeNotification(e) {
+    // Avoid going back to the top of the page when closing the notification
+    e.preventDefault();
+
     // TODO add cookie to allow closing this notification for all page views on this
     // PR build.
     this.remove();
@@ -254,7 +258,7 @@ export class NotificationElement extends LitElement {
 export class NotificationAddon extends AddonBase {
   static jsonValidationURI =
     "http://v1.schemas.readthedocs.org/addons.notifications.json";
-  static addonName = "HotKeys";
+  static addonName = "Notification";
 
   constructor(config) {
     super();
@@ -278,9 +282,12 @@ export class NotificationAddon extends AddonBase {
    * @param {Object} config - Addon configuration object
    */
   static isEnabled(config) {
+    if (!super.isConfigValid(config)) {
+      return false;
+    }
+
     return (
-      (super.isConfigValid(config) &&
-        config.addons.external_version_warning.enabled === true &&
+      (config.addons.external_version_warning.enabled === true &&
         config.versions.current.type === "external") ||
       (config.addons.non_latest_version_warning.enabled === true &&
         config.versions.current.type !== "external")

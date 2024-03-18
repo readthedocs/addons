@@ -31,7 +31,7 @@
             projects: {
               current: {
                 slug: "project",
-                single_version: false,
+                versioning_scheme: "multiple_versions_with_translations",
                 repository: {
                   url: "https://github.com/readthedocs/addons",
                 },
@@ -69,7 +69,6 @@
 
           it("on latest version", async () => {
             config.versions.current.slug = "latest";
-            console.log(config);
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");
