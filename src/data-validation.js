@@ -268,15 +268,17 @@ const addons_notifications = {
         current: {
           type: "object",
           properties: {
-            id: { type: "integer" },
+            urls: {
+              type: "object",
+              required: ["build"],
+              properties: {
+                build: {
+                  type: "string",
+                },
+              },
+            },
           },
         },
-      },
-    },
-    domains: {
-      type: "object",
-      properties: {
-        dashboard: { type: "string" },
       },
     },
     projects: {
@@ -320,6 +322,20 @@ const addons_notifications = {
           properties: {
             slug: { type: "string" },
             type: { enum: ["branch", "tag", "external"] },
+          },
+        },
+        stable: {
+          type: "object",
+          properties: {
+            urls: {
+              type: "object",
+              required: ["documentation"],
+              properties: {
+                documentation: {
+                  type: "string",
+                },
+              },
+            },
           },
         },
       },
