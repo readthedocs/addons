@@ -3,6 +3,25 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.11.3
+---------------
+
+:date: Mar 13, 2024
+
+* Change how ``visualDomDiff`` is imported to make it compatible between testing
+  and production environments
+
+Version v0.11.0
+---------------
+
+:date: Mar 12, 2024
+
+* Hide flyout when triggering the search modal from the flyout input
+* Close the search modal when clicking on a result
+* Allow users to define a custom ``rootSelector`` for docdiff
+* Initial implementation for recent searches when opening the search modal
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.10.0
 ---------------
 

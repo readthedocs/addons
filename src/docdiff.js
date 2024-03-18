@@ -2,7 +2,16 @@ import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
-import { default as visualDomDiff } from "visual-dom-diff";
+// Note that it took as a while to make it work on production and also on tests.
+// We have to import it as:
+//   import * as  visualDomDiff from "visual-dom-diff";
+//
+// We have to use it as:
+//   visualDomDiff.visualDomDiff();
+//
+// See https://github.com/readthedocs/addons/pull/234
+import * as visualDomDiff from "visual-dom-diff";
+
 import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -37,10 +46,6 @@ export class DocDiffElement extends LitElement {
       type: String,
       attribute: "base-url",
     },
-    rootSelector: {
-      type: String,
-      attribute: "root-selector",
-    },
     injectStyles: {
       type: Boolean,
       attribute: "inject-styles",
@@ -72,7 +77,7 @@ export class DocDiffElement extends LitElement {
 
     this.config = null;
     this.baseUrl = null;
-    this.rootSelector = "[role=main]";
+    this.rootSelector = null;
     this.injectStyles = true;
 
     this.originalBody = null;
@@ -83,6 +88,8 @@ export class DocDiffElement extends LitElement {
       return;
     }
     this.config = config;
+    this.rootSelector =
+      this.config.addons.doc_diff.root_selector || "[role=main]";
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
@@ -125,11 +132,9 @@ export class DocDiffElement extends LitElement {
         const parser = new DOMParser();
         const html_document = parser.parseFromString(text, "text/html");
         const old_body = html_document.documentElement.querySelector(
-          this.config.addons.doc_diff.root_selector,
+          this.rootSelector,
         );
-        const new_body = document.querySelector(
-          this.config.addons.doc_diff.root_selector,
-        );
+        const new_body = document.querySelector(this.rootSelector);
 
         if (old_body == null || new_body == null) {
           throw new Error("Element not found in both documents.");
@@ -137,7 +142,11 @@ export class DocDiffElement extends LitElement {
 
         // After finding the root element, and diffing it, replace it in the DOM
         // with the resulting visual diff elements instead.
-        const diffNode = visualDomDiff(old_body, new_body, VISUAL_DIFF_OPTIONS);
+        const diffNode = visualDomDiff.visualDomDiff(
+          old_body,
+          new_body,
+          VISUAL_DIFF_OPTIONS,
+        );
         new_body.replaceWith(diffNode.firstElementChild);
       })
       .catch((error) => {
