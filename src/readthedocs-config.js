@@ -102,6 +102,9 @@ export function getReadTheDocsConfig(sendUrlParam) {
                 document,
                 data,
               );
+            })
+            .catch((error) => {
+              console.error(error);
             });
         } else {
           dispatchEvent(EVENT_READTHEDOCS_ADDONS_DATA_READY, document, data);
