@@ -1,7 +1,11 @@
 import { default as fetch } from "unfetch";
-import { CLIENT_VERSION } from "./utils";
 import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
-import { ADDONS_API_VERSION, ADDONS_API_ENDPOINT } from "./utils";
+import {
+  CLIENT_VERSION,
+  IS_TESTING,
+  ADDONS_API_VERSION,
+  ADDONS_API_ENDPOINT,
+} from "./utils";
 
 /**
  * Get the Read the Docs API version supported by user's integrations.
@@ -77,12 +81,13 @@ export function getReadTheDocsConfig(sendUrlParam) {
           // this data is ready to be consumed under `event.detail`.
 
           url =
-            "/_/addons/?" +
+            ADDONS_API_ENDPOINT +
             new URLSearchParams({
               url: window.location.href,
               "client-version": CLIENT_VERSION,
               "api-version": metadataAddonsAPIVersion,
             });
+
           fetch(url, {
             method: "GET",
           })
