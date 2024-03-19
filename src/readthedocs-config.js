@@ -97,21 +97,14 @@ export function getReadTheDocsConfig(sendUrlParam) {
               return response.json();
             })
             .then((data) => {
-              const readthedocsDataReady = new CustomEvent(
+              dispatchEvent(
                 EVENT_READTHEDOCS_ADDONS_DATA_READY,
-                { detail: data },
+                document,
+                data,
               );
-              document.dispatchEvent(readthedocsDataReady);
-              return undefined;
             });
         } else {
-          const readthedocsDataReady = new CustomEvent(
-            EVENT_READTHEDOCS_ADDONS_DATA_READY,
-            {
-              detail: data,
-            },
-          );
-          document.dispatchEvent(readthedocsDataReady);
+          dispatchEvent(EVENT_READTHEDOCS_ADDONS_DATA_READY, document, data);
         }
       }
 
@@ -120,4 +113,9 @@ export function getReadTheDocsConfig(sendUrlParam) {
     .catch((error) => {
       console.error(error);
     });
+}
+
+function dispatchEvent(eventName, element, data) {
+  const event = new CustomEvent(eventName, { detail: data });
+  element.dispatchEvent(event);
 }
