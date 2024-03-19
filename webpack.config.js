@@ -86,6 +86,13 @@ module.exports = (env, argv) => {
       ignored: ["/node_modules/", "**/node_modules/"],
     },
     devServer: {
+      // Allow CORS when working locally
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "*",
+      },
       open: false,
       port: 8000,
       hot: false,

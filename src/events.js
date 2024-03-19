@@ -5,3 +5,5 @@ export const EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW =
 export const EVENT_READTHEDOCS_DOCDIFF_HIDE = "readthedocs-docdiff-hide";
 export const EVENT_READTHEDOCS_FLYOUT_SHOW = "readthedocs-flyout-show";
 export const EVENT_READTHEDOCS_FLYOUT_HIDE = "readthedocs-flyout-hide";
+export const EVENT_READTHEDOCS_ADDONS_DATA_READY =
+  "readthedocs-addons-data-ready";
