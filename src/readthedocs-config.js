@@ -64,8 +64,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
   })
     .then((response) => {
       if (!response.ok) {
-        console.debug("Error parsing configuration data");
-        return undefined;
+        throw "Error parsing configuration data";
       }
       return response.json();
     })
@@ -93,8 +92,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
           })
             .then((response) => {
               if (!response.ok) {
-                console.debug("Error parsing configuration data");
-                return undefined;
+                throw "Error parsing configuration data";
               }
               return response.json();
             })
@@ -118,5 +116,8 @@ export function getReadTheDocsConfig(sendUrlParam) {
       }
 
       return data;
+    })
+    .catch((error) => {
+      console.error(error);
     });
 }
