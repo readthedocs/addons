@@ -19,13 +19,36 @@
   },
   "versions": {
     "current": {
+      "aliases": [],
       "slug": "v1.0",
-      "type": "external"
+      "type": "external",
+      "urls": {
+        "documentation": "https://test-bulds.readthedocs.io/en/v1.0/"
+      }
+    },
+    "latest": {
+      "aliases": [],
+      "slug": "latest",
+      "type": "branch",
+      "urls": {
+        "documentation": "https://test-bulds.readthedocs.io/en/latest/"
+      }
+    },
+    "stable": {
+      "aliases": [],
+      "slug": "v0.9",
+      "type": "tag",
+      "urls": {
+        "documentation": "https://test-bulds.readthedocs.io/en/v0.9/"
+      }
     }
   },
   "builds": {
     "current": {
-      "id": 2801
+      "id": 2801,
+      "urls": {
+        "build": "https://readthedocs.org/dashboard/test-builds/builds/1/"
+      }
     }
   },
   "domains": {
@@ -70,6 +93,10 @@
     "flyout": {
       "enabled": true,
       "translations": [
+        {
+          "slug": "en",
+          "url": "http://localhost:8000/en/v1.0/"
+        },
         {
           "slug": "es",
           "url": "http://localhost:8000/es/v1.0/"
