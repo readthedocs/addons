@@ -267,6 +267,7 @@ const addons_notifications = {
       properties: {
         current: {
           type: "object",
+          required: ["urls"],
           properties: {
             urls: {
               type: "object",
@@ -319,19 +320,38 @@ const addons_notifications = {
       properties: {
         current: {
           type: "object",
+          required: ["slug", "urls", "type"],
           properties: {
             slug: { type: "string" },
             type: { enum: ["branch", "tag", "external"] },
+            urls: {
+              type: "object",
+              required: ["documentation", "vcs"],
+              properties: {
+                documentation: {
+                  type: "string",
+                },
+                vcs: {
+                  type: "string",
+                },
+              },
+            },
           },
         },
         stable: {
           type: "object",
+          required: ["urls"],
           properties: {
+            slug: { type: "string" },
+            type: { enum: ["branch", "tag", "external"] },
             urls: {
               type: "object",
-              required: ["documentation"],
+              required: ["documentation", "vcs"],
               properties: {
                 documentation: {
+                  type: "string",
+                },
+                vcs: {
                   type: "string",
                 },
               },

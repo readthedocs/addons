@@ -24,9 +24,9 @@
               current: {
                 id: 1,
               },
-            },
-            domains: {
-              dashboard: "readthedocs.org",
+              urls: {
+                build: "https://readthedocs.org/dashboard/project/builds/1/",
+              },
             },
             projects: {
               current: {
@@ -44,6 +44,18 @@
               current: {
                 slug: "stable",
                 type: "branch",
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/stable/",
+                  vcs: "https://github.com/readthedocs/project/",
+                },
+              },
+              stable: {
+                slug: "stable",
+                type: "branch",
+                urls: {
+                    documentation: "https://project.readthedocs.io/en/stable/",
+                    vcs: "https://github.com/readthedocs/project/",
+                },
               },
             },
           };
@@ -52,8 +64,14 @@
         describe("Notification addon", () => {
           it("on stable version", async () => {
             // Set current version as non-stable and non-latest
-            config.versions.current.slug = "v3.x";
-            config.versions.current.type = "tag";
+            config.versions.current = {
+                slug: "v3.x",
+                type: "tag",
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/v3.x/",
+                  vcs: "https://github.com/readthedocs/project/",
+                },
+            }
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");
