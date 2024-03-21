@@ -23,7 +23,7 @@
       "slug": "v1.0",
       "type": "external",
       "urls": {
-        "documentation": "https://test-bulds.readthedocs.io/en/v1.0/"
+        "documentation": "https://example.readthedocs.io/en/v1.0/"
       }
     },
     "latest": {
@@ -31,7 +31,7 @@
       "slug": "latest",
       "type": "branch",
       "urls": {
-        "documentation": "https://test-bulds.readthedocs.io/en/latest/"
+        "documentation": "https://example.readthedocs.io/en/latest/"
       }
     },
     "stable": {
@@ -39,7 +39,7 @@
       "slug": "v0.9",
       "type": "tag",
       "urls": {
-        "documentation": "https://test-bulds.readthedocs.io/en/v0.9/"
+        "documentation": "https://example.readthedocs.io/en/v0.9/"
       }
     }
   },
@@ -47,7 +47,7 @@
     "current": {
       "id": 2801,
       "urls": {
-        "build": "https://readthedocs.org/dashboard/test-builds/builds/1/"
+        "build": "https://readthedocs.org/dashboard/example/builds/1/"
       }
     }
   },
@@ -95,33 +95,33 @@
       "translations": [
         {
           "slug": "en",
-          "url": "http://localhost:8000/en/v1.0/"
+          "url": "https://example.readthedocs.io/en/v1.0/"
         },
         {
           "slug": "es",
-          "url": "http://localhost:8000/es/v1.0/"
+          "url": "https://example.readthedocs.io/es/v1.0/"
         }
       ],
       "versions": [
         {
           "slug": "stable",
-          "url": "http://localhost:8000/en/stable/"
+          "url": "https://example.readthedocs.io/en/stable/"
         },
         {
           "slug": "latest",
-          "url": "http://localhost:8000/en/latest/"
+          "url": "https://example.readthedocs.io/en/latest/"
         },
         {
           "slug": "v1.0",
-          "url": "http://localhost:8000/en/v1.0/"
+          "url": "https://example.readthedocs.io/en/v1.0/"
         },
         {
           "slug": "v1.4",
-          "url": "http://localhost:8000/en/v1.4/"
+          "url": "https://example.readthedocs.io/en/v1.4/"
         },
         {
           "slug": "v2.0",
-          "url": "http://localhost:8000/en/v2.0/"
+          "url": "https://example.readthedocs.io/en/v2.0/"
         }
       ],
       "downloads": [
