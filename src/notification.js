@@ -110,26 +110,39 @@ export class NotificationElement extends LitElement {
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
-    const versions = this.config.addons.non_latest_version_warning.versions;
-    const stable_index = versions.indexOf("stable");
+    const versions = this.config.versions.active;
+    const stable_version = versions.find(
+      (version) => version.slug === "stable",
+    );
+    const latest_version = versions.find(
+      (version) => version.slug === "latest",
+    );
     const current_version = this.config.versions.current;
     const current_project = this.config.projects.current;
 
-    // TODO: support aliases here
-    // https://github.com/readthedocs/addons/issues/132
-    if (current_version.slug === "latest") {
+    // Current version is "latest" or its alias
+    if (
+      current_version.slug === "latest" ||
+      latest_version.aliases.find(
+        (version) => version.slug === current_version.slug,
+      ) !== undefined
+    ) {
       this.readingLatestVersion = true;
     }
 
-    if (current_version.slug === "stable") {
+    // Current version is "stable" or its alias
+    if (
+      current_version.slug === "stable" ||
+      stable_version.aliases.find(
+        (version) => version.slug === current_version.slug,
+      ) !== undefined
+    ) {
       this.readingStableVersion = true;
     }
 
-    if (stable_index !== -1) {
+    if (stable_version !== undefined) {
       this.stableVersionAvailable = true;
-      // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
-      // to support all the posibilities. Those cases won't work for now until we find a proper solution.
-      this.urls.stable = `/${current_project.language.code}/stable/`;
+      this.urls.stable = stable_version.urls.documentation;
     }
   }
 

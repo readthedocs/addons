@@ -187,17 +187,15 @@ export class FlyoutElement extends LitElement {
   }
 
   renderDownloads() {
-    if (!this.config.addons.flyout.downloads.length) {
+    if (!this.config.versions.current.downloads.length) {
       return nothing;
     }
 
     return html`
       <dl class="downloads">
         <dt>Downloads</dt>
-        ${this.config.addons.flyout.downloads.map(
-          (download) => html`
-            <dd><a href="${download.url}">${download.name}</a></dd>
-          `,
+        ${Object.entries(this.config.versions.current.downloads).map(
+          (name, url) => html` <dd><a href="${url}">${name}</a></dd> `,
         )}
       </dl>
     `;
@@ -236,7 +234,7 @@ export class FlyoutElement extends LitElement {
 
   renderVersions() {
     if (
-      !this.config.addons.flyout.versions.length ||
+      !this.config.versions.active.length ||
       this.config.projects.current.versioning_scheme ===
         "single_version_without_translations"
     ) {
@@ -246,7 +244,7 @@ export class FlyoutElement extends LitElement {
     const currentVersion = this.config.versions.current.slug;
 
     const getVersionLink = (version) => {
-      const url = this._getFlyoutLinkWithFilename(version.url);
+      const url = this._getFlyoutLinkWithFilename(version.urls.documentation);
       const link = html`<a href="${url}">${version.slug}</a>`;
       return currentVersion && version.slug === currentVersion
         ? html`<strong>${link}</strong>`
@@ -256,7 +254,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <dl class="versions">
         <dt>Versions</dt>
-        ${this.config.addons.flyout.versions.map(
+        ${this.config.versions.active.map(
           (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>
@@ -264,7 +262,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (!this.config.addons.flyout.translations.length) {
+    if (!this.config.projects.translations.length) {
       return nothing;
     }
 
@@ -281,7 +279,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <dl class="languages">
         <dt>Languages</dt>
-        ${this.config.addons.flyout.translations.map(
+        ${this.config.projects.translations.map(
           (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>
