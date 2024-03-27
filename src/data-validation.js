@@ -136,16 +136,12 @@ const addons_flyout = {
           required: [
             "enabled",
             "downloads",
-            "translations",
-            "versions",
             // TODO: make it required when we support VCS links
             // "vcs",
           ],
           properties: {
             enabled: { type: "boolean" },
             downloads: { type: "array" },
-            translations: { type: "array" },
-            versions: { type: "array" },
             vcs: {
               type: "object",
               properties: {
@@ -165,7 +161,7 @@ const addons_flyout = {
     },
     projects: {
       type: "object",
-      required: ["current"],
+      required: ["current", "translations"],
       properties: {
         current: {
           type: "object",
@@ -181,12 +177,40 @@ const addons_flyout = {
             },
           },
         },
+        translations: {
+          type: "array",
+          required: ["slug", "urls"],
+          properties: {
+            slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["documentation"],
+              properties: {
+                documentation: { type: "string" },
+              },
+            },
+          },
+        },
       },
     },
     versions: {
       type: "object",
-      required: ["current"],
+      required: ["current", "active"],
       properties: {
+        active: {
+          type: "array",
+          required: ["slug", "urls"],
+          properties: {
+            slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["documentation"],
+              properties: {
+                documentation: { type: "string" },
+              },
+            },
+          },
+        },
         current: {
           type: "object",
           required: ["slug"],
