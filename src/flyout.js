@@ -266,11 +266,13 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
+    const translations =
+      [this.config.projects.current] + this.config.projects.translations;
     const currentTranslation = this.config.projects.current.language.code;
 
     const getLanguageLink = (translation) => {
       const url = this._getFlyoutLinkWithFilename(translation.url);
-      const link = html`<a href="${url}">${translation.slug}</a>`;
+      const link = html`<a href="${url}">${translation.language.code}</a>`;
       return currentTranslation && translation.slug === currentTranslation
         ? html`<strong>${link}</strong>`
         : link;
