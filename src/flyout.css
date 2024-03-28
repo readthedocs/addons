@@ -29,7 +29,7 @@
   top: 50px;
 }
 
-:root {
+:host {
   --readthedocs-flyout-font-size: 0.8rem;
 }
 
