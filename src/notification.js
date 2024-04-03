@@ -145,12 +145,8 @@ export class NotificationElement extends LitElement {
   }
 
   renderStableLatestVersionWarning() {
-    library.add(faCircleXmark);
     library.add(faHourglassHalf);
     library.add(faFlask);
-    const xmark = icon(faCircleXmark, {
-      title: "Close notification",
-    });
     if (this.readingLatestVersion && this.stableVersionAvailable) {
       const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
@@ -161,9 +157,7 @@ export class NotificationElement extends LitElement {
           ${iconFlask.node[0]}
           <div class="title">
             This is the <span>latest development version</span>
-            <a href="#" class="right" @click=${this.closeNotification}>
-              ${xmark.node[0]}
-            </a>
+            ${this.renderCloseButton()}
           </div>
           <div class="content">
             Some features may not yet be available in the published stable
@@ -187,9 +181,7 @@ export class NotificationElement extends LitElement {
           <div class="title">
             This <em>may</em> be an
             <span>old version of this documentation</span>
-            <a href="#" class="right" @click=${this.closeNotification}>
-              ${xmark.node[0]}
-            </a>
+            ${this.renderCloseButton()}
           </div>
           <div class="content">
             You may be reading an old version of this documentation. Read the
@@ -205,11 +197,7 @@ export class NotificationElement extends LitElement {
   }
 
   renderExternalVersionWarning() {
-    library.add(faCircleXmark);
     library.add(faCodePullRequest);
-    const xmark = icon(faCircleXmark, {
-      title: "Close notification",
-    });
     const iconPullRequest = icon(faCodePullRequest, {
       title: "This version is a pull request version",
       classes: ["header", "icon"],
@@ -220,9 +208,7 @@ export class NotificationElement extends LitElement {
         ${iconPullRequest.node[0]}
         <div class="title">
           This page was created from a pull request build
-          <a href="#" class="right" @click=${this.closeNotification}>
-            ${xmark.node[0]}
-          </a>
+          ${this.renderCloseButton()}
         </div>
         <div class="content">
           See the
@@ -237,6 +223,18 @@ export class NotificationElement extends LitElement {
         </div>
       </div>
     `;
+  }
+
+  renderCloseButton() {
+    library.add(faCircleXmark);
+    const xmark = icon(faCircleXmark, {
+      title: "Close notification",
+    });
+    return html`
+      <a href="#" class="right" @click=${this.closeNotification}>
+        ${xmark.node[0]}
+      </a>
+    `
   }
 
   closeNotification(e) {
