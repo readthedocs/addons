@@ -20,6 +20,9 @@ export class NotificationElement extends LitElement {
     config: { state: true },
     urls: { state: true },
     highest_version: { state: true },
+    dismissed: {state: true},
+    // Under which key should the notification store dismissal (and other) information
+    localStorageKey: { type: String, attribute: "local-storage-key" },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -37,6 +40,17 @@ export class NotificationElement extends LitElement {
     this.readingLatestVersion = false;
     this.readingStableVersion = false;
     this.stableVersionAvailable = false;
+    this.localStorageKey = "default-notification";
+    this.notificationAddonLocalStorageKey = "readthedocs-addons-notifications";
+    this.dismissed = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    const notificationStorage = this.getLocalStorage()[this.localStorageKey];
+    if (notificationStorage && notificationStorage.dismissed) {
+      this.dismissed = true;
+    }
   }
 
   loadConfig(config) {
@@ -73,6 +87,18 @@ export class NotificationElement extends LitElement {
     }
   }
 
+  getLocalStorage() {
+    const notificationStorage = window.localStorage.getItem(this.notificationAddonLocalStorageKey);
+    return notificationStorage ? JSON.parse(notificationStorage) : {};
+  }
+
+  setLocalStorage(obj) {
+    const notificationStorage = this.getLocalStorage() || {};
+    const specificStorage = notificationStorage[this.localStorageKey] || {};
+    notificationStorage[this.localStorageKey] = {...specificStorage, ...obj};
+    window.localStorage.setItem(this.notificationAddonLocalStorageKey, JSON.stringify(notificationStorage));
+  }
+
   firstUpdated() {
     // Add CSS classes to the element on ``firstUpdated`` because we need the
     // HTML element to exist in the DOM before being able to add tag attributes.
@@ -83,6 +109,10 @@ export class NotificationElement extends LitElement {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
       // nothing is a special Lit response type
+      return nothing;
+    }
+
+    if (this.dismissed) {
       return nothing;
     }
 
@@ -241,9 +271,9 @@ export class NotificationElement extends LitElement {
     // Avoid going back to the top of the page when closing the notification
     e.preventDefault();
 
-    // TODO add cookie to allow closing this notification for all page views on this
-    // PR build.
-    this.remove();
+    this.dismissed = true;
+
+    this.setLocalStorage({dismissed: true});
 
     // Avoid event propagation
     return false;
