@@ -1,6 +1,5 @@
 {
-  "api_version": "0",
-  "comment": "THIS RESPONSE IS IN ALPHA FOR TEST PURPOSES ONLY AND IT'S GOING TO CHANGE COMPLETELY -- DO NOT USE IT!",
+  "api_version": "1",
   "projects": {
     "current": {
       "slug": "example",
@@ -14,18 +13,71 @@
       "programming_language": {
         "code": "words"
       },
-      "versioning_scheme": "multiple_versions_with_translations"
-    }
+      "versioning_scheme": "multiple_versions_with_translations",
+      "urls": {
+        "home": "https://devthedocs.org/projects/example/",
+        "builds": "https://devthedocs.org/projects/example/builds/",
+        "downloads": "https://devthedocs.org/projects/example/downloads/"
+      }
+    },
+    "translations": [
+      {
+        "slug": "example-es",
+        "language": {
+          "code": "es"
+        },
+        "urls": {
+          "documentation": "http://localhost:8000/es/v1.0/"
+        }
+      }
+    ]
   },
   "versions": {
+    "active": [
+      {
+        "slug": "stable",
+        "urls": {
+          "documentation": "http://localhost:8000/en/stable/"
+        }
+      },
+      {
+        "slug": "latest",
+        "urls": {
+          "documentation": "http://localhost:8000/en/latest/"
+        }
+      },
+      {
+        "slug": "v1.0",
+        "urls": {
+          "documentation": "http://localhost:8000/en/v1.0/"
+        }
+      },
+      {
+        "slug": "v1.4",
+        "urls": {
+          "documentation": "http://localhost:8000/en/v1.4/"
+        }
+      },
+      {
+        "slug": "v2.0",
+        "urls": {
+          "documentation": "http://localhost:8000/en/v2.0/"
+        }
+      }
+    ],
     "current": {
       "slug": "v1.0",
-      "type": "external"
+      "type": "external",
+      "downloads": {
+        "pdf": "https://localhost:8000/_/downloads/pdf/example/v1.0/"
+      }
     }
   },
   "builds": {
     "current": {
-      "id": 2801
+      "urls": {
+        "build": "https://localhost:8000/projects/example/builds/1234/"
+      }
     }
   },
   "domains": {
@@ -69,34 +121,6 @@
     },
     "flyout": {
       "enabled": true,
-      "translations": [
-        {
-          "slug": "es",
-          "url": "http://localhost:8000/es/v1.0/"
-        }
-      ],
-      "versions": [
-        {
-          "slug": "stable",
-          "url": "http://localhost:8000/en/stable/"
-        },
-        {
-          "slug": "latest",
-          "url": "http://localhost:8000/en/latest/"
-        },
-        {
-          "slug": "v1.0",
-          "url": "http://localhost:8000/en/v1.0/"
-        },
-        {
-          "slug": "v1.4",
-          "url": "http://localhost:8000/en/v1.4/"
-        },
-        {
-          "slug": "v2.0",
-          "url": "http://localhost:8000/en/v2.0/"
-        }
-      ],
       "downloads": [
         {
           "name": "PDF",
@@ -115,9 +139,6 @@
     },
     "search": {
       "enabled": true,
-      "project": "example",
-      "version": "latest",
-      "api_endpoint": "/_/api/v3/search/",
       "filters": [
         ["Search only in this project", "project:example/latest"],
         ["Search subprojects", "subprojects:example/latest"]

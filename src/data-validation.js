@@ -135,13 +135,11 @@ const addons_flyout = {
           type: "object",
           required: [
             "enabled",
-            "downloads",
             // TODO: make it required when we support VCS links
             // "vcs",
           ],
           properties: {
             enabled: { type: "boolean" },
-            downloads: { type: "array" },
             vcs: {
               type: "object",
               properties: {
@@ -165,9 +163,18 @@ const addons_flyout = {
       properties: {
         current: {
           type: "object",
-          required: ["slug", "versioning_scheme"],
+          required: ["slug", "urls", "versioning_scheme"],
           properties: {
             slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["home", "builds", "downloads"],
+              properties: {
+                home: { type: "string" },
+                builds: { type: "string" },
+                downloads: { type: "string" },
+              },
+            },
             versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
@@ -179,9 +186,17 @@ const addons_flyout = {
         },
         translations: {
           type: "array",
-          required: ["slug", "urls"],
+          items: { type: "object" },
+          required: ["slug", "urls", "language"],
           properties: {
             slug: { type: "string" },
+            language: {
+              type: "object",
+              required: ["code"],
+              properties: {
+                code: { type: "string" },
+              },
+            },
             urls: {
               type: "object",
               required: ["documentation"],
@@ -199,6 +214,7 @@ const addons_flyout = {
       properties: {
         active: {
           type: "array",
+          items: { type: "object" },
           required: ["slug", "urls"],
           properties: {
             slug: { type: "string" },
@@ -213,9 +229,12 @@ const addons_flyout = {
         },
         current: {
           type: "object",
-          required: ["slug"],
+          required: ["slug", "downloads"],
           properties: {
             slug: { type: "string" },
+            downloads: {
+              type: "object",
+            },
           },
         },
       },
@@ -281,18 +300,24 @@ const addons_notifications = {
           type: "object",
           properties: {
             enabled: { type: "boolean" },
-            versions: { type: "array" },
           },
         },
       },
     },
     builds: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
+          required: ["urls"],
           properties: {
-            id: { type: "integer" },
+            urls: {
+              type: "object",
+              properties: {
+                build: { type: "string" },
+              },
+            },
           },
         },
       },
@@ -338,7 +363,23 @@ const addons_notifications = {
     },
     versions: {
       type: "object",
+      required: ["current", "active"],
       properties: {
+        active: {
+          type: "array",
+          items: { type: "object" },
+          required: ["slug", "urls"],
+          properties: {
+            slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["documentation"],
+              properties: {
+                documentation: { type: "string" },
+              },
+            },
+          },
+        },
         current: {
           type: "object",
           properties: {

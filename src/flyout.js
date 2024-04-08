@@ -45,13 +45,6 @@ export class FlyoutElement extends LitElement {
     this.config = config;
   }
 
-  getProjectUrl() {
-    // TODO: this URL should come from ``this.config.projects.current.urls.dashboard``.
-    // We are not able to use that field because of:
-    // https://github.com/readthedocs/readthedocs-ops/issues/1323
-    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`;
-  }
-
   _toggleOpen(e) {
     this.opened = !this.opened;
   }
@@ -174,20 +167,20 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="${this.getProjectUrl()}">Project Home</a>
+          <a href="${this.config.projects.current.urls.home}">Project Home</a>
         </dd>
         <dd>
-          <a href="${this.getProjectUrl()}builds/">Builds</a>
+          <a href="${this.config.projects.current.urls.builds}">Builds</a>
         </dd>
         <dd>
-          <a href="${this.getProjectUrl()}downloads/">Downloads</a>
+          <a href="${this.config.projects.current.urls.downloads}">Downloads</a>
         </dd>
       </dl>
     `;
   }
 
   renderDownloads() {
-    if (!this.config.versions.current.downloads.length) {
+    if (!Object.keys(this.config.versions.current.downloads).length) {
       return nothing;
     }
 
@@ -195,7 +188,7 @@ export class FlyoutElement extends LitElement {
       <dl class="downloads">
         <dt>Downloads</dt>
         ${Object.entries(this.config.versions.current.downloads).map(
-          (name, url) => html` <dd><a href="${url}">${name}</a></dd> `,
+          ([name, url]) => html`<dd><a href="${url}">${name}</a></dd>`,
         )}
       </dl>
     `;
@@ -241,12 +234,10 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    const currentVersion = this.config.versions.current.slug;
-
     const getVersionLink = (version) => {
       const url = this._getFlyoutLinkWithFilename(version.urls.documentation);
       const link = html`<a href="${url}">${version.slug}</a>`;
-      return currentVersion && version.slug === currentVersion
+      return this.config.versions.current.slug == version.slug
         ? html`<strong>${link}</strong>`
         : link;
     };
@@ -262,18 +253,18 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (!this.config.projects.translations.length) {
+    // NOTE: translations contains itself.
+    // We may want to change this.
+    if (this.config.projects.translations.length <= 1) {
       return nothing;
     }
 
-    const translations =
-      [this.config.projects.current] + this.config.projects.translations;
-    const currentTranslation = this.config.projects.current.language.code;
-
     const getLanguageLink = (translation) => {
-      const url = this._getFlyoutLinkWithFilename(translation.url);
+      const url = this._getFlyoutLinkWithFilename(
+        translation.urls.documentation,
+      );
       const link = html`<a href="${url}">${translation.language.code}</a>`;
-      return currentTranslation && translation.slug === currentTranslation
+      return this.config.projects.current.slug === translation.slug
         ? html`<strong>${link}</strong>`
         : link;
     };
