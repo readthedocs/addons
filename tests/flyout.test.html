@@ -29,6 +29,7 @@
                   code: "en",
                 },
                 urls: {
+                  documentation: "https://project.readthedocs.io/en/latest/",
                   home: "https://readthedocs.org/projects/project/",
                   builds: "https://readthedocs.org/projects/project/builds/",
                   downloads:
@@ -37,21 +38,17 @@
               },
               translations: [
                 {
-                  slug: "project",
-                  language: {
-                    code: "en",
-                  },
-                  urls: {
-                    documentation: "https://project.readthedocs.io/en/latest/",
-                  },
-                },
-                {
                   slug: "project-es",
+                  versioning_scheme: "multiple_versions_with_translations",
                   language: {
                     code: "es",
                   },
                   urls: {
                     documentation: "https://project.readthedocs.io/es/latest/",
+                    home: "https://readthedocs.org/projects/project/",
+                    builds: "https://readthedocs.org/projects/project/builds/",
+                    downloads:
+                      "https://readthedocs.org/projects/project/downloads/",
                   },
                 },
               ],
@@ -90,7 +87,10 @@
         describe("Flyout addon", () => {
           it("render languages section translation selected", async () => {
             // Select one of the translations as current project
-            config.projects.current.slug = "project-es";
+            let currentProject = config.projects.current;
+            let translationProject = config.projects.translations[0];
+            config.projects.translations[0] = currentProject;
+            config.projects.current = translationProject;
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");

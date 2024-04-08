@@ -253,9 +253,7 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    // NOTE: translations contains itself.
-    // We may want to change this.
-    if (this.config.projects.translations.length <= 1) {
+    if (!this.config.projects.translations.length) {
       return nothing;
     }
 
@@ -269,10 +267,18 @@ export class FlyoutElement extends LitElement {
         : link;
     };
 
+    // Add the current project as "translation" and sort them based on language's code
+    let translations = this.config.projects.translations.concat(
+      this.config.projects.current,
+    );
+    translations = translations.sort((a, b) =>
+      a.language.code.localeCompare(b.language.code),
+    );
+
     return html`
       <dl class="languages">
         <dt>Languages</dt>
-        ${this.config.projects.translations.map(
+        ${translations.map(
           (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>

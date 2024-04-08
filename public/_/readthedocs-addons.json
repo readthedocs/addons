@@ -15,6 +15,7 @@
       },
       "versioning_scheme": "multiple_versions_with_translations",
       "urls": {
+        "documentation": "http://localhost:8000/en/v1.0/",
         "home": "https://devthedocs.org/projects/example/",
         "builds": "https://devthedocs.org/projects/example/builds/",
         "downloads": "https://devthedocs.org/projects/example/downloads/"
