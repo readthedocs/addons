@@ -17,16 +17,14 @@
               },
               non_latest_version_warning: {
                 enabled: true,
-                versions: ["latest", "stable"],
               },
             },
             builds: {
               current: {
-                id: 1,
+                urls: {
+                    build: "https://readthedocs.org/project/project/builds/",
+                }
               },
-            },
-            domains: {
-              dashboard: "readthedocs.org",
             },
             projects: {
               current: {
@@ -41,9 +39,33 @@
               },
             },
             versions: {
+              active: [
+                  {
+                      slug: "stable",
+                      aliases: [],
+                      urls: {
+                          documentation: "https://project.readthedocs.io/en/stable/",
+                      },
+                  },
+                  {
+                      slug: "latest",
+                      aliases: [],
+                      urls: {
+                          documentation: "https://project.readthedocs.io/en/latest/",
+                      },
+                  },
+                  {
+                      slug: "v3.x",
+                      aliases: [],
+                      urls: {
+                          documentation: "https://project.readthedocs.io/en/v3.x/",
+                      },
+                  },
+              ],
               current: {
                 slug: "stable",
                 type: "branch",
+                aliases: [],
               },
             },
           };

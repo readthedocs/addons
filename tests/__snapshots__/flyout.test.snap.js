@@ -19,6 +19,13 @@ snapshots["Flyout addon snapshot flyout completely"] =
         Languages
       </dt>
       <dd>
+        <strong>
+          <a href="https://project.readthedocs.io/en/latest/">
+            en
+          </a>
+        </strong>
+      </dd>
+      <dd>
         <a href="https://project.readthedocs.io/es/latest/">
           es
         </a>
@@ -51,8 +58,8 @@ snapshots["Flyout addon snapshot flyout completely"] =
         Downloads
       </dt>
       <dd>
-        <a href="/_/downloads/en/latest/">
-          PDF
+        <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">
+          pdf
         </a>
       </dd>
     </dl>
@@ -61,17 +68,17 @@ snapshots["Flyout addon snapshot flyout completely"] =
         On Read the Docs
       </dt>
       <dd>
-        <a href="//readthedocs.org/projects/project/">
+        <a href="https://readthedocs.org/projects/project/">
           Project Home
         </a>
       </dd>
       <dd>
-        <a href="//readthedocs.org/projects/project/builds/">
+        <a href="https://readthedocs.org/projects/project/builds/">
           Builds
         </a>
       </dd>
       <dd>
-        <a href="//readthedocs.org/projects/project/downloads/">
+        <a href="https://readthedocs.org/projects/project/downloads/">
           Downloads
         </a>
       </dd>
@@ -129,6 +136,13 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
         Languages
       </dt>
       <dd>
+        <strong>
+          <a href="https://project.readthedocs.io/en/latest/">
+            en
+          </a>
+        </strong>
+      </dd>
+      <dd>
         <a href="https://project.readthedocs.io/es/latest/">
           es
         </a>
@@ -161,8 +175,8 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
         Downloads
       </dt>
       <dd>
-        <a href="/_/downloads/en/latest/">
-          PDF
+        <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">
+          pdf
         </a>
       </dd>
     </dl>
@@ -171,17 +185,17 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
         On Read the Docs
       </dt>
       <dd>
-        <a href="//readthedocs.org/projects/project/">
+        <a href="https://readthedocs.org/projects/project/">
           Project Home
         </a>
       </dd>
       <dd>
-        <a href="//readthedocs.org/projects/project/builds/">
+        <a href="https://readthedocs.org/projects/project/builds/">
           Builds
         </a>
       </dd>
       <dd>
-        <a href="//readthedocs.org/projects/project/downloads/">
+        <a href="https://readthedocs.org/projects/project/downloads/">
           Downloads
         </a>
       </dd>

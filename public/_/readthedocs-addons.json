@@ -69,7 +69,7 @@
       "slug": "v1.0",
       "type": "external",
       "downloads": {
-        "pdf": "https://localhost:8000/_/downloads/pdf/example/v1.0/"
+        "pdf": "https://localhost:8000/_/downloads/en/v1.0/pdf/"
       }
     }
   },
@@ -124,7 +124,7 @@
       "downloads": [
         {
           "name": "PDF",
-          "url": "/_/downloads/en/latest/"
+          "url": "/_/downloads/en/latest/pdf/"
         }
       ],
       "vcs": {

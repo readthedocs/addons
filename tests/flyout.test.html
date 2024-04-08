@@ -19,36 +19,7 @@
               },
               flyout: {
                 enabled: true,
-                downloads: [
-                  {
-                    name: "PDF",
-                    url: "/_/downloads/en/latest/",
-                  },
-                ],
-                translations: [
-                  {
-                    slug: "es",
-                    url: "https://project.readthedocs.io/es/latest/",
-                  },
-                ],
-                versions: [
-                  {
-                    slug: "stable",
-                    url: "https://project.readthedocs.io/en/stable/",
-                  },
-                  {
-                    slug: "latest",
-                    url: "https://project.readthedocs.io/en/latest/",
-                  },
-                  {
-                    slug: "v1.0",
-                    url: "https://project.readthedocs.io/en/v1.0/",
-                  },
-                ],
               },
-            },
-            domains: {
-              dashboard: "readthedocs.org",
             },
             projects: {
               current: {
@@ -57,11 +28,59 @@
                 language: {
                   code: "en",
                 },
+                urls: {
+                  home: "https://readthedocs.org/projects/project/",
+                  builds: "https://readthedocs.org/projects/project/builds/",
+                  downloads: "https://readthedocs.org/projects/project/downloads/",
+                },
               },
+              translations: [
+                {
+                  slug: "project",
+                  language: {
+                    code: "en",
+                  },
+                  urls: {
+                     documentation: "https://project.readthedocs.io/en/latest/",
+                  },
+                },
+                {
+                  slug: "project-es",
+                  language: {
+                    code: "es",
+                  },
+                  urls: {
+                    documentation: "https://project.readthedocs.io/es/latest/",
+                  },
+                },
+              ],
             },
             versions: {
+              active: [
+                {
+                  slug: "stable",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/stable/",
+                  },
+                },
+                {
+                  slug: "latest",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/latest/",
+                  },
+                },
+                {
+                  slug: "v1.0",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/v1.0/",
+                  },
+                },
+              ],
               current: {
                 slug: "latest",
+                downloads: {
+                  pdf: "https://project.readthedocs.io/_/downloads/en/latest/pdf/",
+                },
               },
             },
           };
@@ -69,8 +88,8 @@
 
         describe("Flyout addon", () => {
           it("render languages section translation selected", async () => {
-            // Select one of the translations as current project's language
-            config.projects.current.language.code = "es";
+            // Select one of the translations as current project
+            config.projects.current.slug = "project-es";
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
@@ -82,6 +101,9 @@
             expect(section).dom.to.equal(`
       <dl class="languages">
         <dt>Languages</dt>
+        <dd>
+          <a href="https://project.readthedocs.io/en/latest/">en</a>
+        </dd>
         <dd>
           <strong>
             <a href="https://project.readthedocs.io/es/latest/">es</a>
@@ -102,6 +124,11 @@
             expect(section).dom.to.equal(`
       <dl class="languages">
         <dt>Languages</dt>
+        <dd>
+          <strong>
+            <a href="https://project.readthedocs.io/en/latest/">en</a>
+          </strong>
+        </dd>
         <dd>
           <a href="https://project.readthedocs.io/es/latest/">es</a>
         </dd>
@@ -146,7 +173,7 @@
       <dl class="downloads">
         <dt>Downloads</dt>
         <dd>
-          <a href="/_/downloads/en/latest/">PDF</a>
+          <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">pdf</a>
         </dd>
       </dl>
       `);
@@ -166,13 +193,13 @@
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="//readthedocs.org/projects/project/">Project Home</a>
+          <a href="https://readthedocs.org/projects/project/">Project Home</a>
         </dd>
         <dd>
-          <a href="//readthedocs.org/projects/project/builds/">Builds</a>
+          <a href="https://readthedocs.org/projects/project/builds/">Builds</a>
         </dd>
         <dd>
-          <a href="//readthedocs.org/projects/project/downloads/">Downloads</a>
+          <a href="https://readthedocs.org/projects/project/downloads/">Downloads</a>
         </dd>
       </dl>
       `);

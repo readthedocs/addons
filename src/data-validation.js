@@ -125,7 +125,7 @@ const addons_ethicalads = {
 const addons_flyout = {
   $id: "http://v1.schemas.readthedocs.org/addons.flyout.json",
   type: "object",
-  required: ["addons", "domains", "projects", "versions"],
+  required: ["addons", "projects", "versions"],
   properties: {
     addons: {
       type: "object",
@@ -148,13 +148,6 @@ const addons_flyout = {
             },
           },
         },
-      },
-    },
-    domains: {
-      type: "object",
-      required: ["dashboard"],
-      properties: {
-        dashboard: { type: "string" },
       },
     },
     projects: {
@@ -186,25 +179,27 @@ const addons_flyout = {
         },
         translations: {
           type: "array",
-          items: { type: "object" },
-          required: ["slug", "urls", "language"],
-          properties: {
-            slug: { type: "string" },
-            language: {
-              type: "object",
-              required: ["code"],
-              properties: {
-                code: { type: "string" },
-              },
-            },
-            urls: {
-              type: "object",
-              required: ["documentation"],
-              properties: {
-                documentation: { type: "string" },
-              },
-            },
-          },
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls", "language"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   language: {
+          //     type: "object",
+          //     required: ["code"],
+          //     properties: {
+          //       code: { type: "string" },
+          //     },
+          //   },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
         },
       },
     },
@@ -214,18 +209,20 @@ const addons_flyout = {
       properties: {
         active: {
           type: "array",
-          items: { type: "object" },
-          required: ["slug", "urls"],
-          properties: {
-            slug: { type: "string" },
-            urls: {
-              type: "object",
-              required: ["documentation"],
-              properties: {
-                documentation: { type: "string" },
-              },
-            },
-          },
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
         },
         current: {
           type: "object",
@@ -322,12 +319,6 @@ const addons_notifications = {
         },
       },
     },
-    domains: {
-      type: "object",
-      properties: {
-        dashboard: { type: "string" },
-      },
-    },
     projects: {
       type: "object",
       properties: {
@@ -367,24 +358,28 @@ const addons_notifications = {
       properties: {
         active: {
           type: "array",
-          items: { type: "object" },
-          required: ["slug", "urls"],
-          properties: {
-            slug: { type: "string" },
-            urls: {
-              type: "object",
-              required: ["documentation"],
-              properties: {
-                documentation: { type: "string" },
-              },
-            },
-          },
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls", "aliases"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
         },
         current: {
           type: "object",
+          required: ["slug", "type", "aliases"],
           properties: {
             slug: { type: "string" },
             type: { enum: ["branch", "tag", "external"] },
+            aliases: { type: "array" },
           },
         },
       },
