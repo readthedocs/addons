@@ -22,10 +22,12 @@ function _getMetadataAddonsAPIVersion() {
 }
 
 /**
- * Load Read the Docs configuration from API endpoint.
+ * Get the Addons API endpoint URL to hit.
  *
+ * It uses META HTML tags to get project/version slugs and `sendUrlParam` to
+ * decide whether or not sending `url=`.
  */
-export function getReadTheDocsConfig(sendUrlParam) {
+function _getAPIURL(sendUrlParam) {
   const metaProject = document.querySelector(
     "meta[name='readthedocs-project-slug']",
   );
@@ -58,6 +60,16 @@ export function getReadTheDocsConfig(sendUrlParam) {
   if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
     url = "/_/readthedocs-addons.json";
   }
+
+  return url;
+}
+
+/**
+ * Load Read the Docs configuration from API endpoint.
+ *
+ */
+export function getReadTheDocsConfig(sendUrlParam) {
+  const url = _getAPIURL(sendUrlParam);
 
   return fetch(url, {
     method: "GET",
