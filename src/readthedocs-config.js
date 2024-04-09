@@ -27,7 +27,7 @@ function _getMetadataAddonsAPIVersion() {
  * It uses META HTML tags to get project/version slugs and `sendUrlParam` to
  * decide whether or not sending `url=`.
  */
-function _getAPIURL(sendUrlParam) {
+function _getApiUrl(sendUrlParam) {
   const metaProject = document.querySelector(
     "meta[name='readthedocs-project-slug']",
   );
@@ -69,65 +69,72 @@ function _getAPIURL(sendUrlParam) {
  *
  */
 export function getReadTheDocsConfig(sendUrlParam) {
-  const url = _getAPIURL(sendUrlParam);
+  return new Promise((resolve, reject) => {
+    let dataUser;
+    const defaultApiUrl = _getApiUrl(sendUrlParam);
 
-  return fetch(url, {
-    method: "GET",
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw "Error parsing configuration data";
-      }
-      return response.json();
+    fetch(defaultApiUrl, {
+      method: "GET",
     })
-    .then((data) => {
-      // We force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
-      // This is to keep forward/backward compatibility without breaking integrations.
-      const metadataAddonsAPIVersion = _getMetadataAddonsAPIVersion();
-      if (metadataAddonsAPIVersion !== undefined) {
-        if (metadataAddonsAPIVersion !== data.api_version) {
-          // When the API scheme version returned doesn't match the one defined via `<meta>` tag by the user,
-          // we perform another request to get the Read the Docs response in the structure
-          // that's supported by the user and dispatch a custom event letting them know
-          // this data is ready to be consumed under `event.detail`.
-
-          url =
-            ADDONS_API_ENDPOINT +
-            new URLSearchParams({
-              url: window.location.href,
-              "client-version": CLIENT_VERSION,
-              "api-version": metadataAddonsAPIVersion,
-            });
-
-          fetch(url, {
-            method: "GET",
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw "Error parsing configuration data";
-              }
-              return response.json();
-            })
-            .then((data) => {
-              dispatchEvent(
-                EVENT_READTHEDOCS_ADDONS_DATA_READY,
-                document,
-                data,
-              );
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        } else {
-          dispatchEvent(EVENT_READTHEDOCS_ADDONS_DATA_READY, document, data);
+      .then((response) => {
+        if (!response.ok) {
+          reject("Error hitting addons API endpoint");
         }
-      }
+        // Use the addons API data response as `dataUser`
+        dataUser = response.json();
+        return dataUser;
+      })
+      .then((data) => {
+        // Create a new Promise here to handle the user request in a different async task.
+        // This allows us to start executing our integration independently from the use one.
+        new Promise((resolve, reject) => {
+          // We force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
+          // This is to keep forward/backward compatibility without breaking integrations.
+          const metadataAddonsAPIVersion = _getMetadataAddonsAPIVersion();
 
-      return data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+          if (
+            metadataAddonsAPIVersion !== undefined &&
+            metadataAddonsAPIVersion !== data.api_version
+          ) {
+            // When the API scheme version returned doesn't match the one defined via `<meta>` tag by the user,
+            // we perform another request to get the Read the Docs response in the structure
+            // that's supported by the user and dispatch a custom event letting them know
+            // this data is ready to be consumed under `event.detail`.
+            const userApiUrl =
+              ADDONS_API_ENDPOINT +
+              new URLSearchParams({
+                url: window.location.href,
+                "client-version": CLIENT_VERSION,
+                "api-version": metadataAddonsAPIVersion,
+              });
+
+            fetch(userApiUrl, {
+              method: "GET",
+            }).then((response) => {
+              if (!response.ok) {
+                reject(
+                  "Error hitting addons API endpoint for user api-version",
+                );
+              }
+              // If the user defined a meta HTML tag with a different api-version,
+              // use the new API data response as `dataUser`
+              dataUser = response.json();
+            });
+          }
+
+          // Trigger the addons data ready CustomEvent to with the data the user is expecting.
+          dispatchEvent(
+            EVENT_READTHEDOCS_ADDONS_DATA_READY,
+            document,
+            dataUser,
+          );
+        });
+
+        resolve(data);
+      });
+  }).catch((error) => {
+    console.error(error);
+  });
 }
 
 function dispatchEvent(eventName, element, data) {
