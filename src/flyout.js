@@ -184,11 +184,18 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
+    const nameDisplay = {
+      pdf: "PDF",
+      epub: "ePUB",
+      htmlzip: "HTML",
+    };
+
     return html`
       <dl class="downloads">
         <dt>Downloads</dt>
         ${Object.entries(this.config.versions.current.downloads).map(
-          ([name, url]) => html`<dd><a href="${url}">${name}</a></dd>`,
+          ([name, url]) =>
+            html`<dd><a href="${url}">${nameDisplay[name]}</a></dd>`,
         )}
       </dl>
     `;

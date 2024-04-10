@@ -59,7 +59,7 @@ snapshots["Flyout addon snapshot flyout completely"] =
       </dt>
       <dd>
         <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">
-          pdf
+          PDF
         </a>
       </dd>
     </dl>
@@ -176,7 +176,7 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
       </dt>
       <dd>
         <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">
-          pdf
+          PDF
         </a>
       </dd>
     </dl>
