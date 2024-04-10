@@ -9,14 +9,9 @@
       document.addEventListener(
         "readthedocs-addons-data-ready",
         function (event) {
-          // Initialize the Read the Docs data object
-          event.detail.initialize();
-
-          // Make usage of its data when it's ready
-          event.detail.data().then((data) => {
-              console.debug(`Project slug using CustomEvent: '${data.projects.current.slug}'`);
-          });
-        }
+            const data = event.detail.data();
+            console.debug(`Project slug using CustomEvent: '${data.projects.current.slug}'`);
+          }
       );
     </script>
     <meta name="readthedocs-resolver-filename" content="/index.html" />
