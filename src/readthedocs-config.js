@@ -123,9 +123,10 @@ export function getReadTheDocsConfig(sendUrlParam) {
               dataUser = response.json();
             });
           }
-
+          resolve(dataUser);
+        }).then((dataUser) => {
           // Trigger the addons data ready CustomEvent to with the data the user is expecting.
-          dispatchEvent(
+          return dispatchEvent(
             EVENT_READTHEDOCS_ADDONS_DATA_READY,
             document,
             new ReadTheDocsEventData(dataUser),
