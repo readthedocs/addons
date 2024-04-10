@@ -21,18 +21,13 @@ export const EVENT_READTHEDOCS_ADDONS_DATA_READY =
  *   document.addEventListener(
  *     "readthedocs-addons-data-ready",
  *     function (event) {
- *       // Initialize the class first
- *       event.detail.initialize();
- *
- *       // Use the data when it's ready
- *       event.detail.data().then((data) => {
- *         console.log(data.projects.current.slug);
- *       });
+ *       const data = event.detail.data();
  *     }
  *   );
  *
- * Note that we perform some checks/validations at `.initialize()` to make sure the
- * user is using the class in the expected way. Otherwise, we throw an exception.
+ * Note that we perform some checks/validations when `.data()` is called,
+ * to make sure the user is using the pattern in the expected way.
+ * Otherwise, we throw an exception.
  */
 export class ReadTheDocsEventData {
   constructor(data) {
@@ -50,9 +45,9 @@ export class ReadTheDocsEventData {
   }
 
   data() {
-    if (this._initialized) {
-      return this._data;
+    if (!this._initialized) {
+      this.initialize();
     }
-    throw "ReadTheDocsData hasn't been initialized yet. Calling '.initialize()' is required to use the '.data' property.";
+    return this._data;
   }
 }
