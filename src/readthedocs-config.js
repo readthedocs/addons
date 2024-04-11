@@ -91,15 +91,17 @@ function getReadTheDocsUserConfig(sendUrlParam) {
         method: "GET",
       }).then((response) => {
         if (!response.ok) {
-          reject("Error hitting addons API endpoint for user api-version");
+          return reject(
+            "Error hitting addons API endpoint for user api-version",
+          );
         }
         // Return the data in the API version requested.
-        resolve(response.json());
+        return resolve(response.json());
       });
     }
 
     // If the API versions match, we return `undefined`.
-    resolve(undefined);
+    return resolve(undefined);
   }).catch((error) => {
     console.error(error);
   });
@@ -119,7 +121,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
     })
       .then((response) => {
         if (!response.ok) {
-          reject("Error hitting addons API endpoint");
+          return reject("Error hitting addons API endpoint");
         }
         return response.json();
       })
