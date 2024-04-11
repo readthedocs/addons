@@ -67,6 +67,44 @@ function _getApiUrl(sendUrlParam, apiVersion) {
   return url;
 }
 
+function getReadTheDocsUserConfig(sendUrlParam) {
+  // Create a Promise here to handle the user request in a different async task.
+  // This allows us to start executing our integration independently from the user one.
+  return new Promise((resolve, reject) => {
+    // Note we force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
+    // This is to keep forward/backward compatibility without breaking integrations.
+    const metadataAddonsAPIVersion = getMetadataAddonsAPIVersion();
+
+    if (
+      metadataAddonsAPIVersion !== undefined &&
+      metadataAddonsAPIVersion !== ADDONS_API_VERSION
+    ) {
+      // When the addons API version doesn't match the one defined via `<meta>` tag by the user,
+      // we perform another request to get the Read the Docs response in the structure
+      // that's supported by the user and dispatch a custom event letting them know
+      // this data is ready to be consumed under `event.detail.data()`.
+      const userApiUrl = _getApiUrl(sendUrlParam, metadataAddonsAPIVersion);
+
+      // TODO: revert this change and use the correct URL here
+      const url = "/_/readthedocs-addons.json";
+      fetch(url, {
+        method: "GET",
+      }).then((response) => {
+        if (!response.ok) {
+          reject("Error hitting addons API endpoint for user api-version");
+        }
+        // Return the data in the API version requested.
+        resolve(response.json());
+      });
+    }
+
+    // If the API versions match, we return `undefined`.
+    resolve(undefined);
+  }).catch((error) => {
+    console.error(error);
+  });
+}
+
 /**
  * Load Read the Docs configuration from API endpoint.
  *
@@ -83,57 +121,24 @@ export function getReadTheDocsConfig(sendUrlParam) {
         if (!response.ok) {
           reject("Error hitting addons API endpoint");
         }
-        // Use the addons API data response as `dataUser`
-        dataUser = response.json();
-        return dataUser;
+        return response.json();
       })
       .then((data) => {
-        // Create a new Promise here to handle the user request in a different async task.
-        // This allows us to start executing our integration independently from the use one.
-        new Promise((resolve, reject) => {
-          // We force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
-          // This is to keep forward/backward compatibility without breaking integrations.
-          const metadataAddonsAPIVersion = getMetadataAddonsAPIVersion();
+        // Trigger a new task here to hit the API again in case the version
+        // request missmatchs the one the user expects.
+        getReadTheDocsUserConfig(sendUrlParam).then((dataUser) => {
+          // Expose `dataUser` if available or the `data` already requested.
+          const dataEvent = dataUser !== undefined ? dataUser : data;
 
-          if (
-            metadataAddonsAPIVersion !== undefined &&
-            metadataAddonsAPIVersion !== data.api_version
-          ) {
-            // When the API scheme version returned doesn't match the one defined via `<meta>` tag by the user,
-            // we perform another request to get the Read the Docs response in the structure
-            // that's supported by the user and dispatch a custom event letting them know
-            // this data is ready to be consumed under `event.detail`.
-            const userApiUrl = _getApiUrl(
-              sendUrlParam,
-              metadataAddonsAPIVersion,
-            );
-
-            // TODO: revert this change and use the correct URL here
-            const url = "/_/readthedocs-addons.json";
-            fetch(url, {
-              method: "GET",
-            }).then((response) => {
-              if (!response.ok) {
-                reject(
-                  "Error hitting addons API endpoint for user api-version",
-                );
-              }
-              // If the user defined a meta HTML tag with a different api-version,
-              // use the new API data response as `dataUser`
-              dataUser = response.json();
-            });
-          }
-          resolve(dataUser);
-        }).then((dataUser) => {
           // Trigger the addons data ready CustomEvent to with the data the user is expecting.
           return dispatchEvent(
             EVENT_READTHEDOCS_ADDONS_DATA_READY,
             document,
-            new ReadTheDocsEventData(dataUser),
+            new ReadTheDocsEventData(dataEvent),
           );
         });
 
-        resolve(data);
+        return data;
       });
   }).catch((error) => {
     console.error(error);
