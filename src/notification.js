@@ -50,18 +50,18 @@ export class NotificationElement extends LitElement {
     this.config = config;
 
     if (
-      config.addons.external_version_warning.enabled &&
-      config.versions.current.type === "external"
+      this.config.addons.external_version_warning.enabled &&
+      this.config.versions.current.type === "external"
     ) {
       // TODO: this URL should come from the backend API.
       // Doing a simple replacement for now to solve the most common cases.
-      const vcs_external_url = config.projects.current.repository.url
+      const vcs_external_url = this.config.projects.current.repository.url
         .replace(".git", "")
         .replace("git@github.com:", "https://github.com/");
 
       this.urls = {
-        build: `${window.location.protocol}//${config.domains.dashboard}/projects/${config.projects.current.slug}/builds/${config.builds.current.id}/`,
-        external: `${vcs_external_url}/pull/${config.versions.current.slug}`,
+        build: this.config.builds.current.urls.build,
+        external: `${vcs_external_url}/pull/${this.config.versions.current.slug}`,
       };
     }
 
@@ -110,26 +110,39 @@ export class NotificationElement extends LitElement {
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
-    const versions = this.config.addons.non_latest_version_warning.versions;
-    const stable_index = versions.indexOf("stable");
-    const current_version = this.config.versions.current;
-    const current_project = this.config.projects.current;
+    const stableVersion = this.config.versions.active.find(
+      (version) => version.slug === "stable",
+    );
+    const latestVersion = this.config.versions.active.find(
+      (version) => version.slug === "latest",
+    );
+    const currentVersion = this.config.versions.current;
 
-    // TODO: support aliases here
-    // https://github.com/readthedocs/addons/issues/132
-    if (current_version.slug === "latest") {
+    // Current version is "latest" or its alias
+    if (
+      currentVersion.slug === "latest" ||
+      (latestVersion !== undefined &&
+        latestVersion.aliases.find(
+          (version) => version.slug === currentVersion.slug,
+        ) !== undefined)
+    ) {
       this.readingLatestVersion = true;
     }
 
-    if (current_version.slug === "stable") {
+    // Current version is "stable" or its alias
+    if (
+      currentVersion.slug === "stable" ||
+      (stableVersion !== undefined &&
+        stableVersion.aliases.find(
+          (version) => version.slug === currentVersion.slug,
+        ) !== undefined)
+    ) {
       this.readingStableVersion = true;
     }
 
-    if (stable_index !== -1) {
+    if (stableVersion !== undefined) {
       this.stableVersionAvailable = true;
-      // TODO: we need to use, somehow, the "resolver.resolve" logic from the Python backend
-      // to support all the posibilities. Those cases won't work for now until we find a proper solution.
-      this.urls.stable = `/${current_project.language.code}/stable/`;
+      this.urls.stable = stableVersion.urls.documentation;
     }
   }
 

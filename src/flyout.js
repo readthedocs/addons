@@ -45,13 +45,6 @@ export class FlyoutElement extends LitElement {
     this.config = config;
   }
 
-  getProjectUrl() {
-    // TODO: this URL should come from ``this.config.projects.current.urls.dashboard``.
-    // We are not able to use that field because of:
-    // https://github.com/readthedocs/readthedocs-ops/issues/1323
-    return `//${this.config.domains.dashboard}/projects/${this.config.projects.current.slug}/`;
-  }
-
   _toggleOpen(e) {
     this.opened = !this.opened;
   }
@@ -174,30 +167,35 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="${this.getProjectUrl()}">Project Home</a>
+          <a href="${this.config.projects.current.urls.home}">Project Home</a>
         </dd>
         <dd>
-          <a href="${this.getProjectUrl()}builds/">Builds</a>
+          <a href="${this.config.projects.current.urls.builds}">Builds</a>
         </dd>
         <dd>
-          <a href="${this.getProjectUrl()}downloads/">Downloads</a>
+          <a href="${this.config.projects.current.urls.downloads}">Downloads</a>
         </dd>
       </dl>
     `;
   }
 
   renderDownloads() {
-    if (!this.config.addons.flyout.downloads.length) {
+    if (!Object.keys(this.config.versions.current.downloads).length) {
       return nothing;
     }
+
+    const nameDisplay = {
+      pdf: "PDF",
+      epub: "EPUB",
+      htmlzip: "HTML",
+    };
 
     return html`
       <dl class="downloads">
         <dt>Downloads</dt>
-        ${this.config.addons.flyout.downloads.map(
-          (download) => html`
-            <dd><a href="${download.url}">${download.name}</a></dd>
-          `,
+        ${Object.entries(this.config.versions.current.downloads).map(
+          ([name, url]) =>
+            html`<dd><a href="${url}">${nameDisplay[name]}</a></dd>`,
         )}
       </dl>
     `;
@@ -236,19 +234,17 @@ export class FlyoutElement extends LitElement {
 
   renderVersions() {
     if (
-      !this.config.addons.flyout.versions.length ||
+      !this.config.versions.active.length ||
       this.config.projects.current.versioning_scheme ===
         "single_version_without_translations"
     ) {
       return nothing;
     }
 
-    const currentVersion = this.config.versions.current.slug;
-
     const getVersionLink = (version) => {
-      const url = this._getFlyoutLinkWithFilename(version.url);
+      const url = this._getFlyoutLinkWithFilename(version.urls.documentation);
       const link = html`<a href="${url}">${version.slug}</a>`;
-      return currentVersion && version.slug === currentVersion
+      return this.config.versions.current.slug == version.slug
         ? html`<strong>${link}</strong>`
         : link;
     };
@@ -256,7 +252,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <dl class="versions">
         <dt>Versions</dt>
-        ${this.config.addons.flyout.versions.map(
+        ${this.config.versions.active.map(
           (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>
@@ -264,24 +260,32 @@ export class FlyoutElement extends LitElement {
   }
 
   renderLanguages() {
-    if (!this.config.addons.flyout.translations.length) {
+    if (!this.config.projects.translations.length) {
       return nothing;
     }
 
-    const currentTranslation = this.config.projects.current.language.code;
-
     const getLanguageLink = (translation) => {
-      const url = this._getFlyoutLinkWithFilename(translation.url);
-      const link = html`<a href="${url}">${translation.slug}</a>`;
-      return currentTranslation && translation.slug === currentTranslation
+      const url = this._getFlyoutLinkWithFilename(
+        translation.urls.documentation,
+      );
+      const link = html`<a href="${url}">${translation.language.code}</a>`;
+      return this.config.projects.current.slug === translation.slug
         ? html`<strong>${link}</strong>`
         : link;
     };
 
+    // Add the current project as "translation" and sort them based on language's code
+    let translations = this.config.projects.translations.concat(
+      this.config.projects.current,
+    );
+    translations = translations.sort((a, b) =>
+      a.language.code.localeCompare(b.language.code),
+    );
+
     return html`
       <dl class="languages">
         <dt>Languages</dt>
-        ${this.config.addons.flyout.translations.map(
+        ${translations.map(
           (translation) => html`<dd>${getLanguageLink(translation)}</dd>`,
         )}
       </dl>
