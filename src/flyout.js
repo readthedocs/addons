@@ -186,7 +186,7 @@ export class FlyoutElement extends LitElement {
 
     const nameDisplay = {
       pdf: "PDF",
-      epub: "ePUB",
+      epub: "EPUB",
       htmlzip: "HTML",
     };
 
