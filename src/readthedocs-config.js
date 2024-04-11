@@ -140,7 +140,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
           );
         });
 
-        return data;
+        return resolve(data);
       });
   }).catch((error) => {
     console.error(error);
