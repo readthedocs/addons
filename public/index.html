@@ -9,8 +9,9 @@
       document.addEventListener(
         "readthedocs-addons-data-ready",
         function (event) {
-          console.debug(event.detail);
-        }
+            const data = event.detail.data();
+            console.debug(`Project slug using CustomEvent: '${data.projects.current.slug}'`);
+          }
       );
     </script>
     <meta name="readthedocs-resolver-filename" content="/index.html" />
