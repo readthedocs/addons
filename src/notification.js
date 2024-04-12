@@ -20,7 +20,7 @@ export class NotificationElement extends LitElement {
     config: { state: true },
     urls: { state: true },
     highest_version: { state: true },
-    dismissed: {state: true},
+    dismissedTimestamp: {state: true},
     // Under which key should the notification store dismissal (and other) information
     localStorageKey: { type: String, attribute: "local-storage-key" },
   };
@@ -40,16 +40,23 @@ export class NotificationElement extends LitElement {
     this.readingLatestVersion = false;
     this.readingStableVersion = false;
     this.stableVersionAvailable = false;
+    // This will store information like user dimissing the notification. Any Notification sharing
+    // the same localStorageKey will be affected. If a specific Notification should not be dismissed after
+    // another has been dismissed, it requires a different localStorageKey
     this.localStorageKey = "default-notification";
     this.notificationAddonLocalStorageKey = "readthedocs-addons-notifications";
-    this.dismissed = false;
+    this.dismissedTimestamp = null;
   }
 
   connectedCallback() {
     super.connectedCallback();
+    // Check if this notification (as determined by localStorageKey) has been dismissed already.
+    // Once a notification has been dismissed, it stays dismissed. This information however is not passed
+    // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
+    // other builds.
     const notificationStorage = this.getLocalStorage()[this.localStorageKey];
-    if (notificationStorage && notificationStorage.dismissed) {
-      this.dismissed = true;
+    if (notificationStorage && notificationStorage.dismissedTimestamp) {
+      this.dismissedTimestamp = notificationStorage.dismissedTimestamp;
     }
   }
 
@@ -112,7 +119,7 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (this.dismissed) {
+    if (this.dismissedTimestamp) {
       return nothing;
     }
 
@@ -271,9 +278,9 @@ export class NotificationElement extends LitElement {
     // Avoid going back to the top of the page when closing the notification
     e.preventDefault();
 
-    this.dismissed = true;
+    this.dismissedTimestamp = Date.now();
 
-    this.setLocalStorage({dismissed: true});
+    this.setLocalStorage({dismissedTimestamp: this.dismissedTimestamp});
 
     // Avoid event propagation
     return false;
