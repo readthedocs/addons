@@ -110,8 +110,7 @@ export class NotificationElement extends LitElement {
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
-    const versions = this.config.addons.non_latest_version_warning.versions;
-    const stable_index = versions.indexOf("stable");
+    const stable_index = this.config.versions.active.indexOf("stable");
     const current_version = this.config.versions.current;
     const current_project = this.config.projects.current;
 

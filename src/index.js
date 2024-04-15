@@ -57,7 +57,7 @@ export function setup() {
           if (addon.isEnabled(config)) {
             promises.push(
               new Promise((resolve) => {
-                resolve(new addon(config));
+                return resolve(new addon(config));
               }),
             );
           }
@@ -65,7 +65,7 @@ export function setup() {
         return Promise.all(promises);
       })
       .then(() => {
-        resolve();
+        return resolve();
       })
       .catch((err) => {
         console.error(err);
