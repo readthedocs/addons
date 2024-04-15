@@ -25,9 +25,6 @@ describe("Flyout addon", () => {
             versions: [],
           },
         },
-        domains: {
-          dashboard: "readthedocs.org",
-        },
         projects: {
           current: {
             slug: "project",
@@ -49,23 +46,34 @@ describe("Flyout addon", () => {
         addons: {
           flyout: {
             enabled: true,
-            downloads: [],
-            translations: [],
-            versions: [],
           },
-        },
-        domains: {
-          dashboard: "readthedocs.org",
         },
         projects: {
           current: {
             slug: "project",
+            urls: {
+              home: "https://readthedocs.org/projects/project/",
+              builds: "https://readthedocs.org/projects/project/builds/",
+              downloads: "https://readthedocs.org/projects/project/downloads/",
+            },
             versioning_scheme: "multiple_versions_with_translations",
           },
+          translations: [],
         },
         versions: {
+          active: [
+            {
+              slug: "latest",
+              urls: {
+                documentation: "https://project.readthedocs.io/en/latest/",
+              },
+            },
+          ],
           current: {
             slug: "latest",
+            downloads: {
+              pdf: "https://project.readthedocs.io/_/downloads/pdf/latest/",
+            },
           },
         },
       }),
@@ -81,23 +89,34 @@ describe("Flyout addon", () => {
         addons: {
           flyout: {
             enabled: true,
-            downloads: [],
-            translations: [],
-            versions: [],
           },
-        },
-        domains: {
-          dashboard: "readthedocs.org",
         },
         projects: {
           current: {
             slug: "project",
+            urls: {
+              home: "https://readthedocs.org/projects/project/",
+              builds: "https://readthedocs.org/projects/project/builds/",
+              downloads: "https://readthedocs.org/projects/project/downloads/",
+            },
             versioning_scheme: "multiple_versions_without_translations",
           },
+          translations: [],
         },
         versions: {
+          active: [
+            {
+              slug: "latest",
+              urls: {
+                documentation: "https://project.readthedocs.io/en/latest/",
+              },
+            },
+          ],
           current: {
             slug: "latest",
+            downloads: {
+              pdf: "https://project.readthedocs.io/_/downloads/pdf/latest/",
+            },
           },
         },
       }),
