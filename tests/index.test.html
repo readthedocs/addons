@@ -43,7 +43,7 @@
         describe("Main library", () => {
           it("hits Read the Docs addons API", async () => {
             const matchUrl = new RegExp(`^${ADDONS_API_ENDPOINT}`, "g");
-            server.respondWith("GET", matchUrl, [200, {}, "{}"]);
+            server.respondWith("GET", matchUrl, [200, {}, '{"testing": true}']);
 
             // Our .setup()  function returns a Promise here and we want to wait for it.
             await readthedocs.setup();
