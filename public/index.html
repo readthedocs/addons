@@ -1,8 +1,19 @@
 <html>
   <head>
+    <meta name="readthedocs-addons-api-version" content="1" />
     <title>Documentation Addons - Read the Docs</title>
     <meta name="readthedocs-project-slug" content="test-builds" />
     <meta name="readthedocs-version-slug" content="latest" />
+    <script>
+      // Example of using "readthedocs-addons-data-ready" with a different API version supported
+      document.addEventListener(
+        "readthedocs-addons-data-ready",
+        function (event) {
+            const data = event.detail.data();
+            console.debug(`Project slug using CustomEvent: '${data.projects.current.slug}'`);
+          }
+      );
+    </script>
     <meta name="readthedocs-resolver-filename" content="/index.html" />
   </head>
   <body>
