@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.12.0
+---------------
+
+:date: Apr 16, 2024
+
+* Notification linking to stable version respects ``project.versioning_scheme``
+* Expose endpoint response data via a JavaScript ``CustomEvent`` called ``readthedocs-addons-data-ready``
+* Use ``api-version=1`` when hitting ``/_/addons/`` backend endpoint
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.11.3
 ---------------
 
