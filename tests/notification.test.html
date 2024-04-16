@@ -64,8 +64,12 @@
               ],
               current: {
                 slug: "stable",
-                type: "branch",
                 aliases: [],
+                type: "branch",
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/stable/",
+                  vcs: "https://github.com/readthedocs/project/",
+                },
               },
             },
           };
@@ -74,8 +78,15 @@
         describe("Notification addon", () => {
           it("on stable version", async () => {
             // Set current version as non-stable and non-latest
-            config.versions.current.slug = "v3.x";
-            config.versions.current.type = "tag";
+            config.versions.current = {
+              slug: "v3.x",
+              aliases: [],
+              type: "tag",
+              urls: {
+                documentation: "https://project.readthedocs.io/en/v3.x/",
+                vcs: "https://github.com/readthedocs/project/",
+              },
+            };
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");
@@ -89,7 +100,7 @@
             );
           });
 
-          it("on latest version", async () => {
+          it("on latest version (multiple_versions_with_translations)", async () => {
             config.versions.current.slug = "latest";
 
             const addon = new notification.NotificationAddon(config);
@@ -98,10 +109,64 @@
             // We need to wait for the element to renders/updates before querying it
             await elementUpdated(element);
 
-            const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
-              "This is the latest development version",
-            );
+            expect(element).shadowDom.to.equal(`
+<div>
+  <div class="title">
+    This is the
+    <span>
+      latest development version
+    </span>
+    <a
+      class="right"
+      href="#"
+    >
+    </a>
+  </div>
+  <div class="content">
+    Some features may not yet be available in the published stable
+            version. Read the
+    <a href="https://project.readthedocs.io/en/stable/">
+      stable version of this documentation
+    </a>
+    .
+  </div>
+</div>
+      `);
+          });
+
+          it("on latest version (multiple_versions_without_translations)", async () => {
+            config.versions.current.slug = "latest";
+            config.projects.current.versioning_scheme =
+              "multiple_versions_without_translations";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            expect(element).shadowDom.to.equal(`
+<div>
+  <div class="title">
+    This is the
+    <span>
+      latest development version
+    </span>
+    <a
+      class="right"
+      href="#"
+    >
+    </a>
+  </div>
+  <div class="content">
+    Some features may not yet be available in the published stable
+            version. Read the
+    <a href="https://project.readthedocs.io/en/stable/">
+      stable version of this documentation
+    </a>
+    .
+ </div>
+`);
           });
 
           it("on external version", async () => {

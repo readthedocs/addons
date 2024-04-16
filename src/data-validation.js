@@ -311,8 +311,11 @@ const addons_notifications = {
           properties: {
             urls: {
               type: "object",
+              required: ["build"],
               properties: {
-                build: { type: "string" },
+                build: {
+                  type: "string",
+                },
               },
             },
           },
@@ -375,11 +378,23 @@ const addons_notifications = {
         },
         current: {
           type: "object",
-          required: ["slug", "type", "aliases"],
+          required: ["slug", "urls", "type", "aliases"],
           properties: {
+            aliases: { type: "array" },
             slug: { type: "string" },
             type: { enum: ["branch", "tag", "external"] },
-            aliases: { type: "array" },
+            urls: {
+              type: "object",
+              required: ["documentation", "vcs"],
+              properties: {
+                documentation: {
+                  type: "string",
+                },
+                vcs: {
+                  type: "string",
+                },
+              },
+            },
           },
         },
       },

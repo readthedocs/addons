@@ -67,17 +67,22 @@
       }
     ],
     "current": {
+      "aliases": [],
       "slug": "v1.0",
       "type": "external",
       "downloads": {
         "pdf": "https://localhost:8000/_/downloads/en/v1.0/pdf/"
+      },
+      "urls": {
+        "documentation": "https://example.readthedocs.io/en/v1.0/"
       }
     }
   },
   "builds": {
     "current": {
+      "id": 1,
       "urls": {
-        "build": "https://localhost:8000/projects/example/builds/1234/"
+        "build": "https://readthedocs.org/dashboard/example/builds/1/"
       }
     }
   },

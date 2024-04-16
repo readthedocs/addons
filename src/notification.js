@@ -53,15 +53,9 @@ export class NotificationElement extends LitElement {
       this.config.addons.external_version_warning.enabled &&
       this.config.versions.current.type === "external"
     ) {
-      // TODO: this URL should come from the backend API.
-      // Doing a simple replacement for now to solve the most common cases.
-      const vcs_external_url = this.config.projects.current.repository.url
-        .replace(".git", "")
-        .replace("git@github.com:", "https://github.com/");
-
       this.urls = {
-        build: this.config.builds.current.urls.build,
-        external: `${vcs_external_url}/pull/${this.config.versions.current.slug}`,
+        build: config.builds.current.urls.build,
+        external: config.versions.current.urls.vcs,
       };
     }
 
