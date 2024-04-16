@@ -17,15 +17,13 @@
               },
               non_latest_version_warning: {
                 enabled: true,
-                versions: ["latest", "stable"],
               },
             },
             builds: {
               current: {
-                id: 1,
-              },
-              urls: {
-                build: "https://readthedocs.org/dashboard/project/builds/1/",
+                urls: {
+                  build: "https://readthedocs.org/project/project/builds/",
+                },
               },
             },
             projects: {
@@ -41,20 +39,36 @@
               },
             },
             versions: {
+              active: [
+                {
+                  slug: "stable",
+                  aliases: [],
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/stable/",
+                  },
+                },
+                {
+                  slug: "latest",
+                  aliases: [],
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/latest/",
+                  },
+                },
+                {
+                  slug: "v3.x",
+                  aliases: [],
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/v3.x/",
+                  },
+                },
+              ],
               current: {
                 slug: "stable",
+                aliases: [],
                 type: "branch",
                 urls: {
                   documentation: "https://project.readthedocs.io/en/stable/",
                   vcs: "https://github.com/readthedocs/project/",
-                },
-              },
-              stable: {
-                slug: "stable",
-                type: "branch",
-                urls: {
-                    documentation: "https://project.readthedocs.io/en/stable/",
-                    vcs: "https://github.com/readthedocs/project/",
                 },
               },
             },
@@ -65,13 +79,13 @@
           it("on stable version", async () => {
             // Set current version as non-stable and non-latest
             config.versions.current = {
-                slug: "v3.x",
-                type: "tag",
-                urls: {
-                  documentation: "https://project.readthedocs.io/en/v3.x/",
-                  vcs: "https://github.com/readthedocs/project/",
-                },
-            }
+              slug: "v3.x",
+              type: "tag",
+              urls: {
+                documentation: "https://project.readthedocs.io/en/v3.x/",
+                vcs: "https://github.com/readthedocs/project/",
+              },
+            };
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");

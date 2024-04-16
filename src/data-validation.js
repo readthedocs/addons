@@ -125,7 +125,7 @@ const addons_ethicalads = {
 const addons_flyout = {
   $id: "http://v1.schemas.readthedocs.org/addons.flyout.json",
   type: "object",
-  required: ["addons", "domains", "projects", "versions"],
+  required: ["addons", "projects", "versions"],
   properties: {
     addons: {
       type: "object",
@@ -135,17 +135,11 @@ const addons_flyout = {
           type: "object",
           required: [
             "enabled",
-            "downloads",
-            "translations",
-            "versions",
             // TODO: make it required when we support VCS links
             // "vcs",
           ],
           properties: {
             enabled: { type: "boolean" },
-            downloads: { type: "array" },
-            translations: { type: "array" },
-            versions: { type: "array" },
             vcs: {
               type: "object",
               properties: {
@@ -156,22 +150,24 @@ const addons_flyout = {
         },
       },
     },
-    domains: {
-      type: "object",
-      required: ["dashboard"],
-      properties: {
-        dashboard: { type: "string" },
-      },
-    },
     projects: {
       type: "object",
-      required: ["current"],
+      required: ["current", "translations"],
       properties: {
         current: {
           type: "object",
-          required: ["slug", "versioning_scheme"],
+          required: ["slug", "urls", "versioning_scheme"],
           properties: {
             slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["home", "builds", "downloads"],
+              properties: {
+                home: { type: "string" },
+                builds: { type: "string" },
+                downloads: { type: "string" },
+              },
+            },
             versioning_scheme: {
               enum: [
                 "multiple_versions_with_translations",
@@ -181,17 +177,61 @@ const addons_flyout = {
             },
           },
         },
+        translations: {
+          type: "array",
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls", "language"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   language: {
+          //     type: "object",
+          //     required: ["code"],
+          //     properties: {
+          //       code: { type: "string" },
+          //     },
+          //   },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
+        },
       },
     },
     versions: {
       type: "object",
-      required: ["current"],
+      required: ["current", "active"],
       properties: {
+        active: {
+          type: "array",
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
+        },
         current: {
           type: "object",
-          required: ["slug"],
+          required: ["slug", "downloads"],
           properties: {
             slug: { type: "string" },
+            downloads: {
+              type: "object",
+            },
           },
         },
       },
@@ -257,13 +297,13 @@ const addons_notifications = {
           type: "object",
           properties: {
             enabled: { type: "boolean" },
-            versions: { type: "array" },
           },
         },
       },
     },
     builds: {
       type: "object",
+      required: ["current"],
       properties: {
         current: {
           type: "object",
@@ -317,11 +357,30 @@ const addons_notifications = {
     },
     versions: {
       type: "object",
+      required: ["current", "active"],
       properties: {
+        active: {
+          type: "array",
+          // TODO: validate each item of the array has the following structure
+          //
+          // items: { type: "object" },
+          // required: ["slug", "urls", "aliases"],
+          // properties: {
+          //   slug: { type: "string" },
+          //   urls: {
+          //     type: "object",
+          //     required: ["documentation"],
+          //     properties: {
+          //       documentation: { type: "string" },
+          //     },
+          //   },
+          // },
+        },
         current: {
           type: "object",
-          required: ["slug", "urls", "type"],
+          required: ["slug", "urls", "type", "aliases"],
           properties: {
+            aliases: { type: "array" },
             slug: { type: "string" },
             type: { enum: ["branch", "tag", "external"] },
             urls: {

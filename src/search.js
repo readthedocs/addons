@@ -88,14 +88,14 @@ export class SearchElement extends LitElement {
     }
 
     this.config = config;
-    if (config.addons.search) {
+    if (this.config.addons.search) {
       this.defaultFilter = {
         name: "Default filter",
-        value: config.addons.search.default_filter,
+        value: this.config.addons.search.default_filter,
       };
 
       let userFilters = [];
-      for (const filter of config.addons.search.filters) {
+      for (const filter of this.config.addons.search.filters) {
         userFilters.push({
           name: filter[0],
           value: filter[1],
