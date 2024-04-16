@@ -397,26 +397,6 @@ const addons_notifications = {
             },
           },
         },
-        stable: {
-          type: "object",
-          required: ["urls"],
-          properties: {
-            slug: { type: "string" },
-            type: { enum: ["branch", "tag", "external"] },
-            urls: {
-              type: "object",
-              required: ["documentation", "vcs"],
-              properties: {
-                documentation: {
-                  type: "string",
-                },
-                vcs: {
-                  type: "string",
-                },
-              },
-            },
-          },
-        },
       },
     },
   },
