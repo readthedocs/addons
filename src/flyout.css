@@ -72,7 +72,10 @@ header > span {
 
 header > span svg.icon {
   color: rgb(128, 128, 128);
-  height: 1rem;
+  height: var(
+    --readthedocs-flyout-header-font-size,
+    calc(var(--readthedocs-flyout-font-size) * 1.125)
+  );
   padding-right: 5px;
   vertical-align: middle;
 }
