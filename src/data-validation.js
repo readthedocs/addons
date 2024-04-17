@@ -207,7 +207,7 @@ const addons_flyout = {
       type: "object",
       required: ["current", "active"],
       properties: {
-        active: {
+        actives: {
           type: "array",
           // TODO: validate each item of the array has the following structure
           //
@@ -357,9 +357,9 @@ const addons_notifications = {
     },
     versions: {
       type: "object",
-      required: ["current", "active"],
+      required: ["current", "actives"],
       properties: {
-        active: {
+        actives: {
           type: "array",
           // TODO: validate each item of the array has the following structure
           //

@@ -61,7 +61,7 @@ describe("Flyout addon", () => {
           translations: [],
         },
         versions: {
-          active: [
+          actives: [
             {
               slug: "latest",
               urls: {
@@ -104,7 +104,7 @@ describe("Flyout addon", () => {
           translations: [],
         },
         versions: {
-          active: [
+          actives: [
             {
               slug: "latest",
               urls: {

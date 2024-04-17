@@ -234,7 +234,7 @@ export class FlyoutElement extends LitElement {
 
   renderVersions() {
     if (
-      !this.config.versions.active.length ||
+      !this.config.versions.actives.length ||
       this.config.projects.current.versioning_scheme ===
         "single_version_without_translations"
     ) {
@@ -252,7 +252,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <dl class="versions">
         <dt>Versions</dt>
-        ${this.config.versions.active.map(
+        ${this.config.versions.actives.map(
           (version) => html`<dd>${getVersionLink(version)}</dd>`,
         )}
       </dl>

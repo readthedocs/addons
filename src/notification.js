@@ -104,10 +104,10 @@ export class NotificationElement extends LitElement {
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
-    const stableVersion = this.config.versions.active.find(
+    const stableVersion = this.config.versions.actives.find(
       (version) => version.slug === "stable",
     );
-    const latestVersion = this.config.versions.active.find(
+    const latestVersion = this.config.versions.actives.find(
       (version) => version.slug === "latest",
     );
     const currentVersion = this.config.versions.current;
