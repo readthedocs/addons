@@ -57,6 +57,8 @@ export class AddonBase {
   static jsonValidationURI = null;
   static addonName = null;
   static addonEnabledPath = null;
+  // The key to be used for Local Storage purposes. If not provided, `readthedocs-<addonName>-storage-key`
+  // will be used
   static addonLocalStorageKey = null;
 
   static isConfigValid(config) {
@@ -81,6 +83,7 @@ export class AddonBase {
   }
 
   static getAddonLocalStorageKey() {
+    // Return a key to be used for Local Storage
     return this.addonLocalStorageKey || `readthedocs-${this.addonName}-storage-key`;
   }
 

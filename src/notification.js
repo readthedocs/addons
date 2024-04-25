@@ -265,10 +265,9 @@ export class NotificationElement extends LitElement {
     // Avoid going back to the top of the page when closing the notification
     e.preventDefault();
 
+    // Store the information about dismissal in the Local Storage
     this.dismissedTimestamp = Date.now();
-
     const dismissedObj = {[this.localStorageKey]: {dismissedTimestamp: this.dismissedTimestamp}};
-
     NotificationAddon.setLocalStorage(dismissedObj);
 
     // Avoid event propagation
