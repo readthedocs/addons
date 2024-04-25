@@ -44,7 +44,6 @@ export class NotificationElement extends LitElement {
     // the same localStorageKey will be affected. If a specific Notification should not be dismissed after
     // another has been dismissed, it requires a different localStorageKey
     this.localStorageKey = "default-notification";
-    this.notificationAddonLocalStorageKey = "readthedocs-addons-notifications";
     this.dismissedTimestamp = null;
   }
 
@@ -54,7 +53,7 @@ export class NotificationElement extends LitElement {
     // Once a notification has been dismissed, it stays dismissed. This information however is not passed
     // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
     // other builds.
-    const notificationStorage = this.getLocalStorage()[this.localStorageKey];
+    const notificationStorage = NotificationAddon.getLocalStorage()[this.localStorageKey];
     if (notificationStorage && notificationStorage.dismissedTimestamp) {
       this.dismissedTimestamp = notificationStorage.dismissedTimestamp;
     }
@@ -92,18 +91,6 @@ export class NotificationElement extends LitElement {
     ) {
       this.calculateStableLatestVersionWarning();
     }
-  }
-
-  getLocalStorage() {
-    const notificationStorage = window.localStorage.getItem(this.notificationAddonLocalStorageKey);
-    return notificationStorage ? JSON.parse(notificationStorage) : {};
-  }
-
-  setLocalStorage(obj) {
-    const notificationStorage = this.getLocalStorage() || {};
-    const specificStorage = notificationStorage[this.localStorageKey] || {};
-    notificationStorage[this.localStorageKey] = {...specificStorage, ...obj};
-    window.localStorage.setItem(this.notificationAddonLocalStorageKey, JSON.stringify(notificationStorage));
   }
 
   firstUpdated() {
@@ -280,7 +267,9 @@ export class NotificationElement extends LitElement {
 
     this.dismissedTimestamp = Date.now();
 
-    this.setLocalStorage({dismissedTimestamp: this.dismissedTimestamp});
+    const dismissedObj = {[this.localStorageKey]: {dismissedTimestamp: this.dismissedTimestamp}};
+
+    NotificationAddon.setLocalStorage(dismissedObj);
 
     // Avoid event propagation
     return false;
