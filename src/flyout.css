@@ -30,7 +30,7 @@
 }
 
 :host {
-  --readthedocs-flyout-font-size: 0.8rem;
+  --addons-flyout-font-size: var(--readthedocs-flyout-font-size, var(--readthedocs-font-size, 0.8rem));
 }
 
 :host > div {
@@ -42,7 +42,7 @@
     "Arial",
     "sans-serif"
   );
-  font-size: var(--readthedocs-flyout-font-size);
+  font-size: var(--addons-flyout-font-size);
   color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   z-index: 3000;
@@ -66,7 +66,7 @@ header > span {
   color: var(--readthedocs-flyout-current-version-color, #27ae60);
   font-size: var(
     --readthedocs-flyout-header-font-size,
-    calc(var(--readthedocs-flyout-font-size) * 1.125)
+    calc(var(--addons-flyout-font-size) * 1.125)
   );
 }
 
@@ -74,7 +74,7 @@ header > span svg.icon {
   color: rgb(128, 128, 128);
   height: var(
     --readthedocs-flyout-header-font-size,
-    calc(var(--readthedocs-flyout-font-size) * 1.125)
+    calc(var(--addons-flyout-font-size) * 1.125)
   );
   padding-right: 5px;
   vertical-align: middle;
@@ -104,7 +104,7 @@ dl {
 dl > dt {
   font-size: var(
     --readthedocs-flyout-dt-font-size,
-    calc(var(--readthedocs-flyout-font-size) * 1.125)
+    calc(var(--addons-flyout-font-size) * 1.125)
   );
   color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
 }
@@ -114,7 +114,7 @@ dl > dd {
   margin: 0;
   font-size: var(
     --readthedocs-flyout-dd-font-size,
-    calc(var(--readthedocs-flyout-font-size) * 1.125)
+    calc(var(--addons-flyout-font-size) * 1.125)
   );
 }
 
