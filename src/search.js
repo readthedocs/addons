@@ -514,6 +514,11 @@ export class SearchElement extends LitElement {
         window.location.href = selected.href;
       }
     }
+
+    if (e.keyCode === 27) {
+      e.preventDefault();
+      this.triggerCloseModal()
+    }
   }
 
   getUserQuery() {
