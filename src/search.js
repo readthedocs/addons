@@ -125,7 +125,7 @@ export class SearchElement extends LitElement {
   renderSearchModal() {
     return html`
       <div ?hidden=${!this.show} role="search">
-        <div @click=${this.closeModal} class="background"></div>
+        <div @click=${this.triggerCloseModal} class="background"></div>
         <div class="content">
           <form class=${classMap(this.cssFormFocusClasses)}>
             <label>${this.inputIcon.node[0]}</label>
@@ -409,6 +409,9 @@ export class SearchElement extends LitElement {
 
   closeModal(e) {
     this.show = false;
+    // Blur the active element (which at this point will be input or the search element itself)
+    // in order for the hotkeys to properly detect future hotkeys
+    document.activeElement.blur();
   }
 
   showModal(e) {
@@ -619,6 +622,11 @@ export class SearchElement extends LitElement {
     for (const element of activeElements) {
       element.classList.remove("active");
     }
+  }
+
+  triggerCloseModal() {
+    const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
+    document.dispatchEvent(event);
   }
 
   _handleCloseModal = (e) => {
