@@ -102,16 +102,10 @@ snapshots["Flyout addon snapshot flyout completely"] =
     <small>
       <span>
         Hosted by
-        <a href="https://readthedocs.org">
+        <a href="https://about.readthedocs.com/?ref=footer">
           Read the Docs
         </a>
       </span>
-      <span>
-        ·
-      </span>
-      <a href="https://docs.readthedocs.io/page/privacy-policy.html">
-        Privacy Policy
-      </a>
     </small>
   </main>
 </div>
@@ -204,16 +198,10 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
     <small>
       <span>
         Hosted by
-        <a href="https://readthedocs.org">
+        <a href="https://about.readthedocs.com/?ref=footer">
           Read the Docs
         </a>
       </span>
-      <span>
-        ·
-      </span>
-      <a href="https://docs.readthedocs.io/page/privacy-policy.html">
-        Privacy Policy
-      </a>
     </small>
   </main>
 </div>

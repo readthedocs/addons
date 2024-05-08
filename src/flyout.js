@@ -92,11 +92,10 @@ export class FlyoutElement extends LitElement {
     return html`
       <small>
         <span
-          >Hosted by <a href="https://readthedocs.org">Read the Docs</a></span
-        >
-        <span> &middot; </span>
-        <a href="https://docs.readthedocs.io/page/privacy-policy.html"
-          >Privacy Policy</a
+          >Hosted by
+          <a href="https://about.readthedocs.com/?ref=flyout"
+            >Read the Docs</a
+          ></span
         >
       </small>
     `;
