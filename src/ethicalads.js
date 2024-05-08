@@ -70,7 +70,10 @@ export class EthicalAdsAddon extends AddonBase {
       } else {
         placement.classList.add("ethical-alabaster");
       }
-    } else {
+    }
+    // NOTE: we are testing EthicalAds on our own platform only for now.
+    // We plan to expand this to more project soon.
+    else if (window.location.hostname === "docs.readthedocs.io") {
       // Inject our own floating element
       placement = document.createElement("div");
 
