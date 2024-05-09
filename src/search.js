@@ -493,20 +493,17 @@ export class SearchElement extends LitElement {
   }
 
   selectResultKeyboard(e) {
-    // if "ArrowDown is pressed"
-    if (e.keyCode === 40) {
+    if (e.key === "ArrowDown") {
       e.preventDefault();
       this.selectNextResult(true);
     }
 
-    // if "ArrowUp" is pressed.
-    if (e.keyCode === 38) {
+    if (e.key === "ArrowUp") {
       e.preventDefault();
       this.selectNextResult(false);
     }
 
-    // if "Enter" key is pressed.
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       e.preventDefault();
       const selected = this.renderRoot.querySelector("a.hit.active");
       // if an item is selected, then redirect to its link
@@ -515,7 +512,7 @@ export class SearchElement extends LitElement {
       }
     }
 
-    if (e.keyCode === 27) {
+    if (e.key === "Escape") {
       e.preventDefault();
       this.triggerCloseModal()
     }
