@@ -514,7 +514,7 @@ export class SearchElement extends LitElement {
 
     if (e.key === "Escape") {
       e.preventDefault();
-      this.triggerCloseModal()
+      this.triggerCloseModal();
     }
   }
 
