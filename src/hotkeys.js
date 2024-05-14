@@ -43,7 +43,6 @@ export class HotKeysElement extends LitElement {
     this.docDiffShowed = false;
 
     this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
-    this.searchShowed = false;
   }
 
   _handleKeydown = (e) => {
@@ -78,13 +77,7 @@ export class HotKeysElement extends LitElement {
       document.activeElement.tagName !== "TEXTAREA" &&
       document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
-      if (this.searchShowed) {
-        event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
-        this.searchShowed = false;
-      } else {
-        event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-        this.searchShowed = true;
-      }
+      event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     }
 
     if (event !== undefined) {
