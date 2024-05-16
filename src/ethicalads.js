@@ -119,16 +119,15 @@ export class EthicalAdsAddon extends AddonBase {
       let selector;
       let element;
       if (this.isSphinxReadTheDocsLikeTheme()) {
-        element = document.querySelector(
-          "nav.wy-nav-side > div.wy-side-scroll",
-        );
+        selector = "nav.wy-nav-side > div.wy-side-scroll";
+        element = document.querySelector(selector);
+
         if (!this.elementAboveTheFold(element)) {
           selector = "footer hr";
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
-        element = document.querySelector(
-          "div.sphinxsidebar > div.sphinxsidebarwrapper",
-        );
+        selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
+        element = document.querySelector(selector);
         if (!this.elementAboveTheFold(element)) {
           selector = "div.bodywrapper .body";
         }
@@ -173,10 +172,10 @@ export class EthicalAdsAddon extends AddonBase {
       !offsetTop ||
       offsetTop - window.scrollY + AD_SIZE > window.innerHeight
     ) {
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   loadEthicalAdLibrary() {
