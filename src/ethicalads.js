@@ -7,8 +7,6 @@ import styleSheet from "./ethicalads.css";
 const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
-const AD_TYPE = "image";
-const AD_STYLE = "stickybox";
 const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 200; // pixels
 
@@ -98,9 +96,6 @@ export class EthicalAdsAddon extends AddonBase {
 
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
-      placement.setAttribute("data-ea-type", AD_TYPE);
-      placement.setAttribute("data-ea-style", AD_STYLE);
-      placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
 
       // Always load the ad manually after ethicalad library is injected.
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
@@ -121,6 +116,7 @@ export class EthicalAdsAddon extends AddonBase {
       // Define where to inject the Ad based on the theme and if it's above the fold or not.
       let selector;
       let element;
+
       if (this.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
@@ -128,8 +124,14 @@ export class EthicalAdsAddon extends AddonBase {
         placement.classList.add("ethical-rtd");
         placement.classList.add("ethical-dark-theme");
 
-        if (!this.elementAboveTheFold(element)) {
+        if (this.elementAboveTheFold(element)) {
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+        } else {
           selector = "footer hr";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
@@ -137,8 +139,15 @@ export class EthicalAdsAddon extends AddonBase {
 
         placement.classList.add("ethical-alabaster");
 
-        if (!this.elementAboveTheFold(element)) {
+        if (this.elementAboveTheFold(element)) {
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+        }
+        else {
           selector = "div.bodywrapper .body";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
         }
       }
 
