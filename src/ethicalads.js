@@ -94,6 +94,7 @@ export class EthicalAdsAddon extends AddonBase {
     else if (window.location.hostname === "docs.readthedocs.io") {
       // Inject our own floating element
       placement = document.createElement("div");
+      placement.setAttribute("id", "rtd-sidebar");
 
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
