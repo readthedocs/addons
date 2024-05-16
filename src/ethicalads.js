@@ -9,6 +9,7 @@ const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_TYPE = "image";
 const AD_STYLE = "stickybox";
+const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 200; // pixels
 
 const AD_SCRIPT_ID = "ethicaladsjs";
@@ -98,7 +99,7 @@ export class EthicalAdsAddon extends AddonBase {
       placement.setAttribute("data-ea-publisher", data.publisher);
       placement.setAttribute("data-ea-type", AD_TYPE);
       placement.setAttribute("data-ea-style", AD_STYLE);
-      placement.setAttribute("data-ea-placement-bottom", "90px");
+      placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
 
       // Always load the ad manually after ethicalad library is injected.
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
