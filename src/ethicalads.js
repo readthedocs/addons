@@ -124,12 +124,18 @@ export class EthicalAdsAddon extends AddonBase {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
 
+        placement.classList.add("ethical-rtd");
+        placement.classList.add("ethical-dark-theme");
+
         if (!this.elementAboveTheFold(element)) {
           selector = "footer hr";
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
         element = document.querySelector(selector);
+
+        placement.classList.add("ethical-alabaster");
+
         if (!this.elementAboveTheFold(element)) {
           selector = "div.bodywrapper .body";
         }
@@ -144,16 +150,6 @@ export class EthicalAdsAddon extends AddonBase {
       }
 
       console.log("EthicalAd placement injected.");
-    }
-
-    if (placement) {
-      // Add CSS classes based on the theme
-      if (this.isSphinxReadTheDocsLikeTheme()) {
-        placement.classList.add("ethical-rtd");
-        placement.classList.add("ethical-dark-theme");
-      } else if (this.isSphinxAlabasterLikeTheme()) {
-        placement.classList.add("ethical-alabaster");
-      }
     }
 
     return placement;
