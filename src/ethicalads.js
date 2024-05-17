@@ -193,7 +193,7 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("async", true);
     library.setAttribute(
       "src",
-      "https://media.ethicalads.io/media/client/ethicalads.min.js",
+      "https://media.ethicalads.io/media/client/beta/ethicalads.min.js",
     );
     document.head.appendChild(library);
 
