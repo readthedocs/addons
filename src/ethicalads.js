@@ -149,6 +149,10 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "stickybox");
           placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
         }
+      } else {
+        placement.setAttribute("data-ea-type", "image");
+        placement.setAttribute("data-ea-style", "stickybox");
+        placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
       }
 
       let main = document.querySelector(selector);
