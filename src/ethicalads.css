@@ -222,3 +222,9 @@ div.ethical-footer {
 .ethical-dark-theme .ethical-callout a {
   color: #b3b3b3 !important;
 }
+
+/* Docusaurus */
+.ethical-docusaurus {
+  margin-left: 10% !important;
+  margin-right: 10% !important;
+}

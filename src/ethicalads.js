@@ -64,6 +64,25 @@ export class EthicalAdsAddon extends AddonBase {
     return false;
   }
 
+  isMaterialMkDocsTheme() {
+    if (
+      document.querySelectorAll('meta[content~="mkdocs-material"]').length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isDocusaurusTheme() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content~="Docusaurus"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   createAdPlacement() {
     let placement;
 
@@ -120,6 +139,7 @@ export class EthicalAdsAddon extends AddonBase {
       // Define where to inject the Ad based on the theme and if it's above the fold or not.
       let selector;
       let element;
+      let insertPlacement = true;
 
       if (this.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
@@ -158,18 +178,65 @@ export class EthicalAdsAddon extends AddonBase {
             AD_PLACEMENT_BOTTOM,
           );
         }
+      } else if (this.isMaterialMkDocsTheme()) {
+        selector = ".md-sidebar__scrollwrap";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          // TODO: use a more styled CSS class.
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+        } else {
+          selector = "main";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+
+          document
+            .querySelector(selector)
+            .insertAdjacentElement("afterend", placement);
+          insertPlacement = false;
+        }
+      } else if (this.isDocusaurusTheme()) {
+        selector = ".menu.thin-scrollbar.menu_SIkG";
+        element = document.querySelector(selector);
+        console.log("TEST");
+
+        if (this.elementAboveTheFold(element)) {
+          // TODO: use a more styled CSS class.
+          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-docusaurus");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+        } else {
+          selector = "article";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
       } else {
         placement.setAttribute("data-ea-type", "image");
         placement.setAttribute("data-ea-style", "stickybox");
         placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
       }
 
-      let main = document.querySelector(selector);
-      if (main) {
-        main.append(placement);
-      } else {
-        main = document.querySelector("[role=main]") || document.body;
-        main.insertBefore(placement, main.lastChild);
+      if (insertPlacement) {
+        let main = document.querySelector(selector);
+        if (main) {
+          main.append(placement);
+        } else {
+          main = document.querySelector("[role=main]") || document.body;
+          main.insertBefore(placement, main.lastChild);
+        }
       }
 
       console.log("EthicalAd placement injected.");
