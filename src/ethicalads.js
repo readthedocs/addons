@@ -9,7 +9,7 @@ const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_PLACEMENT_BOTTOM = "90px";
-const AD_SIZE = 200; // pixels
+const AD_SIZE = 300; // pixels
 
 const AD_SCRIPT_ID = "ethicaladsjs";
 
