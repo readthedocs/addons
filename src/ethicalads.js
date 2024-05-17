@@ -65,6 +65,17 @@ export class EthicalAdsAddon extends AddonBase {
     return false;
   }
 
+  isSphinxBookThemeLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/styles/sphinx-book-theme.css"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   isMaterialMkDocsTheme() {
     if (
       document.querySelectorAll('meta[content~="mkdocs-material"]').length === 1
@@ -166,13 +177,28 @@ export class EthicalAdsAddon extends AddonBase {
             AD_PLACEMENT_BOTTOM,
           );
         }
+      } else if (this.isSphinxBookThemeLikeTheme()) {
+        selector = ".sidebar-primary-items__start.sidebar-primary__section";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+        } else {
+          selector = "article";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
         element = document.querySelector(selector);
 
-        placement.classList.add("ethical-alabaster");
-
         if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
         } else {
           selector = "div.bodywrapper .body";
