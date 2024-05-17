@@ -73,6 +73,9 @@ export class EthicalAdsAddon extends AddonBase {
     const keywords = objectPath.get(data, "keywords", []);
     const campaign_types = objectPath.get(data, "campaign_types", []);
 
+    // Include CSS into the DOM so they can be read.
+    document.adoptedStyleSheets.push(styleSheet);
+
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
       // Always load the ad manually after ethicalad library is injected.
@@ -92,6 +95,7 @@ export class EthicalAdsAddon extends AddonBase {
     else if (window.location.hostname === "docs.readthedocs.io") {
       // Inject our own floating element
       placement = document.createElement("div");
+
       placement.setAttribute("id", "rtd-sidebar");
 
       // Set the keyword, campaign data, and publisher
@@ -131,7 +135,10 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "footer hr";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
@@ -142,12 +149,14 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
-        }
-        else {
+        } else {
           selector = "div.bodywrapper .body";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
         }
       } else {
         placement.setAttribute("data-ea-type", "image");
