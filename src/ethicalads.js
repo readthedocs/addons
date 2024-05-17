@@ -116,11 +116,14 @@ export class EthicalAdsAddon extends AddonBase {
     }
     // NOTE: we are testing EthicalAds on our own platform only for now.
     // We plan to expand this to more project soon.
-    else if (window.location.hostname === "docs.readthedocs.io") {
+    else if (
+      window.location.hostname === "docs.readthedocs.io" ||
+      window.location.hostname.endsWith(".devthedocs.org")
+    ) {
       // Inject our own floating element
       placement = document.createElement("div");
 
-      placement.setAttribute("id", "rtd-sidebar");
+      placement.setAttribute("id", "readthedocs-ea");
 
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
@@ -150,12 +153,10 @@ export class EthicalAdsAddon extends AddonBase {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
 
-        placement.classList.add("ethical-rtd");
-        placement.classList.add("ethical-dark-theme");
-
         if (this.elementAboveTheFold(element)) {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("data-ea-style", "image");
+          placement.classList.add("ethical-rtd");
+          placement.classList.add("ethical-dark-theme");
         } else {
           selector = "footer hr";
           placement.setAttribute("data-ea-type", "image");
@@ -173,7 +174,6 @@ export class EthicalAdsAddon extends AddonBase {
 
         if (this.elementAboveTheFold(element)) {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("data-ea-style", "image");
         } else {
           selector = "div.bodywrapper .body";
           placement.setAttribute("data-ea-type", "image");
@@ -192,7 +192,6 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("data-ea-style", "image");
         } else {
           selector = "main";
           placement.setAttribute("data-ea-type", "image");
