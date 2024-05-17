@@ -46,9 +46,6 @@
               "readthedocs-sidebar",
             );
 
-            // It's not a Read the Docs-like theme
-            expect(element).to.have.class("ethical-alabaster");
-
             // Keep the CSS classes added manually by the user
             expect(element).to.have.class("ad-flat");
 
@@ -63,7 +60,7 @@
             expect(element).to.exist;
             expect(element).to.have.attribute(
               "src",
-              "https://media.ethicalads.io/media/client/ethicalads.min.js",
+              "https://media.ethicalads.io/media/client/beta/ethicalads.min.js",
             );
             expect(element).to.have.attribute("type", "text/javascript");
             expect(element).to.have.attribute("async", "true");

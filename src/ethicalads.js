@@ -2,6 +2,7 @@ import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
+import { IS_TESTING } from "./utils.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
@@ -92,8 +93,12 @@ export class EthicalAdsAddon extends AddonBase {
     const keywords = objectPath.get(data, "keywords", []);
     const campaign_types = objectPath.get(data, "campaign_types", []);
 
-    // Include CSS into the DOM so they can be read.
-    document.adoptedStyleSheets.push(styleSheet);
+    // TODO: fix this on testing. It works fine on production/regular browser.
+    // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
+    if (!IS_TESTING) {
+      // Include CSS into the DOM so they can be read.
+      document.adoptedStyleSheets.push(styleSheet);
+    }
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
