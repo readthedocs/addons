@@ -127,11 +127,11 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
-          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
         } else {
           selector = "footer hr";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
@@ -142,12 +142,12 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
-          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
         }
         else {
           selector = "div.bodywrapper .body";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
         }
       }
 
