@@ -10,7 +10,6 @@ const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 300; // pixels
-
 const AD_SCRIPT_ID = "ethicaladsjs";
 
 /**
@@ -185,6 +184,7 @@ export class EthicalAdsAddon extends AddonBase {
 
         if (this.elementAboveTheFold(element)) {
           // TODO: use a more styled CSS class.
+          // See https://github.com/readthedocs/ethical-ad-client/issues/193
           placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
@@ -205,10 +205,10 @@ export class EthicalAdsAddon extends AddonBase {
       } else if (this.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
         element = document.querySelector(selector);
-        console.log("TEST");
 
         if (this.elementAboveTheFold(element)) {
           // TODO: use a more styled CSS class.
+          // See https://github.com/readthedocs/ethical-ad-client/issues/193
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docusaurus");
 
