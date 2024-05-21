@@ -3,6 +3,8 @@ export const snapshots = {};
 
 snapshots["EthicalAd addon ad placement defined by the user"] = `<div
   class="ad-flat"
+  data-ea-campaign-types="community|paid"
+  data-ea-keywords="docs|data-science"
   data-ea-manual="true"
   data-ea-publisher="readthedocs"
   data-ea-type="readthedocs-sidebar"
