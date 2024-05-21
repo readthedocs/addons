@@ -248,20 +248,22 @@ export class EthicalAdsAddon extends AddonBase {
     const keywords = objectPath.get(data, "keywords", []);
     const campaign_types = objectPath.get(data, "campaign_types", []);
 
-    // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
-    placement.setAttribute("data-ea-manual", "true");
+    if (placement !== null) {
+      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+      placement.setAttribute("data-ea-manual", "true");
 
-    // Set the keyword, campaign data, and publisher
-    placement.setAttribute("data-ea-publisher", data.publisher);
+      // Set the keyword, campaign data, and publisher
+      placement.setAttribute("data-ea-publisher", data.publisher);
 
-    if (keywords.length) {
-      placement.setAttribute("data-ea-keywords", keywords.join("|"));
-    }
-    if (campaign_types.length) {
-      placement.setAttribute(
-        "data-ea-campaign-types",
-        campaign_types.join("|"),
-      );
+      if (keywords.length) {
+        placement.setAttribute("data-ea-keywords", keywords.join("|"));
+      }
+      if (campaign_types.length) {
+        placement.setAttribute(
+          "data-ea-campaign-types",
+          campaign_types.join("|"),
+        );
+      }
     }
 
     return placement;
