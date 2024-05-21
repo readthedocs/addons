@@ -2,7 +2,7 @@
 export const snapshots = {};
 
 snapshots["EthicalAd addon ad placement defined by the user"] = `<div
-  class="ad-flat ethical-alabaster"
+  class="ad-flat"
   data-ea-manual="true"
   data-ea-publisher="readthedocs"
   data-ea-type="readthedocs-sidebar"
