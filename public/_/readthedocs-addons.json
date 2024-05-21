@@ -74,7 +74,8 @@
         "pdf": "https://localhost:8000/_/downloads/en/v1.0/pdf/"
       },
       "urls": {
-        "documentation": "https://example.readthedocs.io/en/v1.0/"
+        "documentation": "https://example.readthedocs.io/en/v1.0/",
+        "vcs": "https://github.com/readthedocs/addons"
       }
     }
   },
@@ -117,8 +118,7 @@
     },
     "non_latest_version_warning": {
       "enabled": true,
-      "query_selector": "[role=main]",
-      "versions": ["stable", "latest", "v1.0", "v1.4", "v2.0"]
+      "query_selector": "[role=main]"
     },
     "doc_diff": {
       "enabled": true,
