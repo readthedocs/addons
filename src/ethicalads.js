@@ -301,10 +301,20 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("id", AD_SCRIPT_ID);
     library.setAttribute("type", "text/javascript");
     library.setAttribute("async", true);
-    library.setAttribute(
-      "src",
-      "https://media.ethicalads.io/media/client/beta/ethicalads.min.js",
-    );
+
+    // TODO: inject the stable version after we have tested this.
+    // Inject the Ethical Ad client (beta) only for our own documentation.
+    let src;
+    if (
+      window.location.hostname === "docs.readthedocs.io" ||
+      window.location.hostname.endsWith(".devthedocs.org")
+    ) {
+      src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
+    } else {
+      src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
+    }
+
+    library.setAttribute("src", src);
     document.head.appendChild(library);
 
     document.getElementById(AD_SCRIPT_ID).addEventListener("load", function () {
