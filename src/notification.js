@@ -9,7 +9,7 @@ import {
 import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./notification.css";
-import { AddonBase } from "./utils";
+import { AddonBase, addUtmParameters } from "./utils";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -222,7 +222,9 @@ export class NotificationElement extends LitElement {
         </div>
         <div class="content">
           See the
-          <a href="${this.urls.build}">build's detail page</a>
+          <a href="${addUtmParameters(this.urls.build, "notification")}"
+            >build's detail page</a
+          >
           or
           <a href="${this.urls.external}"
             >pull request #${this.config.versions.current.slug}</a
