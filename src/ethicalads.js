@@ -1,13 +1,15 @@
 import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
+import styleSheet from "./ethicalads.css";
+import { IS_TESTING } from "./utils.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
-const AD_TYPE = "image";
-const AD_STYLE = "stickybox";
+const AD_PLACEMENT_BOTTOM = "90px";
+const AD_SIZE = 300; // pixels
 
 const AD_SCRIPT_ID = "ethicaladsjs";
 
@@ -34,13 +36,60 @@ export class EthicalAdsAddon extends AddonBase {
     this.injectEthicalAds();
   }
 
-  // Borrowed from:
-  // https://github.com/readthedocs/readthedocs.org/blob/6538d987c2fd26ef7ac38d35f135e52f43a9c6d0/readthedocs/core/static-src/core/js/doc-embed/rtd-data.js#L10-L18
-  isReadTheDocsLikeTheme() {
-    // Returns true for the Read the Docs theme on both sphinx and mkdocs
-    if (document.querySelectorAll("div.rst-other-versions").length === 1) {
-      // Crappy heuristic, but people change the theme name
-      // So we have to do some duck typing.
+  isSphinxAlabasterLikeTheme() {
+    const selectors = [
+      'link[href^="_static/alabaster.css"]',
+      'link[href^="_static/flask.css"]',
+      'link[href^="_static/jinja.css"]',
+      'link[href^="_static/click.css"]',
+      'link[href^="_static/celery.css"]',
+      'link[href^="_static/babel.css"]',
+      'link[href^="_static/platter.css"]',
+      'link[href^="_static/werkzeug.css"]',
+    ];
+    for (const selector of selectors) {
+      if (document.querySelectorAll(selector).length === 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isSphinxReadTheDocsLikeTheme() {
+    if (
+      document.querySelectorAll('script[src^="_static/js/theme.js"]').length ===
+      1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxBookThemeLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/styles/sphinx-book-theme.css"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMaterialMkDocsTheme() {
+    if (
+      document.querySelectorAll('meta[content~="mkdocs-material"]').length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isDocusaurusTheme() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content~="Docusaurus"]')
+        .length === 1
+    ) {
       return true;
     }
     return false;
@@ -55,8 +104,19 @@ export class EthicalAdsAddon extends AddonBase {
     const keywords = objectPath.get(data, "keywords", []);
     const campaign_types = objectPath.get(data, "campaign_types", []);
 
+    // TODO: fix this on testing. It works fine on production/regular browser.
+    // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
+    if (!IS_TESTING) {
+      // Include CSS into the DOM so they can be read.
+      document.adoptedStyleSheets.push(styleSheet);
+    }
+
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
+      // Always load the ad manually after ethicalad library is injected.
+      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+      placement.setAttribute("data-ea-manual", "true");
+
       placement.setAttribute("data-ea-publisher", data.publisher);
       if (
         placement.getAttribute("data-ea-type") !== "image" &&
@@ -64,24 +124,25 @@ export class EthicalAdsAddon extends AddonBase {
       ) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
       }
-      if (this.isReadTheDocsLikeTheme()) {
-        placement.classList.add("ethical-rtd");
-        placement.classList.add("ethical-dark-theme");
-      } else {
-        placement.classList.add("ethical-alabaster");
-      }
     }
     // NOTE: we are testing EthicalAds on our own platform only for now.
     // We plan to expand this to more project soon.
-    else if (window.location.hostname === "docs.readthedocs.io") {
+    else if (
+      window.location.hostname === "docs.readthedocs.io" ||
+      window.location.hostname.endsWith(".devthedocs.org")
+    ) {
       // Inject our own floating element
       placement = document.createElement("div");
 
+      placement.setAttribute("id", "readthedocs-ea");
+
       // Set the keyword, campaign data, and publisher
       placement.setAttribute("data-ea-publisher", data.publisher);
-      placement.setAttribute("data-ea-type", AD_TYPE);
-      placement.setAttribute("data-ea-style", AD_STYLE);
-      placement.setAttribute("data-ea-placement-bottom", "90px");
+
+      // Always load the ad manually after ethicalad library is injected.
+      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+      placement.setAttribute("data-ea-manual", "true");
+
       if (keywords.length) {
         placement.setAttribute("data-ea-keywords", keywords.join("|"));
       }
@@ -94,19 +155,145 @@ export class EthicalAdsAddon extends AddonBase {
 
       placement.classList.add("raised");
 
-      // TODO: find the right last resourse to append (probably not `document.body`)
-      let main = document.querySelector("[role=main]") || document.body;
-      main.insertBefore(placement, main.lastChild);
+      // Define where to inject the Ad based on the theme and if it's above the fold or not.
+      let selector;
+      let element;
+      let insertPlacement = true;
+
+      if (this.isSphinxReadTheDocsLikeTheme()) {
+        selector = "nav.wy-nav-side > div.wy-side-scroll";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.classList.add("ethical-rtd");
+          placement.classList.add("ethical-dark-theme");
+        } else {
+          selector = "footer hr";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
+      } else if (this.isSphinxBookThemeLikeTheme()) {
+        selector = ".sidebar-primary-items__start.sidebar-primary__section";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+        } else {
+          selector = "article";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
+      } else if (this.isSphinxAlabasterLikeTheme()) {
+        selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+        } else {
+          selector = "div.bodywrapper .body";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
+      } else if (this.isMaterialMkDocsTheme()) {
+        selector = ".md-sidebar__scrollwrap";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          // TODO: use a more styled CSS class.
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+        } else {
+          selector = "main";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+
+          document
+            .querySelector(selector)
+            .insertAdjacentElement("afterend", placement);
+          insertPlacement = false;
+        }
+      } else if (this.isDocusaurusTheme()) {
+        selector = ".menu.thin-scrollbar.menu_SIkG";
+        element = document.querySelector(selector);
+        console.log("TEST");
+
+        if (this.elementAboveTheFold(element)) {
+          // TODO: use a more styled CSS class.
+          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-docusaurus");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+        } else {
+          selector = "article";
+          placement.setAttribute("data-ea-type", "image");
+          placement.setAttribute("data-ea-style", "stickybox");
+          placement.setAttribute(
+            "data-ea-placement-bottom",
+            AD_PLACEMENT_BOTTOM,
+          );
+        }
+      } else {
+        placement.setAttribute("data-ea-type", "image");
+        placement.setAttribute("data-ea-style", "stickybox");
+        placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+      }
+
+      if (insertPlacement) {
+        let main = document.querySelector(selector);
+        if (main) {
+          main.append(placement);
+        } else {
+          main = document.querySelector("[role=main]") || document.body;
+          main.insertBefore(placement, main.lastChild);
+        }
+      }
+
       console.log("EthicalAd placement injected.");
     }
 
-    if (placement) {
-      // Always load the ad manually after ethicalad library is injected.
-      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
-      placement.setAttribute("data-ea-manual", "true");
+    return placement;
+  }
+
+  elementAboveTheFold(element) {
+    // Determine if this element would be above the fold.
+    // If this is off screen, instead create an ad in the footer.
+    // Assumes the ad would be AD_SIZE pixels high.
+    const div = document.createElement("div");
+
+    // Append a temporary element to check if it's visible on the screen.
+    element.append(div);
+    const offsetTop = div.offsetTop;
+    div.remove();
+
+    if (
+      !offsetTop ||
+      offsetTop - window.scrollY + AD_SIZE > window.innerHeight
+    ) {
+      return false;
     }
 
-    return placement;
+    return true;
   }
 
   loadEthicalAdLibrary() {
@@ -114,10 +301,20 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("id", AD_SCRIPT_ID);
     library.setAttribute("type", "text/javascript");
     library.setAttribute("async", true);
-    library.setAttribute(
-      "src",
-      "https://media.ethicalads.io/media/client/ethicalads.min.js",
-    );
+
+    // TODO: inject the stable version after we have tested this.
+    // Inject the Ethical Ad client (beta) only for our own documentation.
+    let src;
+    if (
+      window.location.hostname === "docs.readthedocs.io" ||
+      window.location.hostname.endsWith(".devthedocs.org")
+    ) {
+      src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
+    } else {
+      src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
+    }
+
+    library.setAttribute("src", src);
     document.head.appendChild(library);
 
     document.getElementById(AD_SCRIPT_ID).addEventListener("load", function () {
