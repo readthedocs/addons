@@ -166,10 +166,7 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "footer hr";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute(
-            "data-ea-placement-bottom",
-            AD_PLACEMENT_BOTTOM,
-          );
+          this.addEaPlacementToElement(placement);
         }
       } else if (this.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
@@ -182,10 +179,7 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "article";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute(
-            "data-ea-placement-bottom",
-            AD_PLACEMENT_BOTTOM,
-          );
+          this.addEaPlacementToElement(placement);
         }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
@@ -198,10 +192,7 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "div.bodywrapper .body";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute(
-            "data-ea-placement-bottom",
-            AD_PLACEMENT_BOTTOM,
-          );
+          this.addEaPlacementToElement(placement);
         }
       } else if (this.isMaterialMkDocsTheme()) {
         selector = ".md-sidebar__scrollwrap";
@@ -216,10 +207,7 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "main";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute(
-            "data-ea-placement-bottom",
-            AD_PLACEMENT_BOTTOM,
-          );
+          this.addEaPlacementToElement(placement);
 
           document
             .querySelector(selector)
@@ -242,15 +230,12 @@ export class EthicalAdsAddon extends AddonBase {
           selector = "article";
           placement.setAttribute("data-ea-type", "image");
           placement.setAttribute("data-ea-style", "stickybox");
-          placement.setAttribute(
-            "data-ea-placement-bottom",
-            AD_PLACEMENT_BOTTOM,
-          );
+          this.addEaPlacementToElement(placement);
         }
       } else {
         placement.setAttribute("data-ea-type", "image");
         placement.setAttribute("data-ea-style", "stickybox");
-        placement.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+        this.addEaPlacementToElement(placement);
       }
 
       if (insertPlacement) {
@@ -288,6 +273,18 @@ export class EthicalAdsAddon extends AddonBase {
     }
 
     return true;
+  }
+
+  addEaPlacementToElement(element) {
+    // Add `ea-placement-bottom` to the element only if the flyout is enabled.
+    const flyoutEnabled = objectPath.get(
+      this.config,
+      "addons.flyout.enabled",
+      false,
+    );
+    if (flyoutEnabled) {
+      element.setAttribute("data-ea-placement-bottom", AD_PLACEMENT_BOTTOM);
+    }
   }
 
   loadEthicalAdLibrary() {
