@@ -11,7 +11,13 @@ import {
 import READTHEDOCS_LOGO from "./images/logo-wordmark-dark.svg";
 
 import styleSheet from "./search.css";
-import { domReady, CLIENT_VERSION, AddonBase, debounce } from "./utils";
+import {
+  domReady,
+  CLIENT_VERSION,
+  AddonBase,
+  debounce,
+  addUtmParameters,
+} from "./utils";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_SEARCH_HIDE,
@@ -151,7 +157,12 @@ export class SearchElement extends LitElement {
             </ul>
             <div class="credits">
               Search powered by
-              <a href="https://about.readthedocs.com/">
+              <a
+                href="${addUtmParameters(
+                  "https://about.readthedocs.com/",
+                  "search",
+                )}"
+              >
                 <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
               </a>
             </div>

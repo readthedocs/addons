@@ -7,7 +7,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import { AddonBase } from "./utils";
+import { AddonBase, addUtmParameters } from "./utils";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_FLYOUT_HIDE,
@@ -93,7 +93,11 @@ export class FlyoutElement extends LitElement {
       <small>
         <span
           >Hosted by
-          <a href="https://about.readthedocs.com/?ref=flyout"
+          <a
+            href="${addUtmParameters(
+              "https://about.readthedocs.com/",
+              "flyout",
+            )}"
             >Read the Docs</a
           ></span
         >
@@ -166,13 +170,31 @@ export class FlyoutElement extends LitElement {
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="${this.config.projects.current.urls.home}">Project Home</a>
+          <a
+            href="${addUtmParameters(
+              this.config.projects.current.urls.home,
+              "flyout",
+            )}"
+            >Project Home</a
+          >
         </dd>
         <dd>
-          <a href="${this.config.projects.current.urls.builds}">Builds</a>
+          <a
+            href="${addUtmParameters(
+              this.config.projects.current.urls.builds,
+              "flyout",
+            )}"
+            >Builds</a
+          >
         </dd>
         <dd>
-          <a href="${this.config.projects.current.urls.downloads}">Downloads</a>
+          <a
+            href="${addUtmParameters(
+              this.config.projects.current.urls.downloads,
+              "flyout",
+            )}"
+            >Downloads</a
+          >
         </dd>
       </dl>
     `;
@@ -194,7 +216,11 @@ export class FlyoutElement extends LitElement {
         <dt>Downloads</dt>
         ${Object.entries(this.config.versions.current.downloads).map(
           ([name, url]) =>
-            html`<dd><a href="${url}">${nameDisplay[name]}</a></dd>`,
+            html`<dd>
+              <a href="${addUtmParameters(url, "flyout")}"
+                >${nameDisplay[name]}</a
+              >
+            </dd>`,
         )}
       </dl>
     `;
