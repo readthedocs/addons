@@ -142,9 +142,8 @@ export function addUtmParameters(url, content) {
     "meta[name='readthedocs-project-slug']",
   );
   const projectSlug = metaProject.content;
-  const params = {
-    utm_source: projectSlug,
-    utm_content: content,
-  };
-  return url + "?" + new URLSearchParams(params);
+  const newUrl = new URL(url);
+  newUrl.searchParams.append("utm_source", projectSlug);
+  newUrl.searchParams.append("utm_content", content);
+  return newUrl.href;
 }
