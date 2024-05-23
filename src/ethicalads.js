@@ -10,7 +10,6 @@ const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 300; // pixels
-
 const AD_SCRIPT_ID = "ethicaladsjs";
 
 /**
@@ -98,12 +97,6 @@ export class EthicalAdsAddon extends AddonBase {
   createAdPlacement() {
     let placement;
 
-    // Optional attributes coming from the API JSON response.
-    // We get them if exists or return default values otherwise.
-    const data = this.config.addons.ethicalads;
-    const keywords = objectPath.get(data, "keywords", []);
-    const campaign_types = objectPath.get(data, "campaign_types", []);
-
     // TODO: fix this on testing. It works fine on production/regular browser.
     // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
     if (!IS_TESTING) {
@@ -113,11 +106,6 @@ export class EthicalAdsAddon extends AddonBase {
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
-      // Always load the ad manually after ethicalad library is injected.
-      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
-      placement.setAttribute("data-ea-manual", "true");
-
-      placement.setAttribute("data-ea-publisher", data.publisher);
       if (
         placement.getAttribute("data-ea-type") !== "image" &&
         placement.getAttribute("data-ea-type") !== "text"
@@ -127,26 +115,7 @@ export class EthicalAdsAddon extends AddonBase {
     } else {
       // Inject our own floating element
       placement = document.createElement("div");
-
       placement.setAttribute("id", "readthedocs-ea");
-
-      // Set the keyword, campaign data, and publisher
-      placement.setAttribute("data-ea-publisher", data.publisher);
-
-      // Always load the ad manually after ethicalad library is injected.
-      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
-      placement.setAttribute("data-ea-manual", "true");
-
-      if (keywords.length) {
-        placement.setAttribute("data-ea-keywords", keywords.join("|"));
-      }
-      if (campaign_types.length) {
-        placement.setAttribute(
-          "data-ea-campaign-types",
-          campaign_types.join("|"),
-        );
-      }
-
       placement.classList.add("raised");
 
       // Define where to inject the Ad based on the theme and if it's above the fold or not.
@@ -200,6 +169,7 @@ export class EthicalAdsAddon extends AddonBase {
 
         if (this.elementAboveTheFold(element)) {
           // TODO: use a more styled CSS class.
+          // See https://github.com/readthedocs/ethical-ad-client/issues/193
           placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
@@ -217,10 +187,10 @@ export class EthicalAdsAddon extends AddonBase {
       } else if (this.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
         element = document.querySelector(selector);
-        console.log("TEST");
 
         if (this.elementAboveTheFold(element)) {
           // TODO: use a more styled CSS class.
+          // See https://github.com/readthedocs/ethical-ad-client/issues/193
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docusaurus");
 
@@ -249,6 +219,30 @@ export class EthicalAdsAddon extends AddonBase {
       }
 
       console.log("EthicalAd placement injected.");
+    }
+
+    // Optional attributes coming from the API JSON response.
+    // We get them if exists or return default values otherwise.
+    const data = this.config.addons.ethicalads;
+    const keywords = objectPath.get(data, "keywords", []);
+    const campaign_types = objectPath.get(data, "campaign_types", []);
+
+    if (placement !== null) {
+      // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
+      placement.setAttribute("data-ea-manual", "true");
+
+      // Set the keyword, campaign data, and publisher
+      placement.setAttribute("data-ea-publisher", data.publisher);
+
+      if (keywords.length) {
+        placement.setAttribute("data-ea-keywords", keywords.join("|"));
+      }
+      if (campaign_types.length) {
+        placement.setAttribute(
+          "data-ea-campaign-types",
+          campaign_types.join("|"),
+        );
+      }
     }
 
     return placement;
