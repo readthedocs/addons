@@ -235,7 +235,7 @@ export class EthicalAdsAddon extends AddonBase {
       } else {
         placement.setAttribute("data-ea-type", "image");
         placement.setAttribute("data-ea-style", "stickybox");
-        this.addPlavementToElement(placement);
+        this.addEaPlacementToElement(placement);
       }
 
       if (insertPlacement) {
