@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="readthedocs-project-slug" content="project" />
     <meta name="readthedocs-resolver-filename" content="/" />
   </head>
   <body>
@@ -174,7 +175,7 @@
       <dl class="downloads">
         <dt>Downloads</dt>
         <dd>
-          <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">PDF</a>
+          <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/?utm_source=project&amp;utm_content=flyout">PDF</a>
         </dd>
       </dl>
       `);
@@ -194,13 +195,13 @@
       <dl>
         <dt>On Read the Docs</dt>
         <dd>
-          <a href="https://readthedocs.org/projects/project/">Project Home</a>
+          <a href="https://readthedocs.org/projects/project/?utm_source=project&amp;utm_content=flyout">Project Home</a>
         </dd>
         <dd>
-          <a href="https://readthedocs.org/projects/project/builds/">Builds</a>
+          <a href="https://readthedocs.org/projects/project/builds/?utm_source=project&amp;utm_content=flyout">Builds</a>
         </dd>
         <dd>
-          <a href="https://readthedocs.org/projects/project/downloads/">Downloads</a>
+          <a href="https://readthedocs.org/projects/project/downloads/?utm_source=project&amp;utm_content=flyout">Downloads</a>
         </dd>
       </dl>
       `);
@@ -260,7 +261,7 @@
             const section = element.shadowRoot.querySelector("main > small");
             expect(section).dom.to.equal(`
       <small>
-        <span>Hosted by <a href="https://about.readthedocs.com/?ref=flyout">Read the Docs</a></span>
+        <span>Hosted by <a href="https://about.readthedocs.com/?utm_source=project&amp;utm_content=flyout">Read the Docs</a></span>
       </small>
       `);
           });
