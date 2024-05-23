@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.13.0
+---------------
+
+:date: May 21, 2024
+
+* EthicalAd injected on ``docs.readthedocs.io``
+* Search hotkey works after open/close it
+* Privacy policy removed from flyout
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.12.0
 ---------------
 

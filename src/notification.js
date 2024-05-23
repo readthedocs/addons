@@ -54,7 +54,11 @@ export class NotificationElement extends LitElement {
       this.config.versions.current.type === "external"
     ) {
       this.urls = {
-        build: config.builds.current.urls.build,
+        // NOTE: point users to the new beta dashboard for now so we promote it more.
+        // We will revert this once we are fully migrated to the new dashboard.
+        build: config.builds.current.urls.build
+          .replace("readthedocs.org", "beta.readthedocs.org")
+          .replace("readthedocs.com", "beta.readthedocs.com"),
         external: config.versions.current.urls.vcs,
       };
     }
