@@ -136,3 +136,14 @@ export function setupLogging() {
     console.debug = () => {};
   }
 }
+
+export function addUtmParameters(url, content) {
+  const metaProject = document.querySelector(
+    "meta[name='readthedocs-project-slug']",
+  );
+  const projectSlug = metaProject.content;
+  const newUrl = new URL(url);
+  newUrl.searchParams.append("utm_source", projectSlug);
+  newUrl.searchParams.append("utm_content", content);
+  return newUrl.href;
+}
