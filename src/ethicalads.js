@@ -208,6 +208,13 @@ export class EthicalAdsAddon extends AddonBase {
         this.addEaPlacementToElement(placement);
       }
 
+      // Force a specific ad while testing this implementation.
+      // TODO: remove this after we have tested for some time.
+      placement.setAttribute(
+        "data-ea-force-ad",
+        "ethicaladsio-coming-soon-build-commands",
+      );
+
       if (insertPlacement) {
         let main = document.querySelector(selector);
         if (main) {
