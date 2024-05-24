@@ -173,8 +173,8 @@ export class FlyoutElement extends LitElement {
           <a
             href="${addUtmParameters(
               this.config.projects.current.urls.home
-                .replace("readthedocs.org", "beta.readthedocs.org")
-                .replace("readthedocs.com", "beta.readthedocs.com"),
+                .replace("readthedocs.org", "app.readthedocs.org")
+                .replace("readthedocs.com", "app.readthedocs.com"),
               "flyout",
             )}"
             >Project Home</a
@@ -184,8 +184,8 @@ export class FlyoutElement extends LitElement {
           <a
             href="${addUtmParameters(
               this.config.projects.current.urls.builds
-                .replace("readthedocs.org", "beta.readthedocs.org")
-                .replace("readthedocs.com", "beta.readthedocs.com"),
+                .replace("readthedocs.org", "app.readthedocs.org")
+                .replace("readthedocs.com", "app.readthedocs.com"),
               "flyout",
             )}"
             >Builds</a
@@ -195,8 +195,8 @@ export class FlyoutElement extends LitElement {
           <a
             href="${addUtmParameters(
               this.config.projects.current.urls.downloads
-                .replace("readthedocs.org", "beta.readthedocs.org")
-                .replace("readthedocs.com", "beta.readthedocs.com"),
+                .replace("readthedocs.org", "app.readthedocs.org")
+                .replace("readthedocs.com", "app.readthedocs.com"),
               "flyout",
             )}"
             >Downloads</a
