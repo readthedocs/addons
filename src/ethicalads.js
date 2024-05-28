@@ -77,7 +77,9 @@ export class EthicalAdsAddon extends AddonBase {
 
   isMaterialMkDocsTheme() {
     if (
-      document.querySelectorAll('meta[content~="mkdocs-material"]').length === 1
+      document.querySelectorAll(
+        'meta[name="generator"][content*="mkdocs-material"]',
+      ).length === 1
     ) {
       return true;
     }
@@ -86,7 +88,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   isDocusaurusTheme() {
     if (
-      document.querySelectorAll('meta[name="generator"][content~="Docusaurus"]')
+      document.querySelectorAll('meta[name="generator"][content*="Docusaurus"]')
         .length === 1
     ) {
       return true;
