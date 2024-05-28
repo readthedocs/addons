@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.14.2
+---------------
+
+:date: May 28, 2024
+
+* Revert rollout of EthicalAd on projects
+
 Version v0.14.1
 ---------------
 
