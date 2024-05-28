@@ -97,12 +97,15 @@ export class EthicalAdsAddon extends AddonBase {
   createAdPlacement() {
     let placement;
 
-    // TODO: fix this on testing. It works fine on production/regular browser.
-    // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
-    if (!IS_TESTING) {
-      // Include CSS into the DOM so they can be read.
-      document.adoptedStyleSheets.push(styleSheet);
-    }
+    // When doing `import { styleSheet } from "./ethicalads.css"`
+    // it results being a `CSSResult` instance, which is a Lit class:
+    // https://lit.dev/docs/api/styles/#CSSResult
+    //
+    // This class cannot be converted automatically into CSSStyleSheet,
+    // which is what Lit does being the scenes when doing `static styles = styleSheet`.
+    //
+    // So, we need to call the `CSSResult.styleSheet` method here.
+    document.adoptedStyleSheets.push(styleSheet.styleSheet);
 
     placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
     if (placement) {
