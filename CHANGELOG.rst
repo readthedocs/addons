@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.14.0
+---------------
+
+:date: May 28, 2024
+
+* Link to ``beta.readthedocs.org`` dashboard from notification
+* Enable EthicalAds in all projects with a house ad ("Coming soon")
+* Always send keywords, campaing and publisher to EthicalAds server
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.13.0
 ---------------
 
