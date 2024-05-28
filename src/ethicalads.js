@@ -114,7 +114,13 @@ export class EthicalAdsAddon extends AddonBase {
       ) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
       }
-    } else {
+    }
+    // NOTE: we are testing EthicalAds on our own platform only for now.
+    // We plan to expand this to more project soon.
+    else if (
+      window.location.hostname === "docs.readthedocs.io" ||
+      window.location.hostname.endsWith(".devthedocs.org")
+    ) {
       // Inject our own floating element
       placement = document.createElement("div");
       placement.setAttribute("id", "readthedocs-ea");
