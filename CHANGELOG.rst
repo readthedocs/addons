@@ -11,6 +11,8 @@ Version v0.14.0
 * Link to ``beta.readthedocs.org`` dashboard from notification
 * Enable EthicalAds in all projects with a house ad ("Coming soon")
 * Always send keywords, campaing and publisher to EthicalAds server
+* Set ``data-ea-placement`` only when the flyout is enabled
+* Add UTM analytics parameters to links from the flyout
 * Update all ``npm`` dependencies with with ``ncu -u``
 
 Version v0.13.0
