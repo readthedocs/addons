@@ -28,7 +28,7 @@ This is the release process for the Read the Docs Addons client.
 
    .. code-block:: bash
 
-      bumpver update --allow-dirty --patch  # use --minor if it introduces new features
+      bumpver update --allow-dirty --minor # use --patch if it only introduces bug fixes
 
 #. Deploy (if needed) the new files using Read the Docs's `deploy-addons.sh <https://github.com/readthedocs/readthedocs-ops/blob/main/deploy/deploy-addons.sh>`_ script.
 
