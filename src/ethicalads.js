@@ -114,13 +114,7 @@ export class EthicalAdsAddon extends AddonBase {
       ) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
       }
-    }
-    // NOTE: we are testing EthicalAds on our own platform only for now.
-    // We plan to expand this to more project soon.
-    else if (
-      window.location.hostname === "docs.readthedocs.io" ||
-      window.location.hostname.endsWith(".devthedocs.org")
-    ) {
+    } else {
       // Inject our own floating element
       placement = document.createElement("div");
       placement.setAttribute("id", "readthedocs-ea");
@@ -139,12 +133,13 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.classList.add("ethical-rtd");
           placement.classList.add("ethical-dark-theme");
-        } else {
-          selector = "footer hr";
-          placement.setAttribute("data-ea-type", "image");
-          placement.setAttribute("data-ea-style", "stickybox");
-          this.addEaPlacementToElement(placement);
         }
+        // else {
+        //   selector = "footer hr";
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+        // }
       } else if (this.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
         element = document.querySelector(selector);
@@ -152,12 +147,13 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-        } else {
-          selector = "article";
-          placement.setAttribute("data-ea-type", "image");
-          placement.setAttribute("data-ea-style", "stickybox");
-          this.addEaPlacementToElement(placement);
         }
+        // else {
+        //   selector = "article";
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+        // }
       } else if (this.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
         element = document.querySelector(selector);
@@ -165,12 +161,13 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-        } else {
-          selector = "div.bodywrapper .body";
-          placement.setAttribute("data-ea-type", "image");
-          placement.setAttribute("data-ea-style", "stickybox");
-          this.addEaPlacementToElement(placement);
         }
+        // else {
+        //   selector = "div.bodywrapper .body";
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+        // }
       } else if (this.isMaterialMkDocsTheme()) {
         selector = ".md-sidebar__scrollwrap";
         element = document.querySelector(selector);
@@ -181,17 +178,18 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-        } else {
-          selector = "main";
-          placement.setAttribute("data-ea-type", "image");
-          placement.setAttribute("data-ea-style", "stickybox");
-          this.addEaPlacementToElement(placement);
-
-          document
-            .querySelector(selector)
-            .insertAdjacentElement("afterend", placement);
-          insertPlacement = false;
         }
+        // else {
+        //   selector = "main";
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+
+        //   document
+        //     .querySelector(selector)
+        //     .insertAdjacentElement("afterend", placement);
+        //   insertPlacement = false;
+        // }
       } else if (this.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
         element = document.querySelector(selector);
@@ -204,17 +202,19 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
-        } else {
-          selector = "article";
-          placement.setAttribute("data-ea-type", "image");
-          placement.setAttribute("data-ea-style", "stickybox");
-          this.addEaPlacementToElement(placement);
         }
-      } else {
-        placement.setAttribute("data-ea-type", "image");
-        placement.setAttribute("data-ea-style", "stickybox");
-        this.addEaPlacementToElement(placement);
+        // else {
+        //   selector = "article";
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+        // }
       }
+      // else {
+      //   placement.setAttribute("data-ea-type", "image");
+      //   placement.setAttribute("data-ea-style", "stickybox");
+      //   this.addEaPlacementToElement(placement);
+      // }
 
       // Force a specific ad while testing this implementation.
       // TODO: remove this after we have tested for some time.
