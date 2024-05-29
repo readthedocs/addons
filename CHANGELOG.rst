@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.15.1
+---------------
+
+:date: May 29, 2024
+
+* Typo in EthicalAds selector
+
 Version v0.15.0
 ---------------
 
