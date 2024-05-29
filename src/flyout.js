@@ -55,16 +55,6 @@ export class FlyoutElement extends LitElement {
     }
   };
 
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener("click", this._onOutsideClick);
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener("click", this._onOutsideClick);
-    super.disconnectedCallback();
-  }
-
   renderHeader() {
     library.add(faCodeBranch);
     const iconCodeBranch = icon(faCodeBranch, {
@@ -359,8 +349,8 @@ export class FlyoutElement extends LitElement {
     super.connectedCallback();
 
     document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
-
     document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+    window.addEventListener("click", this._onOutsideClick);
   }
 
   disconnectedCallback() {
@@ -373,6 +363,7 @@ export class FlyoutElement extends LitElement {
       EVENT_READTHEDOCS_FLYOUT_HIDE,
       this.hideFlyout,
     );
+    window.removeEventListener("click", this._onOutsideClick);
 
     super.disconnectedCallback();
   }
