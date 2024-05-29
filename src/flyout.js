@@ -181,17 +181,6 @@ export class FlyoutElement extends LitElement {
             >Builds</a
           >
         </dd>
-        <dd>
-          <a
-            href="${addUtmParameters(
-              this.config.projects.current.urls.downloads
-                .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com"),
-              "flyout",
-            )}"
-            >Downloads</a
-          >
-        </dd>
       </dl>
     `;
   }
