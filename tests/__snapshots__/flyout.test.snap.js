@@ -77,11 +77,6 @@ snapshots["Flyout addon snapshot flyout completely"] =
           Builds
         </a>
       </dd>
-      <dd>
-        <a href="https://app.readthedocs.org/projects/project/downloads/?utm_source=project&amp;utm_content=flyout">
-          Downloads
-        </a>
-      </dd>
     </dl>
     <dl>
       <dt>
@@ -186,11 +181,6 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
       <dd>
         <a href="https://app.readthedocs.org/projects/project/builds/?utm_source=project&amp;utm_content=flyout">
           Builds
-        </a>
-      </dd>
-      <dd>
-        <a href="https://app.readthedocs.org/projects/project/downloads/?utm_source=project&amp;utm_content=flyout">
-          Downloads
         </a>
       </dd>
     </dl>

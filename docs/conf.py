@@ -1,3 +1,3 @@
-project = 'JavaScript client: "readthedocs-superpowers.js"'
+project = 'Read the Docs Addons'
 extensions = []
 html_theme = 'furo'

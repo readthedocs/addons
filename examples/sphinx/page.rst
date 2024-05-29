@@ -1,4 +1,0 @@
-Page
-====
-
-Example for tooltipster.

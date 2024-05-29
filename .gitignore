@@ -3,3 +3,4 @@ node_modules/
 .envrc
 .tool-versions
 /coverage/
+/docs/_build/

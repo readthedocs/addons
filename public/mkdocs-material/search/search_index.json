@@ -1,1 +1,0 @@
-{"config":{"lang":["en"],"separator":"[\\s\\-]+","pipeline":["stopWordFilter"]},"docs":[{"location":"","title":"Welcome to Material for MkDocs","text":"<p>This is just a small page to test Read the Docs integration with Material for MkDocs using the new readthedocs JavaScript client.</p>"}]}
