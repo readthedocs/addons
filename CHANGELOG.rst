@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.15.2
+---------------
+
+:date: May 29, 2024
+
+* Small fixes to EthicalAds stickybox placement
+
 Version v0.15.1
 ---------------
 
