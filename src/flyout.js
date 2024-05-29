@@ -50,7 +50,6 @@ export class FlyoutElement extends LitElement {
   }
 
   _onOutsideClick = (e) => {
-    console.log("click outside");
     if (e.target !== this) {
       this.opened = false;
     }
