@@ -3,6 +3,21 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.14.2
+---------------
+
+:date: May 28, 2024
+
+* Revert rollout of EthicalAd on projects
+
+Version v0.14.1
+---------------
+
+:date: May 28, 2024
+
+* Update CSS selector for EthicalAd position in Material for MkDocs
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.14.0
 ---------------
 
@@ -11,6 +26,8 @@ Version v0.14.0
 * Link to ``beta.readthedocs.org`` dashboard from notification
 * Enable EthicalAds in all projects with a house ad ("Coming soon")
 * Always send keywords, campaing and publisher to EthicalAds server
+* Set ``data-ea-placement`` only when the flyout is enabled
+* Add UTM analytics parameters to links from the flyout
 * Update all ``npm`` dependencies with with ``ncu -u``
 
 Version v0.13.0
