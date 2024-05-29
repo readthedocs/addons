@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.15.0
+---------------
+
+:date: May 29, 2024
+
+* Link to ``app.readthedocs.org`` from the flyout to promote the new dashboard more
+* Collapse flyout when clicking outside (this was a regression)
+* Re-enable EthicalAds on all projects with an improved logic
+  (inject them on specific placement or known placement, otherwise stickybox only on wide screens)
+
 Version v0.14.2
 ---------------
 
