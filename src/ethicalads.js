@@ -299,12 +299,12 @@ export class EthicalAdsAddon extends AddonBase {
   addWidthListener() {
     // Hide ad when the window is smaller than the stickybox width
     const placement = document.querySelector("#readthedocs-ea");
-    if (placement && placement.data.eaType === "stickybox") {
+    if (placement && placement.dataset.eaStyle === "stickybox") {
       window.addEventListener("resize", function () {
         if (window.innerWidth <= 1300) {
-          document.getElementById("readthedocs-ea").style.display = "none";
+          placement.style.display = "none";
         } else {
-          document.getElementById("readthedocs-ea").style.display = "";
+          placement.style.display = "";
         }
       });
     }
