@@ -298,7 +298,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   addWidthListener() {
     // Hide ad when the window is smaller than the stickybox width
-    const placement = document.querySelector("#readthedics-ea");
+    const placement = document.querySelector("#readthedocs-ea");
     if (placement && placement.data.eaType === "stickybox") {
       window.addEventListener("resize", function () {
         if (window.innerWidth <= 1300) {
