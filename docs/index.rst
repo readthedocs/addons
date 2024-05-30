@@ -42,7 +42,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 
 * `Antora <https://test-builds.readthedocs.io/en/antora/>`_
 * `Asciidoctor <https://test-builds.readthedocs.io/en/asciidoctor/>`_
-* `DL2-Book <https://test-builds.readthedocs.io/en/dl2book/>`_
+* `D2L-Book <https://test-builds.readthedocs.io/en/d2lbook/>`_
 * `Docsify <https://test-builds.readthedocs.io/en/docsify/>`_
 * `Docusaurus <https://test-builds.readthedocs.io/en/docusaurus/>`_
 * `Jekyll <https://test-builds.readthedocs.io/en/jekyll/>`_
