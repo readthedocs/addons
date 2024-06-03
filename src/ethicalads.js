@@ -7,7 +7,7 @@ import { IS_TESTING } from "./utils.js";
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTORS = [
   "#ethical-ad-placement",
-  '[data-ea-publisher="readthedocs"]',
+  "[data-ea-publisher]",
 ];
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
