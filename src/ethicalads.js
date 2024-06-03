@@ -5,7 +5,10 @@ import styleSheet from "./ethicalads.css";
 import { IS_TESTING } from "./utils.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
-const EXPLICIT_PLACEMENT_SELECTOR = "#ethical-ad-placement";
+const EXPLICIT_PLACEMENT_SELECTORS = [
+  "#ethical-ad-placement",
+  "[data-ea-publisher]",
+];
 
 // https://ethical-ad-client.readthedocs.io/en/latest/
 const AD_PLACEMENT_BOTTOM = "90px";
@@ -106,7 +109,11 @@ export class EthicalAdsAddon extends AddonBase {
       document.adoptedStyleSheets.push(styleSheet);
     }
 
-    placement = document.querySelector(EXPLICIT_PLACEMENT_SELECTOR);
+    for (const explicitSelector of EXPLICIT_PLACEMENT_SELECTORS) {
+      placement = document.querySelector(explicitSelector);
+      if (placement) break;
+    }
+
     if (placement) {
       if (
         placement.getAttribute("data-ea-type") !== "image" &&
