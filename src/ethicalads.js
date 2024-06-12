@@ -206,13 +206,6 @@ export class EthicalAdsAddon extends AddonBase {
           elementInsertBefore.lastChild,
         );
       }
-
-      // Force a specific ad while testing this implementation.
-      // TODO: remove this after we have tested for some time.
-      placement.setAttribute(
-        "data-ea-force-ad",
-        "ethicaladsio-coming-soon-build-commands",
-      );
     }
 
     // Optional attributes coming from the API JSON response.
