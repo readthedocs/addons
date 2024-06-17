@@ -1,5 +1,8 @@
 :host {
-  --addons-notification-font-size: var(--readthedocs-notification-font-size, var(--readthedocs-font-size, 1rem));
+  --addons-notification-font-size: var(
+    --readthedocs-notification-font-size,
+    var(--readthedocs-font-size, 1rem)
+  );
 }
 
 :host > div {

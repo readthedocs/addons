@@ -30,7 +30,10 @@
 }
 
 :host {
-  --addons-flyout-font-size: var(--readthedocs-flyout-font-size, var(--readthedocs-font-size, 0.8rem));
+  --addons-flyout-font-size: var(
+    --readthedocs-flyout-font-size,
+    var(--readthedocs-font-size, 0.8rem)
+  );
 }
 
 :host > div {
