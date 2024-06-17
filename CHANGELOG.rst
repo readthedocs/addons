@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.16.0
+---------------
+
+:date: Jun 17, 2024
+
+* Show paid ads on community documentation (instead of "Coming soon" ad)
+* Use ``data-ea-publisher`` attribute to detect ad placement
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.15.2
 ---------------
 
