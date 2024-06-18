@@ -1,7 +1,14 @@
+:host {
+  --addons-notification-font-size: var(
+    --readthedocs-notification-font-size,
+    var(--readthedocs-font-size, 1rem)
+  );
+}
+
 :host > div {
   margin: 1rem 0rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: var(--addons-notification-font-size);
+  padding-bottom: var(--addons-notification-font-size);
   overflow: auto;
   border-radius: 0.5rem;
   font-family: var(
@@ -12,7 +19,7 @@
     "Arial",
     "sans-serif"
   );
-  font-size: var(--readthedocs-notification-font-size, 1rem);
+  font-size: var(--addons-notification-font-size);
   color: var(--readthedocs-notification-color, rgb(64, 64, 64));
   background-color: var(
     --readthedocs-notification-background-color,
@@ -30,13 +37,16 @@
 
 :host(.toast) > div {
   position: fixed;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-top: calc(var(--addons-notification-font-size) * 0.75);
+  padding-bottom: calc(var(--addons-notification-font-size) * 0.75);
   margin: 0.75rem 0rem;
   top: 2rem;
   right: 2rem;
   z-index: 1750;
-  font-size: 0.85rem;
+  font-size: var(
+    --readthedocs-notification-toast-font-size,
+    calc(var(--addons-notification-font-size) * 0.85)
+  );
   width: 35rem;
   max-width: calc(100vw - 4rem);
 }
@@ -64,13 +74,13 @@
 }
 
 :host > div > svg.header.icon {
-  height: 2rem;
+  height: calc(var(--addons-notification-font-size) * 2);
   padding: 0.5rem 1.5rem;
   float: left;
 }
 
 :host(.toast) > div > svg.header.icon {
-  height: 1.5rem;
+  height: calc(var(--addons-notification-font-size) * 1.5);
 }
 
 :host(.titled) > div > svg.header.icon {
@@ -95,26 +105,26 @@
 }
 
 :host > div > .title {
-  padding: 0.25rem 1rem;
+  padding: 0.25rem var(--addons-notification-font-size);
   margin-bottom: 0.25rem;
-  line-height: 1rem;
+  line-height: var(--addons-notification-font-size);
   font-weight: bold;
 }
 :host > div > div.content {
-  line-height: 1rem;
-  font-size: 0.85em;
-  padding: 0 1.5rem;
+  line-height: var(--addons-notification-font-size);
+  font-size: calc(var(--addons-notification-font-size) * 0.85);
+  padding: 0 calc(var(--addons-notification-font-size) * 1.5);
 }
 
 :host(.toast) > div > .title {
-  padding: 0rem 1rem;
+  padding: 0rem var(--addons-notification-font-size);
 }
 
 :host(.titled) > div > .title {
   display: block;
   margin: 0rem;
-  padding: 0.1rem 1rem;
-  line-height: 2rem;
+  padding: 0.1rem var(--addons-notification-font-size);
+  line-height: calc(var(--addons-notification-font-size) * 2);
   border-radius: 0.5rem 0.5rem 0 0;
   color: var(--readthedocs-notification-title-color, rgb(96, 96, 96));
   background-color: var(
@@ -147,7 +157,7 @@
 
 :host > div > .title > .right > svg {
   display: inline-block;
-  height: 1rem;
+  height: var(--addons-notification-font-size);
   vertical-align: middle;
   cursor: pointer;
   color: var(--readthedocs-notification-title-color, rgba(96, 96, 96));
