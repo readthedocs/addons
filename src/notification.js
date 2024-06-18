@@ -21,8 +21,9 @@ export class NotificationElement extends LitElement {
     urls: { state: true },
     highest_version: { state: true },
     dismissedTimestamp: {state: true},
+    localStorageKey: {state: true},
     // Under which key should the notification store dismissal (and other) information
-    localStorageKey: { type: String, attribute: "local-storage-key" },
+    notificationStorageKey: { type: String, attribute: "notification-storage-key" },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -43,12 +44,16 @@ export class NotificationElement extends LitElement {
     // This will store information like user dimissing the notification. Any Notification sharing
     // the same localStorageKey will be affected. If a specific Notification should not be dismissed after
     // another has been dismissed, it requires a different localStorageKey
-    this.localStorageKey = "default-notification";
+    this.localStorageKey = this.notificationStorageKey || "default-notification";
     this.dismissedTimestamp = null;
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.checkDismissedTimestamp()
+  }
+
+  checkDismissedTimestamp() {
     // Check if this notification (as determined by localStorageKey) has been dismissed already.
     // Once a notification has been dismissed, it stays dismissed. This information however is not passed
     // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
@@ -91,6 +96,15 @@ export class NotificationElement extends LitElement {
     ) {
       this.calculateStableLatestVersionWarning();
     }
+    this.localStorageKey = this.notificationStorageKey || this.getLocalStorageKeyFromConfig(this.config);
+    this.checkDismissedTimestamp()
+  }
+
+  getLocalStorageKeyFromConfig(config) {
+    const projectSlug = config.projects.current.slug;
+    const languageCode = config.projects.current.language.code;
+    const versionSlug = config.versions.current.slug;
+    return `${projectSlug}-${languageCode}-${versionSlug}-notification`;
   }
 
   firstUpdated() {
@@ -106,6 +120,7 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
+    // This notification has been dimissed, so don't render it
     if (this.dismissedTimestamp) {
       return nothing;
     }
@@ -266,6 +281,7 @@ export class NotificationElement extends LitElement {
     e.preventDefault();
 
     // Store the information about dismissal in the Local Storage
+    // Make sure to store the timestamp, so that we have the option to maybe add a TTL on the dismissal
     this.dismissedTimestamp = Date.now();
     const dismissedObj = {[this.localStorageKey]: {dismissedTimestamp: this.dismissedTimestamp}};
     NotificationAddon.setLocalStorage(dismissedObj);
