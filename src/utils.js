@@ -84,7 +84,9 @@ export class AddonBase {
 
   static getAddonLocalStorageKey() {
     // Return a key to be used for Local Storage
-    return this.addonLocalStorageKey || `readthedocs-${this.addonName}-storage-key`;
+    return (
+      this.addonLocalStorageKey || `readthedocs-${this.addonName}-storage-key`
+    );
   }
 
   static requiresUrlParam() {
@@ -97,7 +99,9 @@ export class AddonBase {
 
   static getLocalStorage() {
     // Get the object stored in Local Storage for this addon
-    const addonLocalStorage = window.localStorage.getItem(this.getAddonLocalStorageKey());
+    const addonLocalStorage = window.localStorage.getItem(
+      this.getAddonLocalStorageKey(),
+    );
     return addonLocalStorage ? JSON.parse(addonLocalStorage) : {};
   }
 
@@ -107,8 +111,11 @@ export class AddonBase {
     // For example, if obj provided is {foo: 'bar'}, and the existing object is {a: 1, foo: 'baz'}
     // This will update the existing object to {a: 1, foo: 'bar'} and store it under this.getAddonLocalStorageKey()
     const addonLocalStorage = this.getLocalStorage() || {};
-    const updatedStorage = {...addonLocalStorage, ...obj};
-    window.localStorage.setItem(this.getAddonLocalStorageKey(), JSON.stringify(updatedStorage));
+    const updatedStorage = { ...addonLocalStorage, ...obj };
+    window.localStorage.setItem(
+      this.getAddonLocalStorageKey(),
+      JSON.stringify(updatedStorage),
+    );
   }
 }
 
