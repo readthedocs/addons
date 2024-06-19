@@ -52,12 +52,7 @@ export class NotificationElement extends LitElement {
     this.dismissedTimestamp = null;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.checkDismissedTimestamp();
-  }
-
-  checkDismissedTimestamp() {
+  loadDismissedTimestamp() {
     // Check if this notification (as determined by localStorageKey) has been dismissed already.
     // Once a notification has been dismissed, it stays dismissed. This information however is not passed
     // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
@@ -104,7 +99,7 @@ export class NotificationElement extends LitElement {
     this.localStorageKey =
       this.notificationStorageKey ||
       this.getLocalStorageKeyFromConfig(this.config);
-    this.checkDismissedTimestamp();
+    this.loadDismissedTimestamp();
   }
 
   getLocalStorageKeyFromConfig(config) {
