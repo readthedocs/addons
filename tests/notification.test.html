@@ -6,13 +6,29 @@
     <script type="module">
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
+      import { stub } from "sinon";
       import * as notification from "../src/notification.js";
 
       // Define the config globally to be able to override on ``beforeEach`` and inside each test
       let config;
 
+      // stub localStorage methods, to ensure test isolation
+      const getLocalStorageStub = stub(window.localStorage, "getItem");
+      const setLocalStorageStub = stub(window.localStorage, "setItem");
+
       runTests(async () => {
         beforeEach(() => {
+          // Check if there are any existing notifications in the HTML and remove them
+          // as they might contain state from the previous tests
+          const existingNotification = document.querySelector(
+            "readthedocs-notification",
+          );
+          if (existingNotification) {
+            existingNotification.remove();
+          }
+          // Reset localStorage stubs
+          getLocalStorageStub.reset();
+          setLocalStorageStub.reset();
           config = {
             addons: {
               external_version_warning: {
@@ -196,6 +212,81 @@
             await elementUpdated(element);
 
             expect(element).to.have.attribute("class", "raised floating");
+          });
+
+          it("doesn't render when closed", async () => {
+            config.versions.current.slug = "latest";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            const closeButton = element.shadowRoot.querySelector("a.right");
+            closeButton.click();
+            await elementUpdated(element);
+
+            // The notification should not be displayed anymore
+            expect(element).shadowDom.to.equal("");
+
+            // localStorage should now contain information about the dismissal
+            const key = setLocalStorageStub.getCall(0).args[0];
+            const value = setLocalStorageStub.getCall(0).args[1];
+            expect(key).to.be.equal("readthedocs-Notification-storage-key");
+            const valueObj = JSON.parse(value);
+            expect(valueObj).to.have.property("project-en-latest-notification");
+            expect(valueObj["project-en-latest-notification"]).to.have.property(
+              "dismissedTimestamp",
+            );
+          });
+
+          it("doesn't render when previously closed", async () => {
+            config.versions.current.slug = "latest";
+
+            // localStorage should contain information about the previous dismissal
+            const addonInformation = {
+              "project-en-latest-notification": { dismissedTimestamp: 123 },
+            };
+            const localStorageString = JSON.stringify(addonInformation);
+            getLocalStorageStub
+              .withArgs("readthedocs-Notification-storage-key")
+              .returns(localStorageString);
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            // The notification should not be displayed
+            expect(element).shadowDom.to.equal("");
+          });
+
+          it("renders when a different version was previously closed", async () => {
+            config.versions.current.slug = "381";
+            config.versions.current.type = "external";
+
+            // localStorage should contain information about the previous dismissal
+            const addonInformation = {
+              "project-en-v1.0-notification": { dismissedTimestamp: 123 },
+            };
+            const localStorageString = JSON.stringify(addonInformation);
+            getLocalStorageStub
+              .withArgs("readthedocs-Notification-storage-key")
+              .returns(localStorageString);
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            // The notification should be displayed normally
+            const title = element.shadowRoot.querySelector("div.title");
+            expect(title.innerText).to.be.equal(
+              "This page was created from a pull request build",
+            );
           });
         });
       });
