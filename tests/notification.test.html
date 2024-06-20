@@ -233,7 +233,7 @@
             // localStorage should now contain information about the dismissal
             const key = setLocalStorageStub.getCall(0).args[0];
             const value = setLocalStorageStub.getCall(0).args[1];
-            expect(key).to.be.equal("readthedocs-Notification-storage-key");
+            expect(key).to.be.equal("readthedocs-notification-storage-key");
             const valueObj = JSON.parse(value);
             expect(valueObj).to.have.property("project-en-latest-notification");
             expect(valueObj["project-en-latest-notification"]).to.have.property(
@@ -250,7 +250,7 @@
             };
             const localStorageString = JSON.stringify(addonInformation);
             getLocalStorageStub
-              .withArgs("readthedocs-Notification-storage-key")
+              .withArgs("readthedocs-notification-storage-key")
               .returns(localStorageString);
 
             const addon = new notification.NotificationAddon(config);
@@ -273,7 +273,7 @@
             };
             const localStorageString = JSON.stringify(addonInformation);
             getLocalStorageStub
-              .withArgs("readthedocs-Notification-storage-key")
+              .withArgs("readthedocs-notification-storage-key")
               .returns(localStorageString);
 
             const addon = new notification.NotificationAddon(config);

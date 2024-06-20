@@ -85,7 +85,8 @@ export class AddonBase {
   static getAddonLocalStorageKey() {
     // Return a key to be used for Local Storage
     return (
-      this.addonLocalStorageKey || `readthedocs-${this.addonName}-storage-key`
+      this.addonLocalStorageKey ||
+      `readthedocs-${this.addonName.toLowerCase()}-storage-key`
     );
   }
 
