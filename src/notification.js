@@ -22,11 +22,6 @@ export class NotificationElement extends LitElement {
     highest_version: { state: true },
     dismissedTimestamp: { state: true },
     localStorageKey: { state: true },
-    // Under which key should the notification store dismissal (and other) information
-    notificationStorageKey: {
-      type: String,
-      attribute: "notification-storage-key",
-    },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -45,18 +40,17 @@ export class NotificationElement extends LitElement {
     this.readingStableVersion = false;
     this.stableVersionAvailable = false;
     // This will store information like user dimissing the notification. Any Notification sharing
-    // the same localStorageKey will be affected. If a specific Notification should not be dismissed after
-    // another has been dismissed, it requires a different localStorageKey
-    this.localStorageKey =
-      this.notificationStorageKey || "default-notification";
+    // the same localStorageKey will be affected.
+    this.localStorageKey = null;
     this.dismissedTimestamp = null;
   }
 
-  loadDismissedTimestamp() {
+  loadDismissedTimestamp(config) {
     // Check if this notification (as determined by localStorageKey) has been dismissed already.
     // Once a notification has been dismissed, it stays dismissed. This information however is not passed
     // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
     // other builds.
+    this.localStorageKey = this.getLocalStorageKeyFromConfig(this.config);
     const notificationStorage =
       NotificationAddon.getLocalStorage()[this.localStorageKey];
     if (notificationStorage && notificationStorage.dismissedTimestamp) {
@@ -96,10 +90,7 @@ export class NotificationElement extends LitElement {
     ) {
       this.calculateStableLatestVersionWarning();
     }
-    this.localStorageKey =
-      this.notificationStorageKey ||
-      this.getLocalStorageKeyFromConfig(this.config);
-    this.loadDismissedTimestamp();
+    this.loadDismissedTimestamp(this.config);
   }
 
   getLocalStorageKeyFromConfig(config) {
