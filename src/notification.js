@@ -20,6 +20,8 @@ export class NotificationElement extends LitElement {
     config: { state: true },
     urls: { state: true },
     highest_version: { state: true },
+    dismissedTimestamp: { state: true },
+    localStorageKey: { state: true },
   };
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
@@ -37,6 +39,23 @@ export class NotificationElement extends LitElement {
     this.readingLatestVersion = false;
     this.readingStableVersion = false;
     this.stableVersionAvailable = false;
+    // This will store information like user dimissing the notification. Any Notification sharing
+    // the same localStorageKey will be affected.
+    this.localStorageKey = null;
+    this.dismissedTimestamp = null;
+  }
+
+  loadDismissedTimestamp(config) {
+    // Check if this notification (as determined by localStorageKey) has been dismissed already.
+    // Once a notification has been dismissed, it stays dismissed. This information however is not passed
+    // over different subdomains, so if a notification has been dismissed on a PR build, it will not affect
+    // other builds.
+    this.localStorageKey = this.getLocalStorageKeyFromConfig(this.config);
+    const notificationStorage =
+      NotificationAddon.getLocalStorage()[this.localStorageKey];
+    if (notificationStorage && notificationStorage.dismissedTimestamp) {
+      this.dismissedTimestamp = notificationStorage.dismissedTimestamp;
+    }
   }
 
   loadConfig(config) {
@@ -71,6 +90,14 @@ export class NotificationElement extends LitElement {
     ) {
       this.calculateStableLatestVersionWarning();
     }
+    this.loadDismissedTimestamp(this.config);
+  }
+
+  getLocalStorageKeyFromConfig(config) {
+    const projectSlug = config.projects.current.slug;
+    const languageCode = config.projects.current.language.code;
+    const versionSlug = config.versions.current.slug;
+    return `${projectSlug}-${languageCode}-${versionSlug}-notification`;
   }
 
   firstUpdated() {
@@ -83,6 +110,11 @@ export class NotificationElement extends LitElement {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
       // nothing is a special Lit response type
+      return nothing;
+    }
+
+    // This notification has been dimissed, so don't render it
+    if (this.dismissedTimestamp) {
       return nothing;
     }
 
@@ -145,12 +177,8 @@ export class NotificationElement extends LitElement {
   }
 
   renderStableLatestVersionWarning() {
-    library.add(faCircleXmark);
     library.add(faHourglassHalf);
     library.add(faFlask);
-    const xmark = icon(faCircleXmark, {
-      title: "Close notification",
-    });
     if (this.readingLatestVersion && this.stableVersionAvailable) {
       const iconFlask = icon(faFlask, {
         classes: ["header", "icon"],
@@ -161,9 +189,7 @@ export class NotificationElement extends LitElement {
           ${iconFlask.node[0]}
           <div class="title">
             This is the <span>latest development version</span>
-            <a href="#" class="right" @click=${this.closeNotification}>
-              ${xmark.node[0]}
-            </a>
+            ${this.renderCloseButton()}
           </div>
           <div class="content">
             Some features may not yet be available in the published stable
@@ -187,9 +213,7 @@ export class NotificationElement extends LitElement {
           <div class="title">
             This <em>may</em> be an
             <span>old version of this documentation</span>
-            <a href="#" class="right" @click=${this.closeNotification}>
-              ${xmark.node[0]}
-            </a>
+            ${this.renderCloseButton()}
           </div>
           <div class="content">
             You may be reading an old version of this documentation. Read the
@@ -205,11 +229,7 @@ export class NotificationElement extends LitElement {
   }
 
   renderExternalVersionWarning() {
-    library.add(faCircleXmark);
     library.add(faCodePullRequest);
-    const xmark = icon(faCircleXmark, {
-      title: "Close notification",
-    });
     const iconPullRequest = icon(faCodePullRequest, {
       title: "This version is a pull request version",
       classes: ["header", "icon"],
@@ -220,9 +240,7 @@ export class NotificationElement extends LitElement {
         ${iconPullRequest.node[0]}
         <div class="title">
           This page was created from a pull request build
-          <a href="#" class="right" @click=${this.closeNotification}>
-            ${xmark.node[0]}
-          </a>
+          ${this.renderCloseButton()}
         </div>
         <div class="content">
           See the
@@ -239,13 +257,29 @@ export class NotificationElement extends LitElement {
     `;
   }
 
+  renderCloseButton() {
+    library.add(faCircleXmark);
+    const xmark = icon(faCircleXmark, {
+      title: "Close notification",
+    });
+    return html`
+      <a href="#" class="right" @click=${this.closeNotification}>
+        ${xmark.node[0]}
+      </a>
+    `;
+  }
+
   closeNotification(e) {
     // Avoid going back to the top of the page when closing the notification
     e.preventDefault();
 
-    // TODO add cookie to allow closing this notification for all page views on this
-    // PR build.
-    this.remove();
+    // Store the information about dismissal in the Local Storage
+    // Make sure to store the timestamp, so that we have the option to maybe add a TTL on the dismissal
+    this.dismissedTimestamp = Date.now();
+    const dismissedObj = {
+      [this.localStorageKey]: { dismissedTimestamp: this.dismissedTimestamp },
+    };
+    NotificationAddon.setLocalStorage(dismissedObj);
 
     // Avoid event propagation
     return false;
