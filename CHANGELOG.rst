@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.17.0
+---------------
+
+:date: Jun 25, 2024
+
+* Dismiss notifications permanently for the same project/language/version
+* Add CSS variables to allow user customizations
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.16.0
 ---------------
 
