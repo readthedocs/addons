@@ -81,6 +81,16 @@ export class FlyoutElement extends LitElement {
   renderFooter() {
     return html`
       <small>
+        <span>
+          <a
+            href="${addUtmParameters(
+              "https://docs.readthedocs.io/page/addons.html",
+              "flyout",
+            )}"
+            >Addons documentation</a
+          ></span
+        >
+        <span> ― </span>
         <span
           >Hosted by
           <a
