@@ -54,6 +54,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Sphinx (Alabaster theme) <https://test-builds.readthedocs.io/en/alabaster-theme/>`_
 * `Sphinx (Awesome theme) <https://test-builds.readthedocs.io/en/sphinx-awesome/>`_
 * `Sphinx (Furo theme) <https://test-builds.readthedocs.io/en/furo/>`_
+* `Sphinx (Immaterial theme) <https://test-builds.readthedocs.io/en/immaterial-theme/>`_
 * `Sphinx (PyData theme) <https://test-builds.readthedocs.io/en/pydata-theme/>`_
 * `Sphinx (Read the Docs theme) <https://test-builds.readthedocs.io/en/latest/>`_
 * `Sphinx (Typlog theme) <https://test-builds.readthedocs.io/en/typlog-theme/>`_
