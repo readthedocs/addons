@@ -51,7 +51,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `MkDocs (Material theme) <https://test-builds.readthedocs.io/en/mkdocs-material/>`_
 * `MkDocs (Terminal theme) <https://test-builds.readthedocs.io/en/mkdocs-material/>`_
 * `Pelican <https://test-builds.readthedocs.io/en/pelican/>`_
-* `Sphinx (Alabaster theme) <https://test-builds.readthedocs.io/en/latest/>`_
+* `Sphinx (Alabaster theme) <https://test-builds.readthedocs.io/en/alabaster-theme/>`_
 * `Sphinx (Awesome theme) <https://test-builds.readthedocs.io/en/sphinx-awesome/>`_
 * `Sphinx (Furo theme) <https://test-builds.readthedocs.io/en/furo/>`_
 * `Sphinx (PyData theme) <https://test-builds.readthedocs.io/en/pydata-theme/>`_
