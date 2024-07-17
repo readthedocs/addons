@@ -212,9 +212,7 @@ export class FlyoutElement extends LitElement {
         ${Object.entries(this.config.versions.current.downloads).map(
           ([name, url]) =>
             html`<dd>
-              <a href="${addUtmParameters(url, "flyout")}"
-                >${nameDisplay[name]}</a
-              >
+              <a href="${url}">${nameDisplay[name]}</a>
             </dd>`,
         )}
       </dl>
