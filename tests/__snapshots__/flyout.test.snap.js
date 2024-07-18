@@ -96,6 +96,14 @@ snapshots["Flyout addon snapshot flyout completely"] =
     <hr>
     <small>
       <span>
+        <a href="https://docs.readthedocs.io/page/addons.html?utm_source=project&amp;utm_content=flyout">
+          Addons documentation
+        </a>
+      </span>
+      <span>
+        ―
+      </span>
+      <span>
         Hosted by
         <a href="https://about.readthedocs.com/?utm_source=project&amp;utm_content=flyout">
           Read the Docs
@@ -186,6 +194,14 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
     </dl>
     <hr>
     <small>
+      <span>
+        <a href="https://docs.readthedocs.io/page/addons.html?utm_source=project&amp;utm_content=flyout">
+          Addons documentation
+        </a>
+      </span>
+      <span>
+        ―
+      </span>
       <span>
         Hosted by
         <a href="https://about.readthedocs.com/?utm_source=project&amp;utm_content=flyout">
