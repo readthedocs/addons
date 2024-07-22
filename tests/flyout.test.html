@@ -258,6 +258,14 @@
             const section = element.shadowRoot.querySelector("main > small");
             expect(section).dom.to.equal(`
       <small>
+        <span>
+          <a href="https://docs.readthedocs.io/page/addons.html?utm_source=project&amp;utm_content=flyout">
+            Addons documentation
+          </a>
+        </span>
+        <span>
+        ―
+        </span>
         <span>Hosted by <a href="https://about.readthedocs.com/?utm_source=project&amp;utm_content=flyout">Read the Docs</a></span>
       </small>
       `);
