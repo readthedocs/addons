@@ -67,3 +67,7 @@ powered by Elasticsearch.
 - Run `npm install` to install dependencies
 - Run `npm run dev` to start the local dev server. While this can run without a local Read the Docs development instance, not everything will work.
 - Run `npm test` to run the test suite, using web-test-runner. You can run also `npm run test:dev` to leave tests running in watch mode or `npm run test:debug` to manually test the suite in a browser.
+
+## Deployment
+
+Deploy documentation is available in our published docs here: https://readthedocs-addons.readthedocs.io/releasing.html
