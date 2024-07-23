@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.17.1
+---------------
+
+:date: Jun 25, 2024
+
+* Do not add UTM parameters to "Download" links in the flyout
+* Add link to addons documentation in the flyout
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.17.0
 ---------------
 
