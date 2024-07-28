@@ -358,11 +358,17 @@ export class SearchElement extends LitElement {
     `;
   }
 
+  getLocalStorageKeyFromConfig(config) {
+    const projectSlug = config.projects.current.slug;
+    const languageCode = config.projects.current.language.code;
+    const versionSlug = config.versions.current.slug;
+    return `${projectSlug}-${languageCode}-${versionSlug}-recent-searches`;
+  }
+
   getRecentSearches() {
-    const recentSearchesString = localStorage.getItem(
-      this.recentSearchesLocalStorageKey,
-    );
-    return recentSearchesString ? JSON.parse(recentSearchesString) : [];
+    const localStorageKey = this.getLocalStorageKeyFromConfig(this.config);
+    const recentSearches = SearchAddon.getLocalStorage()[localStorageKey];
+    return recentSearches || [];
   }
 
   storeRecentSearch(block, result) {
@@ -386,10 +392,11 @@ export class SearchElement extends LitElement {
       );
     }
 
-    localStorage.setItem(
-      this.recentSearchesLocalStorageKey,
-      JSON.stringify(recentSearchesLimited),
-    );
+    const recentSearchesObject = {
+      [this.getLocalStorageKeyFromConfig(this.config)]: recentSearches,
+    };
+
+    SearchAddon.setLocalStorage(recentSearchesObject);
   }
 
   removeRecentSearch(block, result) {
@@ -402,10 +409,11 @@ export class SearchElement extends LitElement {
       );
     });
 
-    localStorage.setItem(
-      this.recentSearchesLocalStorageKey,
-      JSON.stringify(recentSearches),
-    );
+    const recentSearchesObject = {
+      [this.getLocalStorageKeyFromConfig(this.config)]: recentSearches,
+    };
+
+    SearchAddon.setLocalStorage(recentSearchesObject);
     this.requestUpdate();
   }
 
