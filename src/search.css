@@ -283,18 +283,27 @@ div.hit-block .hit-block-heading-container svg {
   letter-spacing: 1px;
 }
 
-:host > div .filters li.title {
+:host > div .filters-title {
+  display: block;
   font-size: 0.9rem;
   position: absolute;
-  top: 75px;
+  top: 0;
+  left: 14px;
   background: rgb(252, 252, 252);
   margin: 0 5px;
   padding: 0 5px;
 }
 
 :host > div .filters {
-  padding: 5px 10px;
+  position: relative;
+  padding-top: 0.9rem;
   margin: 0 1.15em;
+}
+
+:host > div .filters ul {
+  display: block;
+  margin: 0;
+  padding: 5px 14px;
   border-radius: 0.3rem;
   border-style: solid;
   border-width: 1px;
