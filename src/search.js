@@ -53,6 +53,7 @@ export class SearchElement extends LitElement {
     results: {
       state: true,
     },
+    fetchingResults: { state: true },
     cssFormFocusClasses: { state: true },
     triggerKeycode: { type: Number, attribute: "trigger-keycode" },
     triggerSelector: { type: String, attribute: "trigger-selector" },
@@ -81,6 +82,7 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
+    this.fetchingResults = false;
     this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches";
     this.recentSearchesLocalStorageLimit = 20; // Control how many recent searches we store in localStorage
   }
@@ -147,7 +149,9 @@ export class SearchElement extends LitElement {
           </form>
           <div class="filters">${this.renderFilters()}</div>
           <div class="results">
-            ${this.results || this.renderRecentSearches()}
+            ${this.results ||
+            this.fetchingResults ||
+            this.renderRecentSearches()}
           </div>
           <div class="footer">
             <ul class="help">
@@ -563,6 +567,7 @@ export class SearchElement extends LitElement {
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
+      this.fetchingResults = true;
       let url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
 
@@ -588,12 +593,14 @@ export class SearchElement extends LitElement {
             this.renderNoResultsFound();
           }
           this.showMagnifierIcon();
+          this.fetchingResults = false;
         })
         .catch((error) => {
           // TODO: create a page similar to noResultsFound when there is an
           // error hitting the API.
           console.error(error);
           this.removeAllResults();
+          this.fetchingResults = false;
         });
     };
 
