@@ -264,7 +264,7 @@ export class SearchElement extends LitElement {
                 (block, bindex) =>
                   html`${this.renderBlockResult(
                     block,
-                    rindex + bindex + 1,
+                    `${block.id}-${rindex}-${bindex}`,
                     result,
                   )}`,
               )}
@@ -463,39 +463,28 @@ export class SearchElement extends LitElement {
 
   selectNextResult(forward) {
     const all = this.renderRoot.querySelectorAll("a.hit");
-    let selected = this.renderRoot.querySelector("a.hit.active");
-    if (selected !== null) {
-      selected = selected.firstElementChild;
-    }
-
-    let nextId = 1;
-    let lastId = 1;
-
-    // Find the `lastId`
-    if (all.length > 0) {
-      const last = all[all.length - 1].firstElementChild;
-      if (last.id !== null) {
-        const match = last.id.match(/\d+/);
-        if (match !== null) {
-          lastId = Number(match[0]);
-        }
+    let selected;
+    let selectedIndex;
+    for (const [index, element] of all.entries()) {
+      if (element.classList.contains("active")) {
+        selected = element;
+        selectedIndex = index;
+        break;
       }
     }
 
-    // Find the `nextId`
-    if (selected !== null && selected.id !== null) {
-      let match = selected.id.match(/\d+/);
-      if (match !== null) {
-        nextId = Number(match[0]);
-        nextId += forward ? 1 : -1;
-      }
+    const lastIndex = all.length > 0 ? all.length - 1 : 0;
+
+    let nextIndex = 0;
+    if (selectedIndex !== undefined) {
+      nextIndex = forward ? selectedIndex + 1 : selectedIndex - 1;
     }
 
-    // Cycle to the first or last result.
-    if (nextId <= 0) {
-      nextId = lastId;
-    } else if (nextId > lastId) {
-      nextId = 1;
+    // Check if we're at the end/start of the list, and adjust accordingly
+    if (nextIndex > lastIndex) {
+      nextIndex = 0;
+    } else if (nextIndex < 0) {
+      nextIndex = lastIndex;
     }
 
     // Remove all active elements
@@ -504,9 +493,7 @@ export class SearchElement extends LitElement {
     }
 
     // Add class for active element and scroll to it
-    const newActive = this.renderRoot.querySelector(
-      `#hit-${nextId}`,
-    ).parentNode;
+    const newActive = all[nextIndex];
     newActive.classList.add("active");
     newActive.scrollIntoView({
       behavior: "smooth",
