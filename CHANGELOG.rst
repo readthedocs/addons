@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.17.2
+---------------
+
+:date: Aug 6, 2024
+
+* Recent searches respect different domains, project, version and language
+* Improve experience when moving between search result items with keyboard
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.17.1
 ---------------
 

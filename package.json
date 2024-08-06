@@ -1,6 +1,6 @@
 {
   "name": "@readthedocs/addons",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "description": "Read the Docs Addons to embed into documentation pages",
   "main": "dist/readthedocs-addons.js",
   "scripts": {
