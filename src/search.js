@@ -323,7 +323,7 @@ export class SearchElement extends LitElement {
     }
 
     if (this.hideRecentSearches) {
-      return html``;
+      return nothing;
     }
     recentSearches.reverse();
     const listIcon = icon(faClockRotateLeft, {
