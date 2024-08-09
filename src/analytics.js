@@ -34,7 +34,6 @@ export class AnalyticsAddon extends AddonBase {
     if (this.config.versions.current.type !== "external") {
       this.registerPageView();
     }
-    this.injectGlobalAnalytics();
   }
 
   registerPageView() {
@@ -57,43 +56,5 @@ export class AnalyticsAddon extends AddonBase {
       .catch((error) => {
         console.error("Error registering page view");
       });
-  }
-
-  injectGlobalAnalytics() {
-    // Skip analytics for users with Do Not Track enabled
-    if (navigator.doNotTrack === "1") {
-      console.debug("Respecting DNT with respect to analytics...");
-    } else {
-      if (this.config.readthedocs.analytics.code) {
-        (() => {
-          // New Google Site Tag (gtag.js) tagging/analytics framework
-          // https://developers.google.com/gtagjs
-          let script = document.createElement("script");
-          script.src =
-            "https://www.googletagmanager.com/gtag/js?id=" +
-            this.config.readthedocs.analytics.code;
-          script.type = "text/javascript";
-          script.async = true;
-          document.getElementsByTagName("head")[0].appendChild(script);
-        })();
-
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-
-        // Setup the Read the Docs global analytics code and send a pageview
-        gtag("config", this.config.readthedocs.analytics.code, {
-          anonymize_ip: true,
-          cookie_expires: 0, // Session cookie (non-persistent)
-          dimension1: this.config.projects.current.slug,
-          dimension2: this.config.versions.current.slug,
-          dimension3: this.config.projects.current.language.code,
-          dimension5: this.config.projects.current.programming_language.code,
-          groups: "rtfd",
-        });
-      }
-    }
   }
 }
