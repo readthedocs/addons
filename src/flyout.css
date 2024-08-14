@@ -71,6 +71,7 @@ header > span {
     --readthedocs-flyout-header-font-size,
     calc(var(--addons-flyout-font-size) * 1.125)
   );
+  margin-left: 10px;
 }
 
 header > span svg.icon {
@@ -86,7 +87,6 @@ header > span svg.icon {
 header > img.logo {
   text-align: center;
   width: 106px;
-  margin-right: 20px;
 }
 
 main {
