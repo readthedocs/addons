@@ -53,7 +53,9 @@ export class SearchElement extends LitElement {
     results: {
       state: true,
     },
-    fetchingResults: { state: true },
+    // Determine whether to hide recent searches. For example set it to true when the first
+    // results are being fetched. Set it to false when the search query is removed.
+    hideRecentSearches: { state: true },
     cssFormFocusClasses: { state: true },
     triggerKeycode: { type: Number, attribute: "trigger-keycode" },
     triggerSelector: { type: String, attribute: "trigger-selector" },
@@ -82,7 +84,7 @@ export class SearchElement extends LitElement {
     this.triggerKeycode = 191;
     this.triggerSelector = null;
     this.triggerEvent = "focusin";
-    this.fetchingResults = false;
+    this.hideRecentSearches = false;
     this.recentSearchesLocalStorageKey = "readthedocsSearchRecentSearches";
     this.recentSearchesLocalStorageLimit = 20; // Control how many recent searches we store in localStorage
   }
@@ -149,9 +151,7 @@ export class SearchElement extends LitElement {
           </form>
           <div class="filters">${this.renderFilters()}</div>
           <div class="results">
-            ${this.results ||
-            this.fetchingResults ||
-            this.renderRecentSearches()}
+            ${this.results || this.renderRecentSearches()}
           </div>
           <div class="footer">
             <ul class="help">
@@ -320,6 +320,10 @@ export class SearchElement extends LitElement {
     const recentSearches = this.getRecentSearches();
     if (!recentSearches || !recentSearches.length) {
       return html`<p>No recent searches</p>`;
+    }
+
+    if (this.hideRecentSearches) {
+      return nothing;
     }
     recentSearches.reverse();
     const listIcon = icon(faClockRotateLeft, {
@@ -554,7 +558,7 @@ export class SearchElement extends LitElement {
     this.showSpinIcon();
 
     let deboucedFetchResults = () => {
-      this.fetchingResults = true;
+      this.hideRecentSearches = true;
       let url =
         API_ENDPOINT + "?" + new URLSearchParams({ q: query }).toString();
 
@@ -580,14 +584,12 @@ export class SearchElement extends LitElement {
             this.renderNoResultsFound();
           }
           this.showMagnifierIcon();
-          this.fetchingResults = false;
         })
         .catch((error) => {
           // TODO: create a page similar to noResultsFound when there is an
           // error hitting the API.
           console.error(error);
           this.removeAllResults();
-          this.fetchingResults = false;
         });
     };
 
@@ -624,6 +626,7 @@ export class SearchElement extends LitElement {
       let func = () => {
         this.removeAllResults();
       };
+      this.hideRecentSearches = false;
       debounce(func, CLEAR_RESULTS_DELAY)();
     }
   }
