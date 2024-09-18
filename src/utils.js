@@ -82,10 +82,12 @@ export class AddonBase {
     // this addons has to be enabled.
 
     // Return false immediately if the HTTP status code is not one of the expected ones
+    const httpStatusInt = parseInt(httpStatus, 10);
     if (
-      httpStatus !== null &&
-      httpStatus !== undefined &&
-      !this.enabledOnHttpStatus.includes(httpStatus)
+      httpStatusInt !== null &&
+      httpStatusInt !== undefined &&
+      !isNaN(httpStatusInt) &&
+      !this.enabledOnHttpStatus.includes(httpStatusInt)
     ) {
       return false;
     }
