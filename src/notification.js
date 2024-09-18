@@ -103,7 +103,7 @@ export class NotificationElement extends LitElement {
   firstUpdated() {
     // Add CSS classes to the element on ``firstUpdated`` because we need the
     // HTML element to exist in the DOM before being able to add tag attributes.
-    this.className = this.className || "raised floating";
+    this.className = this.className || "raised toast";
   }
 
   render() {
