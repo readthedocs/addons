@@ -25,6 +25,7 @@ export class AnalyticsAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.analytics.json";
   static addonEnabledPath = "addons.analytics.enabled";
   static addonName = "Analytics";
+  static enabledOnHttpStatus = [200, 404];
 
   constructor(config) {
     super();

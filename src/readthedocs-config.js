@@ -8,21 +8,8 @@ import {
   IS_TESTING,
   ADDONS_API_VERSION,
   ADDONS_API_ENDPOINT,
+  getMetadataValue,
 } from "./utils";
-
-/**
- * Get the Read the Docs API version supported by user's integrations.
- *
- */
-export function getMetadataAddonsAPIVersion() {
-  const meta = document.querySelector(
-    "meta[name=readthedocs-addons-api-version]",
-  );
-  if (meta !== null) {
-    return meta.getAttribute("content");
-  }
-  return undefined;
-}
 
 /**
  * Get the Addons API endpoint URL to hit.
@@ -31,12 +18,8 @@ export function getMetadataAddonsAPIVersion() {
  * decide whether or not sending `url=`.
  */
 function _getApiUrl(sendUrlParam, apiVersion) {
-  const metaProject = document.querySelector(
-    "meta[name='readthedocs-project-slug']",
-  );
-  const metaVersion = document.querySelector(
-    "meta[name='readthedocs-version-slug']",
-  );
+  const metaProject = getMetadataValue("readthedocs-project-slug");
+  const metaVersion = getMetadataValue("readthedocs-version-slug");
 
   let projectSlug;
   let versionSlug;
@@ -50,11 +33,8 @@ function _getApiUrl(sendUrlParam, apiVersion) {
   }
 
   if (metaProject && metaVersion) {
-    projectSlug = metaProject.content;
-    versionSlug = metaVersion.content;
-
-    params["project-slug"] = projectSlug;
-    params["version-slug"] = versionSlug;
+    params["project-slug"] = metaProject;
+    params["version-slug"] = metaVersion;
   }
 
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
@@ -73,7 +53,9 @@ function getReadTheDocsUserConfig(sendUrlParam) {
   return new Promise((resolve, reject) => {
     // Note we force the user to define the `<meta>` tag to be able to use Read the Docs data directly.
     // This is to keep forward/backward compatibility without breaking integrations.
-    const metadataAddonsAPIVersion = getMetadataAddonsAPIVersion();
+    const metadataAddonsAPIVersion = getMetadataValue(
+      "readthedocs-addons-api-version",
+    );
 
     if (
       metadataAddonsAPIVersion !== undefined &&

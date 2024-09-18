@@ -691,6 +691,7 @@ export class SearchAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.search.json";
   static addonEnabledPath = "addons.search.enabled";
   static addonName = "Search";
+  static enabledOnHttpStatus = [200, 404];
 
   constructor(config) {
     super();

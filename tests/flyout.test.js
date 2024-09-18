@@ -40,6 +40,50 @@ describe("Flyout addon", () => {
     ).to.be.false;
   });
 
+  it("not enabled with valid data and HTTP status 404", () => {
+    expect(
+      FlyoutAddon.isEnabled(
+        {
+          addons: {
+            flyout: {
+              enabled: true,
+            },
+          },
+          projects: {
+            current: {
+              slug: "project",
+              urls: {
+                home: "https://readthedocs.org/projects/project/",
+                builds: "https://readthedocs.org/projects/project/builds/",
+                downloads:
+                  "https://readthedocs.org/projects/project/downloads/",
+              },
+              versioning_scheme: "multiple_versions_with_translations",
+            },
+            translations: [],
+          },
+          versions: {
+            active: [
+              {
+                slug: "latest",
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/latest/",
+                },
+              },
+            ],
+            current: {
+              slug: "latest",
+              downloads: {
+                pdf: "https://project.readthedocs.io/_/downloads/pdf/latest/",
+              },
+            },
+          },
+        },
+        404,
+      ),
+    ).to.be.false;
+  });
+
   it("is enabled with valid data", () => {
     expect(
       FlyoutAddon.isEnabled({
