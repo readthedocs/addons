@@ -11,6 +11,7 @@ import {
   isReadTheDocsEmbedPresent,
   IS_PRODUCTION,
   setupLogging,
+  getMetadataValue,
 } from "./utils";
 
 export function setup() {
@@ -46,6 +47,7 @@ export function setup() {
         return getReadTheDocsConfig(sendUrlParam);
       })
       .then((config) => {
+        const httpStatus = getMetadataValue("readthedocs-http-status");
         let promises = [];
 
         if (!IS_PRODUCTION) {
@@ -54,7 +56,7 @@ export function setup() {
         }
 
         for (const addon of addons) {
-          if (addon.isEnabled(config)) {
+          if (addon.isEnabled(config, httpStatus)) {
             promises.push(
               new Promise((resolve) => {
                 return resolve(new addon(config));
