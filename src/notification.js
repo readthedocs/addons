@@ -46,6 +46,9 @@ export class NotificationElement extends LitElement {
     this.localStorageKey = null;
     this.dismissedTimestamp = null;
     this.autoDismissed = false;
+
+    // Trigger the auto-dismiss timer at startup
+    this.triggerAutoDismissTimer();
   }
 
   loadDismissedTimestamp(config) {
@@ -61,35 +64,62 @@ export class NotificationElement extends LitElement {
     }
   }
 
-  _handleAutoDismiss = (e) => {
-    if (document.hidden) {
-      // Page is hidden. The user is not looking at it.
-      // Clear the timeout to hide the notification.
+  triggerAutoDismissTimer() {
+    if (!document.hidden && !this.autoDismissed) {
       clearTimeout(this.timerID);
-      this.timerID = null;
-    } else {
-      // Page became visible.
-      // Trigger a timeout to hide the notification.
       this.timerID = setTimeout(() => {
         this.autoDismissed = true;
         this.requestUpdate();
       }, 5000);
     }
+  }
+
+  clearAutoDismissTimer() {
+    clearTimeout(this.timerID);
+    this.timerID = null;
+  }
+
+  _handleMouseEnter = (e) => {
+    // Stop the timer when notification is hovered (mouseenter event)
+    clearTimeout(this.timerID);
+    this.timerID = null;
+  };
+
+  _handleMouseLeave = (e) => {
+    // Start the timer when the notification is hovered away (mouseleave)
+    this.triggerAutoDismissTimer();
+  };
+
+  _handleVisibilityChange = (e) => {
+    if (document.hidden) {
+      // Page is hidden. The user is not looking at it.
+      // Clear the timeout to hide the notification.
+      this.clearAutoDismissTimer();
+    } else {
+      // Page became visible.
+      // Trigger a timeout to hide the notification.
+      this.triggerAutoDismissTimer();
+    }
   };
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("visibilitychange", this._handleAutoDismiss);
+    document.addEventListener("visibilitychange", this._handleVisibilityChange);
 
-    if (document.visibilityState === "visible") {
-      this._handleAutoDismiss();
-    }
+    this.addEventListener("mouseenter", this._handleMouseEnter);
+    this.addEventListener("mouseleave", this._handleMouseLeave);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    document.removeEventListener("visibilitychange", this._handleAutoDismiss);
+    this.removeEventListener("mouseenter", this._handleMouseEnter);
+    this.removeEventListener("mouseleave", this._handleMouseLeave);
+
+    document.removeEventListener(
+      "visibilitychange",
+      this._handleVisibilityChange,
+    );
     clearTimeout(this.timerID);
     this.timerID = null;
   }
