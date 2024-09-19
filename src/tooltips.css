@@ -1,0 +1,22 @@
+.tooltip {
+  display: none;
+  max-width: 650px;
+  pointer-events: auto;
+  z-index: 9999999;
+  height: 600px;
+  max-height: 600px;
+  position: absolute;
+  top: 0;
+  border: none;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 0 10px 6px rgba(0,0,0,.1);
+}
+
+.tooltip .tooltip-content {
+  box-sizing: border-box;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  padding: 18px;
+}
