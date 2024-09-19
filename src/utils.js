@@ -60,6 +60,7 @@ export class AddonBase {
   // The key to be used for Local Storage purposes. If not provided, `readthedocs-<addonName>-storage-key`
   // will be used
   static addonLocalStorageKey = null;
+  static enabledOnHttpStatus = [200];
 
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
@@ -71,11 +72,26 @@ export class AddonBase {
     return valid;
   }
 
-  static isEnabled(config) {
+  static isEnabled(config, httpStatus) {
     // Validate the addons is enabled before validating the config itself. This
     // allows us to omit returning a field completely when the addon is not
     // allowed for page the user is reading. Example: `doc_diff` is not returned
     // when `url=` is not sent.
+    //
+    // If `httpStatus` is passed, it checks the status code is on the list where
+    // this addons has to be enabled.
+
+    // Return false immediately if the HTTP status code is not one of the expected ones
+    const httpStatusInt = parseInt(httpStatus, 10);
+    if (
+      httpStatusInt !== null &&
+      httpStatusInt !== undefined &&
+      !isNaN(httpStatusInt) &&
+      !this.enabledOnHttpStatus.includes(httpStatusInt)
+    ) {
+      return false;
+    }
+
     return (
       objectPath.get(config, this.addonEnabledPath, false) === true &&
       this.isConfigValid(config)
@@ -178,4 +194,16 @@ export function addUtmParameters(url, content) {
   newUrl.searchParams.append("utm_source", projectSlug);
   newUrl.searchParams.append("utm_content", content);
   return newUrl.href;
+}
+
+/**
+ * Get a value from a META element injected by Cloudflare Worker.
+ *
+ */
+export function getMetadataValue(name) {
+  const meta = document.querySelector(`meta[name=${name}]`);
+  if (meta !== null) {
+    return meta.getAttribute("content");
+  }
+  return undefined;
 }

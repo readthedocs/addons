@@ -1,5 +1,4 @@
-import { getMetadataAddonsAPIVersion } from "./readthedocs-config";
-import { ADDONS_API_VERSION } from "./utils";
+import { ADDONS_API_VERSION, getMetadataValue } from "./utils";
 
 export const EVENT_READTHEDOCS_SEARCH_SHOW = "readthedocs-search-show";
 export const EVENT_READTHEDOCS_SEARCH_HIDE = "readthedocs-search-hide";
@@ -36,7 +35,9 @@ export class ReadTheDocsEventData {
   }
 
   initialize() {
-    const metadataAddonsAPIVersion = getMetadataAddonsAPIVersion();
+    const metadataAddonsAPIVersion = getMetadataValue(
+      "readthedocs-addons-api-version",
+    );
     if (metadataAddonsAPIVersion === undefined) {
       throw `Subscribing to '${EVENT_READTHEDOCS_ADDONS_DATA_READY}' requires defining the '<meta name="readthedocs-addons-api-version" content="${ADDONS_API_VERSION}" />' tag in the HTML.`;
     }
@@ -49,5 +50,10 @@ export class ReadTheDocsEventData {
       this.initialize();
     }
     return this._data;
+  }
+
+  httpStatus() {
+    const httpStatus = getMetadataValue("readthedocs-http-status");
+    return httpStatus;
   }
 }
