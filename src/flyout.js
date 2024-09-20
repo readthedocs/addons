@@ -174,7 +174,8 @@ export class FlyoutElement extends LitElement {
             href="${addUtmParameters(
               this.config.projects.current.urls.home
                 .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com"),
+                .replace("readthedocs.com", "app.readthedocs.com")
+                .replace("app.app.", "app."),
               "flyout",
             )}"
             >Project Home</a
@@ -185,7 +186,8 @@ export class FlyoutElement extends LitElement {
             href="${addUtmParameters(
               this.config.projects.current.urls.builds
                 .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com"),
+                .replace("readthedocs.com", "app.readthedocs.com")
+                .replace("app.app.", "app."),
               "flyout",
             )}"
             >Builds</a

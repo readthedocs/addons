@@ -143,7 +143,8 @@ export class NotificationElement extends LitElement {
         // We will revert this once we are fully migrated to the new dashboard.
         build: config.builds.current.urls.build
           .replace("readthedocs.org", "app.readthedocs.org")
-          .replace("readthedocs.com", "app.readthedocs.com"),
+          .replace("readthedocs.com", "app.readthedocs.com")
+          .replace("app.app.", "app."),
         external: config.versions.current.urls.vcs,
       };
     }
