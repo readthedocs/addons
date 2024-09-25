@@ -3,6 +3,17 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.18.0
+---------------
+
+:date: Sep 25, 2024
+
+* Fix links to the new dashboard
+* Disable some specific addons on 404 pages
+* Use toast notification (displayed at top right) as default
+* Remove global Read the Docs Google Analytics
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.17.3
 ---------------
 
