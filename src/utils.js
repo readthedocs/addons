@@ -207,3 +207,35 @@ export function getMetadataValue(name) {
   }
   return undefined;
 }
+
+/**
+ * Append "resolver filename" to the URL passed.
+ *
+ * Examples:
+ *
+ * URL: https://docs.readthedocs.io/en/stable/
+ * Filename: /guides/access/index.html
+ * Resulting URL: https://docs.readthedocs.io/en/stable/guides/access/
+ *
+
+ * URL: https://docs.readthedocs.io/en/latest/
+ * Filename: /index.html
+ * Resulting URL: https://docs.readthedocs.io/en/latest/
+ *
+ */
+export function getLinkWithFilename(url) {
+  // Get the resolver's filename returned by the application (as HTTP header)
+  // and injected by Cloudflare Worker as a meta HTML tag
+  const metaFilename = getMetadataValue("readthedocs-resolver-filename");
+
+  // Keep only one trailing slash
+  const base = url.replace(/\/+$/, "/");
+
+  // 1. remove initial slash to make it relative to the base
+  // 2. remove the trailing "index.html"
+  const filename = metaFilename
+    .replace(/\/index.html$/, "/")
+    .replace(/^\//, "");
+
+  return new URL(filename, base);
+}
