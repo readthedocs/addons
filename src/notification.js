@@ -9,7 +9,7 @@ import {
 import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./notification.css";
-import { AddonBase, addUtmParameters } from "./utils";
+import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -243,7 +243,7 @@ export class NotificationElement extends LitElement {
 
     if (stableVersion !== undefined) {
       this.stableVersionAvailable = true;
-      this.urls.stable = stableVersion.urls.documentation;
+      this.urls.stable = getLinkWithFilename(stableVersion.urls.documentation);
     }
   }
 

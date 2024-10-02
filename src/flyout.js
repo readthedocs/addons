@@ -7,7 +7,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import { AddonBase, addUtmParameters } from "./utils";
+import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_FLYOUT_HIDE,
@@ -221,37 +221,6 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
-  _getFlyoutLinkWithFilename = (url) => {
-    // Get the resolver's filename returned by the application (as HTTP header)
-    // and injected by Cloudflare Worker as a meta HTML tag
-    const metaFilename = document.querySelector(
-      "meta[name='readthedocs-resolver-filename']",
-    );
-
-    // Remove trailing slashes from the version's URL and append the
-    // resolver's filename after removing trailing ``index.html``.
-    // Examples:
-    //
-    //   URL: https://docs.readthedocs.io/en/latest/
-    //   Filename: /index.html
-    //   Flyuout URL: https://docs.readthedocs.io/en/latest/
-    //
-    //   URL: https://docs.readthedocs.io/en/stable/
-    //   Filename: /guides/access/index.html
-    //   Flyuout URL: https://docs.readthedocs.io/en/stable/guides/access/
-
-    // Keep only one trailing slash
-    const base = url.replace(/\/+$/, "/");
-
-    // 1. remove initial slash to make it relative to the base
-    // 2. remove the trailing "index.html"
-    const filename = metaFilename.content
-      .replace(/\/index.html$/, "/")
-      .replace(/^\//, "");
-
-    return new URL(filename, base);
-  };
-
   renderVersions() {
     if (
       !this.config.versions.active.length ||
@@ -262,7 +231,7 @@ export class FlyoutElement extends LitElement {
     }
 
     const getVersionLink = (version) => {
-      const url = this._getFlyoutLinkWithFilename(version.urls.documentation);
+      const url = getLinkWithFilename(version.urls.documentation);
       const link = html`<a href="${url}">${version.slug}</a>`;
       return this.config.versions.current.slug == version.slug
         ? html`<strong>${link}</strong>`
@@ -285,9 +254,7 @@ export class FlyoutElement extends LitElement {
     }
 
     const getLanguageLink = (translation) => {
-      const url = this._getFlyoutLinkWithFilename(
-        translation.urls.documentation,
-      );
+      const url = getLinkWithFilename(translation.urls.documentation);
       const link = html`<a href="${url}">${translation.language.code}</a>`;
       return this.config.projects.current.slug === translation.slug
         ? html`<strong>${link}</strong>`
