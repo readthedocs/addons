@@ -9,7 +9,7 @@ import {
 import { html, nothing, render, LitElement } from "lit";
 
 import styleSheet from "./notification.css";
-import { AddonBase, addUtmParameters } from "./utils";
+import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -21,6 +21,7 @@ export class NotificationElement extends LitElement {
     urls: { state: true },
     highest_version: { state: true },
     dismissedTimestamp: { state: true },
+    autoDismissed: { state: true },
     localStorageKey: { state: true },
   };
 
@@ -30,6 +31,7 @@ export class NotificationElement extends LitElement {
   constructor() {
     super();
 
+    this.timerID = null;
     this.config = null;
     this.urls = {
       build: null,
@@ -43,6 +45,10 @@ export class NotificationElement extends LitElement {
     // the same localStorageKey will be affected.
     this.localStorageKey = null;
     this.dismissedTimestamp = null;
+    this.autoDismissed = false;
+
+    // Trigger the auto-dismiss timer at startup
+    this.triggerAutoDismissTimer();
   }
 
   loadDismissedTimestamp(config) {
@@ -56,6 +62,66 @@ export class NotificationElement extends LitElement {
     if (notificationStorage && notificationStorage.dismissedTimestamp) {
       this.dismissedTimestamp = notificationStorage.dismissedTimestamp;
     }
+  }
+
+  triggerAutoDismissTimer() {
+    if (!document.hidden && !this.autoDismissed) {
+      clearTimeout(this.timerID);
+      this.timerID = setTimeout(() => {
+        this.autoDismissed = true;
+        this.requestUpdate();
+      }, 5000);
+    }
+  }
+
+  clearAutoDismissTimer() {
+    clearTimeout(this.timerID);
+    this.timerID = null;
+  }
+
+  _handleMouseEnter = (e) => {
+    // Stop the timer when notification is hovered (mouseenter event)
+    clearTimeout(this.timerID);
+    this.timerID = null;
+  };
+
+  _handleMouseLeave = (e) => {
+    // Start the timer when the notification is hovered away (mouseleave)
+    this.triggerAutoDismissTimer();
+  };
+
+  _handleVisibilityChange = (e) => {
+    if (document.hidden) {
+      // Page is hidden. The user is not looking at it.
+      // Clear the timeout to hide the notification.
+      this.clearAutoDismissTimer();
+    } else {
+      // Page became visible.
+      // Trigger a timeout to hide the notification.
+      this.triggerAutoDismissTimer();
+    }
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener("visibilitychange", this._handleVisibilityChange);
+
+    this.addEventListener("mouseenter", this._handleMouseEnter);
+    this.addEventListener("mouseleave", this._handleMouseLeave);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.removeEventListener("mouseenter", this._handleMouseEnter);
+    this.removeEventListener("mouseleave", this._handleMouseLeave);
+
+    document.removeEventListener(
+      "visibilitychange",
+      this._handleVisibilityChange,
+    );
+    clearTimeout(this.timerID);
+    this.timerID = null;
   }
 
   loadConfig(config) {
@@ -77,7 +143,8 @@ export class NotificationElement extends LitElement {
         // We will revert this once we are fully migrated to the new dashboard.
         build: config.builds.current.urls.build
           .replace("readthedocs.org", "app.readthedocs.org")
-          .replace("readthedocs.com", "app.readthedocs.com"),
+          .replace("readthedocs.com", "app.readthedocs.com")
+          .replace("app.app.", "app."),
         external: config.versions.current.urls.vcs,
       };
     }
@@ -103,10 +170,14 @@ export class NotificationElement extends LitElement {
   firstUpdated() {
     // Add CSS classes to the element on ``firstUpdated`` because we need the
     // HTML element to exist in the DOM before being able to add tag attributes.
-    this.className = this.className || "raised floating";
+    this.className = this.className || "raised toast";
   }
 
   render() {
+    if (this.autoDismissed) {
+      return nothing;
+    }
+
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
       // nothing is a special Lit response type
@@ -172,7 +243,7 @@ export class NotificationElement extends LitElement {
 
     if (stableVersion !== undefined) {
       this.stableVersionAvailable = true;
-      this.urls.stable = stableVersion.urls.documentation;
+      this.urls.stable = getLinkWithFilename(stableVersion.urls.documentation);
     }
   }
 

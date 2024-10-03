@@ -149,7 +149,7 @@ export class SearchElement extends LitElement {
               autocomplete="off"
             />
           </form>
-          <div class="filters">${this.renderFilters()}</div>
+          ${this.renderFilters()}
           <div class="results">
             ${this.results || this.renderRecentSearches()}
           </div>
@@ -219,23 +219,29 @@ export class SearchElement extends LitElement {
   }
 
   renderFilters() {
+    if (!this.config.addons.search.filters.length) {
+      return nothing;
+    }
+
     // https://lit.dev/docs/components/events/#listening-to-events-fired-from-repeated-templates
     // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
     return html`
-      <li class="title">Filters</li>
-      ${this.filters.map(
-        (filter, index) => html`
-          <li>
-            <input
-              @click=${this.filterClicked}
-              id="filter-${index}"
-              type="checkbox"
-              value="${filter.value}"
-            />
-            <label for="filter-${index}"> ${filter.name} </label>
-          </li>
-        `,
-      )}
+      <div class="filters">
+        <li class="title">Filters</li>
+        ${this.filters.map(
+          (filter, index) => html`
+            <li>
+              <input
+                @click=${this.filterClicked}
+                id="filter-${index}"
+                type="checkbox"
+                value="${filter.value}"
+              />
+              <label for="filter-${index}"> ${filter.name} </label>
+            </li>
+          `,
+        )}
+      </div>
     `;
   }
 
@@ -691,6 +697,7 @@ export class SearchAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.search.json";
   static addonEnabledPath = "addons.search.enabled";
   static addonName = "Search";
+  static enabledOnHttpStatus = [200, 404];
 
   constructor(config) {
     super();

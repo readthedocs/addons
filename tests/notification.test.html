@@ -1,6 +1,7 @@
 <html>
   <head>
     <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-resolver-filename" content="/section/page.html" />
   </head>
   <body>
     <script type="module">
@@ -144,7 +145,7 @@
   <div class="content">
     Some features may not yet be available in the published stable
             version. Read the
-    <a href="https://project.readthedocs.io/en/stable/">
+    <a href="https://project.readthedocs.io/en/stable/section/page.html">
       stable version of this documentation
     </a>
     .
@@ -180,7 +181,7 @@
   <div class="content">
     Some features may not yet be available in the published stable
             version. Read the
-    <a href="https://project.readthedocs.io/en/stable/">
+    <a href="https://project.readthedocs.io/en/stable/section/page.html">
       stable version of this documentation
     </a>
     .
@@ -211,7 +212,7 @@
             // We need to wait for the element to renders/updates before querying it
             await elementUpdated(element);
 
-            expect(element).to.have.attribute("class", "raised floating");
+            expect(element).to.have.attribute("class", "raised toast");
           });
 
           it("doesn't render when closed", async () => {
