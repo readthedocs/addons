@@ -1,7 +1,7 @@
 import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
+import { faCodeBranch, faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
@@ -70,10 +70,15 @@ export class FlyoutElement extends LitElement {
       >`;
     }
 
+    const iconCaretDown = icon(faCaretDown, {
+      classes: ["icon"],
+    });
+
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
         ${version}
+        <span class="caret">${iconCaretDown.node[0]}</span>
       </header>
     `;
   }
