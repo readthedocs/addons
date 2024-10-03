@@ -73,6 +73,10 @@ header > span {
   );
 }
 
+header > span.caret {
+  margin-left: 10px;
+}
+
 header > span svg.icon {
   color: rgb(128, 128, 128);
   height: var(
