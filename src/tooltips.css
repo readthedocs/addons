@@ -3,9 +3,10 @@
   max-width: 650px;
   pointer-events: auto;
   z-index: 9999999;
-  height: 600px;
+  height: 80vh;
   max-height: 600px;
   position: absolute;
+  margin-bottom: 20px;
   top: 0;
   border: none;
   border-radius: 5px;

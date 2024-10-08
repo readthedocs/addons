@@ -1,7 +1,7 @@
 import styles from "./tooltips.css";
 
 import { domReady, CLIENT_VERSION } from "./utils";
-import { computePosition, flip, shift, offset, arrow } from "@floating-ui/dom";
+import { computePosition, autoPlacement, shift, offset, arrow } from "@floating-ui/dom";
 
 const SHOW_TOOLTIP_DELAY = 1000;
 const HIDE_TOOLTIP_DELAY = 500;
@@ -107,8 +107,10 @@ function showTooltip(ev) {
           placement: "right",
           middleware: [
             offset(10),
-            flip(),
-            shift(20),
+            autoPlacement(),
+            shift({
+              padding: 10, // 0 by default
+            }),
             arrow({ element: arrowElement }),
           ],
         }).then(({ x, y, middlewareData, placement }) => {
