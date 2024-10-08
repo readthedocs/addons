@@ -10,7 +10,7 @@
   border: none;
   border-radius: 5px;
   background: #fff;
-  box-shadow: 0 0 10px 6px rgba(0,0,0,.1);
+  box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tooltip .tooltip-content {
@@ -19,4 +19,12 @@
   max-width: 100%;
   overflow: auto;
   padding: 18px;
+}
+
+.tooltip .arrow {
+  position: absolute;
+  background: #fff;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
 }
