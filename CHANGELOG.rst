@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.18.1
+---------------
+
+:date: Oct 8, 2024
+
+* Stay on the same page when switching version from the notification
+* Do not render search filters if they are empty
+
+
 Version v0.18.0
 ---------------
 
