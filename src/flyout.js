@@ -1,5 +1,6 @@
 import { ajv } from "./data-validation";
-import READTHEDOCS_LOGO from "./images/logo-wordmark-light.svg";
+import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
+import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import { faCodeBranch } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
@@ -33,6 +34,7 @@ export class FlyoutElement extends LitElement {
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
+    this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
   loadConfig(config) {
@@ -45,13 +47,23 @@ export class FlyoutElement extends LitElement {
     this.config = config;
   }
 
+  _close() {
+    this.opened = false;
+    this.readthedocsLogo = READTHEDOCS_LOGO;
+  }
+
+  _open() {
+    this.opened = true;
+    this.readthedocsLogo = READTHEDOCS_LOGO_WORDMARK;
+  }
+
   _toggleOpen(e) {
-    this.opened = !this.opened;
+    this.opened ? this._close() : this._open();
   }
 
   _onOutsideClick = (e) => {
     if (e.target !== this) {
-      this.opened = false;
+      this._close();
     }
   };
 
@@ -72,7 +84,7 @@ export class FlyoutElement extends LitElement {
 
     return html`
       <header @click="${this._toggleOpen}">
-        <img class="logo" src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+        <img class="logo" src="${this.readthedocsLogo}" alt="Read the Docs" />
         ${version}
       </header>
     `;
