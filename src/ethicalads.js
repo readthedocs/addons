@@ -67,6 +67,16 @@ export class EthicalAdsAddon extends AddonBase {
     return false;
   }
 
+  isFuroLikeTheme() {
+    if (
+      document.querySelectorAll('link[href^="_static/styles/furo.css"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   isSphinxBookThemeLikeTheme() {
     if (
       document.querySelectorAll(
@@ -140,6 +150,15 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.classList.add("ethical-rtd");
           placement.classList.add("ethical-dark-theme");
+          knownPlacementFound = true;
+        }
+      } else if (this.isFuroLikeTheme()) {
+        selector = ".toc-tree-container";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
       } else if (this.isSphinxBookThemeLikeTheme()) {
