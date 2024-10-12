@@ -153,12 +153,18 @@ export class EthicalAdsAddon extends AddonBase {
           knownPlacementFound = true;
         }
       } else if (this.isFuroLikeTheme()) {
-        selector = ".toc-tree-container";
+        // NOTE: The code to handle furo theme shouldn't be required,
+        // since furo uses explicit placement.
+        // However, the Jinja context variable READTHEDOCS is not injected anymore,
+        // and furo does not includes the explicit placement due to this.
+        // This is a temporal solution while they fix this.
+        selector = ".sidebar-tree";
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("id", "furo-sidebar-ad-placement");
           knownPlacementFound = true;
         }
       } else if (this.isSphinxBookThemeLikeTheme()) {
