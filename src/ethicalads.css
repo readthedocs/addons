@@ -40,6 +40,16 @@ div.ethical-footer {
   border: 0;
 }
 
+.ethical-sidebar .ea-cta,
+.ethical-footer .ea-cta {
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  margin-top: 0.5em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
 .ethical-sidebar,
 .ethical-footer {
   background-color: #eee;
@@ -221,6 +231,10 @@ div.ethical-footer {
 }
 .ethical-dark-theme .ethical-callout a {
   color: #b3b3b3 !important;
+}
+.ethical-dark-theme .ethical-sidebar .ea-cta,
+.ethical-dark-theme .ethical-footer .ea-cta {
+  border-color: #a0a0a0;
 }
 
 /* Docusaurus */
