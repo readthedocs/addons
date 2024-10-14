@@ -195,7 +195,13 @@ export class NotificationElement extends LitElement {
       }
     } else if (
       this.config.addons.non_latest_version_warning.enabled &&
-      (this.readingLatestVersion || this.stableVersionAvailable)
+      // NOTE: should this "skip on default_version" be a config in the WebUI?
+      // Is it safe to make this part of the default logic? Won't be an issue in the future?
+      // At first sight, it seems making it part of the default logic complicates the simplicity of the algorithm.
+      (this.readingLatestVersion ||
+        (this.stableVersionAvailable &&
+          this.config.versions.current.slug !==
+            this.config.projects.current.default_version))
     ) {
       return this.renderStableLatestVersionWarning();
     }
@@ -207,7 +213,8 @@ export class NotificationElement extends LitElement {
     //  - if the user is reading the "latest" version: shows a notification to warn
     //    the user about reading the latest development version.
     //  - if the user is reading a non-"stable" version: shows a notification to warn
-    //    the user about reading a version that may be old.
+    //    the user about reading a version that may be old. Except if the reading version
+    //    is the project's default version
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
