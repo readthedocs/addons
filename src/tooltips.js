@@ -3,8 +3,8 @@ import styles from "./tooltips.css";
 import { domReady, CLIENT_VERSION } from "./utils";
 import { computePosition, autoPlacement, shift, offset, arrow } from "@floating-ui/dom";
 
-const SHOW_TOOLTIP_DELAY = 1000;
-const HIDE_TOOLTIP_DELAY = 500;
+const SHOW_TOOLTIP_DELAY = 300;
+const HIDE_TOOLTIP_DELAY = 300;
 
 export function initializeTooltips(config) {
   domReady.then(() => {
