@@ -3,8 +3,8 @@
   max-width: 650px;
   pointer-events: auto;
   z-index: 9999999;
-  height: 80vh;
-  max-height: 600px;
+  max-height: 80vh;
+  min-height: 100px;
   position: absolute;
   margin-bottom: 20px;
   top: 0;

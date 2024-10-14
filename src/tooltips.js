@@ -101,7 +101,7 @@ function showTooltip(ev) {
         // Do we want to have "modals" as well? are those useful?
         const content = data["content"];
         newTooltip.firstChild.innerHTML = content;
-        newTooltip.style.display = "block";
+        newTooltip.style.display = "flex";
         const arrowElement = newTooltip.querySelector(".arrow");
         computePosition(anchorElement, newTooltip, {
           placement: "right",
