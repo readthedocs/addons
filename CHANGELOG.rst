@@ -3,6 +3,17 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.19.0
+---------------
+
+:date: Oct 15, 2024
+
+* Show only logo on flyout when collapsed and logo + wordmark when expanded
+* Include the language of the documentation in the collapsed version of the flyout
+* Ad is more integrated on Sphinx's furo theme
+* Add CSS style for CTA button on ads
+
+
 Version v0.18.1
 ---------------
 
