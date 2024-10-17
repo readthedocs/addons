@@ -14,142 +14,160 @@ export function initializeTooltips(config) {
     // Our Sphinx extension is adding a class depending on the configuration.
     // However, we won't have this for other doctools or when the extension is not installed.
     const elements = document.querySelectorAll("[role=main] a.internal");
-    elements.forEach((el) => el.addEventListener("mouseenter", delayShowTooltip));
-    elements.forEach((el) => el.addEventListener("mouseleave", (ev) => {
-      const tooltip = getRelatedTooltip(ev.target);
-      delayHideTooltip(tooltip);
-    }));
+    elements.forEach((el) => setupTooltip(el));
   });
 }
 
-function getRelatedTooltip(anchorElement) {
-  // Get or create the tooltip that's a sibling to the provided anchor element
-  const existingTooltip = anchorElement.parentElement.querySelector(
-    `div[data-tooltip-href="${anchorElement.href}"]`,
-  );
-  if (existingTooltip) {
-    return existingTooltip;
-  } else {
-    const newTooltip = document.createElement("div");
-    newTooltip.insertAdjacentHTML("afterbegin", '<div class="arrow"></div>');
-    newTooltip.insertAdjacentHTML(
-      "afterbegin",
-      '<div class="tooltip-content">Loading...</div>',
-    );
-    newTooltip.setAttribute("data-tooltip-href", anchorElement.href);
-    newTooltip.classList.add("tooltip");
-    anchorElement.insertAdjacentElement("afterend", newTooltip);
-    newTooltip.addEventListener("mouseenter", cancelHideDelay);
-    newTooltip.addEventListener("mouseleave", (ev) => delayHideTooltip(newTooltip));
-    return newTooltip;
-  }
-}
+function setupTooltip(el) {
+  // Take the provided element and setup the listeners required to
+  // make the tooltips work
 
-let showTooltipTimeoutId = null;
-let hideTooltipTimeoutId = null;
+  const anchorElement = el;
+  let relatedTooltip;
 
-function delayShowTooltip(el) {
-  if (showTooltipTimeoutId === null) {
-    showTooltipTimeoutId = setTimeout(() => { showTooltip(el); }, SHOW_TOOLTIP_DELAY);
+  el.addEventListener("mouseenter", delayShowTooltip);
+  el.addEventListener("mouseleave", delayHideTooltip);
+
+  let showTooltipTimeoutId = null;
+  let hideTooltipTimeoutId = null;
+
+  function delayShowTooltip() {
+    if (showTooltipTimeoutId === null) {
+      showTooltipTimeoutId = setTimeout(() => { showTooltip(); }, SHOW_TOOLTIP_DELAY);
+    }
+    // If there is a timeout on hiding, cancel it, otherwise it could hide a newly shown tooltip
+    cancelHideDelay();
   }
 
-  cancelHideDelay();
-}
-
-function cancelHideDelay() {
-  if (hideTooltipTimeoutId !== null) {
-    clearTimeout(hideTooltipTimeoutId);
-    hideTooltipTimeoutId = null;
+  function cancelHideDelay() {
+    if (hideTooltipTimeoutId !== null) {
+      clearTimeout(hideTooltipTimeoutId);
+      hideTooltipTimeoutId = null;
+    }
   }
-}
 
-function delayHideTooltip(tooltip) {
-  if (hideTooltipTimeoutId === null) {
-    hideTooltipTimeoutId = setTimeout(() => { hideTooltip(tooltip); }, HIDE_TOOLTIP_DELAY);
+  function delayHideTooltip() {
+    const tooltip = getRelatedTooltip();
+    if (hideTooltipTimeoutId === null) {
+      hideTooltipTimeoutId = setTimeout(() => { hideTooltip(); }, HIDE_TOOLTIP_DELAY);
+    }
   }
-}
 
-function showTooltip(ev) {
-  const anchorElement = ev.target;
+  function showTooltip() {
+    const newTooltip = getRelatedTooltip();
 
-  const newTooltip = getRelatedTooltip(anchorElement);
+    if (newTooltip !== undefined) {
+      const href = anchorElement.href;
 
-  if (newTooltip !== undefined) {
-    const href = anchorElement.href;
+      // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
+      const hrefAttribute =
+        "http://docs.devthedocs.org/en/stable/tutorial/index.html#modifying-versions";
+      // "http://docs.devthedocs.org/en/stable/tutorial/index.html#upgrading-the-python-version";
+      // "http://docs.devthedocs.org/en/stable/tutorial/index.html";
+      const url = getEmbedURL(hrefAttribute);
 
-    // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
-    const hrefAttribute =
-      "http://docs.devthedocs.org/en/stable/tutorial/index.html#modifying-versions";
-    // "http://docs.devthedocs.org/en/stable/tutorial/index.html#upgrading-the-python-version";
-    // "http://docs.devthedocs.org/en/stable/tutorial/index.html";
-    const url = getEmbedURL(hrefAttribute);
-
-    fetch(url, {
-      method: "GET",
-      headers: {
-        "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error hitting Read the Docs embed API");
-        }
-        return response.json();
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
+        },
       })
-      .then((data) => {
-        // TODO: decide whether or not to truncate the content
-        // Do we want to have "modals" as well? are those useful?
-        const content = data["content"];
-        newTooltip.firstChild.innerHTML = content;
-        newTooltip.style.display = "flex";
-        const arrowElement = newTooltip.querySelector(".arrow");
-        computePosition(anchorElement, newTooltip, {
-          placement: "right",
-          middleware: [
-            offset(10),
-            autoPlacement(),
-            shift({
-              padding: 10, // 0 by default
-            }),
-            arrow({ element: arrowElement }),
-          ],
-        }).then(({ x, y, middlewareData, placement }) => {
-          Object.assign(newTooltip.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-          });
-          const {x: arrowX, y: arrowY} = middlewareData.arrow;
-          const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-          }[placement.split('-')[0]];
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error hitting Read the Docs embed API");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // TODO: decide whether or not to truncate the content
+          // Do we want to have "modals" as well? are those useful?
+          const content = data["content"];
+          newTooltip.firstChild.innerHTML = content;
+          newTooltip.style.display = "flex";
+          const arrowElement = newTooltip.querySelector(".arrow");
+          computePosition(anchorElement, newTooltip, {
+            placement: "right",
+            middleware: [
+              offset(10),
+              autoPlacement(),
+              shift({
+                padding: 10, // 0 by default
+              }),
+              arrow({ element: arrowElement }),
+            ],
+          }).then(({ x, y, middlewareData, placement }) => {
+            Object.assign(newTooltip.style, {
+              left: `${x}px`,
+              top: `${y}px`,
+            });
+            const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            const staticSide = {
+              top: 'bottom',
+              right: 'left',
+              bottom: 'top',
+              left: 'right',
+            }[placement.split('-')[0]];
 
-          Object.assign(arrowElement.style, {
-            left: arrowX != null ? `${arrowX}px` : '',
-            top: arrowY != null ? `${arrowY}px` : '',
-            right: '',
-            bottom: '',
-            [staticSide]: '-4px',
+            Object.assign(arrowElement.style, {
+              left: arrowX != null ? `${arrowX}px` : '',
+              top: arrowY != null ? `${arrowY}px` : '',
+              right: '',
+              bottom: '',
+              [staticSide]: '-4px',
+            });
           });
+          newTooltip.classList.remove("hide");
+        })
+        .catch((error) => {
+          console.log(error.message);
         });
-        newTooltip.classList.remove("hide");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    }
+  }
+
+  function hideTooltip() {
+    const tooltip = getRelatedTooltip()
+    if (showTooltipTimeoutId !== null) {
+      clearTimeout(showTooltipTimeoutId);
+      showTooltipTimeoutId = null;
+    }
+
+    tooltip.style.display = "";
+  }
+
+  function getRelatedTooltip() {
+    // Return relatedTooltip, if already set, otherwise find it in DOM
+    // or create a new one
+    if (relatedTooltip) {
+      return relatedTooltip;
+    }
+
+    const existingTooltip = anchorElement.parentElement.querySelector(
+      `div[data-tooltip-href="${anchorElement.href}"]`,
+    );
+    if (existingTooltip) {
+      relatedTooltip = existingTooltip;
+      return existingTooltip;
+    } else {
+      const newTooltip = document.createElement("div");
+      newTooltip.insertAdjacentHTML("afterbegin", '<div class="arrow"></div>');
+      newTooltip.insertAdjacentHTML(
+        "afterbegin",
+        '<div class="tooltip-content">Loading...</div>',
+      );
+      newTooltip.setAttribute("data-tooltip-href", anchorElement.href);
+      newTooltip.classList.add("tooltip");
+      anchorElement.insertAdjacentElement("afterend", newTooltip);
+      // Let's add event listeners on the tooltip as well, to prevent hiding, when
+      // mouse moves away from the anchor element
+      newTooltip.addEventListener("mouseenter", cancelHideDelay);
+      newTooltip.addEventListener("mouseleave", delayHideTooltip);
+      relatedTooltip = newTooltip;
+      return newTooltip;
+    }
   }
 }
 
-function hideTooltip(tooltip) {
-  if (showTooltipTimeoutId !== null) {
-    clearTimeout(showTooltipTimeoutId);
-    showTooltipTimeoutId = null;
-  }
 
-  tooltip.style.display = "";
-}
 
 function getEmbedURL(url) {
   // TODO: there are some data we don't have here currently
