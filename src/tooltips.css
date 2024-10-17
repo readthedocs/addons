@@ -20,6 +20,17 @@
   max-width: 100%;
   overflow: auto;
   padding: 18px;
+  color: #8d8d8d;
+  font-size: 80%;
+  line-height: 18px;
+}
+
+.tooltip .tooltip-content .headerlink {
+  visibility: hidden;
+}
+
+.tooltip .tooltip-content p {
+  font-size: 100%;
 }
 
 .tooltip .arrow {
