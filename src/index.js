@@ -22,7 +22,9 @@ export function setup() {
     return false;
   }
 
-  if (isEmbedded()) {
+  const loadWhenEmbedded =
+    getMetadataValue("readthedocs-load-addons-when-embedded") || false;
+  if (isEmbedded() && !loadWhenEmbedded) {
     return false;
   }
 
