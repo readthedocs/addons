@@ -7,6 +7,7 @@ import {
   faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
+import { default as objectPath } from "object-path";
 
 import styleSheet from "./notification.css";
 import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
@@ -135,7 +136,7 @@ export class NotificationElement extends LitElement {
     this.config = config;
 
     if (
-      this.config.addons.external_version_warning.enabled &&
+      this.config.addons.notifications.enabled &&
       this.config.versions.current.type === "external"
     ) {
       this.urls = {
@@ -150,7 +151,7 @@ export class NotificationElement extends LitElement {
     }
 
     if (
-      config.addons.non_latest_version_warning.enabled &&
+      config.addons.notifications.show_on_latest &&
       config.projects.current.versioning_scheme !==
         "single_version_without_translations" &&
       config.versions.current.type !== "external"
@@ -189,16 +190,42 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
+    if (!this.config.addons.notifications.enabled) {
+      return nothing;
+    }
+
     if (this.config.versions.current.type === "external") {
-      if (this.config.addons.external_version_warning.enabled) {
+      if (
+        objectPath.get(
+          this.config,
+          "addons.notifications.show_on_external",
+          false,
+        )
+      ) {
         return this.renderExternalVersionWarning();
       }
-    } else if (
-      this.config.addons.non_latest_version_warning.enabled &&
-      (this.readingLatestVersion || this.stableVersionAvailable)
-    ) {
-      return this.renderStableLatestVersionWarning();
     }
+
+    if (
+      this.readingLatestVersion &&
+      this.stableVersionAvailable &&
+      objectPath.get(this.config, "addons.notifications.show_on_latest", false)
+    ) {
+      return this.renderLatestVersionWarning();
+    }
+
+    if (
+      !this.readingStableVersion &&
+      this.stableVersionAvailable &&
+      objectPath.get(
+        this.config,
+        "addons.notifications.show_on_non_stable",
+        false,
+      )
+    ) {
+      return this.renderStableVersionWarning();
+    }
+
     return nothing;
   }
 
@@ -247,56 +274,51 @@ export class NotificationElement extends LitElement {
     }
   }
 
-  renderStableLatestVersionWarning() {
-    library.add(faHourglassHalf);
+  renderLatestVersionWarning() {
     library.add(faFlask);
-    if (this.readingLatestVersion && this.stableVersionAvailable) {
-      const iconFlask = icon(faFlask, {
-        classes: ["header", "icon"],
-      });
+    const iconFlask = icon(faFlask, {
+      classes: ["header", "icon"],
+    });
 
-      return html`
-        <div>
-          ${iconFlask.node[0]}
-          <div class="title">
-            This is the <span>latest development version</span>
-            ${this.renderCloseButton()}
-          </div>
-          <div class="content">
-            Some features may not yet be available in the published stable
-            version. Read the
-            <a href="${this.urls.stable}"
-              >stable version of this documentation</a
-            >.
-          </div>
+    return html`
+      <div>
+        ${iconFlask.node[0]}
+        <div class="title">
+          This is the <span>latest development version</span>
+          ${this.renderCloseButton()}
         </div>
-      `;
-    }
-
-    if (!this.readingStableVersion && this.stableVersionAvailable) {
-      const iconHourglassHalf = icon(faHourglassHalf, {
-        classes: ["header", "icon"],
-      });
-
-      return html`
-        <div>
-          ${iconHourglassHalf.node[0]}
-          <div class="title">
-            This <em>may</em> be an
-            <span>old version of this documentation</span>
-            ${this.renderCloseButton()}
-          </div>
-          <div class="content">
-            You may be reading an old version of this documentation. Read the
-            <a href="${this.urls.stable}"
-              >latest stable version of this documentation</a
-            >.
-          </div>
+        <div class="content">
+          Some features may not yet be available in the published stable
+          version. Read the
+          <a href="${this.urls.stable}">stable version of this documentation</a
+          >.
         </div>
-      `;
-    }
+      </div>
+    `;
+  }
 
-    return nothing;
+  renderStableVersionWarning() {
+    library.add(faHourglassHalf);
+    const iconHourglassHalf = icon(faHourglassHalf, {
+      classes: ["header", "icon"],
+    });
+
+    return html`
+      <div>
+        ${iconHourglassHalf.node[0]}
+        <div class="title">
+          This <em>may</em> be an
+          <span>old version of this documentation</span>
+          ${this.renderCloseButton()}
+        </div>
+        <div class="content">
+          You may be reading an old version of this documentation. Read the
+          <a href="${this.urls.stable}"
+            >latest stable version of this documentation</a
+          >.
+        </div>
+      </div>
+    `;
   }
 
   renderExternalVersionWarning() {
@@ -376,6 +398,7 @@ export class NotificationElement extends LitElement {
 export class NotificationAddon extends AddonBase {
   static jsonValidationURI =
     "http://v1.schemas.readthedocs.org/addons.notifications.json";
+  static addonEnabledPath = "addons.notifications.enabled";
   static addonName = "Notification";
 
   constructor(config) {
@@ -392,24 +415,6 @@ export class NotificationAddon extends AddonBase {
     for (const elem of elems) {
       elem.loadConfig(config);
     }
-  }
-
-  /**
-   * Test if addon is enabled in the configuration
-   *
-   * @param {Object} config - Addon configuration object
-   */
-  static isEnabled(config) {
-    if (!super.isConfigValid(config)) {
-      return false;
-    }
-
-    return (
-      (config.addons.external_version_warning.enabled === true &&
-        config.versions.current.type === "external") ||
-      (config.addons.non_latest_version_warning.enabled === true &&
-        config.versions.current.type !== "external")
-    );
   }
 }
 
