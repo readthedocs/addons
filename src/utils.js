@@ -50,11 +50,11 @@ export const domReady = new Promise((resolve) => {
 /**
  * Check if addons are running inside iframe.
  *
- * The simplest way to check that is comparing the current URL with the parent URL.
+ * The simplest way to check that is comparing the current windown with the parent window.
  * If they are different, it means we are embedded.
  */
 export function isEmbedded() {
-  if (window.location !== window.parent.location) {
+  if (window.self !== window.parent) {
     return true;
   }
 
