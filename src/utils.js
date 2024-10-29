@@ -54,11 +54,7 @@ export const domReady = new Promise((resolve) => {
  * If they are different, it means we are embedded.
  */
 export function isEmbedded() {
-  if (window.self !== window.parent) {
-    return true;
-  }
-
-  return false;
+  return window.self !== window.parent;
 }
 
 /**
