@@ -151,7 +151,11 @@ export class NotificationElement extends LitElement {
     }
 
     if (
-      config.addons.notifications.show_on_latest &&
+      objectPath.get(
+        this.config,
+        "addons.notifications.show_on_latest",
+        false,
+      ) &&
       config.projects.current.versioning_scheme !==
         "single_version_without_translations" &&
       config.versions.current.type !== "external"
