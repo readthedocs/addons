@@ -46,7 +46,15 @@ function setupTooltip(el) {
     }
   }
 
+  function cancelShowDelay() {
+    if (showTooltipTimeoutId !== null) {
+      clearTimeout(showTooltipTimeoutId);
+      showTooltipTimeoutId = null;
+    }
+  }
+
   function delayHideTooltip() {
+    cancelShowDelay();
     const tooltip = getRelatedTooltip();
     if (hideTooltipTimeoutId === null) {
       hideTooltipTimeoutId = setTimeout(() => { hideTooltip(); }, HIDE_TOOLTIP_DELAY);
@@ -125,12 +133,8 @@ function setupTooltip(el) {
   }
 
   function hideTooltip() {
-    const tooltip = getRelatedTooltip()
-    if (showTooltipTimeoutId !== null) {
-      clearTimeout(showTooltipTimeoutId);
-      showTooltipTimeoutId = null;
-    }
-
+    const tooltip = getRelatedTooltip();
+    cancelShowDelay();
     tooltip.style.display = "";
   }
 
