@@ -62,6 +62,11 @@ function setupTooltip(el) {
   }
 
   function showTooltip() {
+    // First hide any other tooltips
+    const existingTooltips = document.querySelectorAll("div[data-tooltip-href]");
+    existingTooltips.forEach(tooltip => tooltip.style.display = "none");
+
+    // Then get the tooltip for this element, place it correctly and show it
     const newTooltip = getRelatedTooltip();
 
     if (newTooltip !== undefined) {
