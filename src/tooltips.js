@@ -70,14 +70,7 @@ function setupTooltip(el) {
     const newTooltip = getRelatedTooltip();
 
     if (newTooltip !== undefined) {
-      const href = anchorElement.href;
-
-      // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
-      const hrefAttribute =
-        "http://docs.devthedocs.org/en/stable/tutorial/index.html#modifying-versions";
-      // "http://docs.devthedocs.org/en/stable/tutorial/index.html#upgrading-the-python-version";
-      // "http://docs.devthedocs.org/en/stable/tutorial/index.html";
-      const url = getEmbedURL(hrefAttribute);
+      const url = getEmbedURL(anchorElement.href);
 
       fetch(url, {
         method: "GET",
@@ -189,7 +182,7 @@ function getEmbedURL(url) {
 
   // const api_url = "https://docs.readthedocs.io/_/api/v3/embed/?doctool=sphinx&doctoolversion=7.3.7&url=https%3A%2F%2Fdocs.readthedocs.io%2Fen%2Fstable%2Fversions.html%23how-we-envision-versions-working";
   // const api_url = "https://sphinx-hoverxref.readthedocs.io/_/api/v3/embed/?doctool=sphinx&doctoolversion=7.4.7&url=https%3A%2F%2Fsphinx-hoverxref.readthedocs.io%2Fen%2Flatest%2Fhoverxref.html%23hoverxref";
-  const api_url =
-    "https://sphinx-hoverxref.readthedocs.io/_/api/v3/embed/?doctool=sphinx&doctoolversion=7.4.7&url=https%3A%2F%2Fwww.sphinx-doc.org%2Fen%2Fmaster%2Findex.html";
+  const api_url = "/_/api/v3/embed/?" + new URLSearchParams(params).toString();
+  console.log(api_url);
   return api_url;
 }
