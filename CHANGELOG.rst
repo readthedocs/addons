@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.20.0
+---------------
+
+:date: Nov 5, 2024
+
+* Allow to disable ``latest`` and/or non-``stable`` notification independently
+* Small CSS fix for filter titles
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+
 Version v0.19.0
 ---------------
 
