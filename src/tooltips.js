@@ -1,7 +1,7 @@
 import { html, nothing, render, LitElement } from "lit";
 import styleSheet from "./tooltips.css";
 
-import { AddonBase, domReady, CLIENT_VERSION } from "./utils";
+import { AddonBase, domReady, CLIENT_VERSION, IS_TESTING } from "./utils";
 import {
   computePosition,
   autoPlacement,
@@ -13,20 +13,27 @@ import { default as objectPath } from "object-path";
 
 const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
+const TOOLTIP_DATA_HREF = "data-tooltip-href";
 
-export class TooltipElement extends LitElement {
-  static elementName = "readthedocs-tooltips";
+/**
+ * Tooltips addon
+ *
+ * @param {Object} config - Addon configuration object
+ */
+export class TooltipsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.tooltips.json";
+  static addonEnabledPath = "addons.tooltips.enabled";
+  static addonName = "Tooltips";
 
-  static properties = {
-    config: { state: true },
-  };
-
-  static styles = styleSheet;
-
-  constructor() {
+  constructor(config) {
     super();
+    this.config = config;
 
-    this.config = null;
+    if (!IS_TESTING) {
+      // Include CSS into the DOM so they can be read.
+      document.adoptedStyleSheets.push(styleSheet);
+    }
 
     // TODO: decide what's the correct selector.
     // Our Sphinx extension is adding a class depending on the configuration.
@@ -38,16 +45,6 @@ export class TooltipElement extends LitElement {
     );
     const elements = document.querySelectorAll(selector);
     elements.forEach((el) => this.setupTooltip(el));
-  }
-
-  loadConfig(config) {
-    // Validate the config object before assigning it to the Addon.
-    // Later, ``render()`` method will check whether this object exists and (not) render
-    // accordingly
-    if (!TooltipsAddon.isEnabled(config)) {
-      return;
-    }
-    this.config = config;
   }
 
   setupTooltip(el) {
@@ -100,7 +97,7 @@ export class TooltipElement extends LitElement {
     function showTooltip() {
       // First hide any other tooltips
       const existingTooltips = document.querySelectorAll(
-        "div[data-tooltip-href]",
+        `div[${TOOLTIP_DATA_HREF}]`,
       );
       existingTooltips.forEach((tooltip) => (tooltip.style.display = "none"));
 
@@ -182,7 +179,7 @@ export class TooltipElement extends LitElement {
       }
 
       const existingTooltip = anchorElement.parentElement.querySelector(
-        `div[data-tooltip-href="${anchorElement.href}"]`,
+        `div[${TOOLTIP_DATA_HREF}="${anchorElement.href}"]`,
       );
       if (existingTooltip) {
         relatedTooltip = existingTooltip;
@@ -197,7 +194,7 @@ export class TooltipElement extends LitElement {
           "afterbegin",
           '<div class="tooltip-content">Loading...</div>',
         );
-        newTooltip.setAttribute("data-tooltip-href", anchorElement.href);
+        newTooltip.setAttribute(TOOLTIP_DATA_HREF, anchorElement.href);
         newTooltip.classList.add("tooltip");
         anchorElement.insertAdjacentElement("afterend", newTooltip);
         // Let's add event listeners on the tooltip as well, to prevent hiding, when
@@ -236,36 +233,3 @@ export class TooltipElement extends LitElement {
     }
   }
 }
-
-/**
- * Tooltips addon
- *
- * @param {Object} config - Addon configuration object
- */
-export class TooltipsAddon extends AddonBase {
-  static jsonValidationURI =
-    "http://v1.schemas.readthedocs.org/addons.tooltips.json";
-  static addonEnabledPath = "addons.tooltips.enabled";
-  static addonName = "Tooltips";
-
-  constructor(config) {
-    super();
-
-    // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-tooltips");
-    if (!elems.length) {
-      elems = [new TooltipElement()];
-
-      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
-      // So, we append the web-component first and then request an update of it.
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
-}
-
-customElements.define("readthedocs-tooltips", TooltipElement);
