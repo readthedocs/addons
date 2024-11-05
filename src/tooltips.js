@@ -20,7 +20,8 @@ export function initializeTooltips(config) {
     // TODO: decide what's the correct selector.
     // Our Sphinx extension is adding a class depending on the configuration.
     // However, we won't have this for other doctools or when the extension is not installed.
-    const elements = document.querySelectorAll("[role=main] a.internal");
+    const selector = objectPath.get(this.config, "addons.tooltips.css_selector", "[role=main] a.internal");
+    const elements = document.querySelectorAll(selector);
     elements.forEach((el) => setupTooltip(el));
   });
 }
