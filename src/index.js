@@ -6,7 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import { initializeTooltips } from "./tooltips";
+import * as tooltips from "./tooltips";
 import {
   domReady,
   isReadTheDocsEmbedPresent,
@@ -30,6 +30,7 @@ export function setup() {
     search.SearchAddon,
     docdiff.DocDiffAddon,
     hotkeys.HotKeysAddon,
+    tooltips.TooltipsAddon,
   ];
 
   return new Promise((resolve) => {
@@ -55,8 +56,6 @@ export function setup() {
           // Addons that are only available on development
           console.log("Development mode.");
         }
-
-        initializeTooltips(config);
 
         for (const addon of addons) {
           if (addon.isEnabled(config, httpStatus)) {

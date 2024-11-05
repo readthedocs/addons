@@ -439,7 +439,6 @@ const addons_search = {
   },
 };
 
-
 // Validator for Tooltips Addon
 const addons_tooltips = {
   $id: "http://v1.schemas.readthedocs.org/addons.tooltips.json",
@@ -450,7 +449,7 @@ const addons_tooltips = {
       type: "object",
       required: ["tooltips"],
       properties: {
-        search: {
+        tooltips: {
           type: "object",
           required: ["enabled"],
           properties: {
@@ -480,6 +479,7 @@ export const ajv = new Ajv({
     addons_hotkeys,
     addons_notifications,
     addons_search,
+    addons_tooltips,
   ],
 });
 
