@@ -159,8 +159,8 @@ export class TooltipsAddon extends AddonBase {
             });
             newTooltip.classList.remove("hide");
           })
-          .catch((error) => {
-            console.log(error.message);
+          .catch((err) => {
+            console.error(err);
           });
       }
     }
@@ -228,7 +228,6 @@ export class TooltipsAddon extends AddonBase {
 
       const api_url =
         "/_/api/v3/embed/?" + new URLSearchParams(params).toString();
-      console.log(api_url);
       return api_url;
     }
   }
