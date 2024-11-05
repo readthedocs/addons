@@ -1,7 +1,13 @@
 import styles from "./tooltips.css";
 
 import { domReady, CLIENT_VERSION } from "./utils";
-import { computePosition, autoPlacement, shift, offset, arrow } from "@floating-ui/dom";
+import {
+  computePosition,
+  autoPlacement,
+  shift,
+  offset,
+  arrow,
+} from "@floating-ui/dom";
 
 const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
@@ -33,7 +39,9 @@ function setupTooltip(el) {
 
   function delayShowTooltip() {
     if (showTooltipTimeoutId === null) {
-      showTooltipTimeoutId = setTimeout(() => { showTooltip(); }, SHOW_TOOLTIP_DELAY);
+      showTooltipTimeoutId = setTimeout(() => {
+        showTooltip();
+      }, SHOW_TOOLTIP_DELAY);
     }
     // If there is a timeout on hiding, cancel it, otherwise it could hide a newly shown tooltip
     cancelHideDelay();
@@ -57,14 +65,18 @@ function setupTooltip(el) {
     cancelShowDelay();
     const tooltip = getRelatedTooltip();
     if (hideTooltipTimeoutId === null) {
-      hideTooltipTimeoutId = setTimeout(() => { hideTooltip(); }, HIDE_TOOLTIP_DELAY);
+      hideTooltipTimeoutId = setTimeout(() => {
+        hideTooltip();
+      }, HIDE_TOOLTIP_DELAY);
     }
   }
 
   function showTooltip() {
     // First hide any other tooltips
-    const existingTooltips = document.querySelectorAll("div[data-tooltip-href]");
-    existingTooltips.forEach(tooltip => tooltip.style.display = "none");
+    const existingTooltips = document.querySelectorAll(
+      "div[data-tooltip-href]",
+    );
+    existingTooltips.forEach((tooltip) => (tooltip.style.display = "none"));
 
     // Then get the tooltip for this element, place it correctly and show it
     const newTooltip = getRelatedTooltip();
@@ -106,20 +118,20 @@ function setupTooltip(el) {
               left: `${x}px`,
               top: `${y}px`,
             });
-            const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            const { x: arrowX, y: arrowY } = middlewareData.arrow;
             const staticSide = {
-              top: 'bottom',
-              right: 'left',
-              bottom: 'top',
-              left: 'right',
-            }[placement.split('-')[0]];
+              top: "bottom",
+              right: "left",
+              bottom: "top",
+              left: "right",
+            }[placement.split("-")[0]];
 
             Object.assign(arrowElement.style, {
-              left: arrowX != null ? `${arrowX}px` : '',
-              top: arrowY != null ? `${arrowY}px` : '',
-              right: '',
-              bottom: '',
-              [staticSide]: '-4px',
+              left: arrowX != null ? `${arrowX}px` : "",
+              top: arrowY != null ? `${arrowY}px` : "",
+              right: "",
+              bottom: "",
+              [staticSide]: "-4px",
             });
           });
           newTooltip.classList.remove("hide");
@@ -168,8 +180,6 @@ function setupTooltip(el) {
     }
   }
 }
-
-
 
 function getEmbedURL(url) {
   // TODO: there are some data we don't have here currently
