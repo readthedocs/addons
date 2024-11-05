@@ -8,6 +8,7 @@ import {
   offset,
   arrow,
 } from "@floating-ui/dom";
+import { default as objectPath } from "object-path";
 
 const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
@@ -182,11 +183,21 @@ function setupTooltip(el) {
 }
 
 function getEmbedURL(url) {
-  // TODO: there are some data we don't have here currently
-  // We need the doctool to communicate this to us
+  const doctool = objectPath.get(
+    this.config,
+    "addons.tooltips.doctool.name",
+    "unknown",
+  );
+  const doctoolversion = objectPath.get(
+    this.config,
+    "addons.tooltips.doctool.version",
+    "unknown",
+  );
+
   const params = {
-    doctool: "unknown",
-    doctoolversion: "unknown",
+
+    doctool: doctool,
+    doctoolversion: doctoolversion,
     url: url,
   };
 
