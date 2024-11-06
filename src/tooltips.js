@@ -40,7 +40,7 @@ export class TooltipsAddon extends AddonBase {
     // However, we won't have this for other doctools or when the extension is not installed.
     const selector = objectPath.get(
       this.config,
-      "addons.tooltips.css_selector",
+      "addons.tooltips.root_selector",
       "[role=main] a.internal",
     );
     const elements = document.querySelectorAll(selector);

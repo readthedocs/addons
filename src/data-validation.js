@@ -454,7 +454,7 @@ const addons_tooltips = {
           required: ["enabled"],
           properties: {
             enabled: { type: "boolean" },
-            css_selector: { type: "string" },
+            root_selector: { type: "string" },
             doctool: {
               type: "object",
               properties: {
