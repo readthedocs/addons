@@ -285,15 +285,9 @@ const addons_notifications = {
   properties: {
     addons: {
       type: "object",
-      required: ["external_version_warning", "non_latest_version_warning"],
+      required: ["notifications"],
       properties: {
-        external_version_warning: {
-          type: "object",
-          properties: {
-            enabled: { type: "boolean" },
-          },
-        },
-        non_latest_version_warning: {
+        enabled: {
           type: "object",
           properties: {
             enabled: { type: "boolean" },
