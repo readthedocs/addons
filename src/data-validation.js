@@ -454,12 +454,12 @@ const addons_tooltips = {
           required: ["enabled"],
           properties: {
             enabled: { type: "boolean" },
-            root_selector: { type: "string" },
+            root_selector: { type: ["string", "null"] },
             doctool: {
               type: "object",
               properties: {
-                name: { type: "string" },
-                version: { type: "string" },
+                name: { type: ["string", "null"] },
+                version: { type: ["string", "null"] },
               },
             },
           },
