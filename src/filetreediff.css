@@ -23,62 +23,61 @@
   top: 7rem;
   right: 2rem;
   z-index: 1750;
-  font-size: calc(1rem * 0.85)
-);
-width: 35rem;
-max-width: calc(100vw - 4rem);
+  font-size: calc(1rem * 0.85);
+  width: 35rem;
+  max-width: calc(100vw - 4rem);
 }
 
- @media (max-width: 640px) {
-     :host(.toast) > div {
-         right: 0.5rem;
-     }
- }
+@media (max-width: 640px) {
+  :host(.toast) > div {
+    right: 0.5rem;
+  }
+}
 
- :host > div > svg.header.icon {
-     height: calc(1rem * 2);
-     padding: 0.5rem 1.5rem;
-     float: left;
- }
+:host > div > svg.header.icon {
+  height: calc(1rem * 2);
+  padding: 0.5rem 1.5rem;
+  float: left;
+}
 
- :host(.toast) > div > svg.header.icon {
-     height: calc(1rem * 1.5);
- }
+:host(.toast) > div > svg.header.icon {
+  height: calc(1rem * 1.5);
+}
 
- :host > div a {
-     color: rgb(8, 140, 219);
-     text-decoration: none;
- }
+:host > div a {
+  color: rgb(8, 140, 219);
+  text-decoration: none;
+}
 
- :host > div > .title {
-     padding: 0.25rem 1rem;
-     margin-bottom: 0.25rem;
-     line-height: 1rem;
-     font-weight: bold;
-     font-size: 0.85rem;
- }
- :host > div > div.content {
-     line-height: 1rem;
-     font-size: calc(1rem * 0.85);
-     padding-left: 66px;
- }
+:host > div > .title {
+  padding: 0.25rem 1rem;
+  margin-bottom: 0.25rem;
+  line-height: 1rem;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+:host > div > div.content {
+  line-height: 1rem;
+  font-size: calc(1rem * 0.85);
+  padding-left: 66px;
+}
 
- :host(.toast) > div > .title {
-     padding: 0rem 1rem;
- }
+:host(.toast) > div > .title {
+  padding: 0rem 1rem;
+}
 
- :host > div > .title > .right {
-     float: right;
- }
+:host > div > .title > .right {
+  float: right;
+}
 
- :host > div > .title > .right > svg {
-     display: inline-block;
-     height: 1rem;
-     vertical-align: middle;
-     cursor: pointer;
-     color: rgba(96, 96, 96);
-     font-weight: normal;
- }
+:host > div > .title > .right > svg {
+  display: inline-block;
+  height: 1rem;
+  vertical-align: middle;
+  cursor: pointer;
+  color: rgba(96, 96, 96);
+  font-weight: normal;
+}
 
 :host(.raised) > div {
   box-shadow:
