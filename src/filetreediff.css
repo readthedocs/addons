@@ -12,6 +12,7 @@
 
 :host > div > div.content > ul {
   margin: 0;
+  padding-left: 20px;
 }
 
 :host(.toast) > div {
