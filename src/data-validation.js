@@ -239,6 +239,36 @@ const addons_flyout = {
   },
 };
 
+// Validator for File Tree Diff Addon
+const addons_filetreediff = {
+  $id: "http://v1.schemas.readthedocs.org/addons.filetreediff.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["filetreediff"],
+      properties: {
+        filetreediff: {
+          type: "object",
+          required: ["enabled", "diff"],
+          properties: {
+            enabled: { type: "boolean" },
+            diff: {
+              type: "object",
+              properties: {
+                added: { type: "array" },
+                deleted: { type: "array" },
+                modified: { type: "array" },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for Hotkeys Addon
 const addons_hotkeys = {
   $id: "http://v1.schemas.readthedocs.org/addons.hotkeys.json",
@@ -443,6 +473,7 @@ export const ajv = new Ajv({
     addons_hotkeys,
     addons_notifications,
     addons_search,
+    addons_filetreediff,
   ],
 });
 

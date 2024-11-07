@@ -6,6 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
+import * as filetreediff from "./filetreediff";
 import {
   domReady,
   isReadTheDocsEmbedPresent,
@@ -29,6 +30,7 @@ export function setup() {
     search.SearchAddon,
     docdiff.DocDiffAddon,
     hotkeys.HotKeysAddon,
+    filetreediff.FileTreeDiffAddon,
   ];
 
   return new Promise((resolve) => {
