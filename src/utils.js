@@ -11,16 +11,6 @@ export const IS_TESTING =
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
 
-export function isReadTheDocsEmbedPresent() {
-  const urls = [
-    "/_/static/javascript/readthedocs-doc-embed.js",
-    "https://assets.readthedocs.org/static/javascript/readthedocs-doc-embed.js",
-  ];
-  for (const url of urls) {
-    return document.querySelectorAll(`script[src="${url}"]`).length > 0;
-  }
-}
-
 export const domReady = new Promise((resolve) => {
   if (
     document.readyState === "interactive" ||
