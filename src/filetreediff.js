@@ -164,15 +164,15 @@ export class FileTreeDiffAddon extends AddonBase {
 
   showDiff() {
     // const outdated = objectPath.get(this.config, "addons.filetreediff.oudated", false);
-    const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
+    const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
 
-    for (let f of diffdata.added) {
+    for (let f of diffData.added) {
       console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
-    for (let f of diffdata.modified) {
+    for (let f of diffData.modified) {
       console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
-    for (let f of diffdata.deleted) {
+    for (let f of diffData.deleted) {
       console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
   }
