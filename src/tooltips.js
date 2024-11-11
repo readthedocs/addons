@@ -180,7 +180,7 @@ function setupTooltip(el, doctoolname, doctoolversion) {
       params["doctool"] = doctoolname;
     }
 
-    if (doctoolversion !== null ) {
+    if (doctoolversion !== null) {
       params["doctoolversion"] = doctoolversion;
     }
 
@@ -231,8 +231,6 @@ export class TooltipsAddon extends AddonBase {
     );
 
     const elements = document.querySelectorAll(selector);
-    elements.forEach((el) =>
-      setupTooltip(el, doctoolname, doctoolversion),
-    );
+    elements.forEach((el) => setupTooltip(el, doctoolname, doctoolversion));
   }
 }
