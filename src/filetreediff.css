@@ -4,7 +4,7 @@
   padding-bottom: 1rem;
   overflow: auto;
   border-radius: 0.5rem;
-  font-family: "Lato";
+  font-family: "Lato", "proxima-nova", "Helvetica Neue", "Arial", "sans-serif";
   font-size: 1rem;
   color: rgb(64, 64, 64);
   background-color: rgb(234, 234, 234);
