@@ -433,17 +433,17 @@ const addons_search = {
   },
 };
 
-// Validator for Tooltips Addon
-const addons_tooltips = {
-  $id: "http://v1.schemas.readthedocs.org/addons.tooltips.json",
+// Validator for LinkPreviews Addon
+const addons_linkpreviews = {
+  $id: "http://v1.schemas.readthedocs.org/addons.linkpreviews.json",
   type: "object",
   required: ["addons"],
   properties: {
     addons: {
       type: "object",
-      required: ["tooltips"],
+      required: ["linkpreviews"],
       properties: {
-        tooltips: {
+        linkpreviews: {
           type: "object",
           required: ["enabled"],
           properties: {
@@ -473,7 +473,7 @@ export const ajv = new Ajv({
     addons_hotkeys,
     addons_notifications,
     addons_search,
-    addons_tooltips,
+    addons_linkpreviews,
   ],
 });
 

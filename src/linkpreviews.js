@@ -1,5 +1,5 @@
 import { html, nothing, render, LitElement } from "lit";
-import styleSheet from "./tooltips.css";
+import styleSheet from "./linkpreviews.css";
 
 import { AddonBase, domReady, CLIENT_VERSION, IS_TESTING } from "./utils";
 import {
@@ -17,7 +17,7 @@ const TOOLTIP_DATA_HREF = "data-tooltip-href";
 
 function setupTooltip(el, doctoolname, doctoolversion) {
   // Take the provided element and setup the listeners required to
-  // make the tooltips work
+  // make the linkpreviews work
 
   const anchorElement = el;
   let relatedTooltip;
@@ -63,11 +63,11 @@ function setupTooltip(el, doctoolname, doctoolversion) {
   }
 
   function showTooltip() {
-    // First hide any other tooltips
-    const existingTooltips = document.querySelectorAll(
+    // First hide any other linkpreviews
+    const existingLinkPreviews = document.querySelectorAll(
       `div[${TOOLTIP_DATA_HREF}]`,
     );
-    existingTooltips.forEach((tooltip) => (tooltip.style.display = "none"));
+    existingLinkPreviews.forEach((tooltip) => (tooltip.style.display = "none"));
 
     // Then get the tooltip for this element, place it correctly and show it
     const newTooltip = getRelatedTooltip();
@@ -191,15 +191,15 @@ function setupTooltip(el, doctoolname, doctoolversion) {
 }
 
 /**
- * Tooltips addon
+ * LinkPreviews addon
  *
  * @param {Object} config - Addon configuration object
  */
-export class TooltipsAddon extends AddonBase {
+export class LinkPreviewsAddon extends AddonBase {
   static jsonValidationURI =
-    "http://v1.schemas.readthedocs.org/addons.tooltips.json";
-  static addonEnabledPath = "addons.tooltips.enabled";
-  static addonName = "Tooltips";
+    "http://v1.schemas.readthedocs.org/addons.linkpreviews.json";
+  static addonEnabledPath = "addons.linkpreviews.enabled";
+  static addonName = "LinkPreviews";
 
   constructor(config) {
     super();
@@ -212,12 +212,12 @@ export class TooltipsAddon extends AddonBase {
 
     const doctoolname = objectPath.get(
       this.config,
-      "addons.tooltips.doctool.name",
+      "addons.linkpreviews.doctool.name",
       "unknown",
     );
     const doctoolversion = objectPath.get(
       this.config,
-      "addons.tooltips.doctool.version",
+      "addons.linkpreviews.doctool.version",
       "unknown",
     );
 
@@ -226,7 +226,7 @@ export class TooltipsAddon extends AddonBase {
     // However, we won't have this for other doctools or when the extension is not installed.
     const selector = objectPath.get(
       this.config,
-      "addons.tooltips.root_selector",
+      "addons.linkpreviews.root_selector",
       "[role=main] a.internal",
     );
 

@@ -6,7 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
-import * as tooltips from "./tooltips";
+import * as linkpreviews from "./linkpreviews";
 import {
   domReady,
   isReadTheDocsEmbedPresent,
@@ -30,7 +30,7 @@ export function setup() {
     search.SearchAddon,
     docdiff.DocDiffAddon,
     hotkeys.HotKeysAddon,
-    tooltips.TooltipsAddon,
+    linkpreviews.LinkPreviewsAddon,
   ];
 
   return new Promise((resolve) => {

@@ -1,12 +1,12 @@
 import { expect, assert, fixture, html } from "@open-wc/testing";
-import { TooltipsAddon } from "../src/tooltips";
+import { LinkPreviewsAddon } from "../src/linkpreviews";
 
-describe("Tooltips addon", () => {
+describe("LinkPreviews addon", () => {
   it("invalid configuration disables the addon", () => {
     expect(
-      TooltipsAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
-          tooltips: {
+          linkpreviews: {
             enabled: true,
             root_selector: 25, // a number is invalid here
           },
@@ -17,9 +17,9 @@ describe("Tooltips addon", () => {
 
   it("is disabled", () => {
     expect(
-      TooltipsAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
-          tooltips: {
+          linkpreviews: {
             enabled: false,
           },
         },
@@ -29,9 +29,9 @@ describe("Tooltips addon", () => {
 
   it("valid data and enabled", () => {
     expect(
-      TooltipsAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
-          tooltips: {
+          linkpreviews: {
             enabled: true,
           },
         },
