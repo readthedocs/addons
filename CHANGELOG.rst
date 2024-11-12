@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.21.0
+---------------
+
+:date: Nov 12, 2024
+
+* Don't show Ethical Ads on 404 pages
+* New addon: Link Preview; preview the content of the site without navigating to it
+* New addon: File Tree Diff; show all the changed files compared to the latest version
+
+
 Version v0.20.0
 ---------------
 
