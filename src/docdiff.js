@@ -223,6 +223,10 @@ export class DocDiffAddon extends AddonBase {
   }
 
   static requiresUrlParam() {
-    return window.location.host.endsWith(".readthedocs.build");
+    return (
+      window.location.host.endsWith(".readthedocs.build") ||
+      window.location.host.endsWith(".build.devthedocs.org") ||
+      window.location.host.endsWith(".build.devthedocs.com")
+    );
   }
 }
