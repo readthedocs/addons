@@ -463,6 +463,36 @@ const addons_search = {
   },
 };
 
+// Validator for LinkPreviews Addon
+const addons_linkpreviews = {
+  $id: "http://v1.schemas.readthedocs.org/addons.linkpreviews.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["linkpreviews"],
+      properties: {
+        linkpreviews: {
+          type: "object",
+          required: ["enabled"],
+          properties: {
+            enabled: { type: "boolean" },
+            root_selector: { type: ["string", "null"] },
+            doctool: {
+              type: "object",
+              properties: {
+                name: { type: ["string", "null"] },
+                version: { type: ["string", "null"] },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const ajv = new Ajv({
   allErrors: true,
   schemas: [
@@ -473,6 +503,7 @@ export const ajv = new Ajv({
     addons_hotkeys,
     addons_notifications,
     addons_search,
+    addons_linkpreviews,
     addons_filetreediff,
   ],
 });

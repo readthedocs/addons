@@ -6,6 +6,7 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
+import * as linkpreviews from "./linkpreviews";
 import * as filetreediff from "./filetreediff";
 import {
   domReady,
@@ -30,6 +31,7 @@ export function setup() {
     search.SearchAddon,
     docdiff.DocDiffAddon,
     hotkeys.HotKeysAddon,
+    linkpreviews.LinkPreviewsAddon,
     filetreediff.FileTreeDiffAddon,
   ];
 
