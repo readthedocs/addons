@@ -239,6 +239,36 @@ const addons_flyout = {
   },
 };
 
+// Validator for File Tree Diff Addon
+const addons_filetreediff = {
+  $id: "http://v1.schemas.readthedocs.org/addons.filetreediff.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["filetreediff"],
+      properties: {
+        filetreediff: {
+          type: "object",
+          required: ["enabled", "diff"],
+          properties: {
+            enabled: { type: "boolean" },
+            diff: {
+              type: "object",
+              properties: {
+                added: { type: "array" },
+                deleted: { type: "array" },
+                modified: { type: "array" },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for Hotkeys Addon
 const addons_hotkeys = {
   $id: "http://v1.schemas.readthedocs.org/addons.hotkeys.json",
@@ -285,15 +315,9 @@ const addons_notifications = {
   properties: {
     addons: {
       type: "object",
-      required: ["external_version_warning", "non_latest_version_warning"],
+      required: ["notifications"],
       properties: {
-        external_version_warning: {
-          type: "object",
-          properties: {
-            enabled: { type: "boolean" },
-          },
-        },
-        non_latest_version_warning: {
+        enabled: {
           type: "object",
           properties: {
             enabled: { type: "boolean" },
@@ -439,6 +463,36 @@ const addons_search = {
   },
 };
 
+// Validator for LinkPreviews Addon
+const addons_linkpreviews = {
+  $id: "http://v1.schemas.readthedocs.org/addons.linkpreviews.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["linkpreviews"],
+      properties: {
+        linkpreviews: {
+          type: "object",
+          required: ["enabled"],
+          properties: {
+            enabled: { type: "boolean" },
+            root_selector: { type: ["string", "null"] },
+            doctool: {
+              type: "object",
+              properties: {
+                name: { type: ["string", "null"] },
+                version: { type: ["string", "null"] },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const ajv = new Ajv({
   allErrors: true,
   schemas: [
@@ -449,6 +503,8 @@ export const ajv = new Ajv({
     addons_hotkeys,
     addons_notifications,
     addons_search,
+    addons_linkpreviews,
+    addons_filetreediff,
   ],
 });
 

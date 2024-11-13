@@ -6,9 +6,10 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
+import * as linkpreviews from "./linkpreviews";
+import * as filetreediff from "./filetreediff";
 import {
   domReady,
-  isReadTheDocsEmbedPresent,
   isEmbedded,
   IS_PRODUCTION,
   setupLogging,
@@ -16,14 +17,8 @@ import {
 } from "./utils";
 
 export function setup() {
-  if (isReadTheDocsEmbedPresent()) {
-    console.debug("Read the Docs Embed is present. Skipping...");
-    // TODO: return ``Promise.reject()`` or similar here to avoid hybrid async/sync functions.
-    return false;
-  }
-
   const loadWhenEmbedded =
-    getMetadataValue("readthedocs-load-addons-when-embedded") || false;
+    getMetadataValue("readthedocs-load-addons-when-embedded") === "true";
   if (isEmbedded() && !loadWhenEmbedded) {
     return false;
   }
@@ -36,6 +31,8 @@ export function setup() {
     search.SearchAddon,
     docdiff.DocDiffAddon,
     hotkeys.HotKeysAddon,
+    linkpreviews.LinkPreviewsAddon,
+    filetreediff.FileTreeDiffAddon,
   ];
 
   return new Promise((resolve) => {

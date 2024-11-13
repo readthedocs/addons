@@ -343,9 +343,10 @@ export class EthicalAdsAddon extends AddonBase {
     this.loadEthicalAdLibrary();
   }
 
-  static isEnabled(config) {
+  static isEnabled(config, httpStatus) {
     return (
-      super.isEnabled(config) && config.addons.ethicalads.ad_free === false
+      super.isEnabled(config, httpStatus) &&
+      config.addons.ethicalads.ad_free === false
     );
   }
 }
