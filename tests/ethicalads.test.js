@@ -61,4 +61,23 @@ describe("EthicalAds addon", () => {
       }),
     ).to.be.false;
   });
+
+  it("is disabled on 404 pages", () => {
+    expect(
+      EthicalAdsAddon.isEnabled(
+        {
+          addons: {
+            ethicalads: {
+              enabled: true,
+              ad_free: false,
+              campaign_types: ["community", "paid"],
+              keywords: ["docs", "data-science"],
+              publisher: "readthedocs",
+            },
+          },
+        },
+        404,
+      ),
+    ).to.be.false;
+  });
 });

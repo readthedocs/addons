@@ -1,6 +1,6 @@
 {
   "name": "@readthedocs/addons",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "Read the Docs Addons to embed into documentation pages",
   "main": "dist/readthedocs-addons.js",
   "scripts": {
@@ -60,5 +60,8 @@
         ]
       }
     }
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.10"
   }
 }
