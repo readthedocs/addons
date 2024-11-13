@@ -9,7 +9,6 @@
 
       runTests(async () => {
         beforeEach(() => {
-
           config = {
             addons: {
               userjsfile: {
@@ -23,12 +22,15 @@
         describe("UserJsFile addon", () => {
           it("script element is added", async () => {
             const addon = new userjsfile.UserJsFileAddon(config);
-            const element = document.querySelector("#readthedocs-addons-user-js-file");
+            const element = document.querySelector(
+              "#readthedocs-addons-user-js-file",
+            );
 
-            expect(element.src).to.equal("https://myproject.readthedocs.io/en/latest/_static/readthedocs.js");
+            expect(element.src).to.equal(
+              "https://myproject.readthedocs.io/en/latest/_static/readthedocs.js",
+            );
             expect(element.async).to.equal(true);
-        });
-
+          });
         });
       });
     </script>
