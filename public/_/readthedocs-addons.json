@@ -149,6 +149,10 @@
       ],
       "default_filter": "subprojects:example/latest"
     },
+    "userjsfile": {
+      "enabled": true,
+      "src": "userjsfile.js"
+    },
     "hotkeys": {
       "enabled": true,
       "doc_diff": {
