@@ -1,0 +1,36 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as userjsfile from "../src/userjsfile";
+
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+
+          config = {
+            addons: {
+              userjsfile: {
+                enabled: true,
+                src: "https://myproject.readthedocs.io/en/latest/_static/readthedocs.js",
+              },
+            },
+          };
+        });
+
+        describe("UserJsFile addon", () => {
+          it("script element is added", async () => {
+            const addon = new userjsfile.UserJsFileAddon(config);
+            const element = document.querySelector("#readthedocs-addons-user-js-file");
+
+            expect(element.src).to.equal("https://myproject.readthedocs.io/en/latest/_static/readthedocs.js");
+            expect(element.async).to.equal(true);
+        });
+
+        });
+      });
+    </script>
+  </body>
+</html>
