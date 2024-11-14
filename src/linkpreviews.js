@@ -224,15 +224,18 @@ export class LinkPreviewsAddon extends AddonBase {
     // TODO: decide what's the correct selector.
     // Our Sphinx extension is adding a class depending on the configuration.
     // However, we won't have this for other doctools or when the extension is not installed.
-    const selector = objectPath.get(
-      this.config,
-      "addons.linkpreviews.root_selector",
-      "[role=main] a.internal",
-    );
+    const rootSelector = this.config.addons.linkpreviews.root_selector;
+
+    let selector;
+    if (doctoolName === "sphinx") {
+      selector = `${rootSelector} a.internal`;
+    } else {
+      selector = `${rootSelector} a`;
+    }
 
     const elements = document.querySelectorAll(selector);
     for (const element of elements) {
-      if (new URL(element.href).hostname === window.location.hostname ) {
+      if (new URL(element.href).hostname === window.location.hostname) {
         setupTooltip(element, doctoolName, doctoolVersion);
       }
     }
