@@ -13,7 +13,7 @@ import { default as objectPath } from "object-path";
 
 const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
-const TOOLTIP_DATA_HREF = "data-tooltip-href";
+const TOOLTIP_DATA_HREF = "data-linkpreview-href";
 
 function setupTooltip(el, doctoolname, doctoolversion) {
   // Take the provided element and setup the listeners required to
