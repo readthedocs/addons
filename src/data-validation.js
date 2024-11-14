@@ -493,17 +493,17 @@ const addons_linkpreviews = {
   },
 };
 
-// Validator for UserJsFile Addon
-const addons_userjsfile = {
-  $id: "http://v1.schemas.readthedocs.org/addons.userjsfile.json",
+// Validator for CustomScript Addon
+const addons_customscript = {
+  $id: "http://v1.schemas.readthedocs.org/addons.customscript.json",
   type: "object",
   required: ["addons"],
   properties: {
     addons: {
       type: "object",
-      required: ["userjsfile"],
+      required: ["customscript"],
       properties: {
-        userjsfile: {
+        customscript: {
           type: "object",
           required: ["enabled"],
           properties: {
@@ -528,7 +528,7 @@ export const ajv = new Ajv({
     addons_search,
     addons_linkpreviews,
     addons_filetreediff,
-    addons_userjsfile,
+    addons_customscript,
   ],
 });
 

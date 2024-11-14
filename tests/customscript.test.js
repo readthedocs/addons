@@ -1,12 +1,12 @@
 import { expect, assert, fixture, html } from "@open-wc/testing";
-import { UserJsFileAddon } from "../src/userjsfile";
+import { CustomScriptAddon } from "../src/customscript";
 
-describe("UserJsFile addon", () => {
+describe("CustomScript addon", () => {
   it("invalid configuration disables the addon", () => {
     expect(
-      UserJsFileAddon.isEnabled({
+      CustomScriptAddon.isEnabled({
         addons: {
-          userjsfile: {
+          customscript: {
             invalid: true,
           },
         },
@@ -16,9 +16,9 @@ describe("UserJsFile addon", () => {
 
   it("is disabled", () => {
     expect(
-      UserJsFileAddon.isEnabled({
+      CustomScriptAddon.isEnabled({
         addons: {
-          userjsfile: {
+          customscript: {
             enabled: false,
             src: "/en/latest/_static/readthedocs.js",
           },
@@ -29,9 +29,9 @@ describe("UserJsFile addon", () => {
 
   it("valid data and enabled", () => {
     expect(
-      UserJsFileAddon.isEnabled({
+      CustomScriptAddon.isEnabled({
         addons: {
-          userjsfile: {
+          customscript: {
             enabled: true,
             src: "/en/latest/_static/readthedocs.js",
           },

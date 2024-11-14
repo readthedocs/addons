@@ -8,18 +8,18 @@ const SCRIPT_ID = "readthedocs-addons-user-js-file";
  *
  * Allow a user to inject a custom JavaScript file in all the pages.
  */
-export class UserJsFileAddon extends AddonBase {
+export class CustomScriptAddon extends AddonBase {
   static jsonValidationURI =
-    "http://v1.schemas.readthedocs.org/addons.userjsfile.json";
-  static addonEnabledPath = "addons.userjsfile.enabled";
-  static addonName = "UserJsFile";
+    "http://v1.schemas.readthedocs.org/addons.customscript.json";
+  static addonEnabledPath = "addons.customscript.enabled";
+  static addonName = "CustomScript";
   static enabledOnHttpStatus = [200, 403, 404, 500];
 
   constructor(config) {
     super();
     this.config = config;
 
-    if (objectPath.get(this.config, "addons.userjsfile.src")) {
+    if (objectPath.get(this.config, "addons.customscript.src")) {
       this.injectJavaScriptFile();
     }
   }
@@ -27,7 +27,7 @@ export class UserJsFileAddon extends AddonBase {
   injectJavaScriptFile() {
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
-    script.src = objectPath.get(this.config, "addons.userjsfile.src");
+    script.src = objectPath.get(this.config, "addons.customscript.src");
     script.async = true;
 
     document.body.appendChild(script);

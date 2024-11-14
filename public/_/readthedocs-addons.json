@@ -149,9 +149,9 @@
       ],
       "default_filter": "subprojects:example/latest"
     },
-    "userjsfile": {
+    "customscript": {
       "enabled": true,
-      "src": "userjsfile.js"
+      "src": "customscript.js"
     },
     "hotkeys": {
       "enabled": true,
