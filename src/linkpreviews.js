@@ -231,6 +231,10 @@ export class LinkPreviewsAddon extends AddonBase {
     );
 
     const elements = document.querySelectorAll(selector);
-    elements.forEach((el) => setupTooltip(el, doctoolname, doctoolversion));
+    for (const element of elements) {
+      if (new URL(element.href).hostname === window.location.hostname ) {
+        setupTooltip(element, doctoolname, doctoolversion);
+      }
+    }
   }
 }
