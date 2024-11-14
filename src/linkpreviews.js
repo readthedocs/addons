@@ -210,12 +210,12 @@ export class LinkPreviewsAddon extends AddonBase {
       document.adoptedStyleSheets.push(styleSheet);
     }
 
-    const doctoolname = objectPath.get(
+    const doctoolName = objectPath.get(
       this.config,
       "addons.linkpreviews.doctool.name",
       "unknown",
     );
-    const doctoolversion = objectPath.get(
+    const doctoolVersion = objectPath.get(
       this.config,
       "addons.linkpreviews.doctool.version",
       "unknown",
@@ -233,7 +233,7 @@ export class LinkPreviewsAddon extends AddonBase {
     const elements = document.querySelectorAll(selector);
     for (const element of elements) {
       if (new URL(element.href).hostname === window.location.hostname ) {
-        setupTooltip(element, doctoolname, doctoolversion);
+        setupTooltip(element, doctoolName, doctoolVersion);
       }
     }
   }
