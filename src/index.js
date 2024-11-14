@@ -48,7 +48,7 @@ export function setup() {
       .then((config) => {
         const loadWhenEmbedded = objectPath.get(
           config,
-          "addons.configs.load_when_embedded",
+          "addons.options.load_when_embedded",
           false,
         );
         if (isEmbedded() && !loadWhenEmbedded) {
