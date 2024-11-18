@@ -225,8 +225,10 @@ export class DocDiffAddon extends AddonBase {
   static requiresUrlParam() {
     return (
       window.location.host.endsWith(".readthedocs.build") ||
-      window.location.host.endsWith(".build.devthedocs.org") ||
-      window.location.host.endsWith(".build.devthedocs.com")
+      // Allow the addon to be enabled on root domains in dev,
+      // so we don't have to setup external versions for testing.
+      window.location.host.endsWith(".devthedocs.org") ||
+      window.location.host.endsWith(".devthedocs.com")
     );
   }
 }

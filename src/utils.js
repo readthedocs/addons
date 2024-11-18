@@ -52,6 +52,12 @@ export class AddonBase {
   static addonLocalStorageKey = null;
   static enabledOnHttpStatus = [200];
 
+  /**
+   * Validates the given configuration object against a predefined JSON schema.
+   *
+   * @param {Object} config - The configuration object to validate.
+   * @returns {boolean} - Returns true if the configuration is valid, otherwise false.
+   */
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);

@@ -38,6 +38,11 @@ export function setup() {
           if (addon.requiresUrlParam()) {
             sendUrlParam = true;
             break;
+          } else {
+            // Log that the addon isn't going to load because of URL
+            console.debug(
+              `Addon ${addon.addonName} is not going to load because it is not enabled for this URL.`,
+            );
           }
         }
 
