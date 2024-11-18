@@ -50,7 +50,7 @@ export class FileTreeDiffElement extends LitElement {
     });
 
     const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
-    const urlParam = "docdiff=true";
+    const urlParam = "diff=true";
 
     let diffAddedUrls = diffdata.added.length
       ? html`

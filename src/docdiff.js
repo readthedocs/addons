@@ -99,7 +99,7 @@ export class DocDiffElement extends LitElement {
     }
 
     // Enable DocDiff if the URL parameter is present
-    const urlParam = "docdiff";
+    const urlParam = "diff";
     if (hasQueryParam(urlParam)) {
       this.enableDocDiff();
     }
