@@ -1,7 +1,7 @@
 import { default as objectPath } from "object-path";
 import { AddonBase } from "./utils";
 
-const SCRIPT_ID = "readthedocs-addons-user-js-file";
+const SCRIPT_ID = "readthedocs-addons-custom-script";
 
 /**
  * User JavaScript file.
