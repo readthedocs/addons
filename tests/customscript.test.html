@@ -1,0 +1,38 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as customscript from "../src/customscript";
+
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          config = {
+            addons: {
+              customscript: {
+                enabled: true,
+                src: "https://myproject.readthedocs.io/en/latest/_static/readthedocs.js",
+              },
+            },
+          };
+        });
+
+        describe("CustomScript addon", () => {
+          it("script element is added", async () => {
+            const addon = new customscript.CustomScriptAddon(config);
+            const element = document.querySelector(
+              "#readthedocs-addons-custom-script",
+            );
+
+            expect(element.src).to.equal(
+              "https://myproject.readthedocs.io/en/latest/_static/readthedocs.js",
+            );
+            expect(element.async).to.equal(true);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
