@@ -103,7 +103,6 @@ export class DocDiffElement extends LitElement {
     if (hasQueryParam(urlParam)) {
       this.enableDocDiff();
     }
-
   }
 
   render() {
@@ -199,7 +198,6 @@ export class DocDiffElement extends LitElement {
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
       this._handleHideDocDiff,
     );
-
   }
 
   disconnectedCallback() {
