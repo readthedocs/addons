@@ -235,8 +235,15 @@ export class LinkPreviewsAddon extends AddonBase {
 
     const elements = document.querySelectorAll(selector);
     for (const element of elements) {
-      if (new URL(element.href).hostname === window.location.hostname) {
-        setupTooltip(element, doctoolName, doctoolVersion);
+      try {
+        let elementHostname = new URL(element.href).hostname;
+        if (elementHostname === window.location.hostname) {
+          setupTooltip(element, doctoolName, doctoolVersion);
+        }
+      } catch (error) {
+        console.debug(
+          `Skipping link preview on element due to invalid URL: ${element}`,
+        );
       }
     }
   }
