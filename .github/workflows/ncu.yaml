@@ -28,7 +28,8 @@ jobs:
 
       - name: Update packages
         # ``unfetch`` is rejected here because its latest version is not compatible with our project
-        run: ncu --upgrade --reject unfetch
+        # ``rollup/plugin-commonjs`` is rejected because >26 breaks the tests
+        run: ncu --upgrade --reject unfetch --reject rollup/plugin-commonjs
 
       - name: Install them and update "package-lock.json"
         run: npm install
