@@ -4,7 +4,6 @@ import { html, nothing, render, LitElement } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
-import { hasQueryParam } from "./utils";
 
 import { AddonBase } from "./utils";
 
