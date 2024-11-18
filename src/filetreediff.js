@@ -48,65 +48,35 @@ export class FileTreeDiffElement extends LitElement {
       classes: ["header", "icon"],
     });
 
+    const generateDiffList = (diffArray, label) => {
+      return diffArray.length
+        ? html`
+            <span>${label}</span>
+            <ul>
+              ${repeat(
+                diffArray,
+                (f) => f.filename,
+                (f, index) =>
+                  html`<li>
+                    <a href=${f.urls.current}>${f.filename}</a>
+                    (<a href="${f.urls.current}?diff" ="true">diff</a>)
+                  </li>`,
+              )}
+            </ul>
+          `
+        : nothing;
+    };
+
     const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
-    const urlParam = "diff=true";
-
-    let diffAddedUrls = diffdata.added.length
-      ? html`
-          <span>Added</span>
-          <ul>
-            ${repeat(
-              diffdata.added,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li>
-                  <a href=${f.urls.version_a}>${f.filename}</a>
-                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
-                </li>`,
-            )}
-          </ul>
-        `
-      : nothing;
-
-    let diffDeletedUrls = diffdata.deleted.length
-      ? html`
-          <span>Deleted</span>
-          <ul>
-            ${repeat(
-              diffdata.deleted,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li>
-                  <a href=${f.urls.version_a}>${f.filename}</a>
-                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
-                </li>`,
-            )}
-          </ul>
-        `
-      : nothing;
-
-    let diffModifiedUrls = diffdata.modified.length
-      ? html`
-          <span>Modified</span>
-          <ul>
-            ${repeat(
-              diffdata.modified,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li>
-                  <a href=${f.urls.version_a}>${f.filename}</a>
-                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
-                </li>`,
-            )}
-          </ul>
-        `
-      : nothing;
+    let diffAddedUrls = generateDiffList(diffdata.added, "Added");
+    let diffDeletedUrls = generateDiffList(diffdata.deleted, "Deleted");
+    let diffModifiedUrls = generateDiffList(diffdata.modified, "Modified");
 
     return html`
       <div>
         ${iconFile.node[0]}
         <div class="title">
-          List of files changed in this pull request ${this.renderCloseButton()}
+          Files changed in this version ${this.renderCloseButton()}
         </div>
         <div class="content">
           ${diffAddedUrls} ${diffModifiedUrls} ${diffDeletedUrls}
@@ -177,13 +147,13 @@ export class FileTreeDiffAddon extends AddonBase {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
 
     for (let f of diffData.added) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
     for (let f of diffData.modified) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
     for (let f of diffData.deleted) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
   }
 }

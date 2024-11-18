@@ -38,6 +38,16 @@ export const domReady = new Promise((resolve) => {
 });
 
 /**
+ * Check if addons are running inside iframe.
+ *
+ * The simplest way to check that is comparing the current windown with the parent window.
+ * If they are different, it means we are embedded.
+ */
+export function isEmbedded() {
+  return window.self !== window.parent;
+}
+
+/**
  * Addon base class
  *
  * Provides a common interface for addon configuration testing, customization,
