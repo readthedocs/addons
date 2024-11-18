@@ -8,6 +8,7 @@ import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
 import * as filetreediff from "./filetreediff";
+import * as customscript from "./customscript";
 import {
   domReady,
   IS_PRODUCTION,
@@ -26,6 +27,7 @@ export function setup() {
     hotkeys.HotKeysAddon,
     linkpreviews.LinkPreviewsAddon,
     filetreediff.FileTreeDiffAddon,
+    customscript.CustomScriptAddon,
   ];
 
   return new Promise((resolve) => {
