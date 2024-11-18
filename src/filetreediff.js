@@ -4,6 +4,7 @@ import { html, nothing, render, LitElement } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
+import { hasQueryParam } from "./utils";
 
 import { AddonBase } from "./utils";
 
@@ -49,6 +50,7 @@ export class FileTreeDiffElement extends LitElement {
     });
 
     const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
+    const urlParam = "docdiff=true";
 
     let diffAddedUrls = diffdata.added.length
       ? html`
@@ -58,7 +60,10 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.added,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li>
+                  <a href=${f.urls.version_a}>${f.filename}</a>
+                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
+                </li>`,
             )}
           </ul>
         `
@@ -72,7 +77,10 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.deleted,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li>
+                  <a href=${f.urls.version_a}>${f.filename}</a>
+                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
+                </li>`,
             )}
           </ul>
         `
@@ -86,7 +94,10 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.modified,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li>
+                  <a href=${f.urls.version_a}>${f.filename}</a>
+                  (<a href=${f.urls.version_a + `?${urlParam}`}>diff</a>)
+                </li>`,
             )}
           </ul>
         `

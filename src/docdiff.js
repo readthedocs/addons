@@ -19,6 +19,7 @@ import {
 } from "./events";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
+import { hasQueryParam } from "./utils";
 
 /**
  * visual-dom-diff options
@@ -96,6 +97,13 @@ export class DocDiffElement extends LitElement {
     if (this.injectStyles) {
       document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
     }
+
+    // Enable DocDiff if the URL parameter is present
+    const urlParam = "docdiff";
+    if (hasQueryParam(urlParam)) {
+      this.enableDocDiff();
+    }
+
   }
 
   render() {
@@ -191,6 +199,7 @@ export class DocDiffElement extends LitElement {
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
       this._handleHideDocDiff,
     );
+
   }
 
   disconnectedCallback() {
