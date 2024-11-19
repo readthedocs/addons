@@ -21,6 +21,8 @@ import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam } from "./utils";
 
+export const DOCDIFF_URL_PARAM = "readthedocs-diff";
+
 /**
  * visual-dom-diff options
  *
@@ -99,8 +101,7 @@ export class DocDiffElement extends LitElement {
     }
 
     // Enable DocDiff if the URL parameter is present
-    const urlParam = "diff";
-    if (hasQueryParam(urlParam)) {
+    if (hasQueryParam(DOCDIFF_URL_PARAM)) {
       this.enableDocDiff();
     }
   }

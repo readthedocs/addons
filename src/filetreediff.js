@@ -4,6 +4,7 @@ import { html, nothing, render, LitElement } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
+import DOCDIFF_URL_PARAM from "./docdiff.js";
 
 import { AddonBase } from "./utils";
 
@@ -59,7 +60,9 @@ export class FileTreeDiffElement extends LitElement {
                 (f, index) =>
                   html`<li>
                     <a href=${f.urls.current}>${f.filename}</a>
-                    (<a href="${f.urls.current}?diff" ="true">diff</a>)
+                    (<a href="${f.urls.current}?${DOCDIFF_URL_PARAM}=true"
+                      >diff</a
+                    >)
                   </li>`,
               )}
             </ul>
