@@ -81,6 +81,7 @@ export class DocDiffElement extends LitElement {
     this.injectStyles = true;
 
     this.originalBody = null;
+    this.cachedRemoteContent = null;
   }
 
   loadConfig(config) {
@@ -120,6 +121,11 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
+    if (this.cachedRemoteContent) {
+      this.performDiff(this.cachedRemoteContent);
+      return;
+    }
+
     fetch(this.config.addons.doc_diff.base_url)
       .then((response) => {
         if (!response.ok) {
@@ -129,29 +135,34 @@ export class DocDiffElement extends LitElement {
         return response.text();
       })
       .then((text) => {
-        const parser = new DOMParser();
-        const html_document = parser.parseFromString(text, "text/html");
-        const old_body = html_document.documentElement.querySelector(
-          this.rootSelector,
-        );
-        const new_body = document.querySelector(this.rootSelector);
-
-        if (old_body == null || new_body == null) {
-          throw new Error("Element not found in both documents.");
-        }
-
-        // After finding the root element, and diffing it, replace it in the DOM
-        // with the resulting visual diff elements instead.
-        const diffNode = visualDomDiff.visualDomDiff(
-          old_body,
-          new_body,
-          VISUAL_DIFF_OPTIONS,
-        );
-        new_body.replaceWith(diffNode.firstElementChild);
+        this.cachedRemoteContent = text;
+        this.performDiff(text);
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  // After finding the root element, and diffing it, replace it in the DOM
+  // with the resulting visual diff elements instead.
+  performDiff(remoteContent) {
+    const parser = new DOMParser();
+    const html_document = parser.parseFromString(remoteContent, "text/html");
+    const old_body = html_document.documentElement.querySelector(
+      this.rootSelector,
+    );
+    const new_body = document.querySelector(this.rootSelector);
+
+    if (old_body == null || new_body == null) {
+      throw new Error("Element not found in both documents.");
+    }
+
+    const diffNode = visualDomDiff.visualDomDiff(
+      old_body,
+      new_body,
+      VISUAL_DIFF_OPTIONS,
+    );
+    new_body.replaceWith(diffNode.firstElementChild);
   }
 
   enableDocDiff() {
