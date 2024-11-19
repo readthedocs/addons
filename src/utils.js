@@ -192,13 +192,13 @@ export function setupLogging() {
 }
 
 /**
- * Check if a specific query parameter exists in the URL.
+ * Check if a specific query parameter exists in the current URL.
  *
  * @param {string} param - The query parameter to check.
  * @returns {boolean} - Returns true if the parameter exists, otherwise false.
  */
 export function hasQueryParam(param) {
-  console.log("Searching for query parameter", param);
+  console.debug("Searching for query parameter", param);
   const url = new URL(window.location.href);
   return url.searchParams.has(param);
 }
