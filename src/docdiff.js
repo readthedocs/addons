@@ -88,8 +88,7 @@ export class DocDiffElement extends LitElement {
       return;
     }
     this.config = config;
-    this.rootSelector =
-      this.config.addons.doc_diff.root_selector || "[role=main]";
+    this.rootSelector = this.config.addons.options_root_selector;
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles

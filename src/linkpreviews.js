@@ -210,35 +210,46 @@ export class LinkPreviewsAddon extends AddonBase {
       document.adoptedStyleSheets.push(styleSheet);
     }
 
-    const doctoolName = objectPath.get(
-      this.config,
-      "addons.linkpreviews.doctool.name",
-      "unknown",
+    // Autodetect if the page is built with Sphinx and send the `doctool=` attribute in that case.
+    let doctoolName = "unknown";
+    const sphinxHtmlElement = document.querySelector(
+      "html[data-content_root], html.writer-html5",
     );
-    const doctoolVersion = objectPath.get(
-      this.config,
-      "addons.linkpreviews.doctool.version",
-      "unknown",
-    );
+    if (sphinxHtmlElement) {
+      doctoolName = "sphinx";
+    }
 
     // TODO: decide what's the correct selector.
     // Our Sphinx extension is adding a class depending on the configuration.
     // However, we won't have this for other doctools or when the extension is not installed.
-    const rootSelector = this.config.addons.linkpreviews.root_selector;
+    const rootSelector = this.config.addons.options.root_selector;
 
     let selector;
     if (doctoolName === "sphinx") {
-      selector = `${rootSelector} a.internal`;
+      selector = `:is(${rootSelector}) a.internal`;
     } else {
-      selector = `${rootSelector} a`;
+      // Fallback to a more generic selector that only accepts links inside paragraphs.
+      selector = `:is(${rootSelector}) p a`;
     }
+    console.debug(
+      `${LinkPreviewsAddon.addonName}: Using '${selector}' as CSS selector.`,
+    );
 
     const elements = document.querySelectorAll(selector);
     for (const element of elements) {
       try {
-        let elementHostname = new URL(element.href).hostname;
-        if (elementHostname === window.location.hostname) {
-          setupTooltip(element, doctoolName, doctoolVersion);
+        // Do not create Link Previews on elements where:
+        //
+        //  1. The hostname is outside the current domain
+        //  2. The URL points to the same page the user is reading
+        let elementUrl = new URL(element.href);
+        let elementHostname = elementUrl.hostname;
+        const pointToSamePage =
+          window.location.pathname.replace("/index.html", "") ==
+          elementUrl.pathname.replace("/index.html");
+        if (elementHostname === window.location.hostname && !pointToSamePage) {
+          element.classList.add("link-preview");
+          setupTooltip(element, doctoolName, null);
         }
       } catch (error) {
         console.debug(

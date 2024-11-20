@@ -18,6 +18,9 @@ describe("Doc diff addon", () => {
     expect(
       DocDiffAddon.isEnabled({
         addons: {
+          options: {
+            root_selector: "[role=main]",
+          },
           doc_diff: {
             enabled: false,
             base_url: "http://project.readthedocs.io/en/latest/index.html",
@@ -31,10 +34,12 @@ describe("Doc diff addon", () => {
     expect(
       DocDiffAddon.isEnabled({
         addons: {
+          options: {
+            root_selector: "[role=main]",
+          },
           doc_diff: {
             enabled: true,
             base_url: "http://project.readthedocs.io/en/latest/index.html",
-            root_selector: "[role=main]",
           },
         },
       }),

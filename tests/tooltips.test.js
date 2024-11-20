@@ -7,8 +7,7 @@ describe("LinkPreviews addon", () => {
       LinkPreviewsAddon.isEnabled({
         addons: {
           linkpreviews: {
-            enabled: true,
-            root_selector: 25, // a number is invalid here
+            enabled: null,
           },
         },
       }),
