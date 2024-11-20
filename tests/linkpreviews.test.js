@@ -7,7 +7,7 @@ describe("LinkPreviews addon", () => {
       LinkPreviewsAddon.isEnabled({
         addons: {
           linkpreviews: {
-            enabled: null,
+            enabled: true,
           },
         },
       }),
@@ -18,6 +18,9 @@ describe("LinkPreviews addon", () => {
     expect(
       LinkPreviewsAddon.isEnabled({
         addons: {
+          options: {
+            root_selector: "[role=main]",
+          },
           linkpreviews: {
             enabled: false,
           },
@@ -30,6 +33,9 @@ describe("LinkPreviews addon", () => {
     expect(
       LinkPreviewsAddon.isEnabled({
         addons: {
+          options: {
+            root_selector: "[role=main]",
+          },
           linkpreviews: {
             enabled: true,
           },
