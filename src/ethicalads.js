@@ -67,6 +67,16 @@ export class EthicalAdsAddon extends AddonBase {
     return false;
   }
 
+  isFuroLikeTheme() {
+    if (
+      document.querySelectorAll('link[href^="_static/styles/furo.css"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   isSphinxBookThemeLikeTheme() {
     if (
       document.querySelectorAll(
@@ -140,6 +150,21 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.classList.add("ethical-rtd");
           placement.classList.add("ethical-dark-theme");
+          knownPlacementFound = true;
+        }
+      } else if (this.isFuroLikeTheme()) {
+        // NOTE: The code to handle furo theme shouldn't be required,
+        // since furo uses explicit placement.
+        // However, the Jinja context variable READTHEDOCS is not injected anymore,
+        // and furo does not includes the explicit placement due to this.
+        // This is a temporal solution while they fix this.
+        selector = ".sidebar-tree";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("id", "furo-sidebar-ad-placement");
           knownPlacementFound = true;
         }
       } else if (this.isSphinxBookThemeLikeTheme()) {
@@ -318,9 +343,10 @@ export class EthicalAdsAddon extends AddonBase {
     this.loadEthicalAdLibrary();
   }
 
-  static isEnabled(config) {
+  static isEnabled(config, httpStatus) {
     return (
-      super.isEnabled(config) && config.addons.ethicalads.ad_free === false
+      super.isEnabled(config, httpStatus) &&
+      config.addons.ethicalads.ad_free === false
     );
   }
 }

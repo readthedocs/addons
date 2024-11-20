@@ -3,23 +3,13 @@ import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.18.1";
+export const CLIENT_VERSION = "0.22.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
   typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
-
-export function isReadTheDocsEmbedPresent() {
-  const urls = [
-    "/_/static/javascript/readthedocs-doc-embed.js",
-    "https://assets.readthedocs.org/static/javascript/readthedocs-doc-embed.js",
-  ];
-  for (const url of urls) {
-    return document.querySelectorAll(`script[src="${url}"]`).length > 0;
-  }
-}
 
 export const domReady = new Promise((resolve) => {
   if (
@@ -46,6 +36,16 @@ export const domReady = new Promise((resolve) => {
     );
   }
 });
+
+/**
+ * Check if addons are running inside iframe.
+ *
+ * The simplest way to check that is comparing the current windown with the parent window.
+ * If they are different, it means we are embedded.
+ */
+export function isEmbedded() {
+  return window.self !== window.parent;
+}
 
 /**
  * Addon base class

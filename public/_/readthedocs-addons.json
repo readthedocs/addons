@@ -112,13 +112,11 @@
       "enabled": true,
       "code": "UA-12345"
     },
-    "external_version_warning": {
+    "notifications": {
       "enabled": true,
-      "query_selector": "[role=main]"
-    },
-    "non_latest_version_warning": {
-      "enabled": true,
-      "query_selector": "[role=main]"
+      "show_on_latest": true,
+      "show_on_non_stable": true,
+      "show_on_external": true
     },
     "doc_diff": {
       "enabled": true,
@@ -150,6 +148,10 @@
         ["Search subprojects", "subprojects:example/latest"]
       ],
       "default_filter": "subprojects:example/latest"
+    },
+    "customscript": {
+      "enabled": true,
+      "src": "customscript.js"
     },
     "hotkeys": {
       "enabled": true,
