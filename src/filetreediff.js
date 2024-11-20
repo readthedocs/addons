@@ -58,7 +58,7 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.added,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
             )}
           </ul>
         `
@@ -72,7 +72,7 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.deleted,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
             )}
           </ul>
         `
@@ -86,7 +86,7 @@ export class FileTreeDiffElement extends LitElement {
               diffdata.modified,
               (f) => f.filename,
               (f, index) =>
-                html`<li><a href=${f.urls.version_a}>${f.filename}</a></li>`,
+                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
             )}
           </ul>
         `
@@ -167,13 +167,13 @@ export class FileTreeDiffAddon extends AddonBase {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
 
     for (let f of diffData.added) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
     for (let f of diffData.modified) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
     for (let f of diffData.deleted) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.version_a}`);
+      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
   }
 }

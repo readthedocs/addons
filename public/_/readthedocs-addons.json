@@ -148,6 +148,10 @@
       ],
       "default_filter": "subprojects:example/latest"
     },
+    "customscript": {
+      "enabled": true,
+      "src": "customscript.js"
+    },
     "hotkeys": {
       "enabled": true,
       "doc_diff": {

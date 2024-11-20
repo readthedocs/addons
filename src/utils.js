@@ -3,7 +3,7 @@ import { default as objectPath } from "object-path";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.21.0";
+export const CLIENT_VERSION = "0.22.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -36,6 +36,16 @@ export const domReady = new Promise((resolve) => {
     );
   }
 });
+
+/**
+ * Check if addons are running inside iframe.
+ *
+ * The simplest way to check that is comparing the current windown with the parent window.
+ * If they are different, it means we are embedded.
+ */
+export function isEmbedded() {
+  return window.self !== window.parent;
+}
 
 /**
  * Addon base class

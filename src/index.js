@@ -8,8 +8,11 @@ import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
 import * as filetreediff from "./filetreediff";
+import * as customscript from "./customscript";
+import { default as objectPath } from "object-path";
 import {
   domReady,
+  isEmbedded,
   IS_PRODUCTION,
   setupLogging,
   getMetadataValue,
@@ -26,6 +29,7 @@ export function setup() {
     hotkeys.HotKeysAddon,
     linkpreviews.LinkPreviewsAddon,
     filetreediff.FileTreeDiffAddon,
+    customscript.CustomScriptAddon,
   ];
 
   return new Promise((resolve) => {
@@ -44,6 +48,15 @@ export function setup() {
         return getReadTheDocsConfig(sendUrlParam);
       })
       .then((config) => {
+        const loadWhenEmbedded = objectPath.get(
+          config,
+          "addons.options.load_when_embedded",
+          false,
+        );
+        if (isEmbedded() && !loadWhenEmbedded) {
+          return false;
+        }
+
         const httpStatus = getMetadataValue("readthedocs-http-status");
         let promises = [];
 

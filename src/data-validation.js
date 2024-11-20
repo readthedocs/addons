@@ -498,6 +498,29 @@ const addons_linkpreviews = {
   },
 };
 
+// Validator for CustomScript Addon
+const addons_customscript = {
+  $id: "http://v1.schemas.readthedocs.org/addons.customscript.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["customscript"],
+      properties: {
+        customscript: {
+          type: "object",
+          required: ["enabled"],
+          properties: {
+            enabled: { type: "boolean" },
+            src: { type: ["string", "null"] },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const ajv = new Ajv({
   allErrors: true,
   schemas: [
@@ -510,6 +533,7 @@ export const ajv = new Ajv({
     addons_search,
     addons_linkpreviews,
     addons_filetreediff,
+    addons_customscript,
   ],
 });
 
