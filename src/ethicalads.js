@@ -2,7 +2,7 @@ import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
-import { IS_TESTING, DocumentationTool } from "./utils.js";
+import { IS_TESTING, docTool } from "./utils.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTORS = [
@@ -34,8 +34,6 @@ export class EthicalAdsAddon extends AddonBase {
   constructor(config) {
     super();
     this.config = config;
-    this.doctool = new DocumentationTool();
-
     this.injectEthicalAds();
   }
 
@@ -72,7 +70,7 @@ export class EthicalAdsAddon extends AddonBase {
       let element;
       let knownPlacementFound = false;
 
-      if (this.doctool.isSphinxReadTheDocsLikeTheme()) {
+      if (docTool.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
 
@@ -82,7 +80,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-dark-theme");
           knownPlacementFound = true;
         }
-      } else if (this.doctool.isSphinxFuroLikeTheme()) {
+      } else if (docTool.isSphinxFuroLikeTheme()) {
         // NOTE: The code to handle furo theme shouldn't be required,
         // since furo uses explicit placement.
         // However, the Jinja context variable READTHEDOCS is not injected anymore,
@@ -97,7 +95,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("id", "furo-sidebar-ad-placement");
           knownPlacementFound = true;
         }
-      } else if (this.doctool.isSphinxBookThemeLikeTheme()) {
+      } else if (docTool.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
         element = document.querySelector(selector);
 
@@ -106,7 +104,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.doctool.isSphinxAlabasterLikeTheme()) {
+      } else if (docTool.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
         element = document.querySelector(selector);
 
@@ -115,7 +113,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.doctool.isMaterialMkDocsTheme()) {
+      } else if (docTool.isMaterialMkDocsTheme()) {
         selector = ".md-sidebar__scrollwrap";
         element = document.querySelector(selector);
 
@@ -127,7 +125,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.doctool.isDocusaurusTheme()) {
+      } else if (docTool.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
         element = document.querySelector(selector);
 

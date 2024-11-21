@@ -6,7 +6,7 @@ import {
   domReady,
   CLIENT_VERSION,
   IS_TESTING,
-  DocumentationTool,
+  docTool,
 } from "./utils";
 import {
   computePosition,
@@ -210,7 +210,6 @@ export class LinkPreviewsAddon extends AddonBase {
   constructor(config) {
     super();
     this.config = config;
-    this.doctool = new DocumentationTool();
 
     if (!IS_TESTING) {
       // Include CSS into the DOM so they can be read.
@@ -218,12 +217,11 @@ export class LinkPreviewsAddon extends AddonBase {
     }
 
     // Autodetect if the page is built with Sphinx and send the `doctool=` attribute in that case.
-    const doctoolName = this.doctool.getDocumentationTool();
+    const doctoolName = docTool.getDocumentationTool();
     const rootSelector =
-      this.config.addons.options.root_selector ||
-      this.doctool.getRootSelector();
+      this.config.addons.options.root_selector || docTool.getRootSelector();
 
-    const selector = this.doctool.getLinkSelector();
+    const selector = docTool.getLinkSelector();
 
     console.debug(
       `${LinkPreviewsAddon.addonName}: Using '${selector}' as CSS selector.`,

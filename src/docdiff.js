@@ -19,7 +19,7 @@ import {
 } from "./events";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { hasQueryParam } from "./utils";
+import { hasQueryParam, docTool } from "./utils";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 
@@ -91,7 +91,7 @@ export class DocDiffElement extends LitElement {
       return;
     }
     this.config = config;
-    this.rootSelector = this.config.addons.options_root_selector;
+    this.rootSelector = docTool.getRootSelector();
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles

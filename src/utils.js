@@ -437,3 +437,5 @@ export class DocumentationTool {
     return false;
   }
 }
+
+export const docTool = new DocumentationTool();
