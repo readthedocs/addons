@@ -178,7 +178,7 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
-    if (this.config === null) {
+    if (this.config === null || this.enabled) {
       return null;
     }
 
