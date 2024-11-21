@@ -8,6 +8,9 @@ import {
   PELICAN,
   ASCIIDOCTOR,
   JEKYLL,
+  FALLBACK_DOCTOOL,
+  ANTORA,
+  DOCSIFY,
 } from "./constants";
 
 export const ADDONS_API_VERSION = "1";
@@ -276,20 +279,20 @@ export function getLinkWithFilename(url) {
  */
 export class DocumentationTool {
   static DEFAULT_ROOT_SELECTOR = {
-    SPHINX: "[role=main]",
-    MKDOCS_MATERIAL: "main > div > div.md-content",
-    DOCSIFY: "article#main",
-    ASCIIDOCTOR: "div#content",
-    PELICAN: "article",
-    DOCUSAURUS: "article",
-    ANTORA: "article",
-    JEKYLL: "article",
-    FALLBACK_DOCTOOL: ["main", "div.body", "div.document", "body"],
+    [SPHINX]: "[role=main]",
+    [MKDOCS_MATERIAL]: "main > div > div.md-content",
+    [DOCSIFY]: "article#main",
+    [ASCIIDOCTOR]: "div#content",
+    [PELICAN]: "article",
+    [DOCUSAURUS]: "article",
+    [ANTORA]: "article",
+    [JEKYLL]: "article",
+    [FALLBACK_DOCTOOL]: ["main", "div.body", "div.document", "body"],
   };
 
   static DEFAULT_LINK_SELECTOR = {
-    SPHINX: "a.internal",
-    FALLBACK_DOCTOOL: ["p a"],
+    [SPHINX]: "a.internal",
+    [FALLBACK_DOCTOOL]: ["p a"],
   };
 
   constructor() {
@@ -321,7 +324,9 @@ export class DocumentationTool {
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
     let fullSelector;
-    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR.fallback) {
+    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
       fullSelector = `${this.getRootSelector()} ${selector}`;
       element = document.querySelector(fullSelector);
       if (element) {
@@ -354,7 +359,9 @@ export class DocumentationTool {
 
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
-    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR.fallback) {
+    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
       element = document.querySelector(selector);
       if (element) {
         return selector;
