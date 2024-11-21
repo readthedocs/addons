@@ -93,7 +93,8 @@ export class DocDiffElement extends LitElement {
     }
     this.config = config;
     this.rootSelector =
-      this.config.options.root_selector || docTool.getRootSelector();
+      objectPath.get(this.config, "options.root_selector") ||
+      docTool.getRootSelector();
 
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
