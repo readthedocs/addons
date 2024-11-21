@@ -22,6 +22,7 @@ localhost
 Read the Docs
 -------------
 
+#. Clone addons repository next to your ``readthedocs.org`` code.
 #. Spin up Docker by running ``inv docker.up``.
 #. Optional. Define ``USE_PROMOS=True`` if you wan to test EthicalAds addon.
 #. Open any built documentation you already have in your local development instance.
