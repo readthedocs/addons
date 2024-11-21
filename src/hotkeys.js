@@ -6,8 +6,7 @@ import { html, nothing, LitElement } from "lit";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_SEARCH_HIDE,
-  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-  EVENT_READTHEDOCS_DOCDIFF_HIDE,
+  EVENT_READTHEDOCS_DOCDIFF_TOGGLE,
 } from "./events";
 
 export class HotKeysElement extends LitElement {
@@ -60,13 +59,7 @@ export class HotKeysElement extends LitElement {
       document.activeElement.tagName !== "TEXTAREA" &&
       document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
-      if (this.docDiffShowed) {
-        event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
-        this.docDiffShowed = false;
-      } else {
-        event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
-        this.docDiffShowed = true;
-      }
+      event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_TOGGLE);
     }
 
     // Search

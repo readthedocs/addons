@@ -13,10 +13,7 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 import * as visualDomDiff from "visual-dom-diff";
 
 import { AddonBase } from "./utils";
-import {
-  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-  EVENT_READTHEDOCS_DOCDIFF_HIDE,
-} from "./events";
+import { EVENT_READTHEDOCS_DOCDIFF_TOGGLE } from "./events";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
@@ -188,31 +185,29 @@ export class DocDiffElement extends LitElement {
   }
 
   disableDocDiff() {
+    if (!this.enabled) {
+      return null;
+    }
+
     this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
   }
 
-  _handleShowDocDiff = (e) => {
+  _toggleDocDiff = (e) => {
     e.preventDefault();
-    this.enableDocDiff();
-  };
-
-  _handleHideDocDiff = (e) => {
-    e.preventDefault();
-    this.disableDocDiff();
+    if (this.enabled) {
+      this.disableDocDiff();
+    } else {
+      this.enableDocDiff();
+    }
   };
 
   connectedCallback() {
     super.connectedCallback();
 
     document.addEventListener(
-      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      this._handleShowDocDiff,
-    );
-
-    document.addEventListener(
-      EVENT_READTHEDOCS_DOCDIFF_HIDE,
-      this._handleHideDocDiff,
+      EVENT_READTHEDOCS_DOCDIFF_TOGGLE,
+      this._toggleDocDiff,
     );
   }
 
