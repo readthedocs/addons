@@ -4,6 +4,7 @@ import { html, nothing, render, LitElement } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
+import { DOCDIFF_URL_PARAM } from "./docdiff.js";
 
 import { AddonBase } from "./utils";
 
@@ -48,55 +49,37 @@ export class FileTreeDiffElement extends LitElement {
       classes: ["header", "icon"],
     });
 
+    const generateDiffList = (diffArray, label) => {
+      return diffArray.length
+        ? html`
+            <span>${label}</span>
+            <ul>
+              ${repeat(
+                diffArray,
+                (f) => f.filename,
+                (f, index) =>
+                  html`<li>
+                    <a href=${f.urls.current}>${f.filename}</a>
+                    (<a href="${f.urls.current}?${DOCDIFF_URL_PARAM}=true"
+                      >diff</a
+                    >)
+                  </li>`,
+              )}
+            </ul>
+          `
+        : nothing;
+    };
+
     const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
-
-    let diffAddedUrls = diffdata.added.length
-      ? html`
-          <span>Added</span>
-          <ul>
-            ${repeat(
-              diffdata.added,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
-            )}
-          </ul>
-        `
-      : nothing;
-
-    let diffDeletedUrls = diffdata.deleted.length
-      ? html`
-          <span>Deleted</span>
-          <ul>
-            ${repeat(
-              diffdata.deleted,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
-            )}
-          </ul>
-        `
-      : nothing;
-
-    let diffModifiedUrls = diffdata.modified.length
-      ? html`
-          <span>Modified</span>
-          <ul>
-            ${repeat(
-              diffdata.modified,
-              (f) => f.filename,
-              (f, index) =>
-                html`<li><a href=${f.urls.current}>${f.filename}</a></li>`,
-            )}
-          </ul>
-        `
-      : nothing;
+    let diffAddedUrls = generateDiffList(diffdata.added, "Added");
+    let diffDeletedUrls = generateDiffList(diffdata.deleted, "Deleted");
+    let diffModifiedUrls = generateDiffList(diffdata.modified, "Modified");
 
     return html`
       <div>
         ${iconFile.node[0]}
         <div class="title">
-          List of files changed in this pull request ${this.renderCloseButton()}
+          Files changed in this version ${this.renderCloseButton()}
         </div>
         <div class="content">
           ${diffAddedUrls} ${diffModifiedUrls} ${diffDeletedUrls}

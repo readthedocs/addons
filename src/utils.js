@@ -62,6 +62,12 @@ export class AddonBase {
   static addonLocalStorageKey = null;
   static enabledOnHttpStatus = [200];
 
+  /**
+   * Validates the given configuration object against a predefined JSON schema.
+   *
+   * @param {Object} config - The configuration object to validate.
+   * @returns {boolean} - Returns true if the configuration is valid, otherwise false.
+   */
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
@@ -183,6 +189,18 @@ export function setupLogging() {
   if (debug === null || debug.toLowerCase() !== "debug") {
     console.debug = () => {};
   }
+}
+
+/**
+ * Check if a specific query parameter exists in the current URL.
+ *
+ * @param {string} param - The query parameter to check.
+ * @returns {boolean} - Returns true if the parameter exists, otherwise false.
+ */
+export function hasQueryParam(param) {
+  console.debug("Searching for query parameter", param);
+  const url = new URL(window.location.href);
+  return url.searchParams.has(param);
 }
 
 export function addUtmParameters(url, content) {

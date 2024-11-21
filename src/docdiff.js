@@ -19,6 +19,9 @@ import {
 } from "./events";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
+import { hasQueryParam } from "./utils";
+
+export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 
 /**
  * visual-dom-diff options
@@ -94,6 +97,11 @@ export class DocDiffElement extends LitElement {
     // Conditionally inject our base styles
     if (this.injectStyles) {
       document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
+    }
+
+    // Enable DocDiff if the URL parameter is present
+    if (hasQueryParam(DOCDIFF_URL_PARAM)) {
+      this.enableDocDiff();
     }
   }
 
@@ -224,8 +232,10 @@ export class DocDiffAddon extends AddonBase {
   static requiresUrlParam() {
     return (
       window.location.host.endsWith(".readthedocs.build") ||
-      window.location.host.endsWith(".build.devthedocs.org") ||
-      window.location.host.endsWith(".build.devthedocs.com")
+      // Allow the addon to be enabled on root domains in dev,
+      // so we don't have to setup external versions for testing.
+      window.location.host.endsWith(".devthedocs.org") ||
+      window.location.host.endsWith(".devthedocs.com")
     );
   }
 }
