@@ -275,26 +275,26 @@ export function getLinkWithFilename(url) {
  *
  */
 export class DocumentationTool {
+  static DEFAULT_ROOT_SELECTOR = {
+    SPHINX: "[role=main]",
+    MKDOCS_MATERIAL: "main > div > div.md-content",
+    DOCSIFY: "article#main",
+    ASCIIDOCTOR: "div#content",
+    PELICAN: "article",
+    DOCUSAURUS: "article",
+    ANTORA: "article",
+    JEKYLL: "article",
+    FALLBACK_DOCTOOL: ["main", "div.body", "div.document", "body"],
+  };
+
+  static DEFAULT_LINK_SELECTOR = {
+    sphinx: "a.internal",
+    fallback: ["p a"],
+  };
+
   constructor() {
     this.documentationTool = this.getDocumentationTool();
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
-
-    this.DEFAULT_ROOT_SELECTOR = {
-      SPHINX: "[role=main]",
-      MKDOCS_MATERIAL: "main > div > div.md-content",
-      DOCSIFY: "article#main",
-      ASCIIDOCTOR: "div#content",
-      PELICAN: "article",
-      DOCUSAURUS: "article",
-      ANTORA: "article",
-      JEKYLL: "article",
-      FALLBACK_DOCTOOL: ["main", "div.body", "div.document", "body"],
-    };
-
-    this.DEFAULT_LINK_SELECTOR = {
-      sphinx: "a.internal",
-      fallback: ["p a"],
-    };
   }
 
   /**
@@ -307,17 +307,17 @@ export class DocumentationTool {
   getLinkSelector() {
     if (
       this.documentationTool &&
-      objectPath.get(this.DEFAULT_LINK_SELECTOR, this.documentationTool, null)
+      objectPath.get(this.constructor.DEFAULT_LINK_SELECTOR, this.documentationTool, null)
     ) {
       return `${this.getRootSelector()} ${
-        this.DEFAULT_LINK_SELECTOR[this.documentationTool]
+        this.constructor.DEFAULT_LINK_SELECTOR[this.documentationTool]
       }`;
     }
 
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
     let fullSelector;
-    for (const selector of this.DEFAULT_LINK_SELECTOR.fallback) {
+    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR.fallback) {
       fullSelector = `${this.getRootSelector()} ${selector}`;
       element = document.querySelector(fullSelector);
       if (element) {
@@ -339,14 +339,14 @@ export class DocumentationTool {
   getRootSelector() {
     if (
       this.documentationTool &&
-      objectPath.get(this.DEFAULT_ROOT_SELECTOR, this.documentationTool, null)
+      objectPath.get(this.constructor.DEFAULT_ROOT_SELECTOR, this.documentationTool, null)
     ) {
-      return this.DEFAULT_ROOT_SELECTOR[this.documentationTool];
+      return this.constructor.DEFAULT_ROOT_SELECTOR[this.documentationTool];
     }
 
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
-    for (const selector of this.DEFAULT_ROOT_SELECTOR.fallback) {
+    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR.fallback) {
       element = document.querySelector(selector);
       if (element) {
         return selector;
