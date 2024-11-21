@@ -73,14 +73,20 @@ const addons_docdiff = {
   properties: {
     addons: {
       type: "object",
-      required: ["doc_diff"],
+      required: ["options", "doc_diff"],
       properties: {
+        options: {
+          type: "object",
+          required: ["root_selector"],
+          properties: {
+            root_selector: { type: ["string", "null"] },
+          },
+        },
         doc_diff: {
           type: "object",
-          required: ["base_url", "root_selector", "enabled"],
+          required: ["base_url", "enabled"],
           properties: {
             base_url: { type: "string" },
-            root_selector: { type: ["string", "null"] },
             enabled: { type: "boolean" },
           },
         },
@@ -471,21 +477,20 @@ const addons_linkpreviews = {
   properties: {
     addons: {
       type: "object",
-      required: ["linkpreviews"],
+      required: ["options", "linkpreviews"],
       properties: {
+        options: {
+          type: "object",
+          required: ["root_selector"],
+          properties: {
+            root_selector: { type: ["string", "null"] },
+          },
+        },
         linkpreviews: {
           type: "object",
           required: ["enabled"],
           properties: {
             enabled: { type: "boolean" },
-            root_selector: { type: ["string", "null"] },
-            doctool: {
-              type: "object",
-              properties: {
-                name: { type: ["string", "null"] },
-                version: { type: ["string", "null"] },
-              },
-            },
           },
         },
       },

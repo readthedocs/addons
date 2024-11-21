@@ -96,6 +96,10 @@
     }
   },
   "addons": {
+    "options": {
+      "root_selector": null,
+      "load_when_embedded": false
+    },
     "ethicalads": {
       "ad_free": false,
       "enabled": true,
@@ -121,7 +125,6 @@
     "doc_diff": {
       "enabled": true,
       "base_url": "http://localhost:8000/docdiff.changed.html",
-      "root_selector": "#main"
     },
     "flyout": {
       "enabled": true,
