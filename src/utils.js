@@ -265,25 +265,26 @@ export function getLinkWithFilename(url) {
  *
  */
 export class DocumentationTool {
-  static DEFAULT_ROOT_SELECTOR = {
-    sphinx: "[role=main]",
-    "mkdocs-material": "main > div > div.md-content",
-    docsify: "article#main",
-    asciidoctor: "div#content",
-    pelican: "article",
-    docusaurus: "article",
-    antora: "article",
-    jekyll: "article",
-    fallback: ["main", "div.body", "div.document", "body"],
-  };
-
-  static DEFAULT_LINK_SELECTOR = {
-    sphinx: "a.internal",
-    fallback: ["p a"],
-  };
-
   constructor() {
     this.documentationTool = this.getDocumentationTool();
+    console.debug(`Documentation tool detected: ${this.documentationTool}`);
+
+    this.DEFAULT_ROOT_SELECTOR = {
+      sphinx: "[role=main]",
+      "mkdocs-material": "main > div > div.md-content",
+      docsify: "article#main",
+      asciidoctor: "div#content",
+      pelican: "article",
+      docusaurus: "article",
+      antora: "article",
+      jekyll: "article",
+      fallback: ["main", "div.body", "div.document", "body"],
+    };
+
+    this.DEFAULT_LINK_SELECTOR = {
+      sphinx: "a.internal",
+      fallback: ["p a"],
+    };
   }
 
   getLinkSelector() {
@@ -341,8 +342,24 @@ export class DocumentationTool {
       return "mkdocs-material";
     }
 
+    if (this.isPelican()) {
+      return "pelican";
+    }
+
     if (this.isDocusaurus()) {
       return "docusaurus";
+    }
+
+    if (this.isAsciiDoctor()) {
+      return "asciidoctor";
+    }
+
+    if (this.isJekyll()) {
+      return "jekyll";
+    }
+
+    if (this.isMkDocs()) {
+      return "mkdocs";
     }
 
     console.debug("We were not able to detect the documentation tool.");
@@ -364,6 +381,49 @@ export class DocumentationTool {
 
   isDocusaurus() {
     return this.isDocusaurusTheme();
+  }
+
+  isPelican() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content="Pelican"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isAsciiDoctor() {
+    if (
+      document.querySelectorAll(
+        'meta[name="generator"][content*="Asciidoctor"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isJekyll() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content*="Jekyll"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMkDocs() {
+    // MkDocs adds a comment at the end of the file:
+    //     <!--
+    //     MkDocs version : 1.4.2
+    //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
+    //    -->
+    if (document.lastChild.textContent.includes("MkDocs version :")) {
+      return true;
+    }
+    return false;
   }
 
   isSphinxAlabasterLikeTheme() {

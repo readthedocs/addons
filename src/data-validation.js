@@ -79,7 +79,7 @@ const addons_docdiff = {
           type: "object",
           required: ["root_selector"],
           properties: {
-            root_selector: { type: "string" },
+            root_selector: { type: ["string", "null"] },
           },
         },
         doc_diff: {
@@ -483,7 +483,7 @@ const addons_linkpreviews = {
           type: "object",
           required: ["root_selector"],
           properties: {
-            root_selector: { type: "string" },
+            root_selector: { type: ["string", "null"] },
           },
         },
         linkpreviews: {
