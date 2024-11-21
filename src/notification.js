@@ -221,6 +221,8 @@ export class NotificationElement extends LitElement {
     if (
       !this.readingStableVersion &&
       this.stableVersionAvailable &&
+      this.config.versions.current.slug !==
+        this.config.projects.current.default_version &&
       objectPath.get(
         this.config,
         "addons.notifications.show_on_non_stable",
@@ -238,7 +240,8 @@ export class NotificationElement extends LitElement {
     //  - if the user is reading the "latest" version: shows a notification to warn
     //    the user about reading the latest development version.
     //  - if the user is reading a non-"stable" version: shows a notification to warn
-    //    the user about reading a version that may be old.
+    //    the user about reading a version that may be old. Except if the reading version
+    //    is the project's default version.
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
