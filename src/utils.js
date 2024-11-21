@@ -324,8 +324,9 @@ export class DocumentationTool {
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
     let fullSelector;
-    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR
-      .FALLBACK_DOCTOOL) {
+    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
       fullSelector = `${this.getRootSelector()} ${selector}`;
       element = document.querySelector(fullSelector);
       if (element) {
@@ -358,8 +359,9 @@ export class DocumentationTool {
 
     // Fallback to our list of generic selectors and stop in the first we found.
     let element;
-    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR
-      .FALLBACK_DOCTOOL) {
+    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
       element = document.querySelector(selector);
       if (element) {
         return selector;
