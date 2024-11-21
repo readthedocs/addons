@@ -1,7 +1,13 @@
 import { html, nothing, render, LitElement } from "lit";
 import styleSheet from "./linkpreviews.css";
 
-import { AddonBase, domReady, CLIENT_VERSION, IS_TESTING } from "./utils";
+import {
+  AddonBase,
+  domReady,
+  CLIENT_VERSION,
+  IS_TESTING,
+  DocumentationTool,
+} from "./utils";
 import {
   computePosition,
   autoPlacement,
@@ -204,6 +210,7 @@ export class LinkPreviewsAddon extends AddonBase {
   constructor(config) {
     super();
     this.config = config;
+    this.doctool = new DocumentationTool();
 
     if (!IS_TESTING) {
       // Include CSS into the DOM so they can be read.
@@ -211,26 +218,13 @@ export class LinkPreviewsAddon extends AddonBase {
     }
 
     // Autodetect if the page is built with Sphinx and send the `doctool=` attribute in that case.
-    let doctoolName = "unknown";
-    const sphinxHtmlElement = document.querySelector(
-      "html[data-content_root], html.writer-html5",
-    );
-    if (sphinxHtmlElement) {
-      doctoolName = "sphinx";
-    }
+    const doctoolName = this.doctool.getDocumentationTool();
+    const rootSelector =
+      this.config.addons.options.root_selector ||
+      this.doctool.getRootSelector();
 
-    // TODO: decide what's the correct selector.
-    // Our Sphinx extension is adding a class depending on the configuration.
-    // However, we won't have this for other doctools or when the extension is not installed.
-    const rootSelector = this.config.addons.options.root_selector;
+    const selector = this.doctool.getLinkSelector();
 
-    let selector;
-    if (doctoolName === "sphinx") {
-      selector = `:is(${rootSelector}) a.internal`;
-    } else {
-      // Fallback to a more generic selector that only accepts links inside paragraphs.
-      selector = `:is(${rootSelector}) p a`;
-    }
     console.debug(
       `${LinkPreviewsAddon.addonName}: Using '${selector}' as CSS selector.`,
     );

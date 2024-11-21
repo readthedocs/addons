@@ -96,6 +96,10 @@
     }
   },
   "addons": {
+    "options": {
+      "root_selector": null,
+      "load_when_embedded": false
+    },
     "ethicalads": {
       "ad_free": false,
       "enabled": true,

@@ -257,3 +257,183 @@ export function getLinkWithFilename(url) {
 
   return new URL(filename, base);
 }
+
+/**
+ * Helper DocumentationTool class.
+ *
+ * Allows us to detect what doctool is using the current page.
+ *
+ */
+export class DocumentationTool {
+  static DEFAULT_ROOT_SELECTOR = {
+    sphinx: "[role=main]",
+    "mkdocs-material": "main > div > div.md-content",
+    docsify: "article#main",
+    asciidoctor: "div#content",
+    pelican: "article",
+    docusaurus: "article",
+    antora: "article",
+    jekyll: "article",
+    fallback: ["main", "div.body", "div.document", "body"],
+  };
+
+  static DEFAULT_LINK_SELECTOR = {
+    sphinx: "a.internal",
+    fallback: ["p a"],
+  };
+
+  constructor() {
+    this.documentationTool = this.getDocumentationTool();
+  }
+
+  getLinkSelector() {
+    if (
+      this.documentationTool &&
+      objectPath.get(this.DEFAULT_LINK_SELECTOR, this.documentationTool, null)
+    ) {
+      return `${this.getRootSelector()} ${
+        this.DEFAULT_LINK_SELECTOR[this.documentationTool]
+      }`;
+    }
+
+    // Fallback to our list of generic selectors and stop in the first we found.
+    let element;
+    let fullSelector;
+    for (const selector of this.DEFAULT_LINK_SELECTOR.fallback) {
+      fullSelector = `${this.getRootSelector()} ${selector}`;
+      element = document.querySelector(fullSelector);
+      if (element) {
+        return fullSelector;
+      }
+    }
+
+    console.debug("We were not able to find the root selector.");
+    return null;
+  }
+
+  getRootSelector() {
+    if (
+      this.documentationTool &&
+      objectPath.get(this.DEFAULT_ROOT_SELECTOR, this.documentationTool, null)
+    ) {
+      return this.DEFAULT_ROOT_SELECTOR[this.documentationTool];
+    }
+
+    // Fallback to our list of generic selectors and stop in the first we found.
+    let element;
+    for (const selector of this.DEFAULT_ROOT_SELECTOR.fallback) {
+      element = document.querySelector(selector);
+      if (element) {
+        return selector;
+      }
+    }
+
+    console.debug("We were not able to find the root selector.");
+    return null;
+  }
+
+  getDocumentationTool() {
+    if (this.isSphinx()) {
+      return "sphinx";
+    }
+
+    if (this.isMaterialMkDocs()) {
+      return "mkdocs-material";
+    }
+
+    if (this.isDocusaurus()) {
+      return "docusaurus";
+    }
+
+    console.debug("We were not able to detect the documentation tool.");
+    return null;
+  }
+
+  isSphinx() {
+    return (
+      this.isSphinxAlabasterLikeTheme() ||
+      this.isSphinxReadTheDocsLikeTheme() ||
+      this.isSphinxFuroLikeTheme() ||
+      this.isSphinxBookThemeLikeTheme()
+    );
+  }
+
+  isMaterialMkDocs() {
+    return this.isMaterialMkDocsTheme();
+  }
+
+  isDocusaurus() {
+    return this.isDocusaurusTheme();
+  }
+
+  isSphinxAlabasterLikeTheme() {
+    const selectors = [
+      'link[href^="_static/alabaster.css"]',
+      'link[href^="_static/flask.css"]',
+      'link[href^="_static/jinja.css"]',
+      'link[href^="_static/click.css"]',
+      'link[href^="_static/celery.css"]',
+      'link[href^="_static/babel.css"]',
+      'link[href^="_static/platter.css"]',
+      'link[href^="_static/werkzeug.css"]',
+    ];
+    for (const selector of selectors) {
+      if (document.querySelectorAll(selector).length === 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isSphinxReadTheDocsLikeTheme() {
+    if (
+      document.querySelectorAll('script[src^="_static/js/theme.js"]').length ===
+      1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxFuroLikeTheme() {
+    if (
+      document.querySelectorAll('link[href^="_static/styles/furo.css"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxBookThemeLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/styles/sphinx-book-theme.css"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMaterialMkDocsTheme() {
+    if (
+      document.querySelectorAll(
+        'meta[name="generator"][content*="mkdocs-material"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isDocusaurusTheme() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content*="Docusaurus"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+}
