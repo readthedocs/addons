@@ -126,6 +126,39 @@
       "enabled": true,
       "base_url": "http://localhost:8000/docdiff.changed.html",
     },
+    "filetreediff": {
+      "enabled": true,
+      "outdated": false,
+      "diff": {
+        "added": [
+            {
+                "filename": "added.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ],
+        "deleted": [
+            {
+                "filename": "deleted.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ],
+        "modified": [
+            {
+                "filename": "modified.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ]
+      }
+    },
     "flyout": {
       "enabled": true,
       "downloads": [
