@@ -129,19 +129,22 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
-    if (this.cachedRemoteContent) {
-      this.performDiff(this.cachedRemoteContent);
-      return;
+    let promiseData;
+
+    if (this.cachedRemoteContent !== null) {
+      promiseData = Promise.resolve(this.cachedRemoteContent);
+    } else {
+      promiseData = fetch(this.config.addons.doc_diff.base_url).then(
+        (response) => {
+          if (!response.ok) {
+            throw new Error("Error downloading requested base URL.");
+          }
+          return response.text();
+        },
+      );
     }
 
-    fetch(this.config.addons.doc_diff.base_url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error downloading requested base URL.");
-        }
-
-        return response.text();
-      })
+    promiseData
       .then((text) => {
         this.cachedRemoteContent = text;
         this.performDiff(text);
