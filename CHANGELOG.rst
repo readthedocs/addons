@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.22.0
+---------------
+
+:date: Nov 18, 2024
+
+* Use new API field names for File Tree Diff
+* Detect embedded frame and skip loading addons
+* New ``CustomScript`` addon
+* Remove check for old integration
+
 Version v0.21.0
 ---------------
 

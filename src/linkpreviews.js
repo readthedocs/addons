@@ -1,7 +1,13 @@
 import { html, nothing, render, LitElement } from "lit";
 import styleSheet from "./linkpreviews.css";
 
-import { AddonBase, domReady, CLIENT_VERSION, IS_TESTING } from "./utils";
+import {
+  AddonBase,
+  domReady,
+  CLIENT_VERSION,
+  IS_TESTING,
+  docTool,
+} from "./utils";
 import {
   computePosition,
   autoPlacement,
@@ -13,7 +19,7 @@ import { default as objectPath } from "object-path";
 
 const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
-const TOOLTIP_DATA_HREF = "data-tooltip-href";
+const TOOLTIP_DATA_HREF = "data-linkpreview-href";
 
 function setupTooltip(el, doctoolname, doctoolversion) {
   // Take the provided element and setup the listeners required to
@@ -210,27 +216,38 @@ export class LinkPreviewsAddon extends AddonBase {
       document.adoptedStyleSheets.push(styleSheet);
     }
 
-    const doctoolname = objectPath.get(
-      this.config,
-      "addons.linkpreviews.doctool.name",
-      "unknown",
-    );
-    const doctoolversion = objectPath.get(
-      this.config,
-      "addons.linkpreviews.doctool.version",
-      "unknown",
-    );
+    // Autodetect if the page is built with Sphinx and send the `doctool=` attribute in that case.
+    const doctoolName = docTool.getDocumentationTool();
+    const rootSelector =
+      this.config.addons.options.root_selector || docTool.getRootSelector();
 
-    // TODO: decide what's the correct selector.
-    // Our Sphinx extension is adding a class depending on the configuration.
-    // However, we won't have this for other doctools or when the extension is not installed.
-    const selector = objectPath.get(
-      this.config,
-      "addons.linkpreviews.root_selector",
-      "[role=main] a.internal",
+    const selector = docTool.getLinkSelector();
+
+    console.debug(
+      `${LinkPreviewsAddon.addonName}: Using '${selector}' as CSS selector.`,
     );
 
     const elements = document.querySelectorAll(selector);
-    elements.forEach((el) => setupTooltip(el, doctoolname, doctoolversion));
+    for (const element of elements) {
+      try {
+        // Do not create Link Previews on elements where:
+        //
+        //  1. The hostname is outside the current domain
+        //  2. The URL points to the same page the user is reading
+        let elementUrl = new URL(element.href);
+        let elementHostname = elementUrl.hostname;
+        const pointToSamePage =
+          window.location.pathname.replace("/index.html", "") ==
+          elementUrl.pathname.replace("/index.html");
+        if (elementHostname === window.location.hostname && !pointToSamePage) {
+          element.classList.add("link-preview");
+          setupTooltip(element, doctoolName, null);
+        }
+      } catch (error) {
+        console.debug(
+          `Skipping link preview on element due to invalid URL: ${element}`,
+        );
+      }
+    }
   }
 }

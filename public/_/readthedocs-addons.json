@@ -96,6 +96,10 @@
     }
   },
   "addons": {
+    "options": {
+      "root_selector": null,
+      "load_when_embedded": false
+    },
     "ethicalads": {
       "ad_free": false,
       "enabled": true,
@@ -121,7 +125,39 @@
     "doc_diff": {
       "enabled": true,
       "base_url": "http://localhost:8000/docdiff.changed.html",
-      "root_selector": "#main"
+    },
+    "filetreediff": {
+      "enabled": true,
+      "outdated": false,
+      "diff": {
+        "added": [
+            {
+                "filename": "added.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ],
+        "deleted": [
+            {
+                "filename": "deleted.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ],
+        "modified": [
+            {
+                "filename": "modified.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ]
+      }
     },
     "flyout": {
       "enabled": true,
