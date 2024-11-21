@@ -22,28 +22,10 @@ localhost
 Read the Docs
 -------------
 
-#. Run development server, ``npm run dev``.
 #. Spin up Docker by running ``inv docker.up``.
 #. Optional. Define ``USE_PROMOS=True`` if you wan to test EthicalAds addon.
-#. Edit ``common/dockerfiles/force-readthedocs-addons.js`` to point to the development server:
-
-   .. code-block:: diff
-
-
-      diff --git a/dockerfiles/force-readthedocs-addons.js b/dockerfiles/force-readthedocs-addons.js
-      index 82a44c4..2b0d46d 100644
-      --- a/dockerfiles/force-readthedocs-addons.js
-      +++ b/dockerfiles/force-readthedocs-addons.js
-      @@ -15,7 +15,7 @@
-
-      // add "readthedocs-addons.js" inside the "<head>"
-      const addonsJs =
-      -  '<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script>';
-      +  '<script async type="text/javascript" src="http://localhost:8000/readthedocs-addons.js"></script>';
-
-      // selectors we want to remove
-      // https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/#selectors
 #. Open any built documentation you already have in your local development instance.
+#. Edit any file from addons to see the changes immediately.
 
 .. tip::
 
