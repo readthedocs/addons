@@ -1,11 +1,9 @@
-import { ajv } from "./data-validation";
 import { toString as keyboardEventToString } from "keyboard-event-to-string";
 
 import { AddonBase } from "./utils";
-import { html, nothing, LitElement } from "lit";
+import { LitElement } from "lit";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
-  EVENT_READTHEDOCS_SEARCH_HIDE,
   EVENT_READTHEDOCS_DOCDIFF_TOGGLE,
 } from "./events";
 
@@ -25,7 +23,6 @@ export class HotKeysElement extends LitElement {
     super();
 
     this.config = null;
-    this.docDiffShow = false;
   }
 
   loadConfig(config) {

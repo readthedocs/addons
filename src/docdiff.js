@@ -1,4 +1,3 @@
-import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
@@ -14,7 +13,7 @@ import * as visualDomDiff from "visual-dom-diff";
 
 import { AddonBase } from "./utils";
 import { EVENT_READTHEDOCS_DOCDIFF_TOGGLE } from "./events";
-import { html, nothing, LitElement } from "lit";
+import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
 
