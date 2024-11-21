@@ -1,5 +1,15 @@
 import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
+import {
+  SPHINX,
+  MKDOCS,
+  MKDOCS_MATERIAL,
+  DOCUSAURUS,
+  PELICAN,
+  ASCIIDOCTOR,
+  JEKYLL,
+} from "./constants";
+
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
@@ -270,15 +280,15 @@ export class DocumentationTool {
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
 
     this.DEFAULT_ROOT_SELECTOR = {
-      sphinx: "[role=main]",
-      "mkdocs-material": "main > div > div.md-content",
-      docsify: "article#main",
-      asciidoctor: "div#content",
-      pelican: "article",
-      docusaurus: "article",
-      antora: "article",
-      jekyll: "article",
-      fallback: ["main", "div.body", "div.document", "body"],
+      SPHINX: "[role=main]",
+      MKDOCS_MATERIAL: "main > div > div.md-content",
+      DOCSIFY: "article#main",
+      ASCIIDOCTOR: "div#content",
+      PELICAN: "article",
+      DOCUSAURUS: "article",
+      ANTORA: "article",
+      JEKYLL: "article",
+      FALLBACK_DOCTOOL: ["main", "div.body", "div.document", "body"],
     };
 
     this.DEFAULT_LINK_SELECTOR = {
@@ -287,6 +297,13 @@ export class DocumentationTool {
     };
   }
 
+  /**
+   * Return the CSS selector to get all the links inside the content of the page.
+   *
+   * The selector returned is based on the documentation tool detected.
+   * If no documentation tool was detected, we iterate over the fallback selectors
+   * and return the first selector that finds an element.
+   */
   getLinkSelector() {
     if (
       this.documentationTool &&
@@ -312,6 +329,13 @@ export class DocumentationTool {
     return null;
   }
 
+  /**
+   * Return the CSS selector that contains the main content of the page.
+   *
+   * The selector returned is based on the documentation tool detected.
+   * If no documentation tool was detected, we iterate over the fallback selectors
+   * and return the first selector that finds an element.
+   */
   getRootSelector() {
     if (
       this.documentationTool &&
@@ -333,33 +357,39 @@ export class DocumentationTool {
     return null;
   }
 
+  /**
+   * Return the documentation tool auto-detected.
+   *
+   * Check for all the known documentation tools and return the name of it if found.
+   * Otherwise, it returns `null`.
+   */
   getDocumentationTool() {
     if (this.isSphinx()) {
-      return "sphinx";
+      return SPHINX;
     }
 
     if (this.isMaterialMkDocs()) {
-      return "mkdocs-material";
+      return MKDOCS_MATERIAL;
     }
 
     if (this.isPelican()) {
-      return "pelican";
+      return PELICAN;
     }
 
     if (this.isDocusaurus()) {
-      return "docusaurus";
+      return DOCUSAURUS;
     }
 
     if (this.isAsciiDoctor()) {
-      return "asciidoctor";
+      return ASCIIDOCTOR;
     }
 
     if (this.isJekyll()) {
-      return "jekyll";
+      return JEKYLL;
     }
 
     if (this.isMkDocs()) {
-      return "mkdocs";
+      return MKDOCS;
     }
 
     console.debug("We were not able to detect the documentation tool.");
