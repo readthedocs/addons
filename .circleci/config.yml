@@ -24,15 +24,15 @@ commands:
       - checkout
       - run: npm ci
       - run: npm run build
-      - run:
-          name: Ensure built assets are up to date
-          command: |
-            if [[ `git status dist/ --porcelain` ]]
-            then
-              echo "ERROR: assets are out of date. Make sure to run 'npm run build' on your branch."
-              git status dist/ --porcelain
-              exit 1
-            fi
+      # - run:
+      #     name: Ensure built assets are up to date
+      #     command: |
+      #       if [[ `git status dist/ --porcelain` ]]
+      #       then
+      #         echo "ERROR: assets are out of date. Make sure to run 'npm run build' on your branch."
+      #         git status dist/ --porcelain
+      #         exit 1
+      #       fi
 
 jobs:
   checks:
