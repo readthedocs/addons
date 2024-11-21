@@ -288,8 +288,8 @@ export class DocumentationTool {
   };
 
   static DEFAULT_LINK_SELECTOR = {
-    sphinx: "a.internal",
-    fallback: ["p a"],
+    SPHINX: "a.internal",
+    FALLBACK_DOCTOOL: ["p a"],
   };
 
   constructor() {
@@ -307,7 +307,11 @@ export class DocumentationTool {
   getLinkSelector() {
     if (
       this.documentationTool &&
-      objectPath.get(this.constructor.DEFAULT_LINK_SELECTOR, this.documentationTool, null)
+      objectPath.get(
+        this.constructor.DEFAULT_LINK_SELECTOR,
+        this.documentationTool,
+        null,
+      )
     ) {
       return `${this.getRootSelector()} ${
         this.constructor.DEFAULT_LINK_SELECTOR[this.documentationTool]
@@ -339,7 +343,11 @@ export class DocumentationTool {
   getRootSelector() {
     if (
       this.documentationTool &&
-      objectPath.get(this.constructor.DEFAULT_ROOT_SELECTOR, this.documentationTool, null)
+      objectPath.get(
+        this.constructor.DEFAULT_ROOT_SELECTOR,
+        this.documentationTool,
+        null,
+      )
     ) {
       return this.constructor.DEFAULT_ROOT_SELECTOR[this.documentationTool];
     }
@@ -467,10 +475,9 @@ export class DocumentationTool {
       'link[href^="_static/platter.css"]',
       'link[href^="_static/werkzeug.css"]',
     ];
-    for (const selector of selectors) {
-      if (document.querySelectorAll(selector).length === 1) {
-        return true;
-      }
+
+    if (document.querySelectorAll(selectors.join(", ")).length) {
+      return true;
     }
     return false;
   }
