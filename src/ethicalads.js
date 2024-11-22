@@ -162,6 +162,7 @@ export class EthicalAdsAddon extends AddonBase {
         // Use fixed footer for smaller widths, but not mobile
         placement.setAttribute("data-ea-type", "text");
         placement.setAttribute("data-ea-style", "fixedfooter");
+        // TODO: THIS IS A HACK. IS THERE A BETTER WAY?
         // Add margin to the bottom to avoid hiding bottom of content
         const root_node = document.querySelector(docTool.getRootSelector());
         root_node.style.marginBottom = "2em";
