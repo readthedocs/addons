@@ -158,6 +158,19 @@ export class EthicalAdsAddon extends AddonBase {
           placement,
           elementInsertBefore.lastChild,
         );
+      } else {
+        // Use a fixed footer as type when width is smaller than 1300
+        placement.setAttribute("data-ea-type", "text");
+        placement.setAttribute("data-ea-style", "fixedfooter");
+        // Add margin to the bottom to avoid hiding bottom of content
+        const root_node = document.querySelector(docTool.getRootSelector());
+        root_node.style.marginBottom = "5em";
+        // Copy append logic from above
+        const elementInsertBefore = document.body;
+        elementInsertBefore.insertBefore(
+          placement,
+          elementInsertBefore.lastChild,
+        );
       }
     }
 
