@@ -274,6 +274,48 @@ const addons_filetreediff = {
     },
   },
 };
+// Validator for FileSections Addon
+const addons_filesections = {
+  $id: "http://v1.schemas.readthedocs.org/addons.commands.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["filesections"],
+      properties: {
+        filesections: {
+          type: "object",
+          required: ["enabled", "sections"],
+          properties: {
+            enabled: { type: "boolean" },
+            sections: {
+              type: "array",
+              items: {
+                type: "object",
+                required: ["path", "sections"],
+                properties: {
+                  path: { type: "string" },
+                  sections: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      required: ["id", "title"],
+                      properties: {
+                        id: { type: "string" },
+                        title: { type: "string" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 // Validator for Hotkeys Addon
 const addons_hotkeys = {
@@ -534,6 +576,7 @@ export const ajv = new Ajv({
     addons_linkpreviews,
     addons_filetreediff,
     addons_customscript,
+    addons_filesections,
   ],
 });
 

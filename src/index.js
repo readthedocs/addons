@@ -9,6 +9,7 @@ import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
 import * as filetreediff from "./filetreediff";
 import * as customscript from "./customscript";
+import * as commands from "./commands";
 import { default as objectPath } from "object-path";
 import {
   domReady,
@@ -30,6 +31,7 @@ export function setup() {
     linkpreviews.LinkPreviewsAddon,
     filetreediff.FileTreeDiffAddon,
     customscript.CustomScriptAddon,
+    commands.CommandsAddon,
   ];
 
   return new Promise((resolve) => {
@@ -69,6 +71,7 @@ export function setup() {
           if (addon.isEnabled(config, httpStatus)) {
             promises.push(
               new Promise((resolve) => {
+                console.debug("Enabling addon:", addon.addonName);
                 return resolve(new addon(config));
               }),
             );

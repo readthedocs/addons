@@ -9,6 +9,8 @@ export const EVENT_READTHEDOCS_FLYOUT_SHOW = "readthedocs-flyout-show";
 export const EVENT_READTHEDOCS_FLYOUT_HIDE = "readthedocs-flyout-hide";
 export const EVENT_READTHEDOCS_ADDONS_DATA_READY =
   "readthedocs-addons-data-ready";
+export const EVENT_READTHEDOCS_COMMANDS_SHOW = "readthedocs-commands-show";
+export const EVENT_READTHEDOCS_COMMANDS_HIDE = "readthedocs-commands-hide";
 
 /**
  * Object to pass to user subscribing to `EVENT_READTHEDOCS_ADDONS_DATA_READY`.
