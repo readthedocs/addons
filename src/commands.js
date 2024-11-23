@@ -209,7 +209,7 @@ export class CommandPaletteElement extends LitElement {
               <a
                 @click=${(e) => this.handleCommandClick(e, result)}
                 @mouseenter=${this.mouseenterResultHit}
-                class="hit-block-heading"
+                class="hit-block-heading ${result.action ? "hit" : ""}"
                 href="${result.path}"
               >
                 <h2>${result.path}</h2>
