@@ -35,7 +35,6 @@ export class CommandPaletteElement extends LitElement {
     show: { state: true },
     inputIcon: { state: true },
     commands: { state: true },
-    commandResults: { state: true },
     cssFormFocusClasses: { state: true },
     triggerKeycode: { type: Number, attribute: "trigger-keycode" },
     triggerSelector: { type: String, attribute: "trigger-selector" },
@@ -56,59 +55,7 @@ export class CommandPaletteElement extends LitElement {
     this.config = null;
     this.show = false;
     this.cssFormFocusClasses = {};
-    this.commands = [
-      {
-        path: "Show DocDiff",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(
-            EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-          );
-          document.dispatchEvent(event);
-        },
-      },
-      {
-        path: "Hide DocDiff",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
-          document.dispatchEvent(event);
-        },
-      },
-      {
-        path: "Show Search",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-          document.dispatchEvent(event);
-        },
-      },
-      {
-        path: "Hide Search",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
-          document.dispatchEvent(event);
-        },
-      },
-      {
-        path: "Show Flyout",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_SHOW);
-          document.dispatchEvent(event);
-        },
-      },
-      {
-        path: "Hide Flyout",
-        sections: [],
-        action: () => {
-          const event = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
-          document.dispatchEvent(event);
-        },
-      },
-    ];
-    this.commandResults = null;
+    this.commands = [];
     this.inputIcon = icon(faMagnifyingGlass, { title: "Search commands" });
     this.currentQueryRequest = null;
     this.triggerKeycode = 191;
@@ -123,11 +70,130 @@ export class CommandPaletteElement extends LitElement {
     }
 
     this.config = config;
-    this.commands = [
-      ...this.commands,
-      ...(config.addons.filesections.sections || []),
-    ];
+    this.commands = this.createCommands(config);
     console.log("Command palette config loaded", this.commands);
+  }
+
+  /**
+   * Create commands based on the provided configuration.
+   *
+   * Each command object has the following structure:
+   * {
+   *   title: string, // The title of the command
+   *   href: string,  // The URL to navigate to when the command is executed
+   *   action: function, // (Optional) A function to execute when the command is selected
+   *   sections: {
+   *   id: string, // The unique identifier of the section
+   *   title: string, // The title of the section
+   *   }
+   * }
+   *
+   * @param {Object} config - The configuration object
+   * @returns {Array} - An array of command objects
+   */
+  createCommands(config) {
+    const commands = [
+      {
+        title: "Show DocDiff",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(
+            EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+          );
+          document.dispatchEvent(event);
+        },
+      },
+      {
+        title: "Hide DocDiff",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
+          document.dispatchEvent(event);
+        },
+      },
+      {
+        title: "Show Search",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+          document.dispatchEvent(event);
+        },
+      },
+      {
+        title: "Hide Search",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
+          document.dispatchEvent(event);
+        },
+      },
+      {
+        title: "Show Flyout",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_SHOW);
+          document.dispatchEvent(event);
+        },
+      },
+      {
+        title: "Hide Flyout",
+        href: "#",
+        sections: [],
+        action: () => {
+          const event = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
+          document.dispatchEvent(event);
+        },
+      },
+    ];
+
+    if (config.projects && config.projects.current) {
+      commands.push(
+        {
+          title: "Project Home",
+          href: config.projects.current.urls.home,
+          sections: [],
+        },
+        {
+          title: "Project Builds",
+          href: config.projects.current.urls.builds,
+          sections: [],
+        },
+        {
+          title: "GitHub",
+          href: config.projects.current.repository.url,
+          sections: [],
+        },
+      );
+    }
+
+    if (config.builds && config.builds.current) {
+      commands.push({
+        title: "Current Build Log",
+        href: config.builds.current.urls.build,
+        sections: [],
+      });
+    }
+
+    if (
+      config.addons &&
+      config.addons.filesections &&
+      config.addons.filesections.pages
+    ) {
+      commands.push(
+        ...config.addons.filesections.pages.map((page) => ({
+          title: page.path,
+          href: page.path,
+          sections: page.sections,
+        })),
+      );
+    }
+
+    return commands;
   }
 
   firstUpdated() {
@@ -210,9 +276,9 @@ export class CommandPaletteElement extends LitElement {
                 @click=${(e) => this.handleCommandClick(e, result)}
                 @mouseenter=${this.mouseenterResultHit}
                 class="hit-block-heading ${result.action ? "hit" : ""}"
-                href="${result.path}"
+                href="${result.href}"
               >
-                <h2>${result.path}</h2>
+                <h2>${result.title}</h2>
               </a>
               ${result.sections.map(
                 (section, bindex) =>
@@ -231,17 +297,11 @@ export class CommandPaletteElement extends LitElement {
   handleCommandClick(e, result) {
     e.preventDefault();
     if (result.action) {
-      result.action();
+      result.action(this.config);
     } else {
-      window.location.href = result.path;
+      window.location.href = result.href;
     }
     this.triggerClosePalette();
-  }
-
-  followResultLink(e) {
-    // Close the modal if the link is on the same page
-    const event = new CustomEvent(EVENT_READTHEDOCS_COMMANDS_HIDE);
-    document.dispatchEvent(event);
   }
 
   renderSectionResult(section, index, result) {
@@ -252,7 +312,7 @@ export class CommandPaletteElement extends LitElement {
       <a
         @mouseenter=${this.mouseenterResultHit}
         class="hit"
-        href="${result.path}#${section.id}"
+        href="${result.href}#${section.id}"
       >
         <div id="hit-${index}">
           <p class="hit subheading">${title}</p>
@@ -299,16 +359,16 @@ export class CommandPaletteElement extends LitElement {
     const lowerCaseQuery = query.toLowerCase();
 
     // Simulate fetching results from in-memory data with fuzzy searching
-    const data = results.filter((result) => {
-      const pathMatch = result.path.toLowerCase().includes(lowerCaseQuery);
+    const filteredResults = results.filter((result) => {
+      const pathMatch = result.title.toLowerCase().includes(lowerCaseQuery);
       const sectionMatch = result.sections.some((section) =>
         section.title.toLowerCase().includes(lowerCaseQuery),
       );
       return pathMatch || sectionMatch;
     });
 
-    if (data.length > 0) {
-      this.renderResults({ results: data });
+    if (filteredResults.length > 0) {
+      this.renderResults({ results: filteredResults });
     } else {
       this.renderNoResultsFound();
     }
@@ -354,7 +414,7 @@ export class CommandPaletteElement extends LitElement {
       // if an item is selected, then redirect to its link or execute its action
       if (selected !== null) {
         const command = this.commands.find(
-          (cmd) => cmd.path === selected.textContent.trim(),
+          (cmd) => cmd.title === selected.textContent.trim(),
         );
         if (command && command.action) {
           command.action();

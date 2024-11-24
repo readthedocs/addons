@@ -286,7 +286,7 @@ const addons_filesections = {
       properties: {
         filesections: {
           type: "object",
-          required: ["enabled", "sections"],
+          required: ["enabled", "pages"],
           properties: {
             enabled: { type: "boolean" },
             sections: {
