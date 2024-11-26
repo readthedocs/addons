@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.23.0
+---------------
+
+:date: Nov 26, 2024
+
+* Enable DocDiff via a query string (``readthedocs-diff=true``)
+* Don't show notification on default version
+* Improvements to Links Preview (using a default CSS selector and heuristic to detect the documentation tool)
+
 Version v0.22.0
 ---------------
 
