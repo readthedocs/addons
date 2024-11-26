@@ -287,7 +287,7 @@ export class DocumentationTool {
     [DOCUSAURUS]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
-    [FALLBACK_DOCTOOL]: ["main", "div.body", "div.document", "body"],
+    [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
   };
 
   static DEFAULT_LINK_SELECTOR = {

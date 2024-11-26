@@ -21,12 +21,3 @@ repos:
       - id: destroyed-symlinks
       - id: end-of-file-fixer
         exclude: "^(dist/|public/|tests/__snapshots__/).*$"
-  - repo: local
-    hooks:
-      - id: check-build-assets
-        name: Ensure assets are current
-        description: Ensure that `npm run build` was run before commiting.
-        language: script
-        types_or: [css, javascript, svg, json]
-        pass_filenames: false
-        entry: .pre-commit/check-build-assets.sh
