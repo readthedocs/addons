@@ -4,7 +4,8 @@ import { AddonBase } from "./utils";
 import { LitElement } from "lit";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
-  EVENT_READTHEDOCS_DOCDIFF_TOGGLE,
+  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+  EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
 
 export class HotKeysElement extends LitElement {
@@ -36,7 +37,7 @@ export class HotKeysElement extends LitElement {
     this.config = config;
 
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
-    this.docDiffShowed = false;
+    this.docDiffEnabled = false;
 
     this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
   }
@@ -56,7 +57,15 @@ export class HotKeysElement extends LitElement {
       document.activeElement.tagName !== "TEXTAREA" &&
       document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
-      event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_TOGGLE);
+      if (this.docDiffEnabled) {
+        event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
+      } else {
+        event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
+      }
+      if (event !== undefined) {
+        console.log(event);
+        document.dispatchEvent(event);
+      }
     }
 
     // Search
@@ -79,6 +88,18 @@ export class HotKeysElement extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("keydown", this._handleKeydown);
+
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      function (event) {
+        console.log("DD Show");
+        this.docDiffEnabled = true;
+      },
+    );
+    document.addEventListener(EVENT_READTHEDOCS_DOCDIFF_HIDE, function (event) {
+      console.log("DD Hide");
+      this.docDiffEnabled = false;
+    });
   }
 
   disconnectedCallback() {

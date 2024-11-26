@@ -12,7 +12,10 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 import * as visualDomDiff from "visual-dom-diff";
 
 import { AddonBase } from "./utils";
-import { EVENT_READTHEDOCS_DOCDIFF_TOGGLE } from "./events";
+import {
+  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+  EVENT_READTHEDOCS_DOCDIFF_HIDE,
+} from "./events";
 import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
@@ -100,7 +103,8 @@ export class DocDiffElement extends LitElement {
 
     // Enable DocDiff if the URL parameter is present
     if (hasQueryParam(DOCDIFF_URL_PARAM)) {
-      this.enableDocDiff();
+      event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
+      document.dispatchEvent(event);
     }
   }
 
@@ -174,6 +178,7 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
+    console.log(this.enabled);
     if (this.config === null || this.enabled) {
       return null;
     }
@@ -184,6 +189,7 @@ export class DocDiffElement extends LitElement {
   }
 
   disableDocDiff() {
+    console.log(this.enabled);
     if (!this.enabled) {
       return null;
     }
@@ -192,27 +198,27 @@ export class DocDiffElement extends LitElement {
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
   }
 
-  _toggleDocDiff = (e) => {
+  _handleShowDocDiff = (e) => {
     e.preventDefault();
-    if (this.enabled) {
-      this.disableDocDiff();
-    } else {
-      this.enableDocDiff();
-    }
+    this.enableDocDiff();
+  };
+
+  _handleHideDocDiff = (e) => {
+    e.preventDefault();
+    this.disableDocDiff();
   };
 
   connectedCallback() {
     super.connectedCallback();
 
     document.addEventListener(
-      EVENT_READTHEDOCS_DOCDIFF_TOGGLE,
-      this._toggleDocDiff,
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleShowDocDiff,
     );
-  }
-
-  disconnectedCallback() {
-    document.removeEventListener("keydown", this._handleShowDocDiff);
-    super.disconnectedCallback();
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleHideDocDiff,
+    );
   }
 }
 
