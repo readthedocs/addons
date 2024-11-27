@@ -124,7 +124,7 @@
     },
     "doc_diff": {
       "enabled": true,
-      "base_url": "http://localhost:8000/docdiff.changed.html",
+      "base_url": "http://localhost:8000/docdiff.changed.html"
     },
     "filetreediff": {
       "enabled": true,
