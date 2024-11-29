@@ -156,6 +156,44 @@ export class AddonBase {
 }
 
 /**
+ * Setup events firing on history pushState and replaceState
+ *
+ * This is needed when addons are used in SPA. A lot of addons rely
+ * on the current URL. However in the SPA, the pages are not reloaded, so
+ * the addons never get notified of the changes in the URL.
+ *
+ * While History API does have `popstate` event, the only way to listen to
+ * changes via pushState and replaceState is using monkey-patching, which is
+ * what this function does. (See https://stackoverflow.com/a/4585031)
+ * It will fire a "pushState" or "replaceState" event, depending on which method was called.
+ *
+ */
+export function setupHistoryEvents() {
+  // Let's ensure that the history will be patched only once, so we create a Symbol to check by
+  const patchKey = Symbol.for("addons_history");
+
+  if (
+    typeof history !== "undefined" &&
+    typeof window[patchKey] === "undefined"
+  ) {
+    for (const methodName of ["pushState", "replaceState"]) {
+      const originalMethod = history[methodName];
+      history[methodName] = function () {
+        const result = originalMethod.apply(this, arguments);
+        const event = new Event(methodName);
+        event.arguments = arguments;
+
+        dispatchEvent(event);
+        return result;
+      };
+    }
+
+    // Let's leave a flag, so we know that history has been patched
+    Object.defineProperty(window, patchKey, { value: true });
+  }
+}
+
+/**
  * Debounce a function.
  *
  * Usage::
