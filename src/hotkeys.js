@@ -64,7 +64,6 @@ export class HotKeysElement extends LitElement {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
       }
       if (event !== undefined) {
-        console.log(event);
         document.dispatchEvent(event);
       }
     }
