@@ -179,6 +179,7 @@ export class DocDiffElement extends LitElement {
 
   enableDocDiff() {
     if (this.config === null || this.enabled) {
+      console.debug("Ignoring enableDocDiff: it was already enabled");
       return null;
     }
 
@@ -189,6 +190,7 @@ export class DocDiffElement extends LitElement {
 
   disableDocDiff() {
     if (!this.enabled) {
+      console.debug("Ignoring disableDocDiff: it was already disabled");
       return null;
     }
 
