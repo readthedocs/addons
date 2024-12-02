@@ -48,6 +48,7 @@ export class HotKeysElement extends LitElement {
     // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
 
     let event;
+
     // DocDiff
     if (
       this.docDiffHotKeyEnabled &&
@@ -91,13 +92,11 @@ export class HotKeysElement extends LitElement {
 
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      function (event) {
-        console.log("DD Show");
+      (event) => {
         this.docDiffEnabled = true;
       },
     );
-    document.addEventListener(EVENT_READTHEDOCS_DOCDIFF_HIDE, function (event) {
-      console.log("DD Hide");
+    document.addEventListener(EVENT_READTHEDOCS_DOCDIFF_HIDE, (event) => {
       this.docDiffEnabled = false;
     });
   }

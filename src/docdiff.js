@@ -178,10 +178,10 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
-    console.log(this.enabled);
     if (this.config === null || this.enabled) {
       return null;
     }
+    console.log(this.enabled);
 
     this.enabled = true;
     this.originalBody = document.querySelector(this.rootSelector);
@@ -189,10 +189,10 @@ export class DocDiffElement extends LitElement {
   }
 
   disableDocDiff() {
-    console.log(this.enabled);
     if (!this.enabled) {
       return null;
     }
+    console.log(this.enabled);
 
     this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
