@@ -530,7 +530,7 @@ export class SearchElement extends LitElement {
       const selected = this.renderRoot.querySelector("a.hit.active");
       // if an item is selected, then redirect to its link
       if (selected !== null) {
-        window.location.href = selected.href;
+        selected.click();
       }
     }
 
