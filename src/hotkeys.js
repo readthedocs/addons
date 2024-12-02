@@ -88,22 +88,36 @@ export class HotKeysElement extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("keydown", this._handleKeydown);
-
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      (event) => {
-        this.docDiffEnabled = true;
-      },
+      this._handleDocDiffShow,
     );
-    document.addEventListener(EVENT_READTHEDOCS_DOCDIFF_HIDE, (event) => {
-      this.docDiffEnabled = false;
-    });
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleDocDiffHide,
+    );
   }
 
   disconnectedCallback() {
     document.removeEventListener("keydown", this._handleKeydown);
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleDocDiffShow,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleDocDiffHide,
+    );
     super.disconnectedCallback();
   }
+
+  _handleDocDiffShow = (event) => {
+    this.docDiffEnabled = true;
+  };
+
+  _handleDocDiffHide = (event) => {
+    this.docDiffEnabled = false;
+  };
 }
 
 export class HotKeysAddon extends AddonBase {
