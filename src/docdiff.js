@@ -220,6 +220,17 @@ export class DocDiffElement extends LitElement {
       this._handleHideDocDiff,
     );
   }
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleShowDocDiff,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleHideDocDiff,
+    );
+    super.disconnectedCallback();
+  }
 }
 
 export class DocDiffAddon extends AddonBase {
