@@ -19,8 +19,8 @@
     "@babel/core": "^7.26.0",
     "@babel/plugin-syntax-import-assertions": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.1",
+    "@fortawesome/free-solid-svg-icons": "^6.7.1",
     "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-commonjs": "^26.0.3",
     "@rollup/plugin-image": "^3.0.3",
@@ -37,7 +37,7 @@
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.2.1",
     "object-path": "^0.11.8",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "rollup-plugin-lit-css": "^5.0.1",
     "sinon": "^19.0.2",
     "tippy.js": "^6.3.7",
@@ -62,6 +62,6 @@
     }
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.10"
+    "@floating-ui/dom": "^1.6.12"
   }
 }
