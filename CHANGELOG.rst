@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.23.1
+---------------
+
+:date: Dec 3, 2024
+
+* Search store recent queries when using keyboard
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.23.0
 ---------------
 
