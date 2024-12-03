@@ -191,7 +191,7 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
     }
 
     if (selector !== null) {
-      params["selector"] = selector;
+      params["maincontent"] = selector;
     }
 
     const api_url =
