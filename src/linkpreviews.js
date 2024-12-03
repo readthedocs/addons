@@ -21,7 +21,7 @@ const SHOW_TOOLTIP_DELAY = 300;
 const HIDE_TOOLTIP_DELAY = 300;
 const TOOLTIP_DATA_HREF = "data-linkpreview-href";
 
-function setupTooltip(el, doctoolname, doctoolversion) {
+function setupTooltip(el, doctoolname, doctoolversion, selector) {
   // Take the provided element and setup the listeners required to
   // make the linkpreviews work
 
@@ -190,6 +190,10 @@ function setupTooltip(el, doctoolname, doctoolversion) {
       params["doctoolversion"] = doctoolversion;
     }
 
+    if (selector !== null) {
+      params["maincontent"] = selector;
+    }
+
     const api_url =
       "/_/api/v3/embed/?" + new URLSearchParams(params).toString();
     return api_url;
@@ -241,7 +245,7 @@ export class LinkPreviewsAddon extends AddonBase {
           elementUrl.pathname.replace("/index.html");
         if (elementHostname === window.location.hostname && !pointToSamePage) {
           element.classList.add("link-preview");
-          setupTooltip(element, doctoolName, null);
+          setupTooltip(element, doctoolName, null, rootSelector);
         }
       } catch (error) {
         console.debug(

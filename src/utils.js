@@ -284,7 +284,7 @@ export class DocumentationTool {
     [DOCSIFY]: "article#main",
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
-    [DOCUSAURUS]: "article",
+    [DOCUSAURUS]: "article div.markdown",
     [ANTORA]: "article",
     [JEKYLL]: "article",
     [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
