@@ -1,0 +1,189 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as utils from "../src/utils";
+
+      let element;
+
+      runTests(async () => {
+        afterEach(() => {
+          // Remove the element added by the test
+          if (element !== undefined) {
+            element.remove();
+          }
+          const content = document.querySelector("#content");
+          if (content) {
+            content.remove();
+          }
+        });
+
+        describe("DocumentationTool tests", () => {
+          it("Sphinx Alabaster", async () => {
+            element = document.createElement("link");
+            element.href = "_static/alabaster.css";
+            document.head.appendChild(element);
+
+            // We can't rely on the DocumentationTool exported since the
+            // constructur is triggered before we add the required element to
+            // the DOM.
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.isMkDocs()).to.be.false;
+            expect(tool.getDocumentationTool()).to.be.equal("sphinx");
+            expect(tool.isSphinx()).to.be.true;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.true;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.getRootSelector()).to.be.equal("[role=main]");
+            expect(tool.getLinkSelector()).to.be.equal(
+              "[role=main] a.internal",
+            );
+          });
+
+          it("Sphinx Furo", async () => {
+            element = document.createElement("link");
+            element.href = "_static/styles/furo.css";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.isMkDocs()).to.be.false;
+            expect(tool.getDocumentationTool()).to.be.equal("sphinx");
+            expect(tool.isSphinx()).to.be.true;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isSphinxFuroLikeTheme()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("[role=main]");
+            expect(tool.getLinkSelector()).to.be.equal(
+              "[role=main] a.internal",
+            );
+          });
+
+          it("Sphinx Read the Docs", async () => {
+            element = document.createElement("script");
+            element.src = "_static/js/theme.js";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.getDocumentationTool()).to.be.equal("sphinx");
+            expect(tool.isSphinx()).to.be.true;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isPelican()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("[role=main]");
+            expect(tool.getLinkSelector()).to.be.equal(
+              "[role=main] a.internal",
+            );
+          });
+
+          it("Pelican", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "Pelican";
+            document.head.appendChild(element);
+
+            const content = `<article id="content"><p>This is a <a href="#">link</a></p></article>`;
+            document.body.insertAdjacentHTML("beforeend", content);
+
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.getDocumentationTool()).to.be.equal("pelican");
+            expect(tool.isSphinx()).to.be.false;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isPelican()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("article");
+            expect(tool.getLinkSelector()).to.be.equal("article p a");
+          });
+
+          it("AsciiDoctor", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "Built with Asciidoctor";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            const content = `<div id="content"><p>This is a <a href="#">link</a></p></div>`;
+            document.body.insertAdjacentHTML("beforeend", content);
+
+            expect(tool.getDocumentationTool()).to.be.equal("asciidoctor");
+            expect(tool.isSphinx()).to.be.false;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isPelican()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isAsciiDoctor()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("div#content");
+            expect(tool.getLinkSelector()).to.be.equal("div#content p a");
+          });
+
+          it("Jekyll", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "Built with Jekyll";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            const content = `<article id="content"><p>This is a <a href="#">link</a></p></article>`;
+            document.body.insertAdjacentHTML("beforeend", content);
+
+            expect(tool.getDocumentationTool()).to.be.equal("jekyll");
+            expect(tool.isSphinx()).to.be.false;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isPelican()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isAsciiDoctor()).to.be.false;
+            expect(tool.isJekyll()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("article");
+            expect(tool.getLinkSelector()).to.be.equal("article p a");
+          });
+
+          it("Material for MkDocs", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "Built with mkdocs-material";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.getDocumentationTool()).to.be.equal("mkdocs-material");
+            expect(tool.isSphinx()).to.be.false;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isPelican()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isAsciiDoctor()).to.be.false;
+            expect(tool.isJekyll()).to.be.false;
+            expect(tool.isMaterialMkDocs()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal(
+              "main > div > div.md-content",
+            );
+          });
+
+          it("Docusaurus", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "Built with Docusaurus";
+            document.head.appendChild(element);
+
+            const content = `<article id="content"><p>This is a <a href="#">link</a></p></article>`;
+            document.body.insertAdjacentHTML("beforeend", content);
+
+            // We can't rely on the DocumentationTool exported since the
+            // constructur is triggered before we add the required element to
+            // the DOM.
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.getDocumentationTool()).to.be.equal("docusaurus");
+            expect(tool.isJekyll()).to.be.false;
+            expect(tool.isDocusaurus()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("article");
+            expect(tool.getLinkSelector()).to.be.equal("article p a");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
