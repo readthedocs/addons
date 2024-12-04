@@ -8,6 +8,7 @@ import {
   EVENT_READTHEDOCS_SEARCH_HIDE,
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
+  EVENT_READTHEDOCS_COMMANDS_SHOW,
 } from "./events";
 
 export class HotKeysElement extends LitElement {
@@ -43,6 +44,7 @@ export class HotKeysElement extends LitElement {
     this.docDiffShowed = false;
 
     this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
+    this.commandPaletteHotKeyEnabled = true;
   }
 
   _handleKeydown = (e) => {
@@ -58,7 +60,8 @@ export class HotKeysElement extends LitElement {
         this.config.addons.hotkeys.doc_diff.trigger &&
       document.activeElement.tagName !== "INPUT" &&
       document.activeElement.tagName !== "TEXTAREA" &&
-      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
+      document.activeElement.tagName !== "READTHEDOCS-SEARCH" &&
+      document.activeElement.tagName !== "READTHEDOCS-COMMANDS"
     ) {
       if (this.docDiffShowed) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
@@ -75,9 +78,23 @@ export class HotKeysElement extends LitElement {
       keyboardEventToString(e) === this.config.addons.hotkeys.search.trigger &&
       document.activeElement.tagName !== "INPUT" &&
       document.activeElement.tagName !== "TEXTAREA" &&
-      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
+      document.activeElement.tagName !== "READTHEDOCS-SEARCH" &&
+      document.activeElement.tagName !== "READTHEDOCS-COMMANDS"
     ) {
       event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+    }
+
+    // Command Palette
+    if (
+      this.commandPaletteHotKeyEnabled &&
+      (e.metaKey || e.ctrlKey) &&
+      e.key === "k" &&
+      document.activeElement.tagName !== "INPUT" &&
+      document.activeElement.tagName !== "TEXTAREA" &&
+      document.activeElement.tagName !== "READTHEDOCS-SEARCH" &&
+      document.activeElement.tagName !== "READTHEDOCS-COMMANDS"
+    ) {
+      event = new CustomEvent(EVENT_READTHEDOCS_COMMANDS_SHOW);
     }
 
     if (event !== undefined) {
