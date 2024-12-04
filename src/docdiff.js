@@ -121,13 +121,15 @@ export class DocDiffElement extends LitElement {
     // `;
   }
 
-  handleClick(e) {
-    if (e.target.checked) {
-      this.enableDocDiff();
-    } else {
-      this.disableDocDiff();
-    }
-  }
+  // This code isn't used until we show a UI,
+  // and even then we'll want to trigger events to match state?
+  // handleClick(e) {
+  //   if (e.target.checked) {
+  //     this.enableDocDiff();
+  //   } else {
+  //     this.disableDocDiff();
+  //   }
+  // }
 
   compare() {
     let promiseData;
@@ -178,7 +180,13 @@ export class DocDiffElement extends LitElement {
   }
 
   enableDocDiff() {
-    if (this.config === null || this.enabled) {
+    // TODO: Unsure when this would happen?
+    // Perhaps when DocDiffAddon.isEnabled returns false?
+    if (this.config === null) {
+      return null;
+    }
+
+    if (this.enabled) {
       console.debug("Ignoring enableDocDiff: it was already enabled");
       return null;
     }

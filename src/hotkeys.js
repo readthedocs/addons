@@ -63,9 +63,6 @@ export class HotKeysElement extends LitElement {
       } else {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
       }
-      if (event !== undefined) {
-        document.dispatchEvent(event);
-      }
     }
 
     // Search
@@ -79,6 +76,7 @@ export class HotKeysElement extends LitElement {
       event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     }
 
+    // Send event for all keydown events
     if (event !== undefined) {
       document.dispatchEvent(event);
       e.preventDefault();
