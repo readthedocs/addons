@@ -70,10 +70,13 @@ export class FileTreeDiffElement extends LitElement {
         : nothing;
     };
 
-    const diffdata = objectPath.get(this.config, "addons.filetreediff.diff");
-    let diffAddedUrls = generateDiffList(diffdata.added, "Added");
-    let diffDeletedUrls = generateDiffList(diffdata.deleted, "Deleted");
-    let diffModifiedUrls = generateDiffList(diffdata.modified, "Modified");
+    const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
+    if (!diffData) {
+      return nothing;
+    }
+    const diffAddedUrls = generateDiffList(diffData.added, "Added");
+    const diffDeletedUrls = generateDiffList(diffData.deleted, "Deleted");
+    const diffModifiedUrls = generateDiffList(diffData.modified, "Modified");
 
     return html`
       <div>
