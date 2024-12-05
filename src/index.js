@@ -16,6 +16,7 @@ import {
   IS_PRODUCTION,
   setupLogging,
   getMetadataValue,
+  setupHistoryEvents,
 } from "./utils";
 
 export function setup() {
@@ -36,6 +37,7 @@ export function setup() {
     domReady
       .then(() => {
         setupLogging();
+        setupHistoryEvents();
 
         let sendUrlParam = false;
         for (const addon of addons) {
