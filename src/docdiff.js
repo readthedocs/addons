@@ -16,6 +16,7 @@ import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
+  EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
 } from "./events";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
@@ -103,7 +104,10 @@ export class DocDiffElement extends LitElement {
 
     // Enable DocDiff if the URL parameter is present
     if (hasQueryParam(DOCDIFF_URL_PARAM)) {
-      this.enableDocDiff();
+      const event = new CustomEvent(
+        EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      );
+      document.dispatchEvent(event);
     }
   }
 
@@ -158,24 +162,29 @@ export class DocDiffElement extends LitElement {
         );
         new_body.replaceWith(diffNode.firstElementChild);
       })
+      .finally(() => {
+        const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
+        document.dispatchEvent(event);
+      })
       .catch((error) => {
         console.error(error);
       });
   }
 
   enableDocDiff() {
-    if (this.config === null) {
-      return null;
+    if (this.config !== null) {
+      this.enabled = true;
+      this.originalBody = document.querySelector(this.rootSelector);
+      this.compare();
     }
-
-    this.enabled = true;
-    this.originalBody = document.querySelector(this.rootSelector);
-    return this.compare();
   }
 
   disableDocDiff() {
     this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
+
+    const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
+    document.dispatchEvent(event);
   }
 
   _handleShowDocDiff = (e) => {

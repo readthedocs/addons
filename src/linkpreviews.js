@@ -8,6 +8,7 @@ import {
   IS_TESTING,
   docTool,
 } from "./utils";
+import { EVENT_READTHEDOCS_ROOT_DOM_CHANGED } from "./events";
 import {
   computePosition,
   autoPlacement,
@@ -200,26 +201,28 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
   }
 }
 
-/**
- * LinkPreviews addon
- *
- * @param {Object} config - Addon configuration object
- */
-export class LinkPreviewsAddon extends AddonBase {
-  static jsonValidationURI =
-    "http://v1.schemas.readthedocs.org/addons.linkpreviews.json";
-  static addonEnabledPath = "addons.linkpreviews.enabled";
-  static addonName = "LinkPreviews";
+export class LinkPreviewsElement extends LitElement {
+  static elementName = "readthedocs-linkspreview";
 
-  constructor(config) {
+  static properties = {
+    config: {
+      state: true,
+    },
+  };
+
+  constructor() {
     super();
-    this.config = config;
 
     if (!IS_TESTING) {
       // Include CSS into the DOM so they can be read.
+      // We can't include these CSS in the LitElement, because we need them to be globally available.
       document.adoptedStyleSheets.push(styleSheet);
     }
 
+    this.config = null;
+  }
+
+  setupTooltips() {
     // Autodetect if the page is built with Sphinx and send the `doctool=` attribute in that case.
     const doctoolName = docTool.getDocumentationTool();
     const rootSelector =
@@ -242,7 +245,7 @@ export class LinkPreviewsAddon extends AddonBase {
         let elementHostname = elementUrl.hostname;
         const pointToSamePage =
           window.location.pathname.replace("/index.html", "") ==
-          elementUrl.pathname.replace("/index.html");
+          elementUrl.pathname.replace("/index.html", "");
         if (elementHostname === window.location.hostname && !pointToSamePage) {
           element.classList.add("link-preview");
           setupTooltip(element, doctoolName, null, rootSelector);
@@ -254,4 +257,68 @@ export class LinkPreviewsAddon extends AddonBase {
       }
     }
   }
+
+  render() {
+    return nothing;
+  }
+
+  loadConfig(config) {
+    if (!LinkPreviewsAddon.isEnabled(config)) {
+      return;
+    }
+
+    this.config = config;
+    this.setupTooltips();
+  }
+
+  _handleRootDOMChanged = (e) => {
+    // Trigger the setup again since the DOM has changed
+    this.setupTooltips();
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener(
+      EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
+      this._handleRootDOMChanged,
+    );
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
+      this._handleRootDOMChanged,
+    );
+    super.disconnectedCallback();
+  }
 }
+
+/**
+ * LinkPreviews addon
+ *
+ * @param {Object} config - Addon configuration object
+ */
+export class LinkPreviewsAddon extends AddonBase {
+  static jsonValidationURI =
+    "http://v1.schemas.readthedocs.org/addons.linkpreviews.json";
+  static addonEnabledPath = "addons.linkpreviews.enabled";
+  static addonName = "LinkPreviews";
+
+  constructor(config) {
+    super();
+
+    // If there are no elements found, inject one
+    let elems = document.querySelectorAll("readthedocs-linkpreviews");
+    if (!elems.length) {
+      elems = [new LinkPreviewsElement()];
+      document.body.append(elems[0]);
+      elems[0].requestUpdate();
+    }
+
+    for (const elem of elems) {
+      elem.loadConfig(config);
+    }
+  }
+}
+
+customElements.define("readthedocs-linkpreviews", LinkPreviewsElement);

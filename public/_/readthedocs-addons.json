@@ -116,6 +116,9 @@
       "enabled": true,
       "code": "UA-12345"
     },
+    "linkspreview": {
+      "enabled": true
+    },
     "notifications": {
       "enabled": true,
       "show_on_latest": true,
