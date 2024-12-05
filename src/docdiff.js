@@ -103,29 +103,13 @@ export class DocDiffElement extends LitElement {
 
     // Enable DocDiff if the URL parameter is present
     if (hasQueryParam(DOCDIFF_URL_PARAM)) {
-      this.enableDocDiff();
+      const event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
+      document.dispatchEvent(event);
     }
   }
 
   render() {
     return nothing;
-    // TODO: render a checkbox once we are settled on the UI.
-    // For now, we are only enabling/disabling via a hotkey.
-    //
-    // return html`
-    //   <label class="switch">
-    //     <input @click="${this.handleClick}" type="checkbox" />
-    //     <span class="slider round"></span>
-    //   </label>
-    // `;
-  }
-
-  handleClick(e) {
-    if (e.target.checked) {
-      this.enableDocDiff();
-    } else {
-      this.disableDocDiff();
-    }
   }
 
   compare() {
@@ -175,7 +159,12 @@ export class DocDiffElement extends LitElement {
 
   disableDocDiff() {
     this.enabled = false;
+
+    // Revert the DOM with the original body
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
+
+    const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
+    document.dispatchEvent(event);
   }
 
   _handleShowDocDiff = (e) => {
