@@ -86,9 +86,29 @@ export class HotKeysElement extends LitElement {
     }
   };
 
+  _handleShowDocDiff = (e) => {
+    e.preventDefault();
+    this.docDiffShowed = true;
+  };
+
+  _handleHideDocDiff = (e) => {
+    e.preventDefault();
+    this.docDiffShowed = false;
+  };
+
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("keydown", this._handleKeydown);
+
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleShowDocDiff,
+    );
+
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleHideDocDiff,
+    );
   }
 
   disconnectedCallback() {
