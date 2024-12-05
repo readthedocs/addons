@@ -168,7 +168,7 @@
             element.content = "Built with Docusaurus";
             document.head.appendChild(element);
 
-            const content = `<article id="content"><p>This is a <a href="#">link</a></p></article>`;
+            const content = `<article id="content"><div class="markdown"><p>This is a <a href="#">link</a></p></div></article>`;
             document.body.insertAdjacentHTML("beforeend", content);
 
             // We can't rely on the DocumentationTool exported since the
@@ -179,8 +179,10 @@
             expect(tool.getDocumentationTool()).to.be.equal("docusaurus");
             expect(tool.isJekyll()).to.be.false;
             expect(tool.isDocusaurus()).to.be.true;
-            expect(tool.getRootSelector()).to.be.equal("article");
-            expect(tool.getLinkSelector()).to.be.equal("article p a");
+            expect(tool.getRootSelector()).to.be.equal("article div.markdown");
+            expect(tool.getLinkSelector()).to.be.equal(
+              "article div.markdown p a",
+            );
           });
         });
       });
