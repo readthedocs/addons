@@ -202,7 +202,7 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
 }
 
 export class LinkPreviewsElement extends LitElement {
-  static elementName = "readthedocs-linkspreview";
+  static elementName = "readthedocs-linkpreviews";
 
   static properties = {
     config: {

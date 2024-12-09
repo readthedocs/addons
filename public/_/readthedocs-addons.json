@@ -116,7 +116,7 @@
       "enabled": true,
       "code": "UA-12345"
     },
-    "linkspreview": {
+    "linkpreviews": {
       "enabled": true
     },
     "notifications": {
