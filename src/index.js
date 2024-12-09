@@ -1,4 +1,7 @@
-import { getReadTheDocsConfig } from "./readthedocs-config";
+import {
+  getReadTheDocsConfig,
+  getReadTheDocsConfigUsingAPIv3,
+} from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
@@ -45,7 +48,8 @@ export function setup() {
           }
         }
 
-        return getReadTheDocsConfig(sendUrlParam);
+        // return getReadTheDocsConfig(sendUrlParam);
+        return getReadTheDocsConfigUsingAPIv3(sendUrlParam);
       })
       .then((config) => {
         const loadWhenEmbedded = objectPath.get(
