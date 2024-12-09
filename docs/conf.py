@@ -5,6 +5,10 @@ extensions = []
 html_theme = 'furo'
 
 html_context = {}
+html_static_path = ["_static"]
+html_css_files = [
+    'custom.css',
+]
 
 # NOTE: this should be done automatically by the theme,
 # but for some reason it's not working as I expect.
