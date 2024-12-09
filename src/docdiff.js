@@ -1,4 +1,3 @@
-import { ajv } from "./data-validation";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
@@ -18,7 +17,7 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
 } from "./events";
-import { html, nothing, LitElement } from "lit";
+import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
 
@@ -85,6 +84,7 @@ export class DocDiffElement extends LitElement {
     this.injectStyles = true;
 
     this.originalBody = null;
+    this.cachedRemoteContent = null;
   }
 
   loadConfig(config) {
@@ -124,43 +124,36 @@ export class DocDiffElement extends LitElement {
     // `;
   }
 
-  handleClick(e) {
-    if (e.target.checked) {
-      this.enableDocDiff();
-    } else {
-      this.disableDocDiff();
-    }
-  }
+  // This code isn't used until we show a UI,
+  // and even then we'll want to trigger events to match state?
+  // handleClick(e) {
+  //   if (e.target.checked) {
+  //     this.enableDocDiff();
+  //   } else {
+  //     this.disableDocDiff();
+  //   }
+  // }
 
   compare() {
-    fetch(this.config.addons.doc_diff.base_url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error downloading requested base URL.");
-        }
+    let promiseData;
 
-        return response.text();
-      })
+    if (this.cachedRemoteContent !== null) {
+      promiseData = Promise.resolve(this.cachedRemoteContent);
+    } else {
+      promiseData = fetch(this.config.addons.doc_diff.base_url).then(
+        (response) => {
+          if (!response.ok) {
+            throw new Error("Error downloading requested base URL.");
+          }
+          return response.text();
+        },
+      );
+    }
+
+    promiseData
       .then((text) => {
-        const parser = new DOMParser();
-        const html_document = parser.parseFromString(text, "text/html");
-        const old_body = html_document.documentElement.querySelector(
-          this.rootSelector,
-        );
-        const new_body = document.querySelector(this.rootSelector);
-
-        if (old_body == null || new_body == null) {
-          throw new Error("Element not found in both documents.");
-        }
-
-        // After finding the root element, and diffing it, replace it in the DOM
-        // with the resulting visual diff elements instead.
-        const diffNode = visualDomDiff.visualDomDiff(
-          old_body,
-          new_body,
-          VISUAL_DIFF_OPTIONS,
-        );
-        new_body.replaceWith(diffNode.firstElementChild);
+        this.cachedRemoteContent = text;
+        this.performDiff(text);
       })
       .finally(() => {
         const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
@@ -171,15 +164,51 @@ export class DocDiffElement extends LitElement {
       });
   }
 
-  enableDocDiff() {
-    if (this.config !== null) {
-      this.enabled = true;
-      this.originalBody = document.querySelector(this.rootSelector);
-      this.compare();
+  // After finding the root element, and diffing it, replace it in the DOM
+  // with the resulting visual diff elements instead.
+  performDiff(remoteContent) {
+    const parser = new DOMParser();
+    const html_document = parser.parseFromString(remoteContent, "text/html");
+    const old_body = html_document.documentElement.querySelector(
+      this.rootSelector,
+    );
+    const new_body = document.querySelector(this.rootSelector);
+
+    if (old_body == null || new_body == null) {
+      throw new Error("Element not found in both documents.");
     }
+
+    const diffNode = visualDomDiff.visualDomDiff(
+      old_body,
+      new_body,
+      VISUAL_DIFF_OPTIONS,
+    );
+    new_body.replaceWith(diffNode.firstElementChild);
+  }
+
+  enableDocDiff() {
+    // TODO: Unsure when this would happen?
+    // Perhaps when DocDiffAddon.isEnabled returns false?
+    if (this.config === null) {
+      return null;
+    }
+
+    if (this.enabled) {
+      console.debug("Ignoring enableDocDiff: it was already enabled");
+      return null;
+    }
+
+    this.enabled = true;
+    this.originalBody = document.querySelector(this.rootSelector);
+    return this.compare();
   }
 
   disableDocDiff() {
+    if (!this.enabled) {
+      console.debug("Ignoring disableDocDiff: it was already disabled");
+      return null;
+    }
+
     this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
 
@@ -204,15 +233,20 @@ export class DocDiffElement extends LitElement {
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
       this._handleShowDocDiff,
     );
-
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
       this._handleHideDocDiff,
     );
   }
-
   disconnectedCallback() {
-    document.removeEventListener("keydown", this._handleShowDocDiff);
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleShowDocDiff,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleHideDocDiff,
+    );
     super.disconnectedCallback();
   }
 }
