@@ -1,11 +1,9 @@
-import { ajv } from "./data-validation";
 import { toString as keyboardEventToString } from "keyboard-event-to-string";
 
 import { AddonBase } from "./utils";
-import { html, nothing, LitElement } from "lit";
+import { LitElement } from "lit";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
-  EVENT_READTHEDOCS_SEARCH_HIDE,
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
@@ -26,7 +24,6 @@ export class HotKeysElement extends LitElement {
     super();
 
     this.config = null;
-    this.docDiffShow = false;
   }
 
   loadConfig(config) {
@@ -40,7 +37,7 @@ export class HotKeysElement extends LitElement {
     this.config = config;
 
     this.docDiffHotKeyEnabled = this.config.addons.hotkeys.doc_diff.enabled;
-    this.docDiffShowed = false;
+    this.docDiffEnabled = false;
 
     this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
   }
@@ -51,6 +48,7 @@ export class HotKeysElement extends LitElement {
     // Read more about these decisions at https://github.com/readthedocs/addons/issues/80
 
     let event;
+
     // DocDiff
     if (
       this.docDiffHotKeyEnabled &&
@@ -60,12 +58,10 @@ export class HotKeysElement extends LitElement {
       document.activeElement.tagName !== "TEXTAREA" &&
       document.activeElement.tagName !== "READTHEDOCS-SEARCH"
     ) {
-      if (this.docDiffShowed) {
+      if (this.docDiffEnabled) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
-        this.docDiffShowed = false;
       } else {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW);
-        this.docDiffShowed = true;
       }
     }
 
@@ -80,6 +76,7 @@ export class HotKeysElement extends LitElement {
       event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     }
 
+    // Send event for all keydown events
     if (event !== undefined) {
       document.dispatchEvent(event);
       e.preventDefault();
@@ -99,22 +96,36 @@ export class HotKeysElement extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener("keydown", this._handleKeydown);
-
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
-      this._handleShowDocDiff,
+      this._handleDocDiffShow,
     );
-
     document.addEventListener(
       EVENT_READTHEDOCS_DOCDIFF_HIDE,
-      this._handleHideDocDiff,
+      this._handleDocDiffHide,
     );
   }
 
   disconnectedCallback() {
     document.removeEventListener("keydown", this._handleKeydown);
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleDocDiffShow,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleDocDiffHide,
+    );
     super.disconnectedCallback();
   }
+
+  _handleDocDiffShow = (event) => {
+    this.docDiffEnabled = true;
+  };
+
+  _handleDocDiffHide = (event) => {
+    this.docDiffEnabled = false;
+  };
 }
 
 export class HotKeysAddon extends AddonBase {
