@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.23.2
+---------------
+
+:date: Dec 10, 2024
+
+* Link previews work correctly on Docusaurus (``?maincontent=`` attribute is sent to backend)
+* DocDiff/Visual diff content is cached
+* Visual diff works together with link previews
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.23.1
 ---------------
 
