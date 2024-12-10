@@ -25,8 +25,13 @@ export function setup() {
     analytics.AnalyticsAddon,
     ethicalads.EthicalAdsAddon,
     search.SearchAddon,
-    docdiff.DocDiffAddon,
+
+    // HotKeys has to be initialized before DocDiff because when
+    // `?readthedocs-diff=true` DocDiff triggers an event that HotKeys has to
+    // listen to to update its internal state.
     hotkeys.HotKeysAddon,
+    docdiff.DocDiffAddon,
+
     linkpreviews.LinkPreviewsAddon,
     filetreediff.FileTreeDiffAddon,
     customscript.CustomScriptAddon,
