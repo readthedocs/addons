@@ -7,8 +7,23 @@ export const EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW =
 export const EVENT_READTHEDOCS_DOCDIFF_HIDE = "readthedocs-docdiff-hide";
 export const EVENT_READTHEDOCS_FLYOUT_SHOW = "readthedocs-flyout-show";
 export const EVENT_READTHEDOCS_FLYOUT_HIDE = "readthedocs-flyout-hide";
+
+/**
+ * Event triggered when the Read the Docs data is ready to be consumed.
+ *
+ * This is the event users subscribe to to make usage of Read the Docs data.
+ * The object received is `ReadTheDocsEventData`.
+ */
 export const EVENT_READTHEDOCS_ADDONS_DATA_READY =
   "readthedocs-addons-data-ready";
+
+/**
+ * Event triggered when any addons modifies the root DOM.
+ *
+ * As an example, DocDiff triggers it when injecting the visual diferences.
+ * Addons subscribe to this event to re-initialize them in case they perform
+ * something specific on DOM elements from inside the root.
+ */
 export const EVENT_READTHEDOCS_ROOT_DOM_CHANGED =
   "readthedocs-root-dom-changed";
 
