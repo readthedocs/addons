@@ -145,6 +145,10 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
     "/_/api/v3/projects/test-builds/versions/?active=true",
   );
   const buildResponse = fetch("/_/api/v3/projects/test-builds/builds/3111/");
+  // TODO: use `?base-version=` coming from `addons.options.base_version`
+  const filetreediffResponse = fetch(
+    "/_/api/v3/projects/test-builds/versions/2109/filetreediff/?base-version=latest",
+  );
 
   const responses = await Promise.all([
     addonsResponse,
@@ -153,10 +157,18 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
     versionResponse,
     activeVersionsResponse,
     buildResponse,
+    filetreediffResponse,
   ]);
 
-  const [addons, project, translations, version, activeVersions, build] =
-    await Promise.all(responses.map((response) => response.json()));
+  const [
+    addons,
+    project,
+    translations,
+    version,
+    activeVersions,
+    build,
+    filetreediff,
+  ] = await Promise.all(responses.map((response) => response.json()));
 
   // TODO: we are missing the data from the `/_/addons/` endpoint that are not resources.
   // We need to perform another request for that.
@@ -173,6 +185,8 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
       current: version,
     },
   });
+
+  Object.assign(addons["addons"]["filetreediff"], filetreediff);
 
   // Trigger the addons data ready CustomEvent to with the data the user is expecting.
   dispatchEvent(
