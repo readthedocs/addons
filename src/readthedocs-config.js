@@ -130,6 +130,9 @@ export function getReadTheDocsConfig(sendUrlParam) {
 }
 
 export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
+  const defaultApiUrl = _getApiUrl(sendUrlParam, ADDONS_API_VERSION);
+  const addonsResponse = fetch(defaultApiUrl);
+
   // TODO: get the project/version slug from the META tags
   const projectResponse = fetch("/_/api/v3/projects/test-builds/");
   const translationsResponse = fetch(
@@ -144,6 +147,7 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
   const buildResponse = fetch("/_/api/v3/projects/test-builds/builds/3111/");
 
   const responses = await Promise.all([
+    addonsResponse,
     projectResponse,
     translationsResponse,
     versionResponse,
@@ -151,12 +155,12 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
     buildResponse,
   ]);
 
-  const [project, translations, version, activeVersions, build] =
+  const [addons, project, translations, version, activeVersions, build] =
     await Promise.all(responses.map((response) => response.json()));
 
   // TODO: we are missing the data from the `/_/addons/` endpoint that are not resources.
   // We need to perform another request for that.
-  const dataEvent = {
+  Object.assign(addons, {
     builds: {
       current: build,
     },
@@ -168,16 +172,16 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
       active: activeVersions.results,
       current: version,
     },
-  };
+  });
 
   // Trigger the addons data ready CustomEvent to with the data the user is expecting.
   dispatchEvent(
     EVENT_READTHEDOCS_ADDONS_DATA_READY,
     document,
-    new ReadTheDocsEventData(dataEvent),
+    new ReadTheDocsEventData(addons),
   );
 
-  return dataEvent;
+  return addons;
 }
 
 function dispatchEvent(eventName, element, data) {
