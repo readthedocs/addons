@@ -146,27 +146,29 @@ export class EthicalAdsAddon extends AddonBase {
         if (elementToAppend) {
           elementToAppend.append(placement);
         }
-      } else if (window.innerWidth > 1300) {
-        // https://ethical-ad-client.readthedocs.io/en/latest/#stickybox
-        placement.setAttribute("data-ea-type", "image");
-        placement.setAttribute("data-ea-style", "stickybox");
-        this.addEaPlacementToElement(placement);
-        // `document.body` here is not too much relevant, since we are going to
-        // use this selector only for a floating stickybox ad
-        const elementInsertBefore = document.body;
-        elementInsertBefore.insertBefore(
-          placement,
-          elementInsertBefore.lastChild,
-        );
-      } else if (window.innerWidth <= 1300 && window.innerWidth > 768) {
+        // } else if (window.innerWidth > 1300) {
+        //   // https://ethical-ad-client.readthedocs.io/en/latest/#stickybox
+        //   placement.setAttribute("data-ea-type", "image");
+        //   placement.setAttribute("data-ea-style", "stickybox");
+        //   this.addEaPlacementToElement(placement);
+        //   // `document.body` here is not too much relevant, since we are going to
+        //   // use this selector only for a floating stickybox ad
+        //   const elementInsertBefore = document.body;
+        //   elementInsertBefore.insertBefore(
+        //     placement,
+        //     elementInsertBefore.lastChild,
+        //   );
+      } else if (window.innerWidth > 768) {
         // Use fixed footer for smaller widths, but not mobile
         placement.setAttribute("data-ea-type", "text");
         placement.setAttribute("data-ea-style", "fixedfooter");
+        placement.classList.add("ethical-fixedfooter");
         // TODO: THIS IS A HACK. IS THERE A BETTER WAY?
         // Add margin to the bottom to avoid hiding bottom of content
         const root_node = document.querySelector(docTool.getRootSelector());
-        root_node.style.marginBottom = "2em";
-        // Copy append logic from above
+        root_node.classList.add("ethical-fixedfooter-margin");
+        // Also add to body for good measure.
+        document.body.classList.add("ethical-fixedfooter-margin");
         const elementInsertBefore = document.body;
         elementInsertBefore.insertBefore(
           placement,
