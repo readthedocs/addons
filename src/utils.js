@@ -407,8 +407,19 @@ export class DocumentationTool {
       return MKDOCS;
     }
 
+    if (this.isDocsify()) {
+      return DOCSIFY;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
+  }
+
+  isDocsify() {
+    if (document.querySelectorAll("head > link[href*=docsify]").length) {
+      return true;
+    }
+    return false;
   }
 
   isSphinx() {
