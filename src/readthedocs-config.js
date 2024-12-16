@@ -131,27 +131,27 @@ export function getReadTheDocsConfig(sendUrlParam) {
 
 export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
   const defaultApiUrl = _getApiUrl(sendUrlParam, ADDONS_API_VERSION);
-  const addonsResponse = fetch(defaultApiUrl);
+  const addons = await (await fetch(defaultApiUrl)).json();
 
-  // TODO: get the project/version slug from the META tags
-  const projectResponse = fetch("/_/api/v3/projects/test-builds/");
-  const translationsResponse = fetch(
-    "/_/api/v3/projects/test-builds/translations/",
+  const projectResponse = fetch(
+    addons.readthedocs.urls.api.v3.projects.current,
   );
+  const translationsResponse = fetch(
+    addons.readthedocs.urls.api.v3.projects.translations,
+  );
+
   const versionResponse = fetch(
-    "/_/api/v3/projects/test-builds/versions/full-feature/",
+    addons.readthedocs.urls.api.v3.versions.current,
   );
   const activeVersionsResponse = fetch(
-    "/_/api/v3/projects/test-builds/versions/?active=true",
+    addons.readthedocs.urls.api.v3.versions.active,
   );
-  const buildResponse = fetch("/_/api/v3/projects/test-builds/builds/3111/");
-  // TODO: use `?base-version=` coming from `addons.options.base_version`
+  const buildResponse = fetch(addons.readthedocs.urls.api.v3.builds.current);
   const filetreediffResponse = fetch(
-    "/_/api/v3/projects/test-builds/versions/2109/filetreediff/?base-version=latest",
+    addons.readthedocs.urls.api.v3.filetreediff,
   );
 
   const responses = await Promise.all([
-    addonsResponse,
     projectResponse,
     translationsResponse,
     versionResponse,
@@ -160,18 +160,9 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
     filetreediffResponse,
   ]);
 
-  const [
-    addons,
-    project,
-    translations,
-    version,
-    activeVersions,
-    build,
-    filetreediff,
-  ] = await Promise.all(responses.map((response) => response.json()));
+  const [project, translations, version, activeVersions, build, filetreediff] =
+    await Promise.all(responses.map((response) => response.json()));
 
-  // TODO: we are missing the data from the `/_/addons/` endpoint that are not resources.
-  // We need to perform another request for that.
   Object.assign(addons, {
     builds: {
       current: build,
