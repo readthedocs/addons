@@ -114,6 +114,10 @@ export function getReadTheDocsConfig(sendUrlParam) {
           // Expose `dataUser` if available or the `data` already requested.
           const dataEvent = dataUser !== undefined ? dataUser : data;
 
+          // Add the data to the window so scripts loaded after the initial
+          // event was fired can still get access to the data
+          window.ReadTheDocsEventData = new ReadTheDocsEventData(dataEvent);
+
           // Trigger the addons data ready CustomEvent to with the data the user is expecting.
           return dispatchEvent(
             EVENT_READTHEDOCS_ADDONS_DATA_READY,
