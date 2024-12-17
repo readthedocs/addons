@@ -155,3 +155,12 @@ small a {
   text-decoration: none;
   color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
 }
+
+/* Specific styles */
+.mkdocs-material {
+  --addons-flyout-font-size: 0.6rem;
+}
+
+.sphinx-furo {
+  --addons-flyout-font-size: 0.75rem;
+}

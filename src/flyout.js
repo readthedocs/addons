@@ -8,8 +8,6 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import styleMkDocsMaterial from "./flyout.mkdocs.material.css";
-import styleSphinxFuro from "./flyout.sphinx.furo.css";
 import {
   AddonBase,
   addUtmParameters,
@@ -28,6 +26,7 @@ export class FlyoutElement extends LitElement {
 
   static properties = {
     config: { state: true },
+    classes: { state: true, type: Object },
     opened: { type: Boolean },
     floating: { type: Boolean },
     position: { type: String },
@@ -39,6 +38,7 @@ export class FlyoutElement extends LitElement {
     super();
 
     this.config = null;
+    this.classes = {};
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
@@ -74,6 +74,22 @@ export class FlyoutElement extends LitElement {
       this._close();
     }
   };
+
+  firstUpdated() {
+    console.log("Flyout first update.");
+    const doctool = docTool.documentationTool;
+    if (doctool === MKDOCS_MATERIAL) {
+      console.log("MkDocs Material custom style.");
+      this.classes["mkdocs-material"] = true;
+    } else if (doctool == SPHINX && docTool.isSphinxFuroLikeTheme()) {
+      console.log("Sphinx Furo custom style.");
+      this.classes["sphinx-furo"] = true;
+    }
+
+    // FIXME: I don't understand why this doesn't trigger an update
+    // automatically, since `this.classes` is a reactive property.
+    this.requestUpdate();
+  }
 
   renderHeader() {
     library.add(faCodeBranch);
@@ -318,11 +334,12 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    const classes = { floating: this.floating, container: true };
-    classes[this.position] = true;
+    Object.assign(this.classes, { floating: this.floating, container: true });
+    this.classes[this.position] = true;
+    console.log(this.classes);
 
     return html`
-      <div class=${classMap(classes)}>
+      <div class=${classMap(this.classes)}>
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
@@ -394,17 +411,6 @@ export class FlyoutAddon extends AddonBase {
 
     for (const elem of elems) {
       elem.loadConfig(config);
-    }
-
-    this.addCustomStyle();
-  }
-
-  addCustomStyle() {
-    const doctool = docTool.documentationTool;
-    if (doctool === MKDOCS_MATERIAL) {
-      document.adoptedStyleSheets.push(styleMkDocsMaterial);
-    } else if (doctool == SPHINX && docTool.isSphinxFuroLikeTheme()) {
-      document.adoptedStyleSheets.push(styleSphinxFuro);
     }
   }
 }
