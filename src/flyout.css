@@ -7,6 +7,7 @@
   height: auto;
   max-height: calc(100% - 100px);
   overflow-y: auto;
+  line-height: 1rem;
 }
 
 .container.bottom-right {
