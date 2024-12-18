@@ -8,7 +8,13 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
+import {
+  AddonBase,
+  addUtmParameters,
+  getLinkWithFilename,
+  docTool,
+} from "./utils";
+import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_FLYOUT_HIDE,
@@ -31,9 +37,12 @@ export class FlyoutElement extends LitElement {
     super();
 
     this.config = null;
+    this.classes = {};
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
+    this.classes = { floating: this.floating, container: true };
+    this.classes[this.position] = true;
     this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
@@ -310,11 +319,12 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    const classes = { floating: this.floating, container: true };
-    classes[this.position] = true;
-
     return html`
-      <div class=${classMap(classes)}>
+      <div
+        tool="${docTool.documentationTool}"
+        tool-theme="${docTool.documentationTheme}"
+        class=${classMap(this.classes)}
+      >
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
