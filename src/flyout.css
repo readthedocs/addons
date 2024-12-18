@@ -166,5 +166,5 @@ div[tool="mdbook"] {
 }
 
 div[tool="sphinx"][tool-theme="furo"] {
-  --addons-flyout-font-size: 0.8rem;
+  --addons-flyout-font-size: 0.75rem;
 }
