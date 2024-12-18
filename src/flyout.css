@@ -158,7 +158,7 @@ small a {
 
 /* Specific styles */
 div[tool="mkdocs-material"] {
-  --addons-flyout-font-size: 0.6rem;
+  --addons-flyout-font-size: 0.65rem;
 }
 
 div[tool="mdbook"] {
