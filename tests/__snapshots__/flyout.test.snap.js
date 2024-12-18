@@ -2,7 +2,11 @@
 export const snapshots = {};
 
 snapshots["Flyout addon snapshot flyout completely"] = 
-`<div class="bottom-right container floating">
+`<div
+  class="bottom-right container floating"
+  tool=""
+  tool-theme=""
+>
   <header>
     <img
       alt="Read the Docs"
@@ -119,7 +123,11 @@ snapshots["Flyout addon snapshot flyout completely"] =
 /* end snapshot Flyout addon snapshot flyout completely */
 
 snapshots["Flyout addon snapshot flyout with search disabled"] = 
-`<div class="bottom-right container floating">
+`<div
+  class="bottom-right container floating"
+  tool=""
+  tool-theme=""
+>
   <header>
     <img
       alt="Read the Docs"
