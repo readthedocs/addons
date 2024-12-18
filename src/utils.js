@@ -2,6 +2,10 @@ import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
 import {
   SPHINX,
+  SPHINX_FURO,
+  SPHINX_ALABASTER,
+  SPHINX_READTHEDOCS,
+  MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
   DOCUSAURUS,
@@ -297,6 +301,7 @@ export class DocumentationTool {
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
+    this.documentationTheme = this.getDocumentationTheme();
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
   }
 
@@ -411,8 +416,45 @@ export class DocumentationTool {
       return DOCSIFY;
     }
 
+    if (this.isMdBook()) {
+      return MDBOOK;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
+  }
+
+  getDocumentationTheme() {
+    const documentationTool =
+      this.documentationTool || this.getDocumentationTool();
+
+    if (documentationTool === SPHINX) {
+      if (this.isSphinxAlabasterLikeTheme()) {
+        return SPHINX_ALABASTER;
+      } else if (this.isSphinxReadTheDocsLikeTheme()) {
+        return SPHINX_READTHEDOCS;
+      } else if (this.isSphinxFuroLikeTheme()) {
+        return SPHINX_FURO;
+      }
+    }
+
+    // TODO: add the other known themes
+    return null;
+  }
+
+  isMdBook() {
+    // <head>
+    // <!-- Book generated using mdBook -->
+    // <meta charset="UTF-8">
+    // ...
+    if (
+      document.head.firstChild.nextSibling.textContent.includes(
+        "Book generated using mdBook",
+      )
+    ) {
+      return true;
+    }
+    return false;
   }
 
   isDocsify() {

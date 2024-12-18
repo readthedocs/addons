@@ -26,7 +26,6 @@ export class FlyoutElement extends LitElement {
 
   static properties = {
     config: { state: true },
-    classes: { state: true, type: Object },
     opened: { type: Boolean },
     floating: { type: Boolean },
     position: { type: String },
@@ -42,6 +41,8 @@ export class FlyoutElement extends LitElement {
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
+    this.classes = { floating: this.floating, container: true };
+    this.classes[this.position] = true;
     this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
@@ -334,12 +335,12 @@ export class FlyoutElement extends LitElement {
       return nothing;
     }
 
-    Object.assign(this.classes, { floating: this.floating, container: true });
-    this.classes[this.position] = true;
-    console.log(this.classes);
-
     return html`
-      <div class=${classMap(this.classes)}>
+      <div
+        tool="${docTool.documentationTool}"
+        tool-theme="${docTool.documentationTheme}"
+        class=${classMap(this.classes)}
+      >
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
