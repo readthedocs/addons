@@ -157,7 +157,7 @@ small a {
   color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
 }
 
-/* Specific styles */
+/* Specific styles based on documentation tools and themes */
 div[tool="mkdocs-material"] {
   --addons-flyout-font-size: 0.65rem;
   line-height: 0.8rem;
