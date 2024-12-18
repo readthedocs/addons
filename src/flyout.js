@@ -76,22 +76,6 @@ export class FlyoutElement extends LitElement {
     }
   };
 
-  firstUpdated() {
-    console.log("Flyout first update.");
-    const doctool = docTool.documentationTool;
-    if (doctool === MKDOCS_MATERIAL) {
-      console.log("MkDocs Material custom style.");
-      this.classes["mkdocs-material"] = true;
-    } else if (doctool == SPHINX && docTool.isSphinxFuroLikeTheme()) {
-      console.log("Sphinx Furo custom style.");
-      this.classes["sphinx-furo"] = true;
-    }
-
-    // FIXME: I don't understand why this doesn't trigger an update
-    // automatically, since `this.classes` is a reactive property.
-    this.requestUpdate();
-  }
-
   renderHeader() {
     library.add(faCodeBranch);
     library.add(faLanguage);
