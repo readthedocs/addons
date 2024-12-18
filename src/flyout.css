@@ -160,6 +160,12 @@ small a {
 /* Specific styles */
 div[tool="mkdocs-material"] {
   --addons-flyout-font-size: 0.65rem;
+  line-height: 0.8rem;
+}
+
+div[tool="antora"] {
+  --addons-flyout-font-size: 0.7rem;
+  line-height: 0.9rem;
 }
 
 div[tool="mdbook"] {
@@ -168,4 +174,9 @@ div[tool="mdbook"] {
 
 div[tool="sphinx"][tool-theme="furo"] {
   --addons-flyout-font-size: 0.75rem;
+}
+
+div[tool="sphinx"][tool-theme="immaterial"] {
+  --addons-flyout-font-size: 0.65rem;
+  line-height: 0.8rem;
 }

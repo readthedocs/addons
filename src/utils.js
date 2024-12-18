@@ -5,6 +5,7 @@ import {
   SPHINX_FURO,
   SPHINX_ALABASTER,
   SPHINX_READTHEDOCS,
+  SPHINX_IMMATERIAL,
   MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
@@ -420,6 +421,10 @@ export class DocumentationTool {
       return MDBOOK;
     }
 
+    if (this.isAntora()) {
+      return ANTORA;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -435,11 +440,23 @@ export class DocumentationTool {
         return SPHINX_READTHEDOCS;
       } else if (this.isSphinxFuroLikeTheme()) {
         return SPHINX_FURO;
+      } else if (this.isSphinxImmaterialLikeTheme()) {
+        return SPHINX_IMMATERIAL;
       }
     }
 
     // TODO: add the other known themes
     return null;
+  }
+
+  isAntora() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="Antora"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
   }
 
   isMdBook() {
@@ -469,7 +486,8 @@ export class DocumentationTool {
       this.isSphinxAlabasterLikeTheme() ||
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
-      this.isSphinxBookThemeLikeTheme()
+      this.isSphinxBookThemeLikeTheme() ||
+      this.isSphinxImmaterialLikeTheme()
     );
   }
 
@@ -567,6 +585,18 @@ export class DocumentationTool {
       document.querySelectorAll(
         'link[href^="_static/styles/sphinx-book-theme.css"]',
       ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxImmaterialLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/sphinx_immaterial_theme"]',
+        'a[href="https://github.com/jbms/sphinx-immaterial/"][rel="noopener"]',
+      ).length
     ) {
       return true;
     }

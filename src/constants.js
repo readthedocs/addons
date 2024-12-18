@@ -15,3 +15,4 @@ export const FALLBACK_DOCTOOL = "fallback";
 export const SPHINX_ALABASTER = "alabaster";
 export const SPHINX_FURO = "furo";
 export const SPHINX_READTHEDOCS = "readthedocs";
+export const SPHINX_IMMATERIAL = "immaterial";
