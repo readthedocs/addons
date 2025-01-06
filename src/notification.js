@@ -213,6 +213,8 @@ export class NotificationElement extends LitElement {
     if (
       this.readingLatestVersion &&
       this.stableVersionAvailable &&
+      this.config.versions.current.slug !==
+        this.config.projects.current.default_version &&
       objectPath.get(this.config, "addons.notifications.show_on_latest", false)
     ) {
       return this.renderLatestVersionWarning();
