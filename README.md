@@ -71,3 +71,21 @@ powered by Elasticsearch.
 ## Deployment
 
 Deploy documentation is available in our published docs here: https://readthedocs-addons.readthedocs.io/releasing.html
+
+## Development guidelines
+
+### Element attributes
+
+- Don't use CSS classes on web component elements, these have tended to conflict with parent DOM styles. If needed, use CSS selectors against web component attributes like `:host[position="inline"]` instead.
+- When adding an attribute on a custom web components, don't use `data` prefixed attributes, for example `<readthedocs-flyout position="inline">`.
+- When using a custom attribute on a native element, do use `data` prefixed attributes, for example `<div data-position="inline">`.
+
+### CSS variables
+
+We use CSS variables to provide end users and theme maintainers with some light control of element styling of the inner shadow DOM elements.
+Variables have several layers of prefixing/inheritance, as shown here using `font-size` as an example:
+
+- `--readthedocs-font-size`: This can be set at `html`/`:root` in the parent DOM to affect font size on all of our elements.
+- `--readthedocs-flyout-font-size`: This can be set at `html`/`:root` in the parent DOM to affect font size on only the flyout element.
+- `--addons-flyout-font-size`: This is an inner variable used by the addon shadow DOM CSS. It's set inside each addon `:host` CSS selector to give a default value to `--readthedocs-flyout-font-size` without overriding a user supplied value for this variable.
+
