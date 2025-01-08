@@ -321,8 +321,8 @@ export class FlyoutElement extends LitElement {
 
     return html`
       <div
-        tool="${docTool.documentationTool}"
-        tool-theme="${docTool.documentationTheme}"
+        data-tool="${docTool.documentationTool}"
+        data-tool-theme="${docTool.documentationTheme}"
         class=${classMap(this.classes)}
       >
         ${this.renderHeader()}
