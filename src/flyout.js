@@ -8,12 +8,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import {
-  AddonBase,
-  addUtmParameters,
-  getLinkWithFilename,
-  docTool,
-} from "./utils";
+import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
 import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
@@ -320,11 +315,7 @@ export class FlyoutElement extends LitElement {
     }
 
     return html`
-      <div
-        data-tool="${docTool.documentationTool}"
-        data-tool-theme="${docTool.documentationTheme}"
-        class=${classMap(this.classes)}
-      >
+      <div class=${classMap(this.classes)}>
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
           ${this.renderLanguages()} ${this.renderVersions()}
