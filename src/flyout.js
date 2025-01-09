@@ -88,7 +88,7 @@ export class FlyoutElement extends LitElement {
 
     let translation = nothing;
     if (this.config.projects.translations.length > 0) {
-      translation = html`<span class="translation"
+      translation = html`<span class="language"
         >${iconLanguage.node[0]}
         ${this.config.projects.current.language.code}</span
       >`;
