@@ -3,6 +3,25 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.24.0
+---------------
+
+:date: Jan 8, 2025
+
+* Don't show the latest notification if it's the default version (:pr:`480`)
+* EthicalAd: better ad position for Docsify (:pr:`470`)
+* Packages: updated via ncu -u (:pr:`479`)
+
+Version v0.23.2
+---------------
+
+:date: Dec 10, 2024
+
+* Link previews work correctly on Docusaurus (``?maincontent=`` attribute is sent to backend)
+* DocDiff/Visual diff content is cached
+* Visual diff works together with link previews
+* Update all ``npm`` dependencies with with ``ncu -u``
+
 Version v0.23.1
 ---------------
 

@@ -139,6 +139,18 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         }
+      } else if (docTool.isDocsify()) {
+        selector = "main > aside > div.sidebar-nav";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-docsify");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
       }
 
       if (selector && knownPlacementFound) {
