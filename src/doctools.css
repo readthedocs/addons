@@ -1,25 +1,33 @@
-/* Specific styles based on documentation tools and themes */
-html[data-readthedocs-tool="mkdocs-material"] {
-  --readthedocs-font-size: 0.6rem;
-  --readthedocs-flyout-font-size: 0.6rem;
-}
+/*
+ * Specific styles based on documentation tools and themes
+ *
+ * Usage of `@layer` at-rule pushes this rules down a step in
+ * precedence/priority. This allows a user `:root` rule to override these
+ * values.
+ **/
+@layer defaults {
+  :root[data-readthedocs-tool="mkdocs-material"] {
+    --readthedocs-font-size: 0.6rem;
+    --readthedocs-flyout-font-size: 0.6rem;
+  }
 
-html[data-readthedocs-tool="antora"] {
-  --readthedocs-font-size: 0.7rem;
-  --readthedocs-flyout-font-size: 0.7rem;
-}
+  :root[data-readthedocs-tool="antora"] {
+    --readthedocs-font-size: 0.7rem;
+    --readthedocs-flyout-font-size: 0.7rem;
+  }
 
-html[data-readthedocs-tool="mdbook"] {
-  --readthedocs-font-size: 1.3rem;
-  --readthedocs-flyout-font-size: 1.3rem;
-}
+  :root[data-readthedocs-tool="mdbook"] {
+    --readthedocs-font-size: 1.3rem;
+    --readthedocs-flyout-font-size: 1.3rem;
+  }
 
-html[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
-  --readthedocs-font-size: 0.75rem;
-  --readthedocs-flyout-font-size: 0.75rem;
-}
+  :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
+    --readthedocs-font-size: 0.75rem;
+    --readthedocs-flyout-font-size: 0.75rem;
+  }
 
-html[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
-  --readthedocs-font-size: 0.65rem;
-  --readthedocs-flyout-font-size: 0.65rem;
+  :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
+    --readthedocs-font-size: 0.65rem;
+    --readthedocs-flyout-font-size: 0.65rem;
+  }
 }

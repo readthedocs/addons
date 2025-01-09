@@ -465,7 +465,7 @@ export class DocumentationTool {
     // <meta charset="UTF-8">
     // ...
     if (
-      document.head.firstChild.nextSibling.textContent.includes(
+      document?.head?.firstChild?.nextSibling?.textContent.includes(
         "Book generated using mdBook",
       )
     ) {
@@ -536,7 +536,7 @@ export class DocumentationTool {
     //     MkDocs version : 1.4.2
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
-    if (document.lastChild.textContent.includes("MkDocs version :")) {
+    if (document?.lastChild?.textContent.includes("MkDocs version :")) {
       return true;
     }
     return false;

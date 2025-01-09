@@ -1,3 +1,5 @@
+import { CSSResult } from "lit";
+
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
@@ -57,7 +59,11 @@ export function setup() {
         const elementHtml = document.querySelector("html");
         if (elementHtml) {
           // Inject styles at the parent DOM to set variables at :root
-          document.adoptedStyleSheets = [doctoolsStyleSheet];
+          let styleSheet = doctoolsStyleSheet;
+          if (doctoolsStyleSheet instanceof CSSResult) {
+            styleSheet = doctoolsStyleSheet.styleSheet;
+          }
+          document.adoptedStyleSheets = [styleSheet];
 
           // If we detect a documentation tool, set attributes on :root to allow
           // for CSS selectors to utilize these values.
