@@ -143,11 +143,6 @@ export async function getReadTheDocsConfigUsingAPIv3(sendUrlParam) {
   const versionResponse = fetch(
     addons.readthedocs.urls.api.v3.versions.current,
   );
-  // TODO: the results come paginated, so we are only seeing the first 10 results.
-  // We need to perform more requests to get all the resulsts.
-  // What's the correct way to do that?
-  //
-  // The response comes with a `next` attribute that has the URL for the next 10 results.
   const activeVersionsResponse = fetch(
     addons.readthedocs.urls.api.v3.versions.active,
   );
