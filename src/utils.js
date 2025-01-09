@@ -464,14 +464,17 @@ export class DocumentationTool {
     // <!-- Book generated using mdBook -->
     // <meta charset="UTF-8">
     // ...
-    if (
-      document.head.firstChild.nextSibling.textContent.includes(
-        "Book generated using mdBook",
-      )
-    ) {
-      return true;
+    try {
+      if (
+        document.head.firstChild.nextSibling.textContent.includes(
+          "Book generated using mdBook",
+        )
+      ) {
+        return true;
+      }
+    } finally {
+      return false;
     }
-    return false;
   }
 
   isDocsify() {
