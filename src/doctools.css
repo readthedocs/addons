@@ -1,7 +1,7 @@
 /* Specific styles based on documentation tools and themes */
 html[data-readthedocs-tool="mkdocs-material"] {
-  --readthedocs-font-size: 0.6rem;
-  --readthedocs-flyout-font-size: 0.6rem;
+  --readthedocs-font-size: 0.58rem;
+  --readthedocs-flyout-font-size: 0.58rem;
 }
 
 html[data-readthedocs-tool="antora"] {
@@ -20,6 +20,6 @@ html[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
 }
 
 html[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
-  --readthedocs-font-size: 0.65rem;
-  --readthedocs-flyout-font-size: 0.65rem;
+  --readthedocs-font-size: 0.58rem;
+  --readthedocs-flyout-font-size: 0.58rem;
 }
