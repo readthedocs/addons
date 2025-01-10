@@ -158,6 +158,9 @@ export class EthicalAdsAddon extends AddonBase {
         if (elementToAppend) {
           elementToAppend.append(placement);
         }
+
+        // Try fixed footer instead of stickybox as a default experience
+
         // } else if (window.innerWidth > 1300) {
         //   // https://ethical-ad-client.readthedocs.io/en/latest/#stickybox
         //   placement.setAttribute("data-ea-type", "image");
