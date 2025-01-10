@@ -24,6 +24,8 @@ export const IS_TESTING =
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
 
+export const READTHEDOCS_URL_CHANGED_EVENT = "readthedocsUrlChanged"
+
 export const domReady = new Promise((resolve) => {
   if (
     document.readyState === "interactive" ||
@@ -180,7 +182,7 @@ export function setupHistoryEvents() {
       const originalMethod = history[methodName];
       history[methodName] = function () {
         const result = originalMethod.apply(this, arguments);
-        const event = new Event(methodName);
+        const event = new Event(READTHEDOCS_URL_CHANGED_EVENT);
         event.arguments = arguments;
 
         dispatchEvent(event);
