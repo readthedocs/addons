@@ -24,7 +24,7 @@ export const IS_TESTING =
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
 
-export const READTHEDOCS_URL_CHANGED_EVENT = "readthedocsUrlChanged"
+export const READTHEDOCS_URL_CHANGED_EVENT = "readthedocsUrlChanged";
 
 export const domReady = new Promise((resolve) => {
   if (
