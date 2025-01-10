@@ -2,7 +2,7 @@
 
 .container {
   position: fixed;
-  max-width: var(--readthedocs-flyout-max-width, 30em);
+  max-width: var(--readthedocs-flyout-max-width, 25em);
   width: auto;
   height: auto;
   max-height: calc(100% - 100px);
@@ -58,7 +58,6 @@ header {
   display: flex;
   flex-flow: row nowrap;
   gap: 1em;
-  justify-content: space-between;
   align-items: center;
   cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
@@ -91,7 +90,13 @@ header > span {
 
 header > span.version {
   /* Grow to fill parent based on content width, shrink content when needed (for ellipsis) */
-  flex: 1 1 auto;
+  flex: 0 1 auto;
+}
+
+/* Give the flex box extra spacing to the left of the first span item. This puts
+ * automatic spacing between the logo and the text detail spans */
+header > span:first-of-type {
+  margin-left: auto;
 }
 
 header > span svg.icon {
