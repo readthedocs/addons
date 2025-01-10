@@ -172,20 +172,13 @@ export class EthicalAdsAddon extends AddonBase {
         //   );
       } else if (window.innerWidth > 768) {
         // Use fixed footer for smaller widths, but not mobile
+        // https://ethical-ad-client.readthedocs.io/en/latest/#fixedfooter
         placement.setAttribute("data-ea-type", "text");
         placement.setAttribute("data-ea-style", "fixedfooter");
         placement.classList.add("ethical-fixedfooter");
-        // TODO: THIS IS A HACK. IS THERE A BETTER WAY?
-        // Add margin to the bottom to avoid hiding bottom of content
+        // Add margin to the bottom to avoid hiding bottom of content with the ad.
         const root_node = document.querySelector(docTool.getRootSelector());
         root_node.classList.add("ethical-fixedfooter-margin");
-        // Also add to body for good measure.
-        document.body.classList.add("ethical-fixedfooter-margin");
-        const elementInsertBefore = document.body;
-        elementInsertBefore.insertBefore(
-          placement,
-          elementInsertBefore.lastChild,
-        );
       }
     }
 
