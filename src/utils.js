@@ -156,16 +156,16 @@ export class AddonBase {
 }
 
 /**
- * Setup events firing on history pushState and replaceState
+ * Setup events firing on history `pushState` and `replaceState`
  *
  * This is needed when addons are used in SPA. A lot of addons rely
  * on the current URL. However in the SPA, the pages are not reloaded, so
  * the addons never get notified of the changes in the URL.
  *
  * While History API does have `popstate` event, the only way to listen to
- * changes via pushState and replaceState is using monkey-patching, which is
+ * changes via `pushState` and `replaceState` is using monkey-patching, which is
  * what this function does. (See https://stackoverflow.com/a/4585031)
- * It will fire a "pushState" or "replaceState" event, depending on which method was called.
+ * It will fire a `READTHEDOCS_URL_CHANGED` event, on `pushState` and `replaceState`.
  *
  */
 export function setupHistoryEvents() {
