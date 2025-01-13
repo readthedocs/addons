@@ -74,6 +74,7 @@ export function setup() {
           if (addon.isEnabled(config, httpStatus)) {
             promises.push(
               new Promise((resolve) => {
+                // TODO: remove attribute `config` from here since it's not required anymore
                 return resolve(new addon(config));
               }),
             );

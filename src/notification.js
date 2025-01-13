@@ -1,5 +1,6 @@
 import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { ContextConsumer } from "@lit/context";
 import {
   faCircleXmark,
   faFlask,
@@ -8,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { default as objectPath } from "object-path";
+import { configContext } from "./context.js";
 
 import styleSheet from "./notification.css";
 import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
@@ -18,7 +20,6 @@ export class NotificationElement extends LitElement {
 
   /** @static @property {Object} - Lit reactive properties */
   static properties = {
-    config: { state: true },
     urls: { state: true },
     highest_version: { state: true },
     dismissedTimestamp: { state: true },
@@ -28,6 +29,12 @@ export class NotificationElement extends LitElement {
 
   /** @static @property {Object} - Lit stylesheets to apply to elements */
   static styles = styleSheet;
+
+  // `_config` is the context we are going to consume when it's updated.
+  _config = new ContextConsumer(this, {
+    context: configContext,
+    subscribe: true,
+  });
 
   constructor() {
     super();
@@ -125,46 +132,6 @@ export class NotificationElement extends LitElement {
     this.timerID = null;
   }
 
-  loadConfig(config) {
-    // Validate the config object before assigning it to the Addon.
-    // Later, ``render()`` method will check whether this object exists and (not) render
-    // accordingly
-    if (!NotificationAddon.isEnabled(config)) {
-      return;
-    }
-
-    this.config = config;
-
-    if (
-      this.config.addons.notifications.enabled &&
-      this.config.versions.current.type === "external"
-    ) {
-      this.urls = {
-        // NOTE: point users to the new beta dashboard for now so we promote it more.
-        // We will revert this once we are fully migrated to the new dashboard.
-        build: config.builds.current.urls.build
-          .replace("readthedocs.org", "app.readthedocs.org")
-          .replace("readthedocs.com", "app.readthedocs.com")
-          .replace("app.app.", "app."),
-        external: config.versions.current.urls.vcs,
-      };
-    }
-
-    if (
-      objectPath.get(
-        this.config,
-        "addons.notifications.show_on_latest",
-        false,
-      ) &&
-      config.projects.current.versioning_scheme !==
-        "single_version_without_translations" &&
-      config.versions.current.type !== "external"
-    ) {
-      this.calculateStableLatestVersionWarning();
-    }
-    this.loadDismissedTimestamp(this.config);
-  }
-
   getLocalStorageKeyFromConfig(config) {
     const projectSlug = config.projects.current.slug;
     const languageCode = config.projects.current.language.code;
@@ -183,18 +150,46 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    // The element doesn't yet have our config, don't render it.
-    if (this.config === null) {
-      // nothing is a special Lit response type
+    if (!NotificationAddon.isEnabled(this._config.value)) {
       return nothing;
     }
-
-    // This notification has been dimissed, so don't render it
-    if (this.dismissedTimestamp) {
-      return nothing;
-    }
+    this.config = this._config.value;
 
     if (!this.config.addons.notifications.enabled) {
+      return nothing;
+    }
+
+    if (
+      this.config.addons.notifications.enabled &&
+      this.config.versions.current.type === "external"
+    ) {
+      this.urls = {
+        // NOTE: point users to the new beta dashboard for now so we promote it more.
+        // We will revert this once we are fully migrated to the new dashboard.
+        build: this.config.builds.current.urls.build
+          .replace("readthedocs.org", "app.readthedocs.org")
+          .replace("readthedocs.com", "app.readthedocs.com")
+          .replace("app.app.", "app."),
+        external: this.config.versions.current.urls.vcs,
+      };
+    }
+
+    if (
+      objectPath.get(
+        this.config,
+        "addons.notifications.show_on_latest",
+        false,
+      ) &&
+      this.config.projects.current.versioning_scheme !==
+        "single_version_without_translations" &&
+      this.config.versions.current.type !== "external"
+    ) {
+      this.calculateStableLatestVersionWarning();
+    }
+
+    this.loadDismissedTimestamp(this.config);
+    // This notification has been dimissed, so don't render it
+    if (this.dismissedTimestamp) {
       return nothing;
     }
 
@@ -411,19 +406,13 @@ export class NotificationAddon extends AddonBase {
   static addonEnabledPath = "addons.notifications.enabled";
   static addonName = "Notification";
 
-  constructor(config) {
+  constructor() {
     super();
 
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-notification");
     if (!elems.length) {
-      elems = [new NotificationElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
+      render(new NotificationElement(), document.body);
     }
   }
 }
