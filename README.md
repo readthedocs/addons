@@ -88,4 +88,3 @@ Variables have several layers of prefixing/inheritance, as shown here using `fon
 - `--readthedocs-font-size`: This can be set at `html`/`:root` in the parent DOM to affect font size on all of our elements.
 - `--readthedocs-flyout-font-size`: This can be set at `html`/`:root` in the parent DOM to affect font size on only the flyout element.
 - `--addons-flyout-font-size`: This is an inner variable used by the addon shadow DOM CSS. It's set inside each addon `:host` CSS selector to give a default value to `--readthedocs-flyout-font-size` without overriding a user supplied value for this variable.
-
