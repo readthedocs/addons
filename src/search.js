@@ -227,20 +227,22 @@ export class SearchElement extends LitElement {
     // https://lit.dev/docs/templates/lists/#repeating-templates-with-map
     return html`
       <div class="filters">
-        <li class="title">Filters</li>
-        ${this.filters.map(
-          (filter, index) => html`
-            <li>
-              <input
-                @click=${this.filterClicked}
-                id="filter-${index}"
-                type="checkbox"
-                value="${filter.value}"
-              />
-              <label for="filter-${index}"> ${filter.name} </label>
-            </li>
-          `,
-        )}
+        <span class="filters-title">Filters</span>
+        <ul>
+          ${this.filters.map(
+            (filter, index) => html`
+              <li>
+                <input
+                  @click=${this.filterClicked}
+                  id="filter-${index}"
+                  type="checkbox"
+                  value="${filter.value}"
+                />
+                <label for="filter-${index}"> ${filter.name} </label>
+              </li>
+            `,
+          )}
+        </ul>
       </div>
     `;
   }
@@ -528,7 +530,7 @@ export class SearchElement extends LitElement {
       const selected = this.renderRoot.querySelector("a.hit.active");
       // if an item is selected, then redirect to its link
       if (selected !== null) {
-        window.location.href = selected.href;
+        selected.click();
       }
     }
 

@@ -1,0 +1,46 @@
+.tooltip {
+  display: none;
+  max-width: 650px;
+  pointer-events: auto;
+  z-index: 9999999;
+  max-height: 80vh;
+  min-height: 100px;
+  position: absolute;
+  margin-bottom: 20px;
+  top: 0;
+  border: none;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip .tooltip-content {
+  box-sizing: border-box;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: auto;
+  padding: 18px;
+  color: #8d8d8d;
+  font-size: 80%;
+  line-height: 18px;
+}
+
+.tooltip .tooltip-content .headerlink {
+  visibility: hidden;
+}
+
+.tooltip .tooltip-content p {
+  font-size: 100%;
+}
+
+.tooltip .arrow {
+  position: absolute;
+  background: #fff;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+}
+
+.link-preview {
+  border-bottom: 1px dotted;
+}

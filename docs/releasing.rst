@@ -37,9 +37,3 @@ This is the release process for the Read the Docs Addons client.
       It requires defining AWS environment variables (``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY``) and
       also a Cloudflare token (``CLOUDFLARE_API_TOKEN``).
       You can get that token here: https://dash.cloudflare.com/profile/api-tokens.
-
-#. Update development repositories to use the just released version.
-
-   #. Update the version at ``NGINX_ADDONS_GITHUB_TAG``:
-      `dockerfiles/docker-compose.yml <https://github.com/readthedocs/common/blob/bd497c8a5b383e2059de2655b0b8527c76695dd8/dockerfiles/docker-compose.yml#L29>`_.
-   #. Update ``common/`` submodule on community and commercial pointing to updated version of it.

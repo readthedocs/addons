@@ -32,11 +32,11 @@
           setLocalStorageStub.reset();
           config = {
             addons: {
-              external_version_warning: {
+              notifications: {
                 enabled: true,
-              },
-              non_latest_version_warning: {
-                enabled: true,
+                show_on_latest: true,
+                show_on_non_stable: true,
+                show_on_external: true,
               },
             },
             builds: {
@@ -144,7 +144,7 @@
   </div>
   <div class="content">
     Some features may not yet be available in the published stable
-            version. Read the
+          version. Read the
     <a href="https://project.readthedocs.io/en/stable/section/page.html">
       stable version of this documentation
     </a>
@@ -180,13 +180,41 @@
   </div>
   <div class="content">
     Some features may not yet be available in the published stable
-            version. Read the
+          version. Read the
     <a href="https://project.readthedocs.io/en/stable/section/page.html">
       stable version of this documentation
     </a>
     .
  </div>
 `);
+          });
+
+          it("on default version when stable is available", async () => {
+            config.projects.current.default_version = "default";
+            config.versions.current.slug = "default";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            // The notification should not be displayed
+            expect(element).shadowDom.to.equal("");
+          });
+
+          it("on default version that is latest", async () => {
+            config.projects.current.default_version = "latest";
+            config.versions.current.slug = "latest";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            // The notification should not be displayed
+            expect(element).shadowDom.to.equal("");
           });
 
           it("on external version", async () => {

@@ -1,25 +1,28 @@
 import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
+import {
+  SPHINX,
+  MKDOCS,
+  MKDOCS_MATERIAL,
+  DOCUSAURUS,
+  PELICAN,
+  ASCIIDOCTOR,
+  JEKYLL,
+  FALLBACK_DOCTOOL,
+  ANTORA,
+  DOCSIFY,
+} from "./constants";
+
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.18.0";
+export const CLIENT_VERSION = "0.24.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
   typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
-
-export function isReadTheDocsEmbedPresent() {
-  const urls = [
-    "/_/static/javascript/readthedocs-doc-embed.js",
-    "https://assets.readthedocs.org/static/javascript/readthedocs-doc-embed.js",
-  ];
-  for (const url of urls) {
-    return document.querySelectorAll(`script[src="${url}"]`).length > 0;
-  }
-}
 
 export const domReady = new Promise((resolve) => {
   if (
@@ -48,6 +51,16 @@ export const domReady = new Promise((resolve) => {
 });
 
 /**
+ * Check if addons are running inside iframe.
+ *
+ * The simplest way to check that is comparing the current windown with the parent window.
+ * If they are different, it means we are embedded.
+ */
+export function isEmbedded() {
+  return window.self !== window.parent;
+}
+
+/**
  * Addon base class
  *
  * Provides a common interface for addon configuration testing, customization,
@@ -62,6 +75,12 @@ export class AddonBase {
   static addonLocalStorageKey = null;
   static enabledOnHttpStatus = [200];
 
+  /**
+   * Validates the given configuration object against a predefined JSON schema.
+   *
+   * @param {Object} config - The configuration object to validate.
+   * @returns {boolean} - Returns true if the configuration is valid, otherwise false.
+   */
   static isConfigValid(config) {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
@@ -185,6 +204,18 @@ export function setupLogging() {
   }
 }
 
+/**
+ * Check if a specific query parameter exists in the current URL.
+ *
+ * @param {string} param - The query parameter to check.
+ * @returns {boolean} - Returns true if the parameter exists, otherwise false.
+ */
+export function hasQueryParam(param) {
+  console.debug("Searching for query parameter", param);
+  const url = new URL(window.location.href);
+  return url.searchParams.has(param);
+}
+
 export function addUtmParameters(url, content) {
   const metaProject = document.querySelector(
     "meta[name='readthedocs-project-slug']",
@@ -239,3 +270,287 @@ export function getLinkWithFilename(url) {
 
   return new URL(filename, base);
 }
+
+/**
+ * Helper DocumentationTool class.
+ *
+ * Allows us to detect what doctool is using the current page.
+ *
+ */
+export class DocumentationTool {
+  static DEFAULT_ROOT_SELECTOR = {
+    [SPHINX]: "[role=main]",
+    [MKDOCS_MATERIAL]: "main > div > div.md-content",
+    [DOCSIFY]: "article#main",
+    [ASCIIDOCTOR]: "div#content",
+    [PELICAN]: "article",
+    [DOCUSAURUS]: "article div.markdown",
+    [ANTORA]: "article",
+    [JEKYLL]: "article",
+    [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
+  };
+
+  static DEFAULT_LINK_SELECTOR = {
+    [SPHINX]: "a.internal",
+    [FALLBACK_DOCTOOL]: ["p a"],
+  };
+
+  constructor() {
+    this.documentationTool = this.getDocumentationTool();
+    console.debug(`Documentation tool detected: ${this.documentationTool}`);
+  }
+
+  /**
+   * Return the CSS selector to get all the links inside the content of the page.
+   *
+   * The selector returned is based on the documentation tool detected.
+   * If no documentation tool was detected, we iterate over the fallback selectors
+   * and return the first selector that finds an element.
+   */
+  getLinkSelector() {
+    if (
+      this.documentationTool &&
+      objectPath.get(
+        this.constructor.DEFAULT_LINK_SELECTOR,
+        this.documentationTool,
+        null,
+      )
+    ) {
+      return `${this.getRootSelector()} ${
+        this.constructor.DEFAULT_LINK_SELECTOR[this.documentationTool]
+      }`;
+    }
+
+    // Fallback to our list of generic selectors and stop in the first we found.
+    let element;
+    let fullSelector;
+    for (const selector of this.constructor.DEFAULT_LINK_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
+      fullSelector = `${this.getRootSelector()} ${selector}`;
+      element = document.querySelector(fullSelector);
+      if (element) {
+        return fullSelector;
+      }
+    }
+
+    console.debug("We were not able to find the root selector.");
+    return null;
+  }
+
+  /**
+   * Return the CSS selector that contains the main content of the page.
+   *
+   * The selector returned is based on the documentation tool detected.
+   * If no documentation tool was detected, we iterate over the fallback selectors
+   * and return the first selector that finds an element.
+   */
+  getRootSelector() {
+    if (
+      this.documentationTool &&
+      objectPath.get(
+        this.constructor.DEFAULT_ROOT_SELECTOR,
+        this.documentationTool,
+        null,
+      )
+    ) {
+      return this.constructor.DEFAULT_ROOT_SELECTOR[this.documentationTool];
+    }
+
+    // Fallback to our list of generic selectors and stop in the first we found.
+    let element;
+    for (const selector of this.constructor.DEFAULT_ROOT_SELECTOR[
+      FALLBACK_DOCTOOL
+    ]) {
+      element = document.querySelector(selector);
+      if (element) {
+        return selector;
+      }
+    }
+
+    console.debug("We were not able to find the root selector.");
+    return null;
+  }
+
+  /**
+   * Return the documentation tool auto-detected.
+   *
+   * Check for all the known documentation tools and return the name of it if found.
+   * Otherwise, it returns `null`.
+   */
+  getDocumentationTool() {
+    if (this.isSphinx()) {
+      return SPHINX;
+    }
+
+    if (this.isMaterialMkDocs()) {
+      return MKDOCS_MATERIAL;
+    }
+
+    if (this.isPelican()) {
+      return PELICAN;
+    }
+
+    if (this.isDocusaurus()) {
+      return DOCUSAURUS;
+    }
+
+    if (this.isAsciiDoctor()) {
+      return ASCIIDOCTOR;
+    }
+
+    if (this.isJekyll()) {
+      return JEKYLL;
+    }
+
+    if (this.isMkDocs()) {
+      return MKDOCS;
+    }
+
+    if (this.isDocsify()) {
+      return DOCSIFY;
+    }
+
+    console.debug("We were not able to detect the documentation tool.");
+    return null;
+  }
+
+  isDocsify() {
+    if (document.querySelectorAll("head > link[href*=docsify]").length) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinx() {
+    return (
+      this.isSphinxAlabasterLikeTheme() ||
+      this.isSphinxReadTheDocsLikeTheme() ||
+      this.isSphinxFuroLikeTheme() ||
+      this.isSphinxBookThemeLikeTheme()
+    );
+  }
+
+  isMaterialMkDocs() {
+    return this.isMaterialMkDocsTheme();
+  }
+
+  isDocusaurus() {
+    return this.isDocusaurusTheme();
+  }
+
+  isPelican() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content="Pelican"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isAsciiDoctor() {
+    if (
+      document.querySelectorAll(
+        'meta[name="generator"][content*="Asciidoctor"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isJekyll() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content*="Jekyll"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMkDocs() {
+    // MkDocs adds a comment at the end of the file:
+    //     <!--
+    //     MkDocs version : 1.4.2
+    //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
+    //    -->
+    if (document.lastChild.textContent.includes("MkDocs version :")) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxAlabasterLikeTheme() {
+    const selectors = [
+      'link[href^="_static/alabaster.css"]',
+      'link[href^="_static/flask.css"]',
+      'link[href^="_static/jinja.css"]',
+      'link[href^="_static/click.css"]',
+      'link[href^="_static/celery.css"]',
+      'link[href^="_static/babel.css"]',
+      'link[href^="_static/platter.css"]',
+      'link[href^="_static/werkzeug.css"]',
+    ];
+
+    if (document.querySelectorAll(selectors.join(", ")).length) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxReadTheDocsLikeTheme() {
+    if (
+      document.querySelectorAll('script[src^="_static/js/theme.js"]').length ===
+      1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxFuroLikeTheme() {
+    if (
+      document.querySelectorAll('link[href^="_static/styles/furo.css"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxBookThemeLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/styles/sphinx-book-theme.css"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMaterialMkDocsTheme() {
+    if (
+      document.querySelectorAll(
+        'meta[name="generator"][content*="mkdocs-material"]',
+      ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isDocusaurusTheme() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content*="Docusaurus"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+}
+
+export const docTool = new DocumentationTool();

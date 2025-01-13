@@ -2,7 +2,7 @@ import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
-import { IS_TESTING } from "./utils.js";
+import { IS_TESTING, docTool } from "./utils.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTORS = [
@@ -34,69 +34,7 @@ export class EthicalAdsAddon extends AddonBase {
   constructor(config) {
     super();
     this.config = config;
-
     this.injectEthicalAds();
-  }
-
-  isSphinxAlabasterLikeTheme() {
-    const selectors = [
-      'link[href^="_static/alabaster.css"]',
-      'link[href^="_static/flask.css"]',
-      'link[href^="_static/jinja.css"]',
-      'link[href^="_static/click.css"]',
-      'link[href^="_static/celery.css"]',
-      'link[href^="_static/babel.css"]',
-      'link[href^="_static/platter.css"]',
-      'link[href^="_static/werkzeug.css"]',
-    ];
-    for (const selector of selectors) {
-      if (document.querySelectorAll(selector).length === 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  isSphinxReadTheDocsLikeTheme() {
-    if (
-      document.querySelectorAll('script[src^="_static/js/theme.js"]').length ===
-      1
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  isSphinxBookThemeLikeTheme() {
-    if (
-      document.querySelectorAll(
-        'link[href^="_static/styles/sphinx-book-theme.css"]',
-      ).length === 1
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  isMaterialMkDocsTheme() {
-    if (
-      document.querySelectorAll(
-        'meta[name="generator"][content*="mkdocs-material"]',
-      ).length === 1
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  isDocusaurusTheme() {
-    if (
-      document.querySelectorAll('meta[name="generator"][content*="Docusaurus"]')
-        .length === 1
-    ) {
-      return true;
-    }
-    return false;
   }
 
   createAdPlacement() {
@@ -132,7 +70,7 @@ export class EthicalAdsAddon extends AddonBase {
       let element;
       let knownPlacementFound = false;
 
-      if (this.isSphinxReadTheDocsLikeTheme()) {
+      if (docTool.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
 
@@ -142,7 +80,22 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-dark-theme");
           knownPlacementFound = true;
         }
-      } else if (this.isSphinxBookThemeLikeTheme()) {
+      } else if (docTool.isSphinxFuroLikeTheme()) {
+        // NOTE: The code to handle furo theme shouldn't be required,
+        // since furo uses explicit placement.
+        // However, the Jinja context variable READTHEDOCS is not injected anymore,
+        // and furo does not includes the explicit placement due to this.
+        // This is a temporal solution while they fix this.
+        selector = ".sidebar-tree";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("id", "furo-sidebar-ad-placement");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
         element = document.querySelector(selector);
 
@@ -151,7 +104,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.isSphinxAlabasterLikeTheme()) {
+      } else if (docTool.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
         element = document.querySelector(selector);
 
@@ -160,7 +113,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.isMaterialMkDocsTheme()) {
+      } else if (docTool.isMaterialMkDocsTheme()) {
         selector = ".md-sidebar__scrollwrap";
         element = document.querySelector(selector);
 
@@ -172,7 +125,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         }
-      } else if (this.isDocusaurusTheme()) {
+      } else if (docTool.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
         element = document.querySelector(selector);
 
@@ -181,6 +134,18 @@ export class EthicalAdsAddon extends AddonBase {
           // See https://github.com/readthedocs/ethical-ad-client/issues/193
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docusaurus");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isDocsify()) {
+        selector = "main > aside > div.sidebar-nav";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-docsify");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
@@ -318,9 +283,10 @@ export class EthicalAdsAddon extends AddonBase {
     this.loadEthicalAdLibrary();
   }
 
-  static isEnabled(config) {
+  static isEnabled(config, httpStatus) {
     return (
-      super.isEnabled(config) && config.addons.ethicalads.ad_free === false
+      super.isEnabled(config, httpStatus) &&
+      config.addons.ethicalads.ad_free === false
     );
   }
 }

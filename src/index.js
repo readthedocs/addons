@@ -6,29 +6,35 @@ import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
+import * as linkpreviews from "./linkpreviews";
+import * as filetreediff from "./filetreediff";
+import * as customscript from "./customscript";
+import { default as objectPath } from "object-path";
 import {
   domReady,
-  isReadTheDocsEmbedPresent,
+  isEmbedded,
   IS_PRODUCTION,
   setupLogging,
   getMetadataValue,
 } from "./utils";
 
 export function setup() {
-  if (isReadTheDocsEmbedPresent()) {
-    console.debug("Read the Docs Embed is present. Skipping...");
-    // TODO: return ``Promise.reject()`` or similar here to avoid hybrid async/sync functions.
-    return false;
-  }
-
   const addons = [
     flyout.FlyoutAddon,
     notification.NotificationAddon,
     analytics.AnalyticsAddon,
     ethicalads.EthicalAdsAddon,
     search.SearchAddon,
-    docdiff.DocDiffAddon,
+
+    // HotKeys has to be initialized before DocDiff because when
+    // `?readthedocs-diff=true` DocDiff triggers an event that HotKeys has to
+    // listen to to update its internal state.
     hotkeys.HotKeysAddon,
+    docdiff.DocDiffAddon,
+
+    linkpreviews.LinkPreviewsAddon,
+    filetreediff.FileTreeDiffAddon,
+    customscript.CustomScriptAddon,
   ];
 
   return new Promise((resolve) => {
@@ -47,6 +53,15 @@ export function setup() {
         return getReadTheDocsConfig(sendUrlParam);
       })
       .then((config) => {
+        const loadWhenEmbedded = objectPath.get(
+          config,
+          "addons.options.load_when_embedded",
+          false,
+        );
+        if (isEmbedded() && !loadWhenEmbedded) {
+          return false;
+        }
+
         const httpStatus = getMetadataValue("readthedocs-http-status");
         let promises = [];
 

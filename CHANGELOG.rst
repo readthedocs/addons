@@ -3,6 +3,92 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.24.0
+---------------
+
+:date: Jan 8, 2025
+
+* Don't show the latest notification if it's the default version (:pr:`480`)
+* EthicalAd: better ad position for Docsify (:pr:`470`)
+* Packages: updated via ncu -u (:pr:`479`)
+
+Version v0.23.2
+---------------
+
+:date: Dec 10, 2024
+
+* Link previews work correctly on Docusaurus (``?maincontent=`` attribute is sent to backend)
+* DocDiff/Visual diff content is cached
+* Visual diff works together with link previews
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.23.1
+---------------
+
+:date: Dec 3, 2024
+
+* Search store recent queries when using keyboard
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+Version v0.23.0
+---------------
+
+:date: Nov 26, 2024
+
+* Enable DocDiff via a query string (``readthedocs-diff=true``)
+* Don't show notification on default version
+* Improvements to Links Preview (using a default CSS selector and heuristic to detect the documentation tool)
+
+Version v0.22.0
+---------------
+
+:date: Nov 18, 2024
+
+* Use new API field names for File Tree Diff
+* Detect embedded frame and skip loading addons
+* New ``CustomScript`` addon
+* Remove check for old integration
+
+Version v0.21.0
+---------------
+
+:date: Nov 12, 2024
+
+* Don't show Ethical Ads on 404 pages
+* New addon: Link Preview; preview the content of the site without navigating to it
+* New addon: File Tree Diff; show all the changed files compared to the latest version
+
+
+Version v0.20.0
+---------------
+
+:date: Nov 5, 2024
+
+* Allow to disable ``latest`` and/or non-``stable`` notification independently
+* Small CSS fix for filter titles
+* Update all ``npm`` dependencies with with ``ncu -u``
+
+
+Version v0.19.0
+---------------
+
+:date: Oct 15, 2024
+
+* Show only logo on flyout when collapsed and logo + wordmark when expanded
+* Include the language of the documentation in the collapsed version of the flyout
+* Ad is more integrated on Sphinx's furo theme
+* Add CSS style for CTA button on ads
+
+
+Version v0.18.1
+---------------
+
+:date: Oct 8, 2024
+
+* Stay on the same page when switching version from the notification
+* Do not render search filters if they are empty
+
+
 Version v0.18.0
 ---------------
 

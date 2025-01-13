@@ -1,12 +1,12 @@
 import { expect, assert, fixture, html } from "@open-wc/testing";
-import { DocDiffAddon, DocDiffElement } from "../src/docdiff";
+import { LinkPreviewsAddon } from "../src/linkpreviews";
 
-describe("Doc diff addon", () => {
+describe("LinkPreviews addon", () => {
   it("invalid configuration disables the addon", () => {
     expect(
-      DocDiffAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
-          doc_diff: {
+          linkpreviews: {
             enabled: true,
           },
         },
@@ -14,32 +14,30 @@ describe("Doc diff addon", () => {
     ).to.be.false;
   });
 
-  it("is disabled with valid data", () => {
+  it("is disabled", () => {
     expect(
-      DocDiffAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
           options: {
             root_selector: "[role=main]",
           },
-          doc_diff: {
+          linkpreviews: {
             enabled: false,
-            base_url: "http://project.readthedocs.io/en/latest/index.html",
           },
         },
       }),
     ).to.be.false;
   });
 
-  it("is enabled with valid data", () => {
+  it("valid data and enabled", () => {
     expect(
-      DocDiffAddon.isEnabled({
+      LinkPreviewsAddon.isEnabled({
         addons: {
           options: {
             root_selector: "[role=main]",
           },
-          doc_diff: {
+          linkpreviews: {
             enabled: true,
-            base_url: "http://project.readthedocs.io/en/latest/index.html",
           },
         },
       }),
