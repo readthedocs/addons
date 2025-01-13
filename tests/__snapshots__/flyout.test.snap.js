@@ -15,6 +15,8 @@ snapshots["Flyout addon snapshot flyout completely"] =
     <span class="version">
       latest
     </span>
+    <span class="caret">
+    </span>
   </header>
   <main class="closed">
     <dl class="languages">
@@ -131,6 +133,8 @@ snapshots["Flyout addon snapshot flyout with search disabled"] =
     </span>
     <span class="version">
       latest
+    </span>
+    <span class="caret">
     </span>
   </header>
   <main class="closed">
