@@ -81,14 +81,14 @@ export class FlyoutElement extends LitElement {
       this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
-      version = html`<span
+      version = html`<span class="version"
         >${iconCodeBranch.node[0]} ${this.config.versions.current.slug}</span
       >`;
     }
 
     let translation = nothing;
     if (this.config.projects.translations.length > 0) {
-      translation = html`<span
+      translation = html`<span class="language"
         >${iconLanguage.node[0]}
         ${this.config.projects.current.language.code}</span
       >`;
