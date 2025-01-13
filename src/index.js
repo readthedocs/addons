@@ -1,5 +1,3 @@
-import { CSSResult } from "lit";
-
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
@@ -21,7 +19,7 @@ import {
   getMetadataValue,
 } from "./utils";
 
-import doctoolsStyleSheet from "./doctools.css";
+import { defaultStyleSheet } from "./defaults.js";
 
 export function setup() {
   const addons = [
@@ -59,11 +57,7 @@ export function setup() {
         const elementHtml = document.querySelector("html");
         if (elementHtml) {
           // Inject styles at the parent DOM to set variables at :root
-          let styleSheet = doctoolsStyleSheet;
-          if (doctoolsStyleSheet instanceof CSSResult) {
-            styleSheet = doctoolsStyleSheet.styleSheet;
-          }
-          document.adoptedStyleSheets = [styleSheet];
+          document.adoptedStyleSheets = [defaultStyleSheet];
 
           // If we detect a documentation tool, set attributes on :root to allow
           // for CSS selectors to utilize these values.

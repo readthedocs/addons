@@ -1,13 +1,23 @@
 /* Flyout styles */
 
-:host {
-  /* These variables are used more than once, use a local variable so we can set
-   * a default in this addon */
-  --addons-flyout-font-size: var(
-    --readthedocs-flyout-font-size,
-    var(--readthedocs-font-size, 0.8rem)
-  );
-  --addons-flyout-line-height: var(--readthedocs-flyout-line-height, 1.25em);
+@layer defaults {
+  :root {
+    --readthedocs-flyout-font-family: var(--readthedocs-font-family);
+    --readthedocs-flyout-font-size: var(--readthedocs-font-size);
+    --readthedocs-flyout-line-height: 1.25em;
+    --readthedocs-flyout-header-font-size: 1.125em;
+    --readthedocs-flyout-dt-font-size: 1.125em;
+    --readthedocs-flyout-dd-font-size: 1.125em;
+    --readthedocs-flyout-line-height: 1.25em;
+
+    --readthedocs-flyout-color: rgb(128, 128, 128);
+    --readthedocs-flyout-background-color: rgb(39, 39, 37);
+    --readthedocs-flyout-current-version-color: #27ae60;
+    --readthedocs-flyout-section-heading-color: rgb(128, 128, 128);
+    --readthedocs-flyout-item-link-color: rgb(252, 252, 252);
+    --readthedocs-flyout-divider-color: #413d3d;
+    --readthedocs-flyout-link-color: rgb(42, 128, 185);
+  }
 }
 
 .container {
@@ -17,7 +27,7 @@
   height: auto;
   max-height: calc(100% - 100px);
   overflow-y: auto;
-  line-height: var(--addons-flyout-line-height);
+  line-height: var(--readthedocs-flyout-line-height);
 }
 
 .container.bottom-right {
@@ -41,17 +51,10 @@
 }
 
 :host > div {
-  font-family: var(
-    --readthedocs-flyout-font-family,
-    "Lato",
-    "proxima-nova",
-    "Helvetica Neue",
-    "Arial",
-    "sans-serif"
-  );
-  font-size: var(--addons-flyout-font-size);
-  color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
-  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  font-family: var(--readthedocs-flyout-font-family);
+  font-size: var(--readthedocs-flyout-font-size);
+  color: var(--readthedocs-flyout-color);
+  background-color: var(--readthedocs-flyout-background-color);
   z-index: 3000;
   padding: 0 10px;
   overflow-y: auto;
@@ -63,27 +66,21 @@ header {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  background-color: var(--readthedocs-flyout-background-color);
   position: sticky;
   top: 0;
   padding: 10px 0;
 }
 
 header > span {
-  color: var(--readthedocs-flyout-current-version-color, #27ae60);
-  font-size: var(
-    --readthedocs-flyout-header-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
+  color: var(--readthedocs-flyout-current-version-color);
+  font-size: var(--readthedocs-flyout-header-font-size);
   margin-left: 10px;
 }
 
 header > span svg.icon {
   color: rgb(128, 128, 128);
-  height: var(
-    --readthedocs-flyout-header-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
+  height: var(--readthedocs-flyout-header-font-size);
   padding-right: 5px;
   vertical-align: middle;
 }
@@ -111,25 +108,19 @@ dl {
 }
 
 dl > dt {
-  font-size: var(
-    --readthedocs-flyout-dt-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
-  color: var(--readthedocs-flyout-section-heading-color, rgb(128, 128, 128));
+  font-size: var(--readthedocs-flyout-dt-font-size);
+  color: var(--readthedocs-flyout-section-heading-color);
 }
 
 dl > dd {
   display: inline-block;
   margin: 0;
-  font-size: var(
-    --readthedocs-flyout-dd-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
+  font-size: var(--readthedocs-flyout-dd-font-size);
 }
 
 dd a {
   text-decoration: none;
-  color: var(--readthedocs-flyout-item-link-color, rgb(252, 252, 252));
+  color: var(--readthedocs-flyout-item-link-color);
   padding: 6px;
   display: inline-block;
 }
@@ -152,10 +143,10 @@ hr {
   padding: 0;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: var(--readthedocs-flyout-divider-color, #413d3d);
+  border-top-color: var(--readthedocs-flyout-divider-color);
 }
 
 small a {
   text-decoration: none;
-  color: var(--readthedocs-flyout-link-color, rgb(42, 128, 185));
+  color: var(--readthedocs-flyout-link-color);
 }
