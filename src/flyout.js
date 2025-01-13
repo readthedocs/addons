@@ -1,11 +1,13 @@
 import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
+import { ContextConsumer } from "@lit/context";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import { faCodeBranch, faLanguage } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
+import { configContext } from "./context.js";
 
 import styleSheet from "./flyout.css";
 import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
@@ -19,7 +21,6 @@ export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
 
   static properties = {
-    config: { state: true },
     opened: { type: Boolean },
     floating: { type: Boolean },
     position: { type: String },
@@ -27,24 +28,24 @@ export class FlyoutElement extends LitElement {
 
   static styles = styleSheet;
 
+  // `_config` is the context we are going to consume when it's updated.
+  _config = new ContextConsumer(this, {
+    context: configContext,
+    subscribe: true,
+  });
+
   constructor() {
     super();
 
+    // `config` is the internal config for this addon that's updated based on `_config`.
     this.config = null;
+
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
     this.readthedocsLogo = READTHEDOCS_LOGO;
-  }
-
-  loadConfig(config) {
-    // Validate the config object before assigning it to the Addon.
-    // Later, ``render()`` method will check whether this object exists and (not) render
-    // accordingly
-    if (!FlyoutAddon.isEnabled(config)) {
-      return;
-    }
-    this.config = config;
+    console.log("Flyout _config (from constructor() method)");
+    console.log(this._config.value);
   }
 
   _close() {
@@ -305,10 +306,16 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    if (this.config === null) {
-      // nothing is a special Lit response type
+    console.log("Flyout config (from render() method )");
+    console.log(this._config.value);
+
+    // Validate the context (`this._config.value`) on each update and return
+    // nothing if it's invalid. ``nothing`` is a special Lit response type.
+    if (!FlyoutAddon.isEnabled(this._config.value)) {
       return nothing;
     }
+
+    this.config = this._config.value;
 
     const classes = { floating: this.floating, container: true };
     classes[this.position] = true;
@@ -376,16 +383,7 @@ export class FlyoutAddon extends AddonBase {
     // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-flyout");
     if (!elems.length) {
-      elems = [new FlyoutElement()];
-
-      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
-      // So, we append the web-component first and then request an update of it.
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
+      render(new FlyoutElement(), document.body);
     }
   }
 }
