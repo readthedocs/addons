@@ -464,17 +464,14 @@ export class DocumentationTool {
     // <!-- Book generated using mdBook -->
     // <meta charset="UTF-8">
     // ...
-    try {
-      if (
-        document.head.firstChild.nextSibling.textContent.includes(
-          "Book generated using mdBook",
-        )
-      ) {
-        return true;
-      }
-    } finally {
-      return false;
+    if (
+      document?.head?.firstChild?.nextSibling?.textContent.includes(
+        "Book generated using mdBook",
+      )
+    ) {
+      return true;
     }
+    return false;
   }
 
   isDocsify() {
@@ -539,7 +536,7 @@ export class DocumentationTool {
     //     MkDocs version : 1.4.2
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
-    if (document.lastChild.textContent.includes("MkDocs version :")) {
+    if (document?.lastChild?.textContent.includes("MkDocs version :")) {
       return true;
     }
     return false;

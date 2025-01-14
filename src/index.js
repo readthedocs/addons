@@ -1,3 +1,5 @@
+import { CSSResult } from "lit";
+
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
@@ -15,7 +17,6 @@ import {
   domReady,
   isEmbedded,
   IS_PRODUCTION,
-  IS_TESTING,
   setupLogging,
   getMetadataValue,
 } from "./utils";
@@ -58,12 +59,11 @@ export function setup() {
         const elementHtml = document.querySelector("html");
         if (elementHtml) {
           // Inject styles at the parent DOM to set variables at :root
-          //
-          // NOTE: We can't include this on testing due to this error:
-          // Failed to set the 'adoptedStyleSheets' property on 'Document': Failed to convert value to 'CSSStyleSheet'.
-          if (!IS_TESTING) {
-            document.adoptedStyleSheets = [doctoolsStyleSheet];
+          let styleSheet = doctoolsStyleSheet;
+          if (doctoolsStyleSheet instanceof CSSResult) {
+            styleSheet = doctoolsStyleSheet.styleSheet;
           }
+          document.adoptedStyleSheets = [styleSheet];
 
           // If we detect a documentation tool, set attributes on :root to allow
           // for CSS selectors to utilize these values.
