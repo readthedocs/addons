@@ -36,7 +36,6 @@ export class FlyoutElement extends LitElement {
     super();
 
     this.config = null;
-    this.classes = {};
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
