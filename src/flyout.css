@@ -1,13 +1,23 @@
-/* New */
+/* Flyout styles */
+
+:host {
+  /* These variables are used more than once, use a local variable so we can set
+   * a default in this addon */
+  --addons-flyout-font-size: var(
+    --readthedocs-flyout-font-size,
+    var(--readthedocs-font-size, 0.8rem)
+  );
+  --addons-flyout-line-height: var(--readthedocs-flyout-line-height, 1.25em);
+}
 
 .container {
   position: fixed;
-  max-width: 300px;
+  max-width: var(--readthedocs-flyout-max-width, 25em);
   width: auto;
   height: auto;
   max-height: calc(100% - 100px);
   overflow-y: auto;
-  line-height: 1rem;
+  line-height: var(--addons-flyout-line-height);
 }
 
 .container.bottom-right {
@@ -30,13 +40,6 @@
   top: 50px;
 }
 
-:host {
-  --addons-flyout-font-size: var(
-    --readthedocs-flyout-font-size,
-    var(--readthedocs-font-size, 0.8rem)
-  );
-}
-
 :host > div {
   font-family: var(
     --readthedocs-flyout-font-family,
@@ -47,6 +50,7 @@
     "sans-serif"
   );
   font-size: var(--addons-flyout-font-size);
+  line-height: 1.2em;
   color: var(--readthedocs-flyout-color, rgb(128, 128, 128));
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   z-index: 3000;
@@ -56,40 +60,54 @@
 
 header {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  flex-flow: row nowrap;
+  gap: 1em;
   align-items: center;
   cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   position: sticky;
-  top: 0;
-  padding: 10px 0;
+  top: 0px;
+  font-size: var(--readthedocs-flyout-header-font-size, 1.25em);
+}
+
+header > img.logo {
+  /* Total height of 1.5 + 0.5 + 0.5 = 2.5em */
+  max-height: 1.5em;
+  width: auto;
+  padding: 0.5em 0em;
+  /* Don't grow past content size, do shrink down to min-content */
+  flex: 0 1 auto;
 }
 
 header > span {
   color: var(--readthedocs-flyout-current-version-color, #27ae60);
-  font-size: var(
-    --readthedocs-flyout-header-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
-  margin-left: 10px;
+  /* Total height of 1 + 0.75 + 0.75 = 2.5em */
+  padding: 0.75em 0em;
+  line-height: 1em;
+  /* Don't grow past content size or shrink below min-content */
+  flex: 0 0 auto;
+  /* Trim content to get ellipsis on wide content */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+header > span.version {
+  /* Grow to fill parent based on content width, shrink content when needed (for ellipsis) */
+  flex: 0 1 auto;
+}
+
+/* Give the flex box extra spacing to the left of the first span item. This puts
+ * automatic spacing between the logo and the text detail spans */
+header > span:first-of-type {
+  margin-left: auto;
 }
 
 header > span svg.icon {
   color: rgb(128, 128, 128);
-  height: var(
-    --readthedocs-flyout-header-font-size,
-    calc(var(--addons-flyout-font-size) * 1.125)
-  );
-  padding-right: 5px;
+  height: 1em;
+  padding-right: 0.25em;
   vertical-align: middle;
-}
-
-header > img.logo {
-  text-align: center;
-  max-width: 106px;
-  max-height: 22px;
-  margin-right: 10px;
 }
 
 main {
