@@ -50,9 +50,14 @@ export class FlyoutElement extends LitElement {
     // There are two main options: "Default" or a specific value.
     // When "Default" is used, the value will be grabbed from the HTML element (e.g. explicitly set by the theme author).
     // In case it's not defined, the value defined in the `constructor` will be used ("bottom-right")
-    this.position =
-      objectPath.get(this.config, "addons.flyout.position", null) ||
-      this.position;
+    const dashboardPosition = objectPath.get(
+      this.config,
+      "addons.flyout.position",
+      null,
+    );
+    if (dashboardPosition) {
+      this.position = dashboardPosition;
+    }
   }
 
   _close() {
