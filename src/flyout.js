@@ -39,8 +39,6 @@ export class FlyoutElement extends LitElement {
     this.opened = false;
     this.floating = true;
     this.position = "bottom-right";
-    this.classes = { floating: this.floating, container: true };
-    this.classes[this.position] = true;
     this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
@@ -328,12 +326,19 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  updateCSSClasses() {
+    this.classes = { floating: this.floating, container: true };
+    this.classes[this.position] = true;
+  }
+
   render() {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
+
+    this.updateCSSClasses();
 
     return html`
       <div class=${classMap(this.classes)}>
