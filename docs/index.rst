@@ -47,6 +47,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Docusaurus <https://test-builds.readthedocs.io/en/docusaurus/>`_
 * `Jekyll <https://test-builds.readthedocs.io/en/jekyll/>`_
 * `Jupyter Book <https://test-builds.readthedocs.io/en/jupyter-book/>`_
+* `mdBook <https://test-builds.readthedocs.io/en/mdbook/>`_
 * `MkDocs <https://test-builds.readthedocs.io/en/mkdocs/>`_
 * `MkDocs (Material theme) <https://test-builds.readthedocs.io/en/mkdocs-material/>`_
 * `MkDocs (Terminal theme) <https://test-builds.readthedocs.io/en/mkdocs-terminal/>`_
