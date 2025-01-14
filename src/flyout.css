@@ -1,4 +1,14 @@
-/* New */
+/* Flyout styles */
+
+:host {
+  /* These variables are used more than once, use a local variable so we can set
+   * a default in this addon */
+  --addons-flyout-font-size: var(
+    --readthedocs-flyout-font-size,
+    var(--readthedocs-font-size, 0.8rem)
+  );
+  --addons-flyout-line-height: var(--readthedocs-flyout-line-height, 1.25em);
+}
 
 .container {
   position: fixed;
@@ -7,6 +17,7 @@
   height: auto;
   max-height: calc(100% - 100px);
   overflow-y: auto;
+  line-height: var(--addons-flyout-line-height);
 }
 
 .container.bottom-right {
@@ -27,13 +38,6 @@
 .container.top-right {
   right: 20px;
   top: 50px;
-}
-
-:host {
-  --addons-flyout-font-size: var(
-    --readthedocs-flyout-font-size,
-    var(--readthedocs-font-size, 0.8rem)
-  );
 }
 
 :host > div {
