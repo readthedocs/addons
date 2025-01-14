@@ -2,7 +2,11 @@ import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faCodeBranch, faLanguage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCodeBranch,
+  faCaretDown,
+  faLanguage,
+} from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
@@ -81,23 +85,28 @@ export class FlyoutElement extends LitElement {
       this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
-      version = html`<span class="version"
-        >${iconCodeBranch.node[0]} ${this.config.versions.current.slug}</span
-      >`;
+      version = html`<span class="version">
+        ${iconCodeBranch.node[0]} ${this.config.versions.current.slug}
+      </span> `;
     }
+
+    const iconCaretDown = icon(faCaretDown, {
+      classes: ["icon"],
+    });
 
     let translation = nothing;
     if (this.config.projects.translations.length > 0) {
-      translation = html`<span class="language"
-        >${iconLanguage.node[0]}
+      translation = html`<span class="language">
+        ${iconLanguage.node[0]}
         ${this.config.projects.current.language.code}</span
-      >`;
+      > `;
     }
 
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${this.readthedocsLogo}" alt="Read the Docs" />
         ${translation} ${version}
+        <span class="caret">${iconCaretDown.node[0]}</span>
       </header>
     `;
   }
