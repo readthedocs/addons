@@ -198,6 +198,11 @@ export class DocDiffElement extends LitElement {
       return null;
     }
 
+    // Update URL to include the diff parameter
+    const url = new URL(window.location.href);
+    url.searchParams.set(DOCDIFF_URL_PARAM, "true");
+    window.history.replaceState({}, "", url);
+
     this.enabled = true;
     this.originalBody = document.querySelector(this.rootSelector);
     return this.compare();
@@ -208,6 +213,11 @@ export class DocDiffElement extends LitElement {
       console.debug("Ignoring disableDocDiff: it was already disabled");
       return null;
     }
+
+    // Remove diff parameter from URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete(DOCDIFF_URL_PARAM);
+    window.history.replaceState({}, "", url);
 
     this.enabled = false;
     document.querySelector(this.rootSelector).replaceWith(this.originalBody);
@@ -238,6 +248,7 @@ export class DocDiffElement extends LitElement {
       this._handleHideDocDiff,
     );
   }
+
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
