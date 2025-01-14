@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.24.0
+---------------
+
+:date: Jan 8, 2025
+
+* Don't show the latest notification if it's the default version (:pr:`480`)
+* EthicalAd: better ad position for Docsify (:pr:`470`)
+* Packages: updated via ncu -u (:pr:`479`)
+
 Version v0.23.2
 ---------------
 
