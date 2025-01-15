@@ -179,9 +179,25 @@ export class EthicalAdsAddon extends AddonBase {
         placement.setAttribute("data-ea-type", "text");
         placement.setAttribute("data-ea-style", "fixedfooter");
         placement.classList.add("ethical-fixedfooter");
-        // Add margin to the bottom to avoid hiding bottom of content with the ad.
+
+        // Add margin to content and footers to avoid hiding content
         const root_node = document.querySelector(docTool.getRootSelector());
-        root_node.classList.add("ethical-fixedfooter-margin");
+        const footers = document.querySelectorAll("footer, .footer");
+
+        if (root_node) {
+          root_node.classList.add("ethical-fixedfooter-margin");
+        }
+
+        footers.forEach((footer) => {
+          footer.classList.add("ethical-fixedfooter-margin");
+        });
+
+        // Inject the actual ad
+        const elementInsertBefore = document.body;
+        elementInsertBefore.insertBefore(
+          placement,
+          elementInsertBefore.lastChild,
+        );
       }
     }
 
@@ -213,6 +229,11 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   elementAboveTheFold(element) {
+    // Return false if element doesn't exist
+    if (!element) {
+      return false;
+    }
+
     // Determine if this element would be above the fold.
     // If this is off screen, instead create an ad in the footer.
     // Assumes the ad would be AD_SIZE pixels high.
