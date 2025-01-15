@@ -1,30 +1,26 @@
-import { html, nothing, render, LitElement } from "lit";
-import { ContextProvider } from "@lit/context";
-import { createContext } from "@lit/context";
-import { getReadTheDocsConfig } from "./readthedocs-config.js";
+import {
+  ContextProvider,
+  ContextRoot,
+  createContext,
+} from "@lit/context";
 import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
 
+export const contextRoot = new ContextRoot().attach(document.body);
 export const configContext = createContext(Symbol("readthedocs-config"));
 
-export class AddonsApp extends LitElement {
-  config = new ContextProvider(this, { context: configContext });
+/**
+ * Because `config` provider is not attached to a ReactiveElement, and is
+ * instead connected to `document.html`, we have to call `hostConnected()`
+ * manually. See:
+ *
+ * https://github.com/lit/lit/blob/935697d47e62ed75e3157423400163a8371c62fc/packages/context/src/lib/controllers/context-provider.ts#L55-L58
+ **/
+const config = new ContextProvider(document.documentElement, {
+  context: configContext,
+});
+config.hostConnected();
 
-  connectedCallback() {
-    super.connectedCallback();
-    document.addEventListener(
-      EVENT_READTHEDOCS_ADDONS_DATA_READY,
-      this._handleAddonsDataReady,
-    );
-  }
-
-  createRenderRoot() {
-    return this;
-  }
-
-  _handleAddonsDataReady = (event) => {
-    console.log("_handleAddonsDataReady");
-    this.config.setValue(event.detail.data());
-  };
-}
-
-customElements.define("readthedocs-context", AddonsApp);
+document.addEventListener(EVENT_READTHEDOCS_ADDONS_DATA_READY, (event) => {
+  console.log("Event:", EVENT_READTHEDOCS_ADDONS_DATA_READY);
+  config.setValue(event.detail.data());
+});
