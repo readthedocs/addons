@@ -104,7 +104,9 @@ export class FileTreeDiffElement extends LitElement {
             Show diff
           </label>
           <select id="file-select" @change=${this.handleFileChange}>
-            <option value="" ?selected=${!hasCurrentFile}>Files changed</option>
+            <option value="" ?selected=${!hasCurrentFile} disabled>
+              Files changed:
+            </option>
             ${renderSection(diffData.added, "Added")}
             ${renderSection(diffData.modified, "Changed")}
           </select>
