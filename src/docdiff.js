@@ -17,9 +17,11 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
 } from "./events";
-import { nothing, LitElement } from "lit";
+import { render, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
+import { ContextConsumer } from "@lit/context";
+import { configContext } from "./context.js";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 
@@ -75,6 +77,12 @@ export class DocDiffElement extends LitElement {
 
   static styles = styleSheet;
 
+  // `_config` is the context we are going to consume when it's updated.
+  _config = new ContextConsumer(this, {
+    context: configContext,
+    subscribe: true,
+  });
+
   constructor() {
     super();
 
@@ -87,11 +95,7 @@ export class DocDiffElement extends LitElement {
     this.cachedRemoteContent = null;
   }
 
-  loadConfig(config) {
-    if (!DocDiffAddon.isEnabled(config)) {
-      return;
-    }
-    this.config = config;
+  firstUpdated() {
     this.rootSelector =
       objectPath.get(this.config, "options.root_selector") ||
       docTool.getRootSelector();
@@ -101,7 +105,17 @@ export class DocDiffElement extends LitElement {
     if (this.injectStyles) {
       document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
     }
+  }
 
+  render() {
+    // Validate the context (`this._config.value`) on each update and return
+    // nothing if it's invalid. ``nothing`` is a special Lit response type.
+    if (!DocDiffAddon.isEnabled(this._config.value)) {
+      return nothing;
+    }
+    console.log("DocDiff:", this._config.value);
+
+    this.config = this._config.value;
     // Enable DocDiff if the URL parameter is present
     if (hasQueryParam(DOCDIFF_URL_PARAM)) {
       const event = new CustomEvent(
@@ -109,30 +123,9 @@ export class DocDiffElement extends LitElement {
       );
       document.dispatchEvent(event);
     }
-  }
 
-  render() {
     return nothing;
-    // TODO: render a checkbox once we are settled on the UI.
-    // For now, we are only enabling/disabling via a hotkey.
-    //
-    // return html`
-    //   <label class="switch">
-    //     <input @click="${this.handleClick}" type="checkbox" />
-    //     <span class="slider round"></span>
-    //   </label>
-    // `;
   }
-
-  // This code isn't used until we show a UI,
-  // and even then we'll want to trigger events to match state?
-  // handleClick(e) {
-  //   if (e.target.checked) {
-  //     this.enableDocDiff();
-  //   } else {
-  //     this.disableDocDiff();
-  //   }
-  // }
 
   compare() {
     let promiseData;
@@ -264,13 +257,7 @@ export class DocDiffAddon extends AddonBase {
     customElements.define("readthedocs-docdiff", DocDiffElement);
     let elems = document.querySelectorAll("readthedocs-docdiff");
     if (!elems.length) {
-      elems = [new DocDiffElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
+      render(new DocDiffElement(), document.body);
     }
   }
 
