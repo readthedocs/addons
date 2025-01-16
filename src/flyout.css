@@ -20,32 +20,34 @@
   line-height: var(--addons-flyout-line-height);
 }
 
-.container.bottom-right {
+.container.bottom-right:not(.inline) {
   right: 20px;
   bottom: 50px;
 }
 
-.container.bottom-left {
+.container.bottom-left:not(.inline) {
   left: 20px;
   bottom: 50px;
 }
 
-.container.top-left {
+.container.top-left:not(.inline) {
   left: 20px;
   top: 50px;
 }
 
-.container.top-right {
+.container.top-right:not(.inline) {
   right: 20px;
   top: 50px;
 }
 
 .container.inline {
   width: calc(100% - 20px);
+  max-width: 100%;
   padding: 0 10px;
   margin: 0;
-  position: absolute;
-  bottom: 0;
+  position: relative;
+  display: inline-block;
+  overflow: visible;
 }
 
 @media screen and (max-width: 768px) {
@@ -130,7 +132,26 @@ main {
   margin-top: 5px;
 }
 
-main.closed {
+.container.inline main {
+  position: absolute;
+  bottom: 3em;
+  padding: 1em;
+  background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+}
+
+/* This is where `.container.top-left` would be better as `.container.top.left`, giving an independent `top` */
+.container.bottom-left.inline main,
+.container.bottom-right.inline main {
+  bottom: 3em;
+  top: unset;
+}
+.container.top-left.inline main,
+.container.top-right.inline main {
+  top: 3em;
+  bottom: unset;
+}
+
+main.closed, .container.inline main.closed {
   display: none;
 }
 
