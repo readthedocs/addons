@@ -40,6 +40,20 @@
   top: 50px;
 }
 
+.container.inline {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .container.inline {
+    max-width: 100%;
+  }
+}
+
 :host > div {
   font-family: var(
     --readthedocs-flyout-font-family,
