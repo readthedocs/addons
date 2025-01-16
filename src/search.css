@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   z-index: 3000;
-  line-height: 1;
+  line-height: 1rem;
 }
 
 :host > div a {
@@ -69,7 +69,7 @@
   flex-direction: column;
   border: 1px solid var(--readthedocs-search-content-border-color, #e0e0e0);
   border-radius: 0.7rem;
-  line-height: 1.75;
+  line-height: 1.75rem;
   background-color: var(--readthedocs-search-content-background-color, #fcfcfc);
   box-shadow:
     rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
@@ -147,7 +147,7 @@ div.hit-block .hit-block-heading-container .close-icon {
   font-size: 1.15em;
   width: 1em;
   padding-right: 10px;
-  color: #999;
+  color: rgba(0, 0, 0, 0.54);
   padding-top: 5px;
 }
 
@@ -209,7 +209,10 @@ div.hit-block .hit-block-heading-container svg {
 }
 
 :host > div .results .hit .subheading {
-  color: var(--readthedocs-search-result-section-subheading-color, #888);
+  color: var(
+    --readthedocs-search-result-section-subheading-color,
+    rgba(0, 0, 0, 0.64)
+  );
   font-weight: 700;
   font-size: 15px;
   margin-right: 10px;
@@ -221,7 +224,7 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .results .hit .content {
   margin: 0;
   text-decoration: none;
-  color: #999;
+  color: rgba(0, 0, 0, 0.54);
   font-size: 15px;
   display: block;
   margin-bottom: 5px;
