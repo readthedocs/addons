@@ -102,6 +102,8 @@ export function setup() {
         }
 
         for (const addon of addons) {
+          // TODO: always initialize _all the addons_, they will be rendered or not based on the dynamic config context
+          // TODO: move the `httpStatus` usage for `isEnabled` into `render()` for each addon
           if (addon.isEnabled(config, httpStatus)) {
             promises.push(
               new Promise((resolve) => {
