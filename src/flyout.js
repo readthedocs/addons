@@ -44,8 +44,10 @@ export class FlyoutElement extends LitElement {
     this.floating = true;
     this.position = "bottom-right";
     this.readthedocsLogo = READTHEDOCS_LOGO;
-    console.log("Flyout _config (from constructor() method)");
-    console.log(this._config.value);
+    console.log(
+      "Flyout _config (from constructor() method)",
+      this._config.value,
+    );
   }
 
   _close() {
@@ -306,8 +308,7 @@ export class FlyoutElement extends LitElement {
 
   render() {
     // The element doesn't yet have our config, don't render it.
-    console.log("Flyout config (from render() method )");
-    console.log(this._config.value);
+    console.log("Flyout config (from render() method )", this._config.value);
 
     // Validate the context (`this._config.value`) on each update and return
     // nothing if it's invalid. ``nothing`` is a special Lit response type.
