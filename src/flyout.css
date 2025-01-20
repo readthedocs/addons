@@ -41,19 +41,12 @@
 }
 
 .container.inline {
-  width: calc(100% - 20px);
-  max-width: 100%;
+  width: 100%;
   padding: 0 10px;
   margin: 0;
   position: relative;
   display: inline-block;
   overflow: visible;
-}
-
-@media screen and (max-width: 768px) {
-  .container.inline {
-    max-width: 100%;
-  }
 }
 
 :host > div {
@@ -137,21 +130,22 @@ main {
   bottom: 3em;
   padding: 1em;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
+  margin-left: -0.6rem;
+  width: calc(100% - 1.6rem);
 }
 
-/* This is where `.container.top-left` would be better as `.container.top.left`, giving an independent `top` */
-.container.bottom-left.inline main,
-.container.bottom-right.inline main {
+.container.bottom.inline main {
   bottom: 3em;
   top: unset;
 }
-.container.top-left.inline main,
-.container.top-right.inline main {
-  top: 3em;
+
+.container.top.inline main {
+  top: 2.85em;
   bottom: unset;
 }
 
-main.closed, .container.inline main.closed {
+main.closed,
+.container.inline main.closed {
   display: none;
 }
 
