@@ -63,7 +63,7 @@
   z-index: 100000;
   height: 80%;
   width: 60%;
-  max-width: 700px;
+  max-width: 43em;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
