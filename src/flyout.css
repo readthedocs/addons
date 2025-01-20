@@ -134,12 +134,12 @@ main {
   width: calc(100% - 1.6rem);
 }
 
-.container.bottom.inline main {
+.container.down.inline main {
   bottom: 3em;
   top: unset;
 }
 
-.container.top.inline main {
+.container.up.inline main {
   top: 2.85em;
   bottom: unset;
 }
