@@ -133,8 +133,11 @@ main {
   padding: 1em;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
 
-  /* Remove the padding-left added in .container.inline */
+  /* Remove the padding-left added in `.container.inline` */
   margin-left: -10px;
+
+  /* Use full width minus 1em padding added on left and right in `.container.inline main` */
+  width: calc(100% - 2em);
 }
 
 .container.up.inline main {
