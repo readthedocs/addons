@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.26.0
+---------------
+
+:date: Jan 21, 2025
+
+* Search: small updates on look & feel (:pr:`497`)
+
 Version v0.25.0
 ---------------
 
