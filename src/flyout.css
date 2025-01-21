@@ -134,11 +134,12 @@ main {
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
   bottom: 3em;
   width: calc(100% - (var(--addons-flyout-font-size) * 2));
-  margin-left: calc(var(--addons-flyout-font-size) - 1.3rem);
+
+  /* Remove the padding-left added in .container.inline */
+  margin-left: -10px;
 }
 
 .container.up.inline main {
-  bottom: calc(var(--addons-flyout-font-size) * 3.2);
   top: unset;
 }
 
