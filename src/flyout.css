@@ -132,7 +132,6 @@ main {
   position: absolute;
   padding: 1em;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
-  bottom: 3em;
 
   /* Remove the padding-left added in .container.inline */
   margin-left: -10px;
@@ -140,6 +139,7 @@ main {
 
 .container.up.inline main {
   top: unset;
+  bottom: 0;
 }
 
 .container.down.inline main {
