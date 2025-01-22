@@ -1,9 +1,9 @@
+import { ContextProvider, ContextRoot, createContext } from "@lit/context";
 import {
-  ContextProvider,
-  ContextRoot,
-  createContext,
-} from "@lit/context";
-import { EVENT_READTHEDOCS_ADDONS_DATA_READY } from "./events";
+  EVENT_READTHEDOCS_ADDONS_DATA_READY,
+  EVENT_READTHEDOCS_URL_CHANGED,
+} from "./events";
+import { getReadTheDocsConfig } from "./readthedocs-config";
 
 export const contextRoot = new ContextRoot().attach(document.body);
 export const configContext = createContext(Symbol("readthedocs-config"));
@@ -22,5 +22,11 @@ config.hostConnected();
 
 document.addEventListener(EVENT_READTHEDOCS_ADDONS_DATA_READY, (event) => {
   console.log("Event:", EVENT_READTHEDOCS_ADDONS_DATA_READY);
-  config.setValue(event.detail.data());
+  config.setValue(event.detail.data(true));
+});
+
+window.addEventListener(EVENT_READTHEDOCS_URL_CHANGED, (event) => {
+  console.log("URL Change detected. Triggering a new API call", event);
+  // TODO: find a way to get access to the `AddonApplication.sendUrlParam()` method.
+  getReadTheDocsConfig(true);
 });
