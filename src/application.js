@@ -19,6 +19,7 @@ import {
   isEmbedded,
   IS_PRODUCTION,
   setupLogging,
+  setupHistoryEvents,
   getMetadataValue,
 } from "./utils";
 
@@ -65,6 +66,7 @@ export class AddonsAppElement extends LitElement {
     this.httpStatus = getMetadataValue("readthedocs-http-status");
 
     setupLogging();
+    setupHistoryEvents();
     getReadTheDocsConfig(this.sendUrlParam()); // .then(() => console.log("Finished"));;
   }
 
