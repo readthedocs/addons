@@ -2,6 +2,11 @@ import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
 import {
   SPHINX,
+  SPHINX_FURO,
+  SPHINX_ALABASTER,
+  SPHINX_READTHEDOCS,
+  SPHINX_IMMATERIAL,
+  MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
   DOCUSAURUS,
@@ -16,7 +21,7 @@ import {
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.23.0";
+export const CLIENT_VERSION = "0.26.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -324,7 +329,7 @@ export class DocumentationTool {
     [DOCSIFY]: "article#main",
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
-    [DOCUSAURUS]: "article",
+    [DOCUSAURUS]: "article div.markdown",
     [ANTORA]: "article",
     [JEKYLL]: "article",
     [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
@@ -337,6 +342,7 @@ export class DocumentationTool {
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
+    this.documentationTheme = this.getDocumentationTheme();
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
   }
 
@@ -447,8 +453,72 @@ export class DocumentationTool {
       return MKDOCS;
     }
 
+    if (this.isDocsify()) {
+      return DOCSIFY;
+    }
+
+    if (this.isMdBook()) {
+      return MDBOOK;
+    }
+
+    if (this.isAntora()) {
+      return ANTORA;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
+  }
+
+  getDocumentationTheme() {
+    const documentationTool =
+      this.documentationTool || this.getDocumentationTool();
+
+    if (documentationTool === SPHINX) {
+      if (this.isSphinxAlabasterLikeTheme()) {
+        return SPHINX_ALABASTER;
+      } else if (this.isSphinxReadTheDocsLikeTheme()) {
+        return SPHINX_READTHEDOCS;
+      } else if (this.isSphinxFuroLikeTheme()) {
+        return SPHINX_FURO;
+      } else if (this.isSphinxImmaterialLikeTheme()) {
+        return SPHINX_IMMATERIAL;
+      }
+    }
+
+    // TODO: add the other known themes
+    return null;
+  }
+
+  isAntora() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="Antora"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMdBook() {
+    // <head>
+    // <!-- Book generated using mdBook -->
+    // <meta charset="UTF-8">
+    // ...
+    if (
+      document?.head?.firstChild?.nextSibling?.textContent.includes(
+        "Book generated using mdBook",
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isDocsify() {
+    if (document.querySelectorAll("head > link[href*=docsify]").length) {
+      return true;
+    }
+    return false;
   }
 
   isSphinx() {
@@ -456,7 +526,8 @@ export class DocumentationTool {
       this.isSphinxAlabasterLikeTheme() ||
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
-      this.isSphinxBookThemeLikeTheme()
+      this.isSphinxBookThemeLikeTheme() ||
+      this.isSphinxImmaterialLikeTheme()
     );
   }
 
@@ -505,7 +576,7 @@ export class DocumentationTool {
     //     MkDocs version : 1.4.2
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
-    if (document.lastChild.textContent.includes("MkDocs version :")) {
+    if (document?.lastChild?.textContent.includes("MkDocs version :")) {
       return true;
     }
     return false;
@@ -554,6 +625,18 @@ export class DocumentationTool {
       document.querySelectorAll(
         'link[href^="_static/styles/sphinx-book-theme.css"]',
       ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxImmaterialLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/sphinx_immaterial_theme"]',
+        'a[href="https://github.com/jbms/sphinx-immaterial/"][rel="noopener"]',
+      ).length
     ) {
       return true;
     }

@@ -1,2 +1,7 @@
 const section = document.querySelector("#customscript + p");
-section.innerHTML = "This was injected by the customscript addon";
+if (section) {
+  section.innerHTML = "This was injected by the customscript addon";
+}
+else {
+  console.log("Skipping CustomScript: section was not found.");
+}
