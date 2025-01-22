@@ -9,6 +9,7 @@ export const JEKYLL = "jekyll";
 export const DOCSIFY = "docsify";
 export const ANTORA = "antora";
 export const MDBOOK = "mdbook";
+export const VITEPRESS = "vitepress";
 export const FALLBACK_DOCTOOL = "fallback";
 
 // Known documentation tools themes
