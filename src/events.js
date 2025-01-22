@@ -9,6 +9,11 @@ export const EVENT_READTHEDOCS_FLYOUT_SHOW = "readthedocs-flyout-show";
 export const EVENT_READTHEDOCS_FLYOUT_HIDE = "readthedocs-flyout-hide";
 
 /**
+ * Event triggered when the URL has changed dynamically (modifying the history object)
+ */
+export const EVENT_READTHEDOCS_URL_CHANGED = "readthedocs-url-changed";
+
+/**
  * Event triggered when the Read the Docs data is ready to be consumed.
  *
  * This is the event users subscribe to to make usage of Read the Docs data.

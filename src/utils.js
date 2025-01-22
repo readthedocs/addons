@@ -17,6 +17,7 @@ import {
   ANTORA,
   DOCSIFY,
 } from "./constants";
+import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
@@ -28,8 +29,6 @@ export const IS_TESTING =
   typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
-
-export const READTHEDOCS_URL_CHANGED_EVENT = "readthedocsUrlChanged";
 
 export const domReady = new Promise((resolve) => {
   if (
@@ -187,7 +186,7 @@ export function setupHistoryEvents() {
       const originalMethod = history[methodName];
       history[methodName] = function () {
         const result = originalMethod.apply(this, arguments);
-        const event = new Event(READTHEDOCS_URL_CHANGED_EVENT);
+        const event = new Event(EVENT_READTHEDOCS_URL_CHANGED);
         event.arguments = arguments;
 
         dispatchEvent(event);
