@@ -19,6 +19,7 @@ import {
   IS_PRODUCTION,
   setupLogging,
   getMetadataValue,
+  setupHistoryEvents,
 } from "./utils";
 
 import doctoolsStyleSheet from "./doctools.css";
@@ -46,6 +47,7 @@ export function setup() {
     domReady
       .then(() => {
         setupLogging();
+        setupHistoryEvents();
 
         let sendUrlParam = false;
         for (const addon of addons) {
