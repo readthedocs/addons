@@ -56,20 +56,20 @@ export class ReadTheDocsEventData {
     this._data = data;
   }
 
-  initialize() {
+  initialize(internal) {
     const metadataAddonsAPIVersion = getMetadataValue(
       "readthedocs-addons-api-version",
     );
-    if (metadataAddonsAPIVersion === undefined) {
+    if (metadataAddonsAPIVersion === undefined && !internal) {
       throw `Subscribing to '${EVENT_READTHEDOCS_ADDONS_DATA_READY}' requires defining the '<meta name="readthedocs-addons-api-version" content="${ADDONS_API_VERSION}" />' tag in the HTML.`;
     }
 
     this._initialized = true;
   }
 
-  data() {
+  data(internal) {
     if (!this._initialized) {
-      this.initialize();
+      this.initialize(internal);
     }
     return this._data;
   }
