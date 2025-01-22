@@ -260,8 +260,6 @@ export class DocDiffAddon extends AddonBase {
   constructor(config) {
     super();
 
-    // TODO: is it possible to move this `constructor` to the `AddonBase` class?
-    customElements.define("readthedocs-docdiff", DocDiffElement);
     let elems = document.querySelectorAll("readthedocs-docdiff");
     if (!elems.length) {
       elems = [new DocDiffElement()];
@@ -284,3 +282,5 @@ export class DocDiffAddon extends AddonBase {
     );
   }
 }
+
+customElements.define("readthedocs-docdiff", DocDiffElement);
