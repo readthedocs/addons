@@ -131,7 +131,7 @@ const addons_ethicalads = {
 const addons_flyout = {
   $id: "http://v1.schemas.readthedocs.org/addons.flyout.json",
   type: "object",
-  required: ["addons", "projects", "versions"],
+  required: ["addons", "projects", "versions", "readthedocs"],
   properties: {
     addons: {
       type: "object",
@@ -242,6 +242,19 @@ const addons_flyout = {
         },
       },
     },
+    readthedocs: {
+      type: "object",
+      required: ["resolver"],
+      properties: {
+        resolver: {
+          type: "object",
+          required: ["filename"],
+          properties: {
+            filename: { type: "string" },
+          },
+        },
+      },
+    },
   },
 };
 
@@ -317,7 +330,7 @@ const addons_hotkeys = {
 const addons_notifications = {
   $id: "http://v1.schemas.readthedocs.org/addons.notifications.json",
   type: "object",
-  required: ["addons"],
+  required: ["addons", "readthedocs"],
   properties: {
     addons: {
       type: "object",
@@ -425,6 +438,19 @@ const addons_notifications = {
                 },
               },
             },
+          },
+        },
+      },
+    },
+    readthedocs: {
+      type: "object",
+      required: ["resolver"],
+      properties: {
+        resolver: {
+          type: "object",
+          required: ["filename"],
+          properties: {
+            filename: { type: "string" },
           },
         },
       },

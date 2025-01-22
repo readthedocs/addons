@@ -280,7 +280,10 @@ export class NotificationElement extends LitElement {
 
     if (stableVersion !== undefined) {
       this.stableVersionAvailable = true;
-      this.urls.stable = getLinkWithFilename(stableVersion.urls.documentation);
+      this.urls.stable = getLinkWithFilename(
+        stableVersion.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
     }
   }
 

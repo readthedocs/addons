@@ -298,17 +298,13 @@ export function getMetadataValue(name) {
  * Resulting URL: https://docs.readthedocs.io/en/latest/
  *
  */
-export function getLinkWithFilename(url) {
-  // Get the resolver's filename returned by the application (as HTTP header)
-  // and injected by Cloudflare Worker as a meta HTML tag
-  const metaFilename = getMetadataValue("readthedocs-resolver-filename");
-
+export function getLinkWithFilename(url, resolverFilename) {
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
   // 1. remove initial slash to make it relative to the base
   // 2. remove the trailing "index.html"
-  const filename = metaFilename
+  const filename = resolverFilename
     .replace(/\/index.html$/, "/")
     .replace(/^\//, "");
 

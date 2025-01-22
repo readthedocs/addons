@@ -278,7 +278,10 @@ export class FlyoutElement extends LitElement {
     }
 
     const getVersionLink = (version) => {
-      const url = getLinkWithFilename(version.urls.documentation);
+      const url = getLinkWithFilename(
+        version.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
       const link = html`<a href="${url}">${version.slug}</a>`;
       return this.config.versions.current.slug == version.slug
         ? html`<strong>${link}</strong>`
@@ -301,7 +304,10 @@ export class FlyoutElement extends LitElement {
     }
 
     const getLanguageLink = (translation) => {
-      const url = getLinkWithFilename(translation.urls.documentation);
+      const url = getLinkWithFilename(
+        translation.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
       const link = html`<a href="${url}">${translation.language.code}</a>`;
       return this.config.projects.current.slug === translation.slug
         ? html`<strong>${link}</strong>`
