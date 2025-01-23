@@ -1,6 +1,20 @@
 import { CSSResult } from "lit";
 
+import {
+  docTool,
+  domReady,
+  isEmbedded,
+  IS_PRODUCTION,
+  setupLogging,
+  setupHistoryEvents,
+  getMetadataValue,
+} from "./utils";
 import { getReadTheDocsConfig } from "./readthedocs-config";
+import {
+  EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
+  EVENT_READTHEDOCS_URL_CHANGED,
+} from "./events";
+
 import * as notification from "./notification";
 import * as analytics from "./analytics";
 import * as search from "./search";
@@ -13,36 +27,16 @@ import * as filetreediff from "./filetreediff";
 import * as customscript from "./customscript";
 import * as application from "./application";
 import { default as objectPath } from "object-path";
-import {
-  docTool,
-  domReady,
-  isEmbedded,
-  IS_PRODUCTION,
-  setupLogging,
-  setupHistoryEvents,
-  getMetadataValue,
-} from "./utils";
 
 import doctoolsStyleSheet from "./doctools.css";
-import { html, nothing, render, LitElement } from "lit";
-import { ContextConsumer } from "@lit/context";
-import { configContext } from "./context.js";
 
-export class AddonsAppElement extends LitElement {
-  static elementName = "readthedocs-application";
-
-  // `_config` is the context we are going to consume when it's updated.
-  _config = new ContextConsumer(this, {
-    context: configContext,
-    subscribe: true,
-  });
-
+export class AddonsApplication {
   constructor() {
-    super();
+    this.config = null;
 
     console.log(
-      "Addons Application _config (from constructor() method)",
-      this._config.value,
+      "Addons Application config (from constructor() method)",
+      this.config,
     );
 
     this.addons = [
@@ -67,29 +61,29 @@ export class AddonsAppElement extends LitElement {
 
     setupLogging();
     setupHistoryEvents();
+    this.addDoctoolData();
     getReadTheDocsConfig(this.sendUrlParam()); // .then(() => console.log("Finished"));;
   }
 
-  render() {
-    console.log(
-      "Addons Application _config (from render() method)",
-      this._config.value,
-    );
+  reload(config) {
+    console.log("Addons Application config (from reload() method)", config);
 
-    if (!this._config.value) {
-      return nothing;
+    if (!config) {
+      return null;
     }
 
-    if (this._config.value && !this.loadWhenEmbedded()) {
-      return nothing;
+    this.config = config;
+
+    if (this.config && !this.loadWhenEmbedded()) {
+      return null;
     }
 
     let promises = [];
     for (const addon of this.addons) {
-      if (addon.isEnabled(this._config.value, this.httpStatus)) {
+      if (addon.isEnabled(this.config, this.httpStatus)) {
         promises.push(
           new Promise((resolve) => {
-            resolve(new addon(this._config.value));
+            resolve(new addon(this.config));
           }),
         );
       }
@@ -99,12 +93,12 @@ export class AddonsAppElement extends LitElement {
       console.error(err);
     });
 
-    return nothing;
+    return null;
   }
 
   loadWhenEmbedded() {
     const loadWhenEmbedded = objectPath.get(
-      this._config.value,
+      this.config,
       "addons.options.load_when_embedded",
       false,
     );
@@ -152,5 +146,27 @@ export class AddonsAppElement extends LitElement {
   }
 }
 
-customElements.define("readthedocs-application", AddonsAppElement);
-render(new AddonsAppElement(), document.body);
+export const addonsApplication = new AddonsApplication();
+
+/**
+ * Subscribe to `EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY` to reload all the
+ * addons with fresh Addons API data once it's ready.
+ *
+ */
+document.addEventListener(
+  EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
+  (event) => {
+    addonsApplication.reload(event.detail.data(true));
+  },
+);
+
+/**
+ * Subscribe to `EVENT_READTHEDOCS_URL_CHANGED` to trigger a new request to
+ * Addons API to fetch fresh data.
+ *
+ */
+window.addEventListener(EVENT_READTHEDOCS_URL_CHANGED, (event) => {
+  console.debug("URL Change detected. Triggering a new API call", event);
+  // TODO: find a way to get access to the `AddonApplication.sendUrlParam()` method.
+  getReadTheDocsConfig(true);
+});

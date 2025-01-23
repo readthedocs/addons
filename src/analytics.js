@@ -3,8 +3,7 @@
 import { default as fetch } from "unfetch";
 
 import { ajv } from "./data-validation";
-import { AddonBase } from "./utils";
-import { CLIENT_VERSION } from "./utils";
+import { AddonBase, CLIENT_VERSION } from "./utils";
 
 export const API_ENDPOINT = "/_/api/v2/analytics/";
 

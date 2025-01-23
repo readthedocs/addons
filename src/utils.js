@@ -176,7 +176,7 @@ export class AddonBase {
  */
 export function setupHistoryEvents() {
   // Let's ensure that the history will be patched only once, so we create a Symbol to check by
-  const patchKey = Symbol.for("addons_history");
+  const patchKey = Symbol.for("addons-history");
 
   if (
     typeof history !== "undefined" &&

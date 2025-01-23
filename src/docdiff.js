@@ -11,7 +11,6 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 // See https://github.com/readthedocs/addons/pull/234
 import * as visualDomDiff from "visual-dom-diff";
 
-import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
@@ -19,7 +18,7 @@ import {
 } from "./events";
 import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { hasQueryParam, docTool } from "./utils";
+import { AddonBase, hasQueryParam, docTool } from "./utils";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 
