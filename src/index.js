@@ -32,15 +32,16 @@ export function setup() {
     ethicalads.EthicalAdsAddon,
     search.SearchAddon,
 
-    // HotKeys has to be initialized before DocDiff because when
+    // HotKeys & FileTreeDiff have to be initialized before DocDiff because when
     // `?readthedocs-diff=true` DocDiff triggers an event that HotKeys has to
     // listen to to update its internal state.
+    // https://github.com/readthedocs/addons/blob/47645b013724cdf244716b549a5baa28409fafcb/src/docdiff.js#L105-L111
     hotkeys.HotKeysAddon,
-    docdiff.DocDiffAddon,
+    filetreediff.FileTreeDiffAddon,
 
     linkpreviews.LinkPreviewsAddon,
-    filetreediff.FileTreeDiffAddon,
     customscript.CustomScriptAddon,
+    docdiff.DocDiffAddon,
   ];
 
   return new Promise((resolve) => {
