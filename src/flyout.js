@@ -329,29 +329,6 @@ export class FlyoutElement extends LitElement {
     this.classes[this.position] = true;
   }
 
-  updated() {
-    // Update the `margin-bottom` property for the main part of the flyout,
-    // to display it exactly over the header of the flyout.
-    // I understand this is not possible to do with CSS, so we use JavaScript for it.
-    const main = this.renderRoot.querySelector("main");
-    const header = this.renderRoot.querySelector("header");
-    if (main !== null && header !== null) {
-      if (this.position.includes("up")) {
-        main.style.setProperty(
-          "margin-bottom",
-          `${header.getBoundingClientRect().height}px`,
-        );
-      }
-
-      if (this.position.includes("down")) {
-        main.style.setProperty(
-          "margin-top",
-          `${header.getBoundingClientRect().height}px`,
-        );
-      }
-    }
-  }
-
   render() {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {

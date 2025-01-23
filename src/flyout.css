@@ -129,7 +129,6 @@ main {
 }
 
 .container.inline main {
-  position: absolute;
   padding: 1em;
   background-color: var(--readthedocs-flyout-background-color, rgb(39, 39, 37));
 
@@ -138,16 +137,6 @@ main {
 
   /* Use full width minus 1em padding added on left and right in `.container.inline main` */
   width: calc(100% - 2em);
-}
-
-.container.up.inline main {
-  top: unset;
-  bottom: 0;
-}
-
-.container.down.inline main {
-  top: 0;
-  bottom: unset;
 }
 
 main.closed,
