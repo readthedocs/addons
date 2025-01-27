@@ -115,8 +115,12 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
+            expect(title.innerText).to.include(
               "This may be an old version of this documentation",
+            );
+            const content = element.shadowRoot.querySelector("div.content");
+            expect(content.innerHTML).to.include(
+              '<a href="https://project.readthedocs.io/en/stable/section/page.html">'
             );
           });
 
@@ -132,6 +136,10 @@
             const title = element.shadowRoot.querySelector("div.title");
             expect(title.innerText).to.include(
               "This is the latest development version"
+            );
+            const content = element.shadowRoot.querySelector("div.content");
+            expect(content.innerHTML).to.include(
+              '<a href="https://project.readthedocs.io/en/stable/section/page.html">'
             );
           });
 
@@ -149,6 +157,10 @@
             const title = element.shadowRoot.querySelector("div.title");
             expect(title.innerText).to.include(
               "This is the latest development version"
+            );
+            const content = element.shadowRoot.querySelector("div.content");
+            expect(content.innerHTML).to.include(
+              '<a href="https://project.readthedocs.io/en/stable/section/page.html">'
             );
           });
 
@@ -191,8 +203,12 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
+            expect(title.innerText).to.include(
               "This page was created from a pull request build",
+            );
+            const content = element.shadowRoot.querySelector("div.content");
+            expect(content.innerHTML).to.include(
+              '<a href="https://app.readthedocs.org/project/project/builds/?utm_source=project&amp;utm_content=notification">build detail page</a>'
             );
           });
 
@@ -276,7 +292,7 @@
 
             // The notification should be displayed normally
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
+            expect(title.innerText).to.include(
               "This page was created from a pull request build",
             );
           });
