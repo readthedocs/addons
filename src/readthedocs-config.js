@@ -116,7 +116,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
 
           // Add the data to the window so scripts loaded after the initial
           // event was fired can still get access to the data
-          window.ReadTheDocsEventData = new ReadTheDocsEventData(dataEvent);
+          globalThis.ReadTheDocsEventData = new ReadTheDocsEventData(dataEvent);
 
           // Trigger the addons data ready CustomEvent to with the data the user is expecting.
           return dispatchEvent(
