@@ -115,7 +115,7 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.include(
+            expect(title.innerText).to.be.equal(
               "This may be an old version of this documentation",
             );
             const content = element.shadowRoot.querySelector("div.content");
@@ -134,7 +134,7 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.include(
+            expect(title.innerText).to.be.equal(
               "This is the latest development version"
             );
             const content = element.shadowRoot.querySelector("div.content");
@@ -155,7 +155,7 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.include(
+            expect(title.innerText).to.be.equal(
               "This is the latest development version"
             );
             const content = element.shadowRoot.querySelector("div.content");
@@ -203,7 +203,7 @@
             await elementUpdated(element);
 
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.include(
+            expect(title.innerText).to.be.equal(
               "This page was created from a pull request build",
             );
             const content = element.shadowRoot.querySelector("div.content");
@@ -292,7 +292,7 @@
 
             // The notification should be displayed normally
             const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.include(
+            expect(title.innerText).to.be.equal(
               "This page was created from a pull request build",
             );
           });
