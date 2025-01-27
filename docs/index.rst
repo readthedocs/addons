@@ -47,6 +47,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Docusaurus <https://test-builds.readthedocs.io/en/docusaurus/>`_
 * `Jekyll <https://test-builds.readthedocs.io/en/jekyll/>`_
 * `Jupyter Book <https://test-builds.readthedocs.io/en/jupyter-book/>`_
+* `mdBook <https://test-builds.readthedocs.io/en/mdbook/>`_
 * `MkDocs <https://test-builds.readthedocs.io/en/mkdocs/>`_
 * `MkDocs (Material theme) <https://test-builds.readthedocs.io/en/mkdocs-material/>`_
 * `MkDocs (Terminal theme) <https://test-builds.readthedocs.io/en/mkdocs-terminal/>`_
@@ -58,6 +59,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Sphinx (PyData theme) <https://test-builds.readthedocs.io/en/pydata-theme/>`_
 * `Sphinx (Read the Docs theme) <https://test-builds.readthedocs.io/en/latest/>`_
 * `Sphinx (Typlog theme) <https://test-builds.readthedocs.io/en/typlog-theme/>`_
+* `VitePress <https://test-builds.readthedocs.io/en/vitepress/>`_
 
 
 Contents
@@ -67,6 +69,11 @@ Contents
 
    releasing
    testing
+
+.. toctree::
+   :maxdepth: 1
+
+   Changelog <changelog>
 
 .. raw:: html
 

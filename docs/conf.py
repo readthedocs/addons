@@ -1,10 +1,17 @@
 import os
 
 project = 'Read the Docs Addons'
-extensions = []
+extensions = [
+    'sphinx.ext.extlinks',
+]
 html_theme = 'furo'
 
 html_context = {}
+
+# Define the extlinks configuration
+extlinks = {
+    'pr': ('https://github.com/readthedocs/addons/pull/%s', 'PR #%s'),
+}
 
 # NOTE: this should be done automatically by the theme,
 # but for some reason it's not working as I expect.

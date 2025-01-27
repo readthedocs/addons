@@ -1,3 +1,5 @@
+import { CSSResult } from "lit";
+
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import * as notification from "./notification";
 import * as analytics from "./analytics";
@@ -11,12 +13,16 @@ import * as filetreediff from "./filetreediff";
 import * as customscript from "./customscript";
 import { default as objectPath } from "object-path";
 import {
+  docTool,
   domReady,
   isEmbedded,
   IS_PRODUCTION,
   setupLogging,
   getMetadataValue,
+  setupHistoryEvents,
 } from "./utils";
+
+import doctoolsStyleSheet from "./doctools.css";
 
 export function setup() {
   const addons = [
@@ -26,27 +32,55 @@ export function setup() {
     ethicalads.EthicalAdsAddon,
     search.SearchAddon,
 
-    // HotKeys has to be initialized before DocDiff because when
+    // HotKeys & FileTreeDiff have to be initialized before DocDiff because when
     // `?readthedocs-diff=true` DocDiff triggers an event that HotKeys has to
     // listen to to update its internal state.
+    // https://github.com/readthedocs/addons/blob/47645b013724cdf244716b549a5baa28409fafcb/src/docdiff.js#L105-L111
     hotkeys.HotKeysAddon,
-    docdiff.DocDiffAddon,
+    filetreediff.FileTreeDiffAddon,
 
     linkpreviews.LinkPreviewsAddon,
-    filetreediff.FileTreeDiffAddon,
     customscript.CustomScriptAddon,
+    docdiff.DocDiffAddon,
   ];
 
   return new Promise((resolve) => {
     domReady
       .then(() => {
         setupLogging();
+        setupHistoryEvents();
 
         let sendUrlParam = false;
         for (const addon of addons) {
           if (addon.requiresUrlParam()) {
             sendUrlParam = true;
             break;
+          }
+        }
+
+        // Apply fixes to variables for individual documentation tools
+        const elementHtml = document.querySelector("html");
+        if (elementHtml) {
+          // Inject styles at the parent DOM to set variables at :root
+          let styleSheet = doctoolsStyleSheet;
+          if (doctoolsStyleSheet instanceof CSSResult) {
+            styleSheet = doctoolsStyleSheet.styleSheet;
+          }
+          document.adoptedStyleSheets = [styleSheet];
+
+          // If we detect a documentation tool, set attributes on :root to allow
+          // for CSS selectors to utilize these values.
+          if (docTool.documentationTool) {
+            elementHtml.setAttribute(
+              "data-readthedocs-tool",
+              docTool.documentationTool,
+            );
+          }
+          if (docTool.documentationTheme) {
+            elementHtml.setAttribute(
+              "data-readthedocs-tool-theme",
+              docTool.documentationTheme,
+            );
           }
         }
 

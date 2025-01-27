@@ -41,6 +41,21 @@
       <p>Hit <code>/</code> to trigger the search modal, or click on the input from the flyout.</p>
       <readthedocs-search></readthedocs-search>
 
+      <h2>Test URL changes</h2>
+
+      <p>Quick check to see if the SPA url changes using "pushState" are correctly picked up using our utils (check console).</p>
+      <button id="change-url-button" type="button">Change URL</button>
+
+      <script>
+        const button = document.getElementById("change-url-button");
+        button.addEventListener("click", () => {
+          const randomHash = (Math.random() + 1).toString(36).substring(7);
+          history.pushState({}, "", `#url-${randomHash}`);
+        });
+
+        window.addEventListener("readthedocs-url-changed", (ev) => {console.log("URL Change detected!", ev)});
+      </script>
+
       <h2>Link Previews</h2>
       <div role="main">
         <ul>

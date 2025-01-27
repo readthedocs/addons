@@ -151,6 +151,39 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         }
+      } else if (docTool.isAntora()) {
+        selector = "aside nav.nav-menu";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isMdBook()) {
+        selector = "nav#sidebar mdbook-sidebar-scrollbox";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isVitePress()) {
+        selector = "aside";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
       }
 
       if (selector && knownPlacementFound) {

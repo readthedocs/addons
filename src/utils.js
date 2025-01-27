@@ -2,6 +2,11 @@ import { ajv } from "./data-validation";
 import { default as objectPath } from "object-path";
 import {
   SPHINX,
+  SPHINX_FURO,
+  SPHINX_ALABASTER,
+  SPHINX_READTHEDOCS,
+  SPHINX_IMMATERIAL,
+  MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
   DOCUSAURUS,
@@ -9,14 +14,16 @@ import {
   ASCIIDOCTOR,
   JEKYLL,
   FALLBACK_DOCTOOL,
+  VITEPRESS,
   ANTORA,
   DOCSIFY,
 } from "./constants";
+import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.23.2";
+export const CLIENT_VERSION = "0.26.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -152,6 +159,44 @@ export class AddonBase {
       this.getAddonLocalStorageKey(),
       JSON.stringify(updatedStorage),
     );
+  }
+}
+
+/**
+ * Setup events firing on history `pushState` and `replaceState`
+ *
+ * This is needed when addons are used in SPA. A lot of addons rely
+ * on the current URL. However in the SPA, the pages are not reloaded, so
+ * the addons never get notified of the changes in the URL.
+ *
+ * While History API does have `popstate` event, the only way to listen to
+ * changes via `pushState` and `replaceState` is using monkey-patching, which is
+ * what this function does. (See https://stackoverflow.com/a/4585031)
+ * It will fire a `READTHEDOCS_URL_CHANGED` event, on `pushState` and `replaceState`.
+ *
+ */
+export function setupHistoryEvents() {
+  // Let's ensure that the history will be patched only once, so we create a Symbol to check by
+  const patchKey = Symbol.for("addons_history");
+
+  if (
+    typeof history !== "undefined" &&
+    typeof window[patchKey] === "undefined"
+  ) {
+    for (const methodName of ["pushState", "replaceState"]) {
+      const originalMethod = history[methodName];
+      history[methodName] = function () {
+        const result = originalMethod.apply(this, arguments);
+        const event = new Event(EVENT_READTHEDOCS_URL_CHANGED);
+        event.arguments = arguments;
+
+        dispatchEvent(event);
+        return result;
+      };
+    }
+
+    // Let's leave a flag, so we know that history has been patched
+    Object.defineProperty(window, patchKey, { value: true });
   }
 }
 
@@ -297,6 +342,7 @@ export class DocumentationTool {
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
+    this.documentationTheme = this.getDocumentationTheme();
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
   }
 
@@ -411,8 +457,75 @@ export class DocumentationTool {
       return DOCSIFY;
     }
 
+    if (this.isMdBook()) {
+      return MDBOOK;
+    }
+
+    if (this.isAntora()) {
+      return ANTORA;
+    }
+
+    if (this.isVitePress()) {
+      return VITEPRESS;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
+  }
+
+  getDocumentationTheme() {
+    const documentationTool =
+      this.documentationTool || this.getDocumentationTool();
+
+    if (documentationTool === SPHINX) {
+      if (this.isSphinxAlabasterLikeTheme()) {
+        return SPHINX_ALABASTER;
+      } else if (this.isSphinxReadTheDocsLikeTheme()) {
+        return SPHINX_READTHEDOCS;
+      } else if (this.isSphinxFuroLikeTheme()) {
+        return SPHINX_FURO;
+      } else if (this.isSphinxImmaterialLikeTheme()) {
+        return SPHINX_IMMATERIAL;
+      }
+    }
+
+    // TODO: add the other known themes
+    return null;
+  }
+
+  isAntora() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="Antora"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isVitePress() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="VitePress"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMdBook() {
+    // <head>
+    // <!-- Book generated using mdBook -->
+    // <meta charset="UTF-8">
+    // ...
+    if (
+      document?.head?.firstChild?.nextSibling?.textContent.includes(
+        "Book generated using mdBook",
+      )
+    ) {
+      return true;
+    }
+    return false;
   }
 
   isDocsify() {
@@ -427,7 +540,8 @@ export class DocumentationTool {
       this.isSphinxAlabasterLikeTheme() ||
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
-      this.isSphinxBookThemeLikeTheme()
+      this.isSphinxBookThemeLikeTheme() ||
+      this.isSphinxImmaterialLikeTheme()
     );
   }
 
@@ -476,7 +590,7 @@ export class DocumentationTool {
     //     MkDocs version : 1.4.2
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
-    if (document.lastChild.textContent.includes("MkDocs version :")) {
+    if (document?.lastChild?.textContent.includes("MkDocs version :")) {
       return true;
     }
     return false;
@@ -525,6 +639,18 @@ export class DocumentationTool {
       document.querySelectorAll(
         'link[href^="_static/styles/sphinx-book-theme.css"]',
       ).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxImmaterialLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href^="_static/sphinx_immaterial_theme"]',
+        'a[href="https://github.com/jbms/sphinx-immaterial/"][rel="noopener"]',
+      ).length
     ) {
       return true;
     }
