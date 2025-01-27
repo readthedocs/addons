@@ -39,7 +39,7 @@
 :host > div > div > select {
   flex: 1;
   padding: 0.25rem 0.5rem;
-  border: 0.0625rem solid var(--addons-filetreediff-border-color);
+  border: 0.06rem solid var(--addons-filetreediff-border-color);
   border-radius: 0.25rem;
   appearance: revert;
 }

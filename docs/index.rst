@@ -59,6 +59,7 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Sphinx (PyData theme) <https://test-builds.readthedocs.io/en/pydata-theme/>`_
 * `Sphinx (Read the Docs theme) <https://test-builds.readthedocs.io/en/latest/>`_
 * `Sphinx (Typlog theme) <https://test-builds.readthedocs.io/en/typlog-theme/>`_
+* `VitePress <https://test-builds.readthedocs.io/en/vitepress/>`_
 
 
 Contents
