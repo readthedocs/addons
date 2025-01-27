@@ -93,9 +93,9 @@ export class FileTreeDiffElement extends LitElement {
     );
 
     return html`
-      <div class="file-dropdown">
-        <div class="diff-controls">
-          <label class="diff-checkbox">
+      <div>
+        <div>
+          <label>
             <input
               type="checkbox"
               .checked=${this.docDiffEnabled}
@@ -103,7 +103,7 @@ export class FileTreeDiffElement extends LitElement {
             />
             Show diff
           </label>
-          <select id="file-select" @change=${this.handleFileChange}>
+          <select @change=${this.handleFileChange}>
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
             </option>
