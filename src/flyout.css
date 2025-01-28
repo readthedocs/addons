@@ -13,11 +13,15 @@
 .container {
   position: fixed;
   max-width: var(--readthedocs-flyout-max-width, 25em);
-  width: auto;
   height: auto;
+  width: auto;
   max-height: calc(100% - 100px);
   overflow-y: auto;
   line-height: var(--addons-flyout-line-height);
+}
+
+.container.closed {
+  height: 2.5rem;
 }
 
 .container.bottom-right:not(.inline) {
@@ -50,6 +54,16 @@
   position: relative;
   display: inline-block;
   overflow: visible;
+}
+
+.container.up.inline main {
+  top: unset;
+  bottom: 2.5rem;
+}
+
+.container.down.inline main {
+  top: 2.5rem;
+  bottom: unset;
 }
 
 :host > div {
@@ -137,6 +151,9 @@ main {
 
   /* Use full width minus 1em padding added on left and right in `.container.inline main` */
   width: calc(100% - 2em);
+
+  position: absolute;
+  margin-top: 0;
 }
 
 main.closed,
