@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.27.0
+---------------
+
+:date: Jan 21, 2025
+
+* Save the ``ReadTheDocsData`` event into the global object (:pr:`474`)
+* Improve File Tree Diff UI element to be more discrete (:pr:`494`)
+* Add VitePress as a known documentation tool (:pr:`505`)
+* Packages: updated via ncu -u (:pr:`509`)
+
 Version v0.26.0
 ---------------
 
