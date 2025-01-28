@@ -1,10 +1,12 @@
-import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faCircleXmark, faFile } from "@fortawesome/free-solid-svg-icons";
-import { html, nothing, render, LitElement } from "lit";
-import { repeat } from "lit/directives/repeat.js";
+import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
 import { DOCDIFF_URL_PARAM } from "./docdiff.js";
+import {
+  EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+  EVENT_READTHEDOCS_DOCDIFF_HIDE,
+} from "./events";
+import { hasQueryParam } from "./utils";
 
 import { AddonBase } from "./utils";
 
@@ -13,7 +15,7 @@ export class FileTreeDiffElement extends LitElement {
 
   static properties = {
     config: { state: true },
-    dismissed: { state: true },
+    docDiffEnabled: { state: true },
   };
 
   static styles = styleSheet;
@@ -21,95 +23,128 @@ export class FileTreeDiffElement extends LitElement {
   constructor() {
     super();
     this.config = null;
-    this.dismissed = false;
-  }
-
-  firstUpdated() {
-    // Add CSS classes to the element on ``firstUpdated`` because we need the
-    // HTML element to exist in the DOM before being able to add tag attributes.
-    this.className = this.className || "raised toast";
+    this.docDiffEnabled = false;
   }
 
   loadConfig(config) {
     if (!FileTreeDiffAddon.isEnabled(config)) {
       return;
     }
-
     this.config = config;
   }
 
-  render() {
-    if (this.dismissed) {
-      return nothing;
+  handleFileChange(event) {
+    const fileUrl = event.target.value;
+    if (fileUrl) {
+      const url = new URL(fileUrl);
+      // Only add the diff parameter if diff is currently enabled
+      if (this.docDiffEnabled) {
+        url.searchParams.set(DOCDIFF_URL_PARAM, "true");
+      }
+      window.location.href = url.toString();
     }
+  }
 
-    library.add(faFile);
-    const iconFile = icon(faFile, {
-      title: "This version is a pull request version",
-      classes: ["header", "icon"],
-    });
+  handleToggleDiff(event) {
+    if (event.target.checked) {
+      document.dispatchEvent(
+        new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW),
+      );
+    } else {
+      document.dispatchEvent(new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE));
+    }
+  }
 
-    const generateDiffList = (diffArray, label) => {
-      return diffArray.length
-        ? html`
-            <span>${label}</span>
-            <ul>
-              ${repeat(
-                diffArray,
-                (f) => f.filename,
-                (f, index) =>
-                  html`<li>
-                    <a href=${f.urls.current}>${f.filename}</a>
-                    (<a href="${f.urls.current}?${DOCDIFF_URL_PARAM}=true"
-                      >diff</a
-                    >)
-                  </li>`,
-              )}
-            </ul>
-          `
-        : nothing;
-    };
+  getCurrentPageUrl() {
+    // Remove any query parameters to match against file URLs
+    const currentPath = window.location.pathname;
+    const currentOrigin = window.location.origin;
+    return `${currentOrigin}${currentPath}`;
+  }
 
+  render() {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
     if (!diffData) {
       return nothing;
     }
-    const diffAddedUrls = generateDiffList(diffData.added, "Added");
-    const diffDeletedUrls = generateDiffList(diffData.deleted, "Deleted");
-    const diffModifiedUrls = generateDiffList(diffData.modified, "Modified");
+
+    const currentUrl = this.getCurrentPageUrl();
+    const renderSection = (files, label) => {
+      if (!files.length) return nothing;
+      const emoji = label === "Added" ? "+ " : "± ";
+      return html`
+        <optgroup label="${label}">
+          ${files.map(
+            (f) => html`
+              <option
+                value=${f.urls.current}
+                ?selected=${f.urls.current === currentUrl}
+              >
+                ${emoji}${f.filename}
+              </option>
+            `,
+          )}
+        </optgroup>
+      `;
+    };
+
+    const hasCurrentFile = [...diffData.added, ...diffData.modified].some(
+      (f) => f.urls.current === currentUrl,
+    );
 
     return html`
       <div>
-        ${iconFile.node[0]}
-        <div class="title">
-          Files changed in this version ${this.renderCloseButton()}
-        </div>
-        <div class="content">
-          ${diffAddedUrls} ${diffModifiedUrls} ${diffDeletedUrls}
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              .checked=${this.docDiffEnabled}
+              @change=${this.handleToggleDiff}
+            />
+            Show diff
+          </label>
+          <select @change=${this.handleFileChange}>
+            <option value="" ?selected=${!hasCurrentFile} disabled>
+              Files changed
+            </option>
+            ${renderSection(diffData.added, "Added")}
+            ${renderSection(diffData.modified, "Changed")}
+          </select>
         </div>
       </div>
     `;
   }
 
-  renderCloseButton() {
-    library.add(faCircleXmark);
-    const xmark = icon(faCircleXmark, {
-      title: "Close notification",
-    });
-    return html`
-      <a href="#" class="right" @click=${this.closeNotification}>
-        ${xmark.node[0]}
-      </a>
-    `;
+  _handleDocDiffShow = (event) => {
+    this.docDiffEnabled = true;
+  };
+
+  _handleDocDiffHide = (event) => {
+    this.docDiffEnabled = false;
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleDocDiffShow,
+    );
+    document.addEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleDocDiffHide,
+    );
   }
 
-  closeNotification(e) {
-    // Avoid going back to the top of the page when closing the notification
-    e.preventDefault();
-    this.dismissed = true;
-
-    // Avoid event propagation
-    return false;
+  disconnectedCallback() {
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+      this._handleDocDiffShow,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_DOCDIFF_HIDE,
+      this._handleDocDiffHide,
+    );
+    super.disconnectedCallback();
   }
 }
 
@@ -131,11 +166,8 @@ export class FileTreeDiffAddon extends AddonBase {
 
   constructor(config) {
     super();
-
     this.config = config;
-    this.showDiff();
 
-    // If there are no elements found, inject one
     let elems = document.querySelectorAll("readthedocs-filetreediff");
     if (!elems.length) {
       elems = [new FileTreeDiffElement()];
@@ -145,21 +177,6 @@ export class FileTreeDiffAddon extends AddonBase {
 
     for (const elem of elems) {
       elem.loadConfig(config);
-    }
-  }
-
-  showDiff() {
-    // const outdated = objectPath.get(this.config, "addons.filetreediff.oudated", false);
-    const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
-
-    for (let f of diffData.added) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
-    }
-    for (let f of diffData.modified) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
-    }
-    for (let f of diffData.deleted) {
-      console.debug(`File: ${f.filename}, URL: ${f.urls.current}`);
     }
   }
 }

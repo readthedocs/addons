@@ -14,6 +14,7 @@ import {
   ASCIIDOCTOR,
   JEKYLL,
   FALLBACK_DOCTOOL,
+  VITEPRESS,
   ANTORA,
   DOCSIFY,
 } from "./constants";
@@ -460,6 +461,10 @@ export class DocumentationTool {
       return ANTORA;
     }
 
+    if (this.isVitePress()) {
+      return VITEPRESS;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -487,6 +492,16 @@ export class DocumentationTool {
   isAntora() {
     if (
       document.querySelectorAll('meta[name="generator"][content^="Antora"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isVitePress() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="VitePress"]')
         .length
     ) {
       return true;

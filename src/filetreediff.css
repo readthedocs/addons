@@ -1,86 +1,59 @@
+/* Using --addons-* prefix variables for consistency and to allow for overrides */
+:host {
+  --addons-filetreediff-background-color: var(
+    --readthedocs-filetreediff-background-color,
+    #f8f9fa
+  );
+  --addons-filetreediff-border-color: var(
+    --readthedocs-filetreediff-border-color,
+    #ddd
+  );
+  --addons-filetreediff-font-size: var(
+    --readthedocs-filetreediff-font-size,
+    0.85rem
+  );
+  --addons-filetreediff-label-color: var(
+    --readthedocs-filetreediff-label-color,
+    #333
+  );
+}
+
 :host > div {
-  margin: 1rem 0rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  overflow: auto;
-  border-radius: 0.5rem;
-  font-family: "Lato", "proxima-nova", "Helvetica Neue", "Arial", "sans-serif";
-  font-size: 1rem;
-  color: rgb(64, 64, 64);
-  background-color: rgb(234, 234, 234);
-}
-
-:host > div > div.content > ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
-:host(.toast) > div {
   position: fixed;
-  padding-top: calc(1rem * 0.75);
-  padding-bottom: calc(1rem * 0.75);
-  margin: 0.75rem 0rem;
-  top: 7rem;
-  right: 2rem;
-  z-index: 1750;
-  font-size: calc(1rem * 0.85);
-  width: 35rem;
-  max-width: calc(100vw - 4rem);
+  top: 0;
+  right: 1rem;
+  background-color: var(--addons-filetreediff-background-color);
+  padding: 0.25rem 0.75rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+  border-radius: 0 0 0.375rem 0.375rem;
+  font-size: var(--addons-filetreediff-font-size);
 }
 
-@media (max-width: 640px) {
-  :host(.toast) > div {
-    right: 0.5rem;
-  }
+:host > div > div {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
 }
 
-:host > div > svg.header.icon {
-  height: calc(1rem * 2);
-  padding: 0.5rem 1.5rem;
-  float: left;
+:host > div > div > select {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  border: 0.06rem solid var(--addons-filetreediff-border-color);
+  border-radius: 0.25rem;
+  appearance: revert;
 }
 
-:host(.toast) > div > svg.header.icon {
-  height: calc(1rem * 1.5);
-}
-
-:host > div a {
-  color: rgb(8, 140, 219);
-  text-decoration: none;
-}
-
-:host > div > .title {
-  padding: 0.25rem 1rem;
-  margin-bottom: 0.25rem;
-  line-height: 1rem;
-  font-weight: bold;
-  font-size: 0.85rem;
-}
-:host > div > div.content {
-  line-height: 1rem;
-  font-size: calc(1rem * 0.85);
-  padding-left: 66px;
-}
-
-:host(.toast) > div > .title {
-  padding: 0rem 1rem;
-}
-
-:host > div > .title > .right {
-  float: right;
-}
-
-:host > div > .title > .right > svg {
-  display: inline-block;
-  height: 1rem;
-  vertical-align: middle;
+:host > div > div > label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--addons-filetreediff-font-size);
+  color: var(--addons-filetreediff-label-color);
+  white-space: nowrap;
   cursor: pointer;
-  color: rgba(96, 96, 96);
-  font-weight: normal;
 }
 
-:host(.raised) > div {
-  box-shadow:
-    0 2px 4px 0 rgba(34, 36, 38, 0.12),
-    0 2px 10px 0 rgba(34, 36, 38, 0.15);
+:host > div > div > label > input {
+  margin: 0;
 }
