@@ -65,11 +65,11 @@ export class ReadTheDocsEventData {
     this._data = data;
   }
 
-  initialize(internal) {
+  initialize() {
     const metadataAddonsAPIVersion = getMetadataValue(
       "readthedocs-addons-api-version",
     );
-    if (metadataAddonsAPIVersion === undefined && !internal) {
+    if (metadataAddonsAPIVersion === undefined) {
       throw `Subscribing to '${EVENT_READTHEDOCS_ADDONS_USER_DATA_READY}' requires defining the '<meta name="readthedocs-addons-api-version" content="${ADDONS_API_VERSION}" />' tag in the HTML.`;
     }
 
@@ -77,8 +77,9 @@ export class ReadTheDocsEventData {
   }
 
   data(internal) {
-    if (!this._initialized) {
-      this.initialize(internal);
+    // ``internal`` is used internally, to skip the META element check.
+    if (!this._initialized && !internal) {
+      this.initialize();
     }
     return this._data;
   }

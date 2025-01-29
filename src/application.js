@@ -32,9 +32,12 @@ import doctoolsStyleSheet from "./doctools.css";
 
 export class AddonsApplication {
   constructor() {
+    setupLogging();
+    setupHistoryEvents();
+
     this.config = null;
 
-    console.log(
+    console.debug(
       "Addons Application config (from constructor() method)",
       this.config,
     );
@@ -60,14 +63,12 @@ export class AddonsApplication {
 
     this.httpStatus = getMetadataValue("readthedocs-http-status");
 
-    setupLogging();
-    setupHistoryEvents();
     this.addDoctoolData();
-    getReadTheDocsConfig(this.sendUrlParam()); // .then(() => console.log("Finished"));;
+    getReadTheDocsConfig(this.sendUrlParam());
   }
 
   reload(config) {
-    console.log("Addons Application config (from reload() method)", config);
+    console.debug("Addons Application config (from reload() method)", config);
 
     if (!config) {
       return null;
