@@ -166,7 +166,6 @@ export class FileTreeDiffAddon extends AddonBase {
 
   constructor(config) {
     super();
-    this.config = config;
 
     let elems = document.querySelectorAll("readthedocs-filetreediff");
     if (!elems.length) {
