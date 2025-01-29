@@ -63,7 +63,7 @@ export class FileTreeDiffElement extends LitElement {
   }
 
   renderDocDiff() {
-    if (objectPath.get(this.config.doc_diff.enabled, false)) {
+    if (objectPath.get(this.config, "addons.doc_diff.enabled", false)) {
       return html`
         <label>
           <input
