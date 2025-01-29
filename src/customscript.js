@@ -25,6 +25,11 @@ export class CustomScriptAddon extends AddonBase {
   }
 
   injectJavaScriptFile() {
+    // Do not add the script if it already exists in the page.
+    if (document.querySelector(`#${SCRIPT_ID}`) !== null) {
+      return;
+    }
+
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.src = objectPath.get(this.config, "addons.customscript.src");
