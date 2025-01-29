@@ -421,6 +421,15 @@ export class FlyoutAddon extends AddonBase {
       elem.loadConfig(config);
     }
   }
+
+  static requiresUrlParam() {
+    // Flyout requires URL param for the feature "keep the same page when
+    // switching version". We need to know the URL path
+    // (``readthedocs.resolver.filename`` from the API) to be able to generate
+    // those URLs. If we ever make this feature configurable and user disables
+    // it, we can adapt this code to return ``false`` in that case.
+    return true;
+  }
 }
 
 customElements.define("readthedocs-flyout", FlyoutElement);
