@@ -31,9 +31,14 @@ export class EthicalAdsAddon extends AddonBase {
   static addonEnabledPath = "addons.ethicalads.enabled";
   static addonName = "EthicalAds";
 
-  constructor(config) {
-    super();
+  loadConfig(config) {
     this.config = config;
+
+    // Do not add another ad if we already added one
+    if (document.querySelector(`#${AD_SCRIPT_ID}`) !== null) {
+      return;
+    }
+
     this.injectEthicalAds();
   }
 
@@ -267,11 +272,6 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   loadEthicalAdLibrary() {
-    // Do not add the script if it already exists in the page.
-    if (document.querySelector(`#${AD_SCRIPT_ID}`) !== null) {
-      return;
-    }
-
     const library = document.createElement("script");
     library.setAttribute("id", AD_SCRIPT_ID);
     library.setAttribute("type", "text/javascript");

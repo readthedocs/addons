@@ -15,8 +15,7 @@ export class CustomScriptAddon extends AddonBase {
   static addonName = "CustomScript";
   static enabledOnHttpStatus = [200, 403, 404, 500];
 
-  constructor(config) {
-    super();
+  loadConfig(config) {
     this.config = config;
 
     if (objectPath.get(this.config, "addons.customscript.src")) {

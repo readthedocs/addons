@@ -82,6 +82,35 @@ export class AddonBase {
   static addonLocalStorageKey = null;
   static enabledOnHttpStatus = [200];
 
+  constructor(config) {
+    // Store all the Read the Docs web component elements
+    this.elements = [];
+
+    // If the addon class defines a web component element, we query/instanciate it before initializing it.
+    if (this.constructor.elementClass !== undefined) {
+      // If there are no elements found, inject one
+      this.elements = document.querySelectorAll(
+        this.constructor.elementClass.elementName,
+      );
+      if (!this.elements.length) {
+        this.elements = [new this.constructor.elementClass()];
+
+        // We cannot use `render(this.elements[0], document.body)` because there is a race conditions between all the addons.
+        // So, we append the web-component first and then request an update of it.
+        document.body.append(this.elements[0]);
+        this.elements[0].requestUpdate();
+      }
+    }
+
+    this.loadConfig(config);
+  }
+
+  loadConfig(config) {
+    for (const element of this.elements) {
+      element.loadConfig(config);
+    }
+  }
+
   /**
    * Validates the given configuration object against a predefined JSON schema.
    *

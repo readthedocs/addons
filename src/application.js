@@ -35,6 +35,7 @@ export class AddonsApplication {
     setupLogging();
     setupHistoryEvents();
 
+    this.addonsInstances = [];
     this.config = null;
 
     console.debug(
@@ -71,31 +72,37 @@ export class AddonsApplication {
     console.debug("Addons Application config (from reload() method)", config);
 
     if (!config) {
-      return null;
+      return;
     }
-
     this.config = config;
-
     if (this.config && !this.loadWhenEmbedded()) {
-      return null;
+      return;
     }
 
-    let promises = [];
-    for (const addon of this.addons) {
-      if (addon.isEnabled(this.config, this.httpStatus)) {
-        promises.push(
-          new Promise((resolve) => {
-            resolve(new addon(this.config));
-          }),
-        );
+    if (!this.addonsInstances.length) {
+      // Addons instances were not created yet
+      let promises = [];
+      for (const addon of this.addons) {
+        if (addon.isEnabled(this.config, this.httpStatus)) {
+          promises.push(
+            new Promise((resolve) => {
+              this.addonsInstances.push(new addon(this.config));
+              resolve();
+            }),
+          );
+        }
+      }
+      Promise.all(promises).catch((err) => {
+        console.error(err);
+      });
+    } else {
+      // Addons instances were already created. We just need to reload them with
+      // the new config object.
+      for (const addon of this.addonsInstances) {
+        addon.loadConfig(config);
       }
     }
-
-    Promise.all(promises).catch((err) => {
-      console.error(err);
-    });
-
-    return null;
+    return;
   }
 
   loadWhenEmbedded() {
@@ -169,6 +176,5 @@ document.addEventListener(
  */
 window.addEventListener(EVENT_READTHEDOCS_URL_CHANGED, (event) => {
   console.debug("URL Change detected. Triggering a new API call", event);
-  // TODO: find a way to get access to the `AddonApplication.sendUrlParam()` method.
-  getReadTheDocsConfig(true);
+  getReadTheDocsConfig(addonsApplication.sendUrlParam());
 });

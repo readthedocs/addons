@@ -26,8 +26,7 @@ export class AnalyticsAddon extends AddonBase {
   static addonName = "Analytics";
   static enabledOnHttpStatus = [200, 404];
 
-  constructor(config) {
-    super();
+  loadConfig(config) {
     this.config = config;
 
     // Only register pageviews on non-external versions

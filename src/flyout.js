@@ -402,25 +402,7 @@ export class FlyoutAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.flyout.json";
   static addonEnabledPath = "addons.flyout.enabled";
   static addonName = "Flyout";
-
-  constructor(config) {
-    super();
-
-    // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-flyout");
-    if (!elems.length) {
-      elems = [new FlyoutElement()];
-
-      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
-      // So, we append the web-component first and then request an update of it.
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
+  static elementClass = FlyoutElement;
 
   static requiresUrlParam() {
     // Flyout requires URL param for the feature "keep the same page when
@@ -432,4 +414,4 @@ export class FlyoutAddon extends AddonBase {
   }
 }
 
-customElements.define("readthedocs-flyout", FlyoutElement);
+customElements.define(FlyoutElement.elementName, FlyoutElement);

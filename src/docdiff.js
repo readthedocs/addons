@@ -112,26 +112,7 @@ export class DocDiffElement extends LitElement {
 
   render() {
     return nothing;
-    // TODO: render a checkbox once we are settled on the UI.
-    // For now, we are only enabling/disabling via a hotkey.
-    //
-    // return html`
-    //   <label class="switch">
-    //     <input @click="${this.handleClick}" type="checkbox" />
-    //     <span class="slider round"></span>
-    //   </label>
-    // `;
   }
-
-  // This code isn't used until we show a UI,
-  // and even then we'll want to trigger events to match state?
-  // handleClick(e) {
-  //   if (e.target.checked) {
-  //     this.enableDocDiff();
-  //   } else {
-  //     this.disableDocDiff();
-  //   }
-  // }
 
   compare() {
     let promiseData;
@@ -266,21 +247,7 @@ export class DocDiffAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.docdiff.json";
   static addonEnabledPath = "addons.doc_diff.enabled";
   static addonName = "DocDiff";
-
-  constructor(config) {
-    super();
-
-    let elems = document.querySelectorAll("readthedocs-docdiff");
-    if (!elems.length) {
-      elems = [new DocDiffElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
+  static elementClass = DocDiffElement;
 
   static requiresUrlParam() {
     return (
@@ -293,4 +260,4 @@ export class DocDiffAddon extends AddonBase {
   }
 }
 
-customElements.define("readthedocs-docdiff", DocDiffElement);
+customElements.define(DocDiffElement.elementName, DocDiffElement);
