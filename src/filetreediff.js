@@ -151,10 +151,9 @@ export class FileTreeDiffElement extends LitElement {
 /**
  * File Tree Diff addon
  *
- * UNDER DEVELOPMENT.
- *
- * Currently, this addon shows in the console all the file changed compared to
- * the LATEST version of the project.
+ * This addon shows a small UI element at the top-right with a selector listing
+ * all the "Added" and "Modified" files compared to the base version
+ * (configurable from project's setting in the WebUI).
  *
  * @param {Object} config - Addon configuration object
  */
