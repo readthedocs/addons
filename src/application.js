@@ -120,6 +120,7 @@ export class AddonsApplication {
   sendUrlParam() {
     for (const addon of this.addons) {
       if (addon.requiresUrlParam()) {
+        console.debug(`${addon.addonName} requires "url=" parameter.`);
         return true;
       }
     }

@@ -337,6 +337,22 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
+  if (!resolverFilename) {
+    if (docTool.isSinglePageApplication()) {
+      // SPA without ``resolverFilename``.
+      // Just a protection, this shouldn't happen.
+      return new URL(url);
+    } else {
+      // No SPA without ``resolverFilename``.
+      // Normal case for most of the documentation tools.
+      // Get the resolver's filename returned by the application (as HTTP header)
+      // and injected by Cloudflare Worker as a meta HTML tag
+      const resolverFilename = getMetadataValue(
+        "readthedocs-resolver-filename",
+      );
+    }
+  }
+
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
@@ -372,6 +388,8 @@ export class DocumentationTool {
     [SPHINX]: "a.internal",
     [FALLBACK_DOCTOOL]: ["p a"],
   };
+
+  static SINGLE_PAGE_APPLICATIONS = [VITEPRESS, MDBOOK, DOCUSAURUS, DOCSIFY];
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
@@ -524,6 +542,14 @@ export class DocumentationTool {
 
     // TODO: add the other known themes
     return null;
+  }
+
+  isSinglePageApplication() {
+    const isSPA = DocumentationTool.SINGLE_PAGE_APPLICATIONS.includes(
+      this.documentationTool,
+    );
+    console.log("isSinglePageApplication", isSPA);
+    return isSPA;
   }
 
   isAntora() {

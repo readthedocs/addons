@@ -12,7 +12,12 @@ import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
+import {
+  AddonBase,
+  addUtmParameters,
+  getLinkWithFilename,
+  docTool,
+} from "./utils";
 import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
@@ -407,10 +412,12 @@ export class FlyoutAddon extends AddonBase {
   static requiresUrlParam() {
     // Flyout requires URL param for the feature "keep the same page when
     // switching version". We need to know the URL path
-    // (``readthedocs.resolver.filename`` from the API) to be able to generate
-    // those URLs. If we ever make this feature configurable and user disables
-    // it, we can adapt this code to return ``false`` in that case.
-    return true;
+    // (``readthedocs.resolver.filename`` from the API or MEATA
+    // ``readthedocs-resolver-filename``) to be able to generate those URLs.
+    //
+    // NOTE: If we ever make this feature configurable and user disables it, we
+    // can adapt this code to return ``false`` in that case.
+    return docTool.isSinglePageApplication();
   }
 }
 
