@@ -262,7 +262,7 @@ const addons_flyout = {
 const addons_filetreediff = {
   $id: "http://v1.schemas.readthedocs.org/addons.filetreediff.json",
   type: "object",
-  required: ["addons"],
+  required: ["addons", "versions"],
   properties: {
     addons: {
       type: "object",
@@ -281,6 +281,19 @@ const addons_filetreediff = {
                 modified: { type: "array" },
               },
             },
+          },
+        },
+      },
+    },
+    versions: {
+      type: "object",
+      required: ["current"],
+      properties: {
+        current: {
+          type: "object",
+          required: ["type"],
+          properties: {
+            type: { type: "string" },
           },
         },
       },
