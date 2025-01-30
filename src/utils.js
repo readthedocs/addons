@@ -98,7 +98,6 @@ export class AddonBase {
         // We cannot use `render(this.elements[0], document.body)` because there is a race conditions between all the addons.
         // So, we append the web-component first and then request an update of it.
         document.body.append(this.elements[0]);
-        this.elements[0].requestUpdate();
       }
     }
 
