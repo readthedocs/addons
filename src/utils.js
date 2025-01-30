@@ -216,10 +216,18 @@ export function setupHistoryEvents() {
       const originalMethod = history[methodName];
       history[methodName] = function () {
         const result = originalMethod.apply(this, arguments);
-        const event = new Event(EVENT_READTHEDOCS_URL_CHANGED);
-        event.arguments = arguments;
 
-        dispatchEvent(event);
+        // Dispatch the event only when the third argument (url) is passed.
+        // Otherwise, we are triggering the event even then the URL hasn't changed.
+        //
+        // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+        // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
+        if (arguments.length === 3) {
+          const event = new Event(EVENT_READTHEDOCS_URL_CHANGED);
+          event.arguments = arguments;
+          dispatchEvent(event);
+        }
+
         return result;
       };
     }
