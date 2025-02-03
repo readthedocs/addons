@@ -320,7 +320,7 @@ export class NotificationElement extends LitElement {
         </div>
         <div class="content">
           Refer to the <a href="${this.urls.stable}">stable version</a> for the
-          most up-to-date version.
+          most current documentation.
         </div>
       </div>
     `;
