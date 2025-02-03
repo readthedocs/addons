@@ -57,3 +57,9 @@
 :host > div > div > label > input {
   margin: 0;
 }
+
+:host > div > div > span {
+  display: flex;
+  width: 0.5rem;
+  cursor: pointer;
+}

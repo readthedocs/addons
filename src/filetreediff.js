@@ -1,3 +1,5 @@
+import { library, icon } from "@fortawesome/fontawesome-svg-core";
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
@@ -24,6 +26,17 @@ export class FileTreeDiffElement extends LitElement {
     super();
     this.config = null;
     this.docDiffEnabled = false;
+
+    this.chunkIndex = null;
+    library.add(faArrowDown);
+    library.add(faArrowUp);
+
+    this.iconArrowUp = icon(faArrowUp, {
+      classes: ["icon"],
+    });
+    this.iconArrowDown = icon(faArrowDown, {
+      classes: ["icon"],
+    });
   }
 
   loadConfig(config) {
@@ -73,9 +86,49 @@ export class FileTreeDiffElement extends LitElement {
           />
           Show diff
         </label>
+        <span @click=${this.previousChunk}> ${this.iconArrowUp.node[0]} </span>
+        <span @click=${this.nextChunk}> ${this.iconArrowDown.node[0]} </span>
       `;
     }
     return nothing;
+  }
+
+  previousChunk() {
+    const chunks = document.querySelectorAll(
+      "p:has(.doc-diff-removed), p:has(.doc-diff-added)",
+    );
+    if (!chunks.length) {
+      return;
+    }
+    if (this.chunkIndex === null) {
+      this.chunkIndex = 0;
+    } else if (this.chunkIndex != 0) {
+      this.chunkIndex -= 1;
+    }
+
+    globalThis.scrollTo(
+      0, // X-axis
+      chunks[this.chunkIndex].offsetTop - 150, // Y-axis
+    );
+  }
+
+  nextChunk() {
+    const chunks = document.querySelectorAll(
+      "p:has(.doc-diff-removed), p:has(.doc-diff-added)",
+    );
+    if (!chunks.length) {
+      return;
+    }
+    if (this.chunkIndex === null) {
+      this.chunkIndex = 0;
+    } else if (this.chunkIndex != chunks.length - 1) {
+      this.chunkIndex += 1;
+    }
+
+    globalThis.scrollTo(
+      0, // X-axis
+      chunks[this.chunkIndex].offsetTop - 150, // Y-axis
+    );
   }
 
   render() {
