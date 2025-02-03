@@ -173,10 +173,12 @@ export class FileTreeDiffElement extends LitElement {
     chunk.classList.add("doc-diff-chunk-selected");
 
     console.log("chunk offset", chunk.offsetTop);
-    globalThis.scrollTo(
-      0, // X-axis
-      chunk.getBoundingClientRect().top - window.innerHeight * SCROLL_OFFSET_Y, // Y-axis
-    );
+    globalThis.scrollTo({
+      top:
+        chunk.getBoundingClientRect().top -
+        window.innerHeight * SCROLL_OFFSET_Y, // Y-axis
+      behavior: "smooth",
+    });
   }
 
   render() {
