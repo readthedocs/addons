@@ -297,7 +297,7 @@ export class NotificationElement extends LitElement {
           This is the latest development version ${this.renderCloseButton()}
         </div>
         <div class="content">
-          Some features may only be avilable in the
+          Some features may not yet be available in the
           <a href="${this.urls.stable}">stable version</a>.
         </div>
       </div>
