@@ -63,3 +63,7 @@
   width: 0.5rem;
   cursor: pointer;
 }
+
+:host > div > div > span:nth-child(2) {
+  min-width: 2.5rem;
+}
