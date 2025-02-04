@@ -9,8 +9,7 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
-import { hasQueryParam } from "./utils";
-
+import { getQueryParam } from "./utils";
 import { AddonBase } from "./utils";
 
 const SCROLL_OFFSET_Y = 0.1;
@@ -32,7 +31,7 @@ export class FileTreeDiffElement extends LitElement {
     this.config = null;
     this.docDiffEnabled = false;
 
-    this.chunkIndex = null;
+    this.chunkIndex = 1;
     this.chunks = [];
     this.chunkTagSelector = [
       // We may want to add more selectors here as we find them.
@@ -56,7 +55,6 @@ export class FileTreeDiffElement extends LitElement {
       }
     }
     this.chunkSelector = this.chunkSelector.join(", ");
-    console.log(this.chunkSelector);
 
     library.add(faArrowDown);
     library.add(faArrowUp);
@@ -109,12 +107,8 @@ export class FileTreeDiffElement extends LitElement {
     if (!this.docDiffEnabled) {
       return nothing;
     }
-    console.log("chunkIndex", this.chunkIndex);
-    console.log("chunks.length", this.chunks.length);
-    console.log("chunks", this.chunks);
-
     return html`
-      <span>${this.chunkIndex + 1 || 0} of ${this.chunks.length || 0}</span>
+      <span>${this.chunkIndex || 0} of ${this.chunks.length || 0}</span>
       <span @click=${this.previousChunk}> ${this.iconArrowUp.node[0]} </span>
       <span @click=${this.nextChunk}> ${this.iconArrowDown.node[0]} </span>
     `;
@@ -141,13 +135,13 @@ export class FileTreeDiffElement extends LitElement {
     if (!this.chunks.length) {
       return;
     }
-    if (this.chunkIndex === null) {
-      this.chunkIndex = 0;
-    } else if (this.chunkIndex != 0) {
+    if (this.chunkIndex === 1) {
+      this.chunkIndex = 1;
+    } else if (this.chunkIndex != 1) {
       this.chunkIndex -= 1;
     }
 
-    const chunk = this.chunks[this.chunkIndex];
+    const chunk = this.chunks[this.chunkIndex - 1];
     this.scrollToChunk(chunk);
   }
 
@@ -155,13 +149,11 @@ export class FileTreeDiffElement extends LitElement {
     if (!this.chunks.length) {
       return;
     }
-    if (this.chunkIndex === null) {
-      this.chunkIndex = 0;
-    } else if (this.chunkIndex != this.chunks.length - 1) {
+    if (this.chunkIndex != this.chunks.length) {
       this.chunkIndex += 1;
     }
 
-    const chunk = this.chunks[this.chunkIndex];
+    const chunk = this.chunks[this.chunkIndex - 1];
     this.scrollToChunk(chunk);
   }
 
@@ -176,11 +168,14 @@ export class FileTreeDiffElement extends LitElement {
     url.searchParams.set(DOCDIFF_CHUNK_URL_PARAM, this.chunkIndex);
     window.history.replaceState({}, "", url);
 
-    console.log("chunk offset", chunk.offsetTop);
     globalThis.scrollTo({
+      // Calculate the position of the current selectect chunk and scroll to its
+      // position minus 25% of the current window. This is to give the chunk
+      // some extra context.
       top:
+        window.scrollY +
         chunk.getBoundingClientRect().top -
-        window.innerHeight * SCROLL_OFFSET_Y, // Y-axis
+        window.innerHeight * 0.25,
       behavior: "smooth",
     });
   }
@@ -242,11 +237,13 @@ export class FileTreeDiffElement extends LitElement {
   _handleRootDOMChanged = (event) => {
     // Update the list of chunks when the DOM changes
     this.chunks = document.querySelectorAll(this.chunkSelector);
-    if (this.chunkIndex === null || this.chunkIndex === 0) {
-      this.chunkIndex = 0;
-      if (this.chunks.length) {
-        this.scrollToChunk(this.chunks[0]);
-      }
+    this.chunkIndex = parseInt(getQueryParam(DOCDIFF_CHUNK_URL_PARAM));
+
+    if (!this.chunkIndex) {
+      this.chunkIndex = 1;
+    }
+    if (this.chunks.length) {
+      this.scrollToChunk(this.chunks[this.chunkIndex - 1]);
     }
   };
 

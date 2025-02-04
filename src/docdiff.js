@@ -19,7 +19,7 @@ import {
 } from "./events";
 import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { hasQueryParam, docTool } from "./utils";
+import { getQueryParam, docTool } from "./utils";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 export const DOCDIFF_CHUNK_URL_PARAM = "readthedocs-diff-chunk";
@@ -104,7 +104,7 @@ export class DocDiffElement extends LitElement {
     }
 
     // Enable DocDiff if the URL parameter is present
-    if (hasQueryParam(DOCDIFF_URL_PARAM)) {
+    if (getQueryParam(DOCDIFF_URL_PARAM) === "true") {
       const event = new CustomEvent(
         EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
       );
