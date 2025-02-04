@@ -81,20 +81,13 @@ export class AddonsApplication {
 
     if (!this.addonsInstances.length) {
       // Addons instances were not created yet
-      let promises = [];
-      for (const addon of this.addons) {
-        if (addon.isEnabled(this.config, this.httpStatus)) {
-          promises.push(
-            new Promise((resolve) => {
-              this.addonsInstances.push(new addon(this.config));
-              resolve();
-            }),
-          );
-        }
-      }
-      Promise.all(promises).catch((err) => {
+      try {
+        this.addonsInstances = this.addons
+          .filter((addon) => addon.isEnabled(this.config, this.httpStatus))
+          .map((addon) => new addon(this.config));
+      } catch (err) {
         console.error(err);
-      });
+      }
     } else {
       // Addons instances were already created. We just need to reload them with
       // the new config object.
