@@ -58,12 +58,13 @@
   margin: 0;
 }
 
-:host > div > div > span {
+:host > div > div > span:not(.chunks) {
   display: flex;
   width: 0.5rem;
   cursor: pointer;
 }
 
-:host > div > div > span:nth-child(2) {
+:host > div > div > span.chunks {
+  display: flex;
   min-width: 2.5rem;
 }
