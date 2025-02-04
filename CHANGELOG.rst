@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.28.0
+---------------
+
+:date: Feb 4, 2025
+
+* Visual diff: jump between diff chunks (:pr:`519`)
+* Docdiff: use Embed API to grab the base URL content (:pr:`520`)
+* Trigger the URL_CHANGED event only if from/to URL are different (:pr:`516`)
+
 Version v0.27.0
 ---------------
 
