@@ -35,11 +35,14 @@ export class FileTreeDiffElement extends LitElement {
     this.chunks = [];
     this.chunkTagSelector = [
       // We may want to add more selectors here as we find them.
+      "section",
       "h1",
       "h2",
       "h3",
       "p",
       "dl",
+      "ul",
+      "ol",
       "table",
       "pre",
     ];
