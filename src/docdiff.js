@@ -22,6 +22,7 @@ import { default as objectPath } from "object-path";
 import { hasQueryParam, docTool } from "./utils";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
+export const DOCDIFF_CHUNK_URL_PARAM = "readthedocs-diff-chunk";
 
 /**
  * visual-dom-diff options
@@ -217,6 +218,7 @@ export class DocDiffElement extends LitElement {
     // Remove diff parameter from URL
     const url = new URL(window.location.href);
     url.searchParams.delete(DOCDIFF_URL_PARAM);
+    url.searchParams.delete(DOCDIFF_CHUNK_URL_PARAM);
     window.history.replaceState({}, "", url);
 
     this.enabled = false;

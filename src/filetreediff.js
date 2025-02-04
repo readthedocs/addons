@@ -3,7 +3,7 @@ import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
-import { DOCDIFF_URL_PARAM } from "./docdiff.js";
+import { DOCDIFF_URL_PARAM, DOCDIFF_CHUNK_URL_PARAM } from "./docdiff.js";
 import {
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -171,6 +171,10 @@ export class FileTreeDiffElement extends LitElement {
     }
 
     chunk.classList.add("doc-diff-chunk-selected");
+
+    const url = new URL(window.location.href);
+    url.searchParams.set(DOCDIFF_CHUNK_URL_PARAM, this.chunkIndex);
+    window.history.replaceState({}, "", url);
 
     console.log("chunk offset", chunk.offsetTop);
     globalThis.scrollTo({
