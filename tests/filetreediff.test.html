@@ -16,25 +16,51 @@
           config = {
             addons: {
               doc_diff: {
-                  enabled: true,
+                enabled: true,
               },
               filetreediff: {
-                  enabled: true,
-                  ignored_files: [
-                    "^ignored/.+\.html",
+                enabled: true,
+                ignored_files: ["^ignored/.+\.html"],
+                diff: {
+                  added: [
+                    {
+                      filename: "testing.html",
+                      urls: {
+                        current:
+                          "http://project.readthedocs.io/en/latest/testing.html",
+                        base: "https://project.readthedocs.io/en/base/testing.html",
+                      },
+                    },
                   ],
-                  diff: {
-                      added: [
-                          {filename: "testing.html", urls: {current: "http://project.readthedocs.io/en/latest/testing.html", base: "https://project.readthedocs.io/en/base/testing.html"}},
-                      ],
-                      modified: [
-                          {filename: "ignored/index.html", urls: {current: "http://project.readthedocs.io/en/latest/ignored/index.html", base: "https://project.readthedocs.io/en/base/ignored/index.html"}},
-                          {filename: "commercial.html", urls: {current: "http://project.readthedocs.io/en/latest/commercial.html", base: "https://project.readthedocs.io/en/base/commercial.html"}},
-                      ],
-                      deleted: [
-                          {filename: "deleted.html", urls: {current: "http://project.readthedocs.io/en/latest/deleted.html", base: "https://project.readthedocs.io/en/base/deleted.html"}},
-                      ],
-                  },
+                  modified: [
+                    {
+                      filename: "ignored/index.html",
+                      urls: {
+                        current:
+                          "http://project.readthedocs.io/en/latest/ignored/index.html",
+                        base: "https://project.readthedocs.io/en/base/ignored/index.html",
+                      },
+                    },
+                    {
+                      filename: "commercial.html",
+                      urls: {
+                        current:
+                          "http://project.readthedocs.io/en/latest/commercial.html",
+                        base: "https://project.readthedocs.io/en/base/commercial.html",
+                      },
+                    },
+                  ],
+                  deleted: [
+                    {
+                      filename: "deleted.html",
+                      urls: {
+                        current:
+                          "http://project.readthedocs.io/en/latest/deleted.html",
+                        base: "https://project.readthedocs.io/en/base/deleted.html",
+                      },
+                    },
+                  ],
+                },
               },
             },
           };
