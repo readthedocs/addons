@@ -213,13 +213,21 @@ export class FileTreeDiffElement extends LitElement {
       (f) => f.urls.current === currentUrl,
     );
 
+    const testIgnoredfile = (file) => {
+      for (const re of ignoredFiles) {
+        let regex = new RegExp(re);
+        if (regex.test(file.filename)) {
+          return false;
+        }
+      }
+      return true;
+    };
+
     // Filter out files that are ignored by this project
     const ignoredFiles = this.config.addons.filetreediff.ignored_files || [];
-    const addedFiles = diffData.added.filter(
-      (file) => !ignoredFiles.includes(file.filename),
-    );
-    const modifiedFiles = diffData.modified.filter(
-      (file) => !ignoredFiles.includes(file.filename),
+    const addedFiles = diffData.added.filter((file) => testIgnoredfile(file));
+    const modifiedFiles = diffData.modified.filter((file) =>
+      testIgnoredfile(file),
     );
 
     return html`
