@@ -38,6 +38,7 @@ describe("FileTreeDiff addon", () => {
         addons: {
           filetreediff: {
             enabled: true,
+            ignored_files: ["^changelogs/.+.html$", "guides/index.html"],
             diff: {
               added: [],
               modified: [],
