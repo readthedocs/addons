@@ -257,7 +257,7 @@ const addons_filetreediff = {
       properties: {
         filetreediff: {
           type: "object",
-          required: ["enabled", "diff"],
+          required: ["enabled", "diff", "ignored_files"],
           properties: {
             enabled: { type: "boolean" },
             diff: {
@@ -268,6 +268,7 @@ const addons_filetreediff = {
                 modified: { type: "array" },
               },
             },
+            ignored_files: { type: ["array", "null"] },
           },
         },
       },

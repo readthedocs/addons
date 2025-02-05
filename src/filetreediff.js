@@ -213,6 +213,15 @@ export class FileTreeDiffElement extends LitElement {
       (f) => f.urls.current === currentUrl,
     );
 
+    // Filter out files that are ignored by this project
+    const ignoredFiles = this.config.addons.filetreediff.ignored_files || [];
+    const addedFiles = diffData.added.filter(
+      (file) => !ignoredFiles.contains(file),
+    );
+    const modifiedFiles = diffData.modified.filter(
+      (file) => !ignoredFiles.contains(file),
+    );
+
     return html`
       <div>
         <div>
@@ -221,8 +230,8 @@ export class FileTreeDiffElement extends LitElement {
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
             </option>
-            ${renderSection(diffData.added, "Added")}
-            ${renderSection(diffData.modified, "Changed")}
+            ${renderSection(addedFiles, "Added")}
+            ${renderSection(modifiedFiles, "Changed")}
           </select>
         </div>
       </div>
