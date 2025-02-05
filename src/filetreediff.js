@@ -216,10 +216,10 @@ export class FileTreeDiffElement extends LitElement {
     // Filter out files that are ignored by this project
     const ignoredFiles = this.config.addons.filetreediff.ignored_files || [];
     const addedFiles = diffData.added.filter(
-      (file) => !ignoredFiles.contains(file),
+      (file) => !ignoredFiles.includes(file.filename),
     );
     const modifiedFiles = diffData.modified.filter(
-      (file) => !ignoredFiles.contains(file),
+      (file) => !ignoredFiles.includes(file.filename),
     );
 
     return html`
