@@ -62,6 +62,22 @@ export class FileTreeDiffElement extends LitElement {
     return `${currentOrigin}${currentPath}`;
   }
 
+  renderDocDiff() {
+    if (objectPath.get(this.config, "addons.doc_diff.enabled", false)) {
+      return html`
+        <label>
+          <input
+            type="checkbox"
+            .checked=${this.docDiffEnabled}
+            @change=${this.handleToggleDiff}
+          />
+          Show diff
+        </label>
+      `;
+    }
+    return nothing;
+  }
+
   render() {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
     if (!diffData) {
@@ -95,14 +111,7 @@ export class FileTreeDiffElement extends LitElement {
     return html`
       <div>
         <div>
-          <label>
-            <input
-              type="checkbox"
-              .checked=${this.docDiffEnabled}
-              @change=${this.handleToggleDiff}
-            />
-            Show diff
-          </label>
+          ${this.renderDocDiff()}
           <select @change=${this.handleFileChange}>
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
