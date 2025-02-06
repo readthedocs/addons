@@ -9,6 +9,7 @@ import {
   docTool,
 } from "./utils";
 import { EVENT_READTHEDOCS_ROOT_DOM_CHANGED } from "./events";
+import { EMBED_API_ENDPOINT } from "./constants";
 import {
   computePosition,
   autoPlacement,
@@ -195,9 +196,7 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
       params["maincontent"] = selector;
     }
 
-    const api_url =
-      "/_/api/v3/embed/?" + new URLSearchParams(params).toString();
-    return api_url;
+    return EMBED_API_ENDPOINT + "?" + new URLSearchParams(params).toString();
   }
 }
 

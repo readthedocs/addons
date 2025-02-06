@@ -23,7 +23,7 @@ import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.27.0";
+export const CLIENT_VERSION = "0.28.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -301,15 +301,14 @@ export function setupLogging() {
 }
 
 /**
- * Check if a specific query parameter exists in the current URL.
+ * Get a specific query parameter from the current URL.
  *
  * @param {string} param - The query parameter to check.
- * @returns {boolean} - Returns true if the parameter exists, otherwise false.
+ * @returns {boolean} - Returns the parameter if exists, otherwise null.
  */
-export function hasQueryParam(param) {
-  console.debug("Searching for query parameter", param);
+export function getQueryParam(param) {
   const url = new URL(window.location.href);
-  return url.searchParams.has(param);
+  return url.searchParams.get(param);
 }
 
 export function addUtmParameters(url, content) {

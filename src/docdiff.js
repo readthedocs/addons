@@ -18,9 +18,11 @@ import {
 } from "./events";
 import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { AddonBase, hasQueryParam, docTool } from "./utils";
+import { AddonBase, getQueryParam, docTool } from "./utils";
+import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
+export const DOCDIFF_CHUNK_URL_PARAM = "readthedocs-diff-chunk";
 
 /**
  * visual-dom-diff options
@@ -83,7 +85,7 @@ export class DocDiffElement extends LitElement {
     this.injectStyles = true;
 
     this.originalBody = null;
-    this.cachedRemoteContent = null;
+    this.cachedRemoteResponse = null;
   }
 
   loadConfig(config) {
@@ -102,7 +104,7 @@ export class DocDiffElement extends LitElement {
     }
 
     // Enable DocDiff if the URL parameter is present
-    if (hasQueryParam(DOCDIFF_URL_PARAM)) {
+    if (getQueryParam(DOCDIFF_URL_PARAM) === "true") {
       const event = new CustomEvent(
         EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
       );
@@ -114,26 +116,41 @@ export class DocDiffElement extends LitElement {
     return nothing;
   }
 
+  getEmbedURL(url) {
+    const params = {
+      url: url,
+    };
+
+    if (this.rootSelector !== null) {
+      params["maincontent"] = this.rootSelector;
+    }
+
+    // NOTE: we don't send ``doctool`` and ``docversion`` on purpose here
+    // because we don't want the backed to pre-process the response. We need the
+    // HTML as-is without any pre-processing.
+    return EMBED_API_ENDPOINT + "?" + new URLSearchParams(params).toString();
+  }
+
   compare() {
     let promiseData;
 
-    if (this.cachedRemoteContent !== null) {
-      promiseData = Promise.resolve(this.cachedRemoteContent);
+    if (this.cachedRemoteResponse !== null) {
+      promiseData = Promise.resolve(this.cachedRemoteResponse);
     } else {
-      promiseData = fetch(this.config.addons.doc_diff.base_url).then(
-        (response) => {
-          if (!response.ok) {
-            throw new Error("Error downloading requested base URL.");
-          }
-          return response.text();
-        },
-      );
+      const baseURL = this.config.addons.doc_diff.base_url;
+      const url = this.getEmbedURL(baseURL);
+      promiseData = fetch(url).then((response) => {
+        if (!response.ok) {
+          throw new Error("Error downloading requested base URL.");
+        }
+        return response.json();
+      });
     }
 
     promiseData
-      .then((text) => {
-        this.cachedRemoteContent = text;
-        this.performDiff(text);
+      .then((data) => {
+        this.cachedRemoteResponse = data;
+        this.performDiff(this.cachedRemoteResponse.content);
       })
       .finally(() => {
         const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
@@ -148,22 +165,22 @@ export class DocDiffElement extends LitElement {
   // with the resulting visual diff elements instead.
   performDiff(remoteContent) {
     const parser = new DOMParser();
-    const html_document = parser.parseFromString(remoteContent, "text/html");
-    const old_body = html_document.documentElement.querySelector(
+    const htmlDocument = parser.parseFromString(remoteContent, "text/html");
+    const oldBody = htmlDocument.documentElement.querySelector(
       this.rootSelector,
     );
-    const new_body = document.querySelector(this.rootSelector);
+    const newBody = document.querySelector(this.rootSelector);
 
-    if (old_body == null || new_body == null) {
+    if (oldBody == null || newBody == null) {
       throw new Error("Element not found in both documents.");
     }
 
     const diffNode = visualDomDiff.visualDomDiff(
-      old_body,
-      new_body,
+      oldBody,
+      newBody,
       VISUAL_DIFF_OPTIONS,
     );
-    new_body.replaceWith(diffNode.firstElementChild);
+    newBody.replaceWith(diffNode.firstElementChild);
   }
 
   enableDocDiff() {
@@ -197,6 +214,7 @@ export class DocDiffElement extends LitElement {
     // Remove diff parameter from URL
     const url = new URL(window.location.href);
     url.searchParams.delete(DOCDIFF_URL_PARAM);
+    url.searchParams.delete(DOCDIFF_CHUNK_URL_PARAM);
     window.history.replaceState({}, "", url);
 
     this.enabled = false;
