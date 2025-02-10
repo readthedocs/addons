@@ -276,7 +276,11 @@ export class FileTreeDiffElement extends LitElement {
     // Update the list of chunks when the DOM changes
     this.chunks = this.getChunks();
 
-    this.chunkIndex = parseInt(getQueryParam(DOCDIFF_CHUNK_URL_PARAM));
+    // Limit the `?readthedocs-diff-chunk` number to be between 0 and `this.chunks.length`
+    this.chunkIndex = Math.min(
+      this.chunks.length,
+      Math.max(0, parseInt(getQueryParam(DOCDIFF_CHUNK_URL_PARAM))),
+    );
 
     if (!this.chunkIndex) {
       this.chunkIndex = 1;
