@@ -262,7 +262,12 @@ export class FileTreeDiffElement extends LitElement {
       let parent = chunk.parentElement;
       // Find the parent up to 10 levels maximum
       for (let i = 0; i < 10; i++) {
-        if (parent && sectionNodes.includes(parent.tagName.toLowerCase())) {
+        // If we don't have a parent, we stop iterating for this chunk
+        if (!parent) {
+          break;
+        }
+
+        if (sectionNodes.includes(parent.tagName.toLowerCase())) {
           chunkParents.add(parent);
           break;
         }
