@@ -266,6 +266,9 @@ export class FileTreeDiffElement extends LitElement {
           chunkParents.add(parent);
           break;
         }
+
+        // Continue checking with the parent of the parent
+        parent = parent.parentElement;
       }
     }
 
