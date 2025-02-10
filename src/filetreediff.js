@@ -33,31 +33,6 @@ export class FileTreeDiffElement extends LitElement {
 
     this.chunkIndex = 1;
     this.chunks = [];
-    this.chunkTagSelector = [
-      // We may want to add more selectors here as we find them.
-      "section",
-      "h1",
-      "h2",
-      "h3",
-      "p",
-      "dl",
-      "ul",
-      "ol",
-      "table",
-      "pre",
-    ];
-    this.chunkPseudoSelector = [
-      ":has(.doc-diff-added)",
-      ":has(.doc-diff-removed)",
-    ];
-
-    this.chunkSelector = [];
-    for (let selector of this.chunkTagSelector) {
-      for (let pseudo of this.chunkPseudoSelector) {
-        this.chunkSelector.push(`${selector}${pseudo}`);
-      }
-    }
-    this.chunkSelector = this.chunkSelector.join(", ");
 
     library.add(faArrowDown);
     library.add(faArrowUp);
@@ -240,9 +215,50 @@ export class FileTreeDiffElement extends LitElement {
     this.docDiffEnabled = false;
   };
 
+  getChunks() {
+    const chunks = document.querySelectorAll(
+      ".doc-diff-added, .doc-diff-removed",
+    );
+    // These are the nodes we consider a "section for a chunk". The classes
+    // `.doc-diff-*` are added to the _word_ that changed, but we want to
+    // highlight the parent element of it, being a more important section of the
+    // page (i.e `sectionNodes`)
+    const sectionNodes = [
+      "section",
+      "h1",
+      "h2",
+      "h3",
+      "p",
+      "dl",
+      "ul",
+      "ol",
+      "table",
+      "pre",
+    ];
+
+    // Create a set to de-duplicate the nodes
+    const chunkParents = new Set();
+
+    // Find the first parent we consider a section node
+    for (const chunk of chunks) {
+      let parent = chunk.parentElement;
+      // Find the parent up to 10 levels maximum
+      for (let i = 0; i < 10; i++) {
+        if (parent && sectionNodes.includes(parent.tagName.toLowerCase())) {
+          chunkParents.add(parent);
+          break;
+        }
+      }
+    }
+
+    // Convert the de-duplicated Set into an Array
+    return Array.from(chunkParents);
+  }
+
   _handleRootDOMChanged = (event) => {
     // Update the list of chunks when the DOM changes
-    this.chunks = document.querySelectorAll(this.chunkSelector);
+    this.chunks = this.getChunks();
+
     this.chunkIndex = parseInt(getQueryParam(DOCDIFF_CHUNK_URL_PARAM));
 
     if (!this.chunkIndex) {
