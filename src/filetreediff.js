@@ -226,8 +226,8 @@ export class FileTreeDiffElement extends LitElement {
     //
     // Examples:
     //
-    //   - If the class is added to a `span` (word/sentence deleted/added inside a
-    //     paragraph), we will return its parent `p`.
+    //   - If the class is added to a `span/ins/del` (word/sentence
+    //     deleted/added inside a paragraph), we will return its parent `p`.
     //   - If the class is added to a `p` (whole paragraph deleted/added), we
     //     will return the same `p` element.
     //   - If the class is added to a `section`, we will return the same
