@@ -228,8 +228,6 @@ export class FileTreeDiffElement extends LitElement {
     //
     //   - If the class is added to a `span/ins/del` (word/sentence
     //     deleted/added inside a paragraph), we will return its parent `p`.
-    //   - If the class is added to a `p` (whole paragraph deleted/added), we
-    //     will return the same `p` element.
     //   - If the class is added to a `section`, we will return the same
     //     `section` element.
     //   - If the class is added to a `li`, we will return the same `ul`/`ol`
@@ -252,13 +250,6 @@ export class FileTreeDiffElement extends LitElement {
 
     // Find the first parent we consider a section node
     for (const chunk of chunks) {
-      // If the chunk selected is already a section node,
-      // we add the chunk itself
-      if (sectionNodes.includes(chunk.tagName.toLowerCase())) {
-        chunkParents.add(chunk);
-        continue;
-      }
-
       let parent = chunk.parentElement;
       // Find the parent up to 10 levels maximum
       for (let i = 0; i < 10; i++) {
