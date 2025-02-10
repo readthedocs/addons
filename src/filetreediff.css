@@ -1,8 +1,12 @@
 /* Using --addons-* prefix variables for consistency and to allow for overrides */
 :host {
+  --addons-filetreediff-color: var(
+    --readthedocs-filetreediff-color,
+    rgb(128, 128, 128)
+  );
   --addons-filetreediff-background-color: var(
     --readthedocs-filetreediff-background-color,
-    #f8f9fa
+    rgb(39, 39, 37)
   );
   --addons-filetreediff-border-color: var(
     --readthedocs-filetreediff-border-color,
@@ -22,6 +26,7 @@
   position: fixed;
   top: 0;
   right: 1rem;
+  color: var(--addons-filetreediff-color);
   background-color: var(--addons-filetreediff-background-color);
   padding: 0.25rem 0.75rem;
   box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
@@ -39,7 +44,9 @@
 :host > div > div > select {
   flex: 1;
   padding: 0.25rem 0.5rem;
-  border: 0.06rem solid var(--addons-filetreediff-border-color);
+  border: 0;
+  color: var(--addons-filetreediff-color);
+  background-color: var(--addons-filetreediff-background-color);
   border-radius: 0.25rem;
   appearance: revert;
 }
@@ -48,14 +55,13 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: var(--addons-filetreediff-font-size);
-  color: var(--addons-filetreediff-label-color);
   white-space: nowrap;
   cursor: pointer;
 }
 
 :host > div > div > label > input {
   margin: 0;
+  background-color: #ccc;
 }
 
 :host > div > div > span:not(.chunks) {
@@ -65,6 +71,8 @@
 }
 
 :host > div > div > span.chunks {
+  color: var(--readthedocs-filetreediff-chunks-color, #27ae60);
+  font-weight: bold;
   display: flex;
   min-width: 2.5rem;
 }
