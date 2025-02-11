@@ -11,7 +11,6 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 // See https://github.com/readthedocs/addons/pull/234
 import * as visualDomDiff from "visual-dom-diff";
 
-import { AddonBase } from "./utils";
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
@@ -19,7 +18,7 @@ import {
 } from "./events";
 import { nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { getQueryParam, docTool } from "./utils";
+import { AddonBase, getQueryParam, docTool } from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
@@ -266,23 +265,7 @@ export class DocDiffAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.docdiff.json";
   static addonEnabledPath = "addons.doc_diff.enabled";
   static addonName = "DocDiff";
-
-  constructor(config) {
-    super();
-
-    // TODO: is it possible to move this `constructor` to the `AddonBase` class?
-    customElements.define("readthedocs-docdiff", DocDiffElement);
-    let elems = document.querySelectorAll("readthedocs-docdiff");
-    if (!elems.length) {
-      elems = [new DocDiffElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
+  static elementClass = DocDiffElement;
 
   static requiresUrlParam() {
     return (
@@ -294,3 +277,5 @@ export class DocDiffAddon extends AddonBase {
     );
   }
 }
+
+customElements.define(DocDiffElement.elementName, DocDiffElement);
