@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.29.1
+---------------
+
+:date: Feb 11, 2025
+
+* SPA bugix on URL handling (:pr:`531`)
+
 Version v0.29.0
 ---------------
 
