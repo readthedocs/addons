@@ -3,6 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.29.0
+---------------
+
+:date: Feb 11, 2025
+
+* Visual diff: improve algorithm to jump between chunks (:pr:`527`)
+* Visual diff: small yellow background on selected chunk (:pr:`522`)
+* Support for SPA (Single Page Applications) (:pr:`504`)
+
 Version v0.28.0
 ---------------
 
