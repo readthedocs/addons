@@ -68,3 +68,18 @@
   display: flex;
   min-width: 2.5rem;
 }
+
+@media (max-width: 1023px) {
+  :host > div {
+    width: calc(100% - 1rem);
+    margin: 0;
+    right: 0;
+    border-radius: 0;
+    padding: 0.5rem;
+  }
+
+  :host > div > div > select {
+    width: 100%;
+    border: 0;
+  }
+}
