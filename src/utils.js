@@ -561,7 +561,7 @@ export class DocumentationTool {
     const isSPA = DocumentationTool.SINGLE_PAGE_APPLICATIONS.includes(
       this.documentationTool,
     );
-    console.log("isSinglePageApplication", isSPA);
+    console.debug("isSinglePageApplication:", isSPA);
     return isSPA;
   }
 
