@@ -225,7 +225,7 @@ export function setupHistoryEvents() {
         // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
         // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
         if (arguments.length === 3) {
-          const toURL = arguments[2];
+          const toURL = new URL(arguments[2], fromURL.origin);
 
           // TODO: we can't import this here -- it has to be at the top.
           // We can't import it at the top due to circular dependencies.
