@@ -140,7 +140,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
   });
 }
 
-function dispatchEvent(eventName, element, data) {
+export function dispatchEvent(eventName, element, data) {
   const event = new CustomEvent(eventName, { detail: data });
   element.dispatchEvent(event);
 }
