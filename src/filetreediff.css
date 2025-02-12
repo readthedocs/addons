@@ -2,7 +2,7 @@
 :host {
   --addons-filetreediff-color: var(
     --readthedocs-filetreediff-color,
-    rgb(128, 128, 128)
+    rgb(252, 252, 252)
   );
   --addons-filetreediff-background-color: var(
     --readthedocs-filetreediff-background-color,
