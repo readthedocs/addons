@@ -1,8 +1,18 @@
 <html>
+  <head>
+      <script type="importmap">
+      {
+        "imports": {
+          "../src/utils": "./__mocks__/utils.js"
+        }
+      }
+    </script>
+  </head>
   <body>
     <script type="module">
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
+      import * as sinon from "sinon";
       import * as utils from "../src/utils";
 
       let element;
@@ -183,6 +193,17 @@
             expect(tool.getLinkSelector()).to.be.equal(
               "article div.markdown p a",
             );
+          });
+
+          it("setupHistoryEvents and change URL", async () => {
+            utils.setupHistoryEvents();
+
+            const url = new URL(globalThis.location.href);
+            url.searchParams.set("testing-parameter", true);
+            globalThis.history.replaceState({}, "", url);
+
+            // Expect the EVENT_READTHEDOCS_URL_CHANGED to be dispatched
+            expect(utils.dispatchEvent.calledOnce).to.be.true;
           });
         });
       });
