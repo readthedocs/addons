@@ -14,6 +14,11 @@
       runTests(async () => {
         beforeEach(() => {
           config = {
+            versions: {
+              current: {
+                type: "external",
+              },
+            },
             addons: {
               doc_diff: {
                 enabled: true,
