@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-version-slug" content="version" />
+  </head>
+  <body>
+    <script type="module">
+      import { default as sinon } from "sinon";
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as readthedocsConfig from "../src/readthedocs-config";
+      import * as utils from "../src/utils";
+
+      let server;
+      let metadataAddonsAPIVersion;
+      let metadataProject;
+      let metadataVersion;
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Create a sinon fake server to mock requests
+          server = sinon.fakeServer.create();
+          if (metadataAddonsAPIVersion) {
+            metadataAddonsAPIVersion.remove();
+          }
+        });
+
+        afterEach(() => {
+          // Restore the fake server to its original state
+          server.restore();
+        });
+
+        describe("Read the Docs config", () => {
+          it("test API url without ?url= param", async () => {
+            let url;
+
+            url = readthedocsConfig._getApiUrl(false, 1);
+            expect(url).to.be.equal(
+              `/_/addons/?client-version=${utils.CLIENT_VERSION}&api-version=1&project-slug=project&version-slug=version`,
+            );
+
+            url = readthedocsConfig._getApiUrl(false, 2);
+            expect(url).to.be.equal(
+              `/_/addons/?client-version=${utils.CLIENT_VERSION}&api-version=2&project-slug=project&version-slug=version`,
+            );
+          });
+
+          it("test API url with ?url= param", async () => {
+            const url = readthedocsConfig._getApiUrl(true, 1);
+            expect(url).to.match(
+              /^\/_\/addons\/\?client-version=.+&api-version=1&url=.+$/,
+            );
+          });
+
+          it("fetch config from API endpoint", async () => {
+            // Response 204 on requests made to Read the Docs analytics' API
+            const matchMockedUrl = new RegExp(`^/_/addons/`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              "fake response body",
+            ]);
+
+            const config = readthedocsConfig.getReadTheDocsConfig(false);
+
+            // Respond to all the request waiting for a response
+            server.respond();
+
+            expect(server.requests).to.have.length(1);
+            expect(server.requests[0].status).to.be.equal(200);
+            expect(server.requests[0].method).to.be.equal("GET");
+            const apiUrl = `/_/addons/?client-version=${utils.CLIENT_VERSION}&api-version=1&project-slug=project&version-slug=version`;
+            expect(server.requests[0].url).to.be.equal(apiUrl);
+          });
+
+          it("fetch config from API endpoint for user", async () => {
+            metadataAddonsAPIVersion = document.createElement("meta");
+            metadataAddonsAPIVersion.name = "readthedocs-addons-api-version";
+            metadataAddonsAPIVersion.content = "2";
+            document.head.appendChild(metadataAddonsAPIVersion);
+
+            // Response 204 on requests made to Read the Docs analytics' API
+            const matchMockedUrl = new RegExp(`^/_/addons/`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              "fake response body",
+            ]);
+
+            const config = readthedocsConfig.getReadTheDocsUserConfig(true);
+
+            // Respond to all the request waiting for a response
+            server.respond();
+
+            expect(server.requests).to.have.length(1);
+            expect(server.requests[0].status).to.be.equal(200);
+            expect(server.requests[0].method).to.be.equal("GET");
+            const matchApiUrl =
+              /^\/_\/addons\/\?client-version=.+&api-version=2&url=.+$/;
+            expect(server.requests[0].url).to.match(matchApiUrl);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
