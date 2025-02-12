@@ -61,7 +61,6 @@
 
 :host > div > div > label > input {
   margin: 0;
-  background-color: #ccc;
 }
 
 :host > div > div > span:not(.chunks) {
