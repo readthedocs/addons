@@ -360,9 +360,7 @@ export function getLinkWithFilename(url, resolverFilename) {
       // Normal case for most of the documentation tools.
       // Get the resolver's filename returned by the application (as HTTP header)
       // and injected by Cloudflare Worker as a meta HTML tag
-      const resolverFilename = getMetadataValue(
-        "readthedocs-resolver-filename",
-      );
+      resolverFilename = getMetadataValue("readthedocs-resolver-filename");
     }
   }
 

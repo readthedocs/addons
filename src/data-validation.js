@@ -250,7 +250,7 @@ const addons_flyout = {
           type: "object",
           required: ["filename"],
           properties: {
-            filename: { type: "string" },
+            filename: { type: ["string", "null"] },
           },
         },
       },
@@ -463,7 +463,7 @@ const addons_notifications = {
           type: "object",
           required: ["filename"],
           properties: {
-            filename: { type: "string" },
+            filename: { type: ["string", "null"] },
           },
         },
       },
