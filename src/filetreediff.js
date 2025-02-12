@@ -344,8 +344,10 @@ export class FileTreeDiffAddon extends AddonBase {
 
   static isEnabled(config, httpStatus) {
     return (
-      super.isEnabled(config, httpStatus) &&
-      config.versions.current.type === "external"
+      // The order is important since we don't even want to run the data
+      // validation if the version is not external.
+      config.versions.current.type === "external" &&
+      super.isEnabled(config, httpStatus)
     );
   }
 }
