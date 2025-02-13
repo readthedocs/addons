@@ -62,6 +62,48 @@
             await expect(element).shadowDom.to.equalSnapshot();
           });
 
+          it("initial trigger by event and DOM check with filters", async () => {
+            config.addons.search.filters = [
+              ["Include subprojects", "subprojects:project/version"],
+            ];
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("show the modal and perform a query with no results", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"count":0,"next":null,"previous":null,"projects":[{"slug":"project","versions":[{"slug":"version"}]}],"query":"no results","results":[]}',
+            ]);
+
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+
+            const inputForm = element.shadowRoot.querySelector("input");
+            inputForm.value = "no results";
+            element.queryInput();
+
+            // TODO: investigate https://open-wc.org/docs/testing/helpers/#timings
+            await new Promise((resolve) => setTimeout(resolve, 10));
+
+            server.respond();
+            await elementUpdated(element);
+
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
           it("show the modal and perform a query", async () => {
             const matchMockedUrl = new RegExp(`.+`, "g");
             server.respondWith("GET", matchMockedUrl, [
