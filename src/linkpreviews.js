@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import { html, nothing, render, LitElement } from "lit";
 import styleSheet from "./linkpreviews.css";
 
