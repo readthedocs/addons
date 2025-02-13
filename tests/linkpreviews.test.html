@@ -64,6 +64,7 @@
             // I'm not sure how to solve this without a `setTimeout`, but
             // we need to wait a fraction of second to give some time to the
             // tooltip to be displayed.
+            // TODO: check https://open-wc.org/docs/testing/helpers/#testing-events
             await new Promise((resolve) => setTimeout(resolve, 10));
 
             const tooltip = document.querySelector(".tooltip");
