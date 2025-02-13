@@ -62,9 +62,9 @@
             link.dispatchEvent(mouseenterEvent);
 
             // I'm not sure how to solve this without a `setTimeout`, but
-            // we need to wait SHOW_TOOLTIP_DELAY to give some time to the
+            // we need to wait a fraction of second to give some time to the
             // tooltip to be displayed.
-            await new Promise((resolve) => setTimeout(resolve, 300));
+              await new Promise((resolve) => setTimeout(resolve, 10));
 
             const tooltip = document.querySelector(".tooltip");
             expect(tooltip).to.have.attribute("data-linkpreview-href");
@@ -88,13 +88,9 @@
             const mouseenterEvent = new Event("mouseenter");
             link.dispatchEvent(mouseenterEvent);
 
-            // I'm not sure how to solve this without a `setTimeout`, but
-            // we need to wait SHOW_TOOLTIP_DELAY to give some time to the
-            // tooltip to be displayed.
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 10));
             server.respond();
-
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 10));
 
             const tooltip = document.querySelector(".tooltip");
             expect(tooltip).to.have.attribute("data-linkpreview-href");

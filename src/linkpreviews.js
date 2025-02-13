@@ -20,8 +20,10 @@ import {
 } from "@floating-ui/dom";
 import { default as objectPath } from "object-path";
 
-const SHOW_TOOLTIP_DELAY = 300;
-const HIDE_TOOLTIP_DELAY = 300;
+// Remove delay when running tests
+const SHOW_TOOLTIP_DELAY = IS_TESTING ? 0 : 300;
+const HIDE_TOOLTIP_DELAY = IS_TESTING ? 0 : 300;
+
 const TOOLTIP_DATA_HREF = "data-linkpreview-href";
 
 function setupTooltip(el, doctoolname, doctoolversion, selector) {
