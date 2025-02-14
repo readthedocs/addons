@@ -346,7 +346,8 @@ export class FileTreeDiffAddon extends AddonBase {
     return (
       // The order is important since we don't even want to run the data
       // validation if the version is not external.
-      config.versions.current.type === "external" &&
+      // We have to use `objectPath` here becase we haven't validated the data yet.
+      objectPath.get(config, "versions.current.type") === "external" &&
       super.isEnabled(config, httpStatus)
     );
   }
