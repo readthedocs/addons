@@ -234,6 +234,7 @@
             const tool = new utils.DocumentationTool();
 
             expect(tool.getDocumentationTool()).to.be.equal("mkdocs-material");
+            expect(tool.isSinglePageApplication()).to.be.false;
             expect(tool.isSphinx()).to.be.false;
             expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
             expect(tool.isPelican()).to.be.false;
@@ -261,12 +262,35 @@
             const tool = new utils.DocumentationTool();
 
             expect(tool.getDocumentationTool()).to.be.equal("docusaurus");
+            expect(tool.isSinglePageApplication()).to.be.true;
             expect(tool.isJekyll()).to.be.false;
             expect(tool.isDocusaurus()).to.be.true;
             expect(tool.getRootSelector()).to.be.equal("article div.markdown");
             expect(tool.getLinkSelector()).to.be.equal(
               "article div.markdown p a",
             );
+          });
+
+          it("VitePress", async () => {
+            element = document.createElement("meta");
+            element.name = "generator";
+            element.content = "VitePress generator 0.1.2";
+            document.head.appendChild(element);
+
+            const content = `<article id="content"><p>This is a <a href="#">link</a></p></article>`;
+            document.body.insertAdjacentHTML("beforeend", content);
+
+            // We can't rely on the DocumentationTool exported since the
+            // constructur is triggered before we add the required element to
+            // the DOM.
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.getDocumentationTool()).to.be.equal("vitepress");
+            expect(tool.isSinglePageApplication()).to.be.true;
+            expect(tool.isJekyll()).to.be.false;
+            expect(tool.isDocusaurus()).to.be.false;
+            expect(tool.getRootSelector()).to.be.equal("article");
+            expect(tool.getLinkSelector()).to.be.equal("article p a");
           });
         });
       });
