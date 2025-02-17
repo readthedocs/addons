@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
@@ -9,14 +10,17 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 //   visualDomDiff.visualDomDiff();
 //
 // See https://github.com/readthedocs/addons/pull/234
-import * as visualDomDiff from "visual-dom-diff";
+// import * as visualDomDiff from "visual-dom-diff";
+//
+// I had to change this because otherwise the tests do not work.
+import { default as visualDomDiff } from "visual-dom-diff";
 
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
 } from "./events";
-import { nothing, LitElement } from "lit";
+import { CSSResult, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import { AddonBase, getQueryParam, docTool } from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
@@ -100,7 +104,11 @@ export class DocDiffElement extends LitElement {
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
     if (this.injectStyles) {
-      document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
+      let styleSheet = docdiffGeneralStyleSheet;
+      if (styleSheet instanceof CSSResult) {
+        styleSheet = styleSheet.styleSheet;
+      }
+      document.adoptedStyleSheets.push(styleSheet);
     }
 
     // Enable DocDiff if the URL parameter is present

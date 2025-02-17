@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-version-slug" content="version" />
+    <meta name="readthedocs-resolver-filename" content="/" />
+    <meta name="readthedocs-http-status" content="200" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, waitUntil, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import { default as sinon } from "sinon";
+      import { EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW } from "../src/events";
+      import * as docdiff from "../src/docdiff";
+
+      let server;
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Create a sinon fake server to mock requests
+          server = sinon.fakeServer.create();
+          server.respondImmediately = true;
+
+          config = {
+            addons: {
+              options: {
+                root_selector: "main",
+              },
+              doc_diff: {
+                enabled: true,
+                base_url: "http://project.readthedocs.io/en/latest/index.html",
+              },
+            },
+          };
+        });
+
+        afterEach(() => {
+          // Restore the fake server to its original state
+          server.restore();
+        });
+
+        describe("DocDiff tests", () => {
+          it("initial trigger by event and DOM check", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"url":"http://project.readthedocs.io/en/latest/index.html","fragment":null,"content":"<main><section><h1>Old title</h1></section></main>","external":false}',
+            ]);
+
+            const addon = new docdiff.DocDiffAddon(config);
+            const element = document.querySelector("readthedocs-docdiff");
+
+            const event = new CustomEvent(
+              EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+            );
+            document.dispatchEvent(event);
+
+            await elementUpdated(element);
+            expect(server.requests).to.have.length(1);
+
+            await waitUntil(
+              () => document.querySelector(".doc-diff-added"),
+              "DOM difference was not rendered",
+            );
+
+            const content = document.querySelector("main");
+            await expect(content).dom.to.equalSnapshot();
+          });
+        });
+      });
+    </script>
+  </body>
+  <main>
+    <section>
+      <h1>New title (changed)</h1>
+      <p>This paragraph was added.</p>
+    </section>
+  </main>
+</html>
