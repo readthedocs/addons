@@ -10,10 +10,7 @@ import docdiffGeneralStyleSheet from "./docdiff.document.css";
 //   visualDomDiff.visualDomDiff();
 //
 // See https://github.com/readthedocs/addons/pull/234
-// import * as visualDomDiff from "visual-dom-diff";
-//
-// I had to change this because otherwise the tests do not work.
-import { default as visualDomDiff } from "visual-dom-diff";
+import * as visualDomDiff from "visual-dom-diff";
 
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -27,6 +24,7 @@ import {
   getQueryParam,
   docTool,
   IS_LOCALHOST_DEVELOPMENT,
+  IS_TESTING,
 } from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
@@ -192,7 +190,13 @@ export class DocDiffElement extends LitElement {
       throw new Error("Element not found in both documents.");
     }
 
-    const diffNode = visualDomDiff.visualDomDiff(
+    // Depending on the context, visualDomDiff function is found under a different path.
+    // When running tests we use a different path for it.
+    let visualDomDiffFunction = visualDomDiff.visualDomDiff;
+    if (!visualDomDiffFunction && IS_TESTING) {
+      visualDomDiffFunction = visualDomDiff.default.visualDomDiff;
+    }
+    const diffNode = visualDomDiffFunction(
       oldBody,
       newBody,
       VISUAL_DIFF_OPTIONS,
