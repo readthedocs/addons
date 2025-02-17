@@ -7,6 +7,7 @@ import {
 import {
   CLIENT_VERSION,
   IS_TESTING,
+  IS_LOCALHOST_DEVELOPMENT,
   ADDONS_API_VERSION,
   ADDONS_API_ENDPOINT,
   getMetadataValue,
@@ -18,7 +19,7 @@ import {
  * It uses META HTML tags to get project/version slugs and `sendUrlParam` to
  * decide whether or not sending `url=`.
  */
-function _getApiUrl(sendUrlParam, apiVersion) {
+export function _getApiUrl(sendUrlParam, apiVersion) {
   const metaProject = getMetadataValue("readthedocs-project-slug");
   const metaVersion = getMetadataValue("readthedocs-version-slug");
 
@@ -41,14 +42,14 @@ function _getApiUrl(sendUrlParam, apiVersion) {
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
   // Retrieve a static JSON file when working in development mode
-  if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
+  if (IS_LOCALHOST_DEVELOPMENT) {
     url = "/_/readthedocs-addons.json";
   }
 
   return url;
 }
 
-function getReadTheDocsUserConfig(sendUrlParam) {
+export function getReadTheDocsUserConfig(sendUrlParam) {
   // Create a Promise here to handle the user request in a different async task.
   // This allows us to start executing our integration independently from the user one.
   return new Promise((resolve, reject) => {
@@ -68,9 +69,7 @@ function getReadTheDocsUserConfig(sendUrlParam) {
       // this data is ready to be consumed under `event.detail.data()`.
       const userApiUrl = _getApiUrl(sendUrlParam, metadataAddonsAPIVersion);
 
-      // TODO: revert this change and use the correct URL here
-      const url = "/_/readthedocs-addons.json";
-      fetch(url, {
+      fetch(userApiUrl, {
         method: "GET",
       }).then((response) => {
         if (!response.ok) {
@@ -140,7 +139,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
   });
 }
 
-function dispatchEvent(eventName, element, data) {
+export function dispatchEvent(eventName, element, data) {
   const event = new CustomEvent(eventName, { detail: data });
   element.dispatchEvent(event);
 }

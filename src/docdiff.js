@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
 
@@ -16,9 +17,15 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
 } from "./events";
-import { nothing, LitElement } from "lit";
+import { CSSResult, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { AddonBase, getQueryParam, docTool } from "./utils";
+import {
+  AddonBase,
+  getQueryParam,
+  docTool,
+  IS_LOCALHOST_DEVELOPMENT,
+  IS_TESTING,
+} from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
@@ -100,7 +107,11 @@ export class DocDiffElement extends LitElement {
     // NOTE: maybe there is a better way to inject this styles?
     // Conditionally inject our base styles
     if (this.injectStyles) {
-      document.adoptedStyleSheets.push(docdiffGeneralStyleSheet);
+      let styleSheet = docdiffGeneralStyleSheet;
+      if (styleSheet instanceof CSSResult) {
+        styleSheet = styleSheet.styleSheet;
+      }
+      document.adoptedStyleSheets.push(styleSheet);
     }
 
     // Enable DocDiff if the URL parameter is present
@@ -123,6 +134,10 @@ export class DocDiffElement extends LitElement {
 
     if (this.rootSelector !== null) {
       params["maincontent"] = this.rootSelector;
+    }
+
+    if (IS_LOCALHOST_DEVELOPMENT) {
+      return "/_/readthedocs-docdiff-embed.json";
     }
 
     // NOTE: we don't send ``doctool`` and ``docversion`` on purpose here
@@ -175,7 +190,13 @@ export class DocDiffElement extends LitElement {
       throw new Error("Element not found in both documents.");
     }
 
-    const diffNode = visualDomDiff.visualDomDiff(
+    // Depending on the context, visualDomDiff function is found under a different path.
+    // When running tests we use a different path for it.
+    let visualDomDiffFunction = visualDomDiff.visualDomDiff;
+    if (!visualDomDiffFunction && IS_TESTING) {
+      visualDomDiffFunction = visualDomDiff.default.visualDomDiff;
+    }
+    const diffNode = visualDomDiffFunction(
       oldBody,
       newBody,
       VISUAL_DIFF_OPTIONS,
