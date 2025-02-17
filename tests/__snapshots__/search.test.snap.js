@@ -65,7 +65,7 @@ snapshots["Search tests show the modal and perform a query"] =
   <div class="background">
   </div>
   <div class="content">
-    <form class="focus">
+    <form>
       <label>
       </label>
       <input
@@ -152,7 +152,7 @@ snapshots["Search tests show the modal and perform a query with no results"] =
   <div class="background">
   </div>
   <div class="content">
-    <form class="focus">
+    <form>
       <label>
       </label>
       <input
@@ -268,7 +268,7 @@ snapshots["Search tests initial trigger by event and DOM check with filters"] =
   <div class="background">
   </div>
   <div class="content">
-    <form class="focus">
+    <form>
       <label>
       </label>
       <input
