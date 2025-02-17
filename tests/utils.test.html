@@ -1,11 +1,17 @@
 <html>
+  <head>
+    <meta name="readthedocs-http-status" content="200" />
+  </head>
   <body>
     <script type="module">
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as utils from "../src/utils";
+      import * as events from "../src/events";
+      import * as readthedocsConfig from "../src/readthedocs-config";
 
       let element;
+      let eventListener;
 
       runTests(async () => {
         afterEach(() => {
@@ -17,9 +23,87 @@
           if (content) {
             content.remove();
           }
+
+          if (eventListener) {
+            document.removeEventListener(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              eventListener,
+            );
+            eventListener = null;
+          }
         });
 
         describe("DocumentationTool tests", () => {
+          it("use readthedocs-addons-data-ready", async () => {
+            // Add the required META tag
+            element = document.createElement("meta");
+            element.name = "readthedocs-addons-api-version";
+            element.content = "1";
+            document.head.appendChild(element);
+
+            eventListener = function func(event) {
+              // We need to use `JSON.stringify` because objects are not equal in javascript
+              expect(JSON.stringify(event.detail.data())).to.be.equal(
+                JSON.stringify({ addons: "data" }),
+              );
+              expect(event.detail.httpStatus()).to.be.equal("200");
+            };
+
+            document.addEventListener(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              eventListener,
+            );
+
+            readthedocsConfig.dispatchEvent(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              document,
+              new events.ReadTheDocsEventData({ addons: "data" }),
+            );
+          });
+
+          it("use readthedocs-addons-data-ready without META tag", async () => {
+            eventListener = function func(event) {
+              // We require an arrow function here because we need to make
+              // usage of `this.` inside the function that's called. If we pass
+              // `event.detail.data` as the documentation says, `this.` will be
+              // undefined inside the function.
+              // https://stackoverflow.com/q/30176093/2187091
+              expect(() => {
+                event.detail.data();
+              }).to.throw(/^Subscribing/);
+            };
+
+            document.addEventListener(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              eventListener,
+            );
+
+            readthedocsConfig.dispatchEvent(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              document,
+              new events.ReadTheDocsEventData({ addons: "data" }),
+            );
+          });
+
+          it("use readthedocs-addons-data-ready without META tag and internal=true", async () => {
+            eventListener = function func(event) {
+              // We need to use `JSON.stringify` because objects are not equal in javascript
+              expect(JSON.stringify(event.detail.data(true))).to.be.equal(
+                JSON.stringify({ addons: "data" }),
+              );
+            };
+            document.addEventListener(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              eventListener,
+            );
+
+            readthedocsConfig.dispatchEvent(
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+              document,
+              new events.ReadTheDocsEventData({ addons: "data" }),
+            );
+          });
+
           it("Sphinx Alabaster", async () => {
             element = document.createElement("link");
             element.href = "_static/alabaster.css";

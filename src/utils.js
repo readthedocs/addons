@@ -30,6 +30,8 @@ export const IS_TESTING =
   typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
+export const IS_LOCALHOST_DEVELOPMENT =
+  globalThis.location.href.startsWith("http://localhost") && !IS_TESTING;
 
 export const domReady = new Promise((resolve) => {
   if (

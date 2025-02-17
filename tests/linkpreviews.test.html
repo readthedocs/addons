@@ -1,0 +1,151 @@
+<html>
+  <head></head>
+  <body>
+    <script type="module">
+      import {
+        expect,
+        aTimeout,
+        waitUntil,
+        elementUpdated,
+      } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import { default as sinon } from "sinon";
+      import { EVENT_READTHEDOCS_ROOT_DOM_CHANGED } from "../src/events";
+      import * as linkpreviews from "../src/linkpreviews";
+
+      let server;
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Create a sinon fake server to mock requests
+          server = sinon.fakeServer.create();
+          server.respondImmediately = true;
+
+          config = {
+            addons: {
+              options: {
+                root_selector: "main",
+              },
+              linkpreviews: {
+                enabled: true,
+              },
+            },
+          };
+        });
+
+        afterEach(() => {
+          // Restore the fake server to its original state
+          server.restore();
+        });
+
+        describe("Link previews tests", () => {
+          it("initial setup adds classes", async () => {
+            let linkInternal = document.querySelector("#linkpreview-internal");
+            let linkExternal = document.querySelector("#linkpreview-external");
+
+            expect(linkInternal).to.not.have.class("link-preview");
+            expect(linkExternal).to.not.have.class("link-preview");
+
+            const addon = new linkpreviews.LinkPreviewsAddon(config);
+            const element = document.querySelector("readthedocs-linkpreviews");
+            await elementUpdated(element);
+
+            // Internal link should have a specific class
+            expect(linkInternal).to.have.class("link-preview");
+
+            // External link shouldn't be previewed
+            expect(linkExternal).to.not.have.class("link-preview");
+          });
+
+          it("trigger mouseenter event without response to show Loading... tooltip", async () => {
+            const addon = new linkpreviews.LinkPreviewsAddon(config);
+            const element = document.querySelector("readthedocs-linkpreviews");
+            await elementUpdated(element);
+
+            const link = document.querySelector("#linkpreview-internal");
+            const mouseenterEvent = new Event("mouseenter");
+            link.dispatchEvent(mouseenterEvent);
+
+            // We need to wait a fraction of second to give some time to the
+            // tooltip to be displayed.
+            await waitUntil(
+              () => document.querySelector(".tooltip"),
+              "Tooltip was not rendered",
+            );
+
+            const tooltip = document.querySelector(".tooltip");
+            expect(tooltip).to.have.attribute("data-linkpreview-href");
+            // The tooltip will have the "Loading..."  content
+            await expect(tooltip).dom.to.equalSnapshot();
+          });
+
+          it("trigger mouseenter event to show tooltip", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"content": "<section><h1>Title</h1><p>Paragraph</p></section>"}',
+            ]);
+
+            const addon = new linkpreviews.LinkPreviewsAddon(config);
+            const element = document.querySelector("readthedocs-linkpreviews");
+            await elementUpdated(element);
+
+            const link = document.querySelector("#linkpreview-internal");
+            const mouseenterEvent = new Event("mouseenter");
+            link.dispatchEvent(mouseenterEvent);
+
+            await waitUntil(
+              () => document.querySelector(".tooltip section"),
+              "Tooltip content was not found",
+            );
+
+            const tooltip = document.querySelector(".tooltip");
+            expect(tooltip).to.have.attribute("data-linkpreview-href");
+            // The tooltip should have the content from the response (title and paragraph)
+            await expect(tooltip).dom.to.equalSnapshot();
+
+            // TODO: I wasn't able to make the `mouseleave` event to hide the tooltip.
+            // const mouseleaveEvent = new Event("mouseleave");
+            // link.dispatchEvent(mouseleaveEvent);
+            // await expect(tooltip).not.to.be.visible;
+          });
+
+          it("trigger DOM changed event and check for new link previews", async () => {
+            const addon = new linkpreviews.LinkPreviewsAddon(config);
+            const element = document.querySelector("readthedocs-linkpreviews");
+            await elementUpdated(element);
+
+            let tooltips = document.querySelectorAll(".link-preview");
+            expect(tooltips.length).to.equal(1);
+
+            const link = document.createElement("a");
+            link.href = "http://localhost:8000/new-link.html";
+            document.querySelector("main > p").appendChild(link);
+
+            const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
+            document.dispatchEvent(event);
+
+            tooltips = document.querySelectorAll(".link-preview");
+            expect(tooltips.length).to.equal(2);
+          });
+        });
+      });
+    </script>
+    <main>
+      <p>
+        This is an
+        <a id="linkpreview-internal" href="http://localhost:8000/link.html"
+          >internal link</a
+        >.
+      </p>
+      <p>
+        This is an
+        <a id="linkpreview-external" href="http://external.link.com/link.html"
+          >external link</a
+        >.
+      </p>
+    </main>
+  </body>
+</html>

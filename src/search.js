@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -14,6 +15,7 @@ import styleSheet from "./search.css";
 import {
   domReady,
   CLIENT_VERSION,
+  IS_TESTING,
   AddonBase,
   debounce,
   addUtmParameters,
@@ -29,7 +31,7 @@ import { classMap } from "lit/directives/class-map.js";
 // TODO: play more with the substring limit.
 // The idea is to try to fit most of the results in one line.
 const MAX_SUBSTRING_LIMIT = 80;
-const FETCH_RESULTS_DELAY = 250;
+const FETCH_RESULTS_DELAY = IS_TESTING ? 0 : 250;
 const CLEAR_RESULTS_DELAY = 300;
 const MIN_CHARACTERS_QUERY = 3;
 const API_ENDPOINT = "/_/api/v3/search/";

@@ -1,0 +1,139 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-version-slug" content="version" />
+    <meta name="readthedocs-resolver-filename" content="/" />
+    <meta name="readthedocs-http-status" content="200" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, waitUntil, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import { default as sinon } from "sinon";
+      import { EVENT_READTHEDOCS_SEARCH_SHOW } from "../src/events";
+      import * as search from "../src/search";
+
+      let server;
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Create a sinon fake server to mock requests
+          server = sinon.fakeServer.create();
+          server.respondImmediately = true;
+
+          config = {
+            addons: {
+              search: {
+                enabled: true,
+                default_filter: "project:project",
+                filters: [],
+              },
+            },
+            projects: {
+              current: {
+                slug: "project",
+                language: {
+                  code: "en",
+                },
+              },
+            },
+            versions: {
+              current: {
+                slug: "version",
+              },
+            },
+          };
+        });
+
+        afterEach(() => {
+          // Restore the fake server to its original state
+          server.restore();
+        });
+
+        describe("Search tests", () => {
+          it("initial trigger by event and DOM check", async () => {
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("initial trigger by event and DOM check with filters", async () => {
+            config.addons.search.filters = [
+              ["Include subprojects", "subprojects:project/version"],
+            ];
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("show the modal and perform a query with no results", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"count":0,"next":null,"previous":null,"projects":[{"slug":"project","versions":[{"slug":"version"}]}],"query":"no results","results":[]}',
+            ]);
+
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+
+            const inputForm = element.shadowRoot.querySelector("input");
+            inputForm.value = "no results";
+            element.queryInput();
+
+            await elementUpdated(element);
+
+            await waitUntil(
+              () =>
+                element.shadowRoot.querySelector(
+                  "div.results > div.no-results",
+                ),
+              "No-results block was not rendered",
+            );
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("show the modal and perform a query", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"count":1,"next":null,"previous":null,"projects":[{"slug":"project","versions":[{"slug":"version"}]}],"query":"search query","results":[{"blocks":[{"content":"This is the content","highlights":{"content":["This is the <span>search query</span> content"],"title":[]},"id":"id-search-query","title":"Search query","type":"section"}],"domain":"http://localhost:8000","highlights":{"title":[]},"path":"/en/version/index.html","project":{"alias":null,"slug":"project"},"title":"Title","type":"page","version":{"slug":"version"}}]}',
+            ]);
+
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+            const inputForm = element.shadowRoot.querySelector("input");
+            inputForm.value = "search query";
+            element.queryInput();
+
+            await elementUpdated(element);
+
+            await waitUntil(
+              () => element.shadowRoot.querySelector("div.results > div.hit"),
+              "Hit result was not rendered",
+            );
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
