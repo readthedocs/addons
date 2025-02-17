@@ -7,7 +7,7 @@
   </head>
   <body>
     <script type="module">
-      import { expect, elementUpdated } from "@open-wc/testing";
+      import { expect, waitUntil, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import { default as sinon } from "sinon";
       import { EVENT_READTHEDOCS_SEARCH_SHOW } from "../src/events";
@@ -20,6 +20,7 @@
         beforeEach(() => {
           // Create a sinon fake server to mock requests
           server = sinon.fakeServer.create();
+          server.respondImmediately = true;
 
           config = {
             addons: {
@@ -94,10 +95,6 @@
             inputForm.value = "no results";
             element.queryInput();
 
-            // TODO: investigate https://open-wc.org/docs/testing/helpers/#timings
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            server.respond();
             await elementUpdated(element);
 
             await new Promise((resolve) => setTimeout(resolve, 10));
@@ -121,13 +118,12 @@
             inputForm.value = "search query";
             element.queryInput();
 
-            // TODO: investigate https://open-wc.org/docs/testing/helpers/#timings
-            await new Promise((resolve) => setTimeout(resolve, 10));
-
-            server.respond();
             await elementUpdated(element);
 
-            await new Promise((resolve) => setTimeout(resolve, 10));
+            await waitUntil(
+              () => element.shadowRoot.querySelector("div.results > div.hit"),
+              "Hit result was not rendered",
+            );
             await expect(element).shadowDom.to.equalSnapshot();
           });
         });
