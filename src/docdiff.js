@@ -22,7 +22,12 @@ import {
 } from "./events";
 import { CSSResult, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
-import { AddonBase, getQueryParam, docTool } from "./utils";
+import {
+  AddonBase,
+  getQueryParam,
+  docTool,
+  IS_LOCALHOST_DEVELOPMENT,
+} from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
@@ -131,6 +136,10 @@ export class DocDiffElement extends LitElement {
 
     if (this.rootSelector !== null) {
       params["maincontent"] = this.rootSelector;
+    }
+
+    if (IS_LOCALHOST_DEVELOPMENT) {
+      return "/_/readthedocs-docdiff-embed.json";
     }
 
     // NOTE: we don't send ``doctool`` and ``docversion`` on purpose here

@@ -7,6 +7,7 @@ import {
 import {
   CLIENT_VERSION,
   IS_TESTING,
+  IS_LOCALHOST_DEVELOPMENT,
   ADDONS_API_VERSION,
   ADDONS_API_ENDPOINT,
   getMetadataValue,
@@ -41,7 +42,7 @@ export function _getApiUrl(sendUrlParam, apiVersion) {
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
   // Retrieve a static JSON file when working in development mode
-  if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
+  if (IS_LOCALHOST_DEVELOPMENT) {
     url = "/_/readthedocs-addons.json";
   }
 
