@@ -97,7 +97,13 @@
 
             await elementUpdated(element);
 
-            await new Promise((resolve) => setTimeout(resolve, 10));
+            await waitUntil(
+              () =>
+                element.shadowRoot.querySelector(
+                  "div.results > div.no-results",
+                ),
+              "No-results block was not rendered",
+            );
             await expect(element).shadowDom.to.equalSnapshot();
           });
 
