@@ -26,6 +26,11 @@ const HIDE_TOOLTIP_DELAY = IS_TESTING ? 0 : 300;
 
 const TOOLTIP_DATA_HREF = "data-linkpreview-href";
 
+// Object to save the responses from the EmbedAPI.
+// This way we don't have to perform multiple times the same request.
+// The key is the URL and the value is the JSON response.
+const cachedRemoteResponses = {};
+
 function setupTooltip(el, doctoolname, doctoolversion, selector) {
   // Take the provided element and setup the listeners required to
   // make the linkpreviews work
@@ -86,19 +91,31 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
     if (newTooltip !== undefined) {
       const url = getEmbedURL(anchorElement.href);
 
-      fetch(url, {
-        method: "GET",
-        headers: {
-          "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
-        },
-      })
-        .then((response) => {
+      let promiseData;
+      // Check if we have the response already cached
+      if (Object.keys(cachedRemoteResponses).includes(url)) {
+        console.debug("URL was found cached, reusing it.");
+        promiseData = Promise.resolve(cachedRemoteResponses[url]);
+      } else {
+        console.debug("URL not found cached, performing a fetch.");
+        promiseData = fetch(url, {
+          method: "GET",
+          headers: {
+            "X-RTD-Hosting-Integrations-Version": CLIENT_VERSION,
+          },
+        }).then((response) => {
           if (!response.ok) {
             throw new Error("Error hitting Read the Docs embed API");
           }
           return response.json();
-        })
+        });
+      }
+
+      promiseData
         .then((data) => {
+          // Cache the response to use it later
+          cachedRemoteResponses[url] = data;
+
           // TODO: decide whether or not to truncate the content
           // Do we want to have "modals" as well? are those useful?
           const content = data["content"];
