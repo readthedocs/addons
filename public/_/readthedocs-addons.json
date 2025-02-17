@@ -100,7 +100,7 @@
   },
   "addons": {
     "options": {
-      "root_selector": null,
+      "root_selector": "[role=main]",
       "load_when_embedded": false
     },
     "ethicalads": {

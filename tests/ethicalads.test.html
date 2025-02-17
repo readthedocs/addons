@@ -1,7 +1,13 @@
 <html>
   <body>
     <script type="module">
-      import { expect, fixture, fixtureCleanup } from "@open-wc/testing";
+      import {
+        expect,
+        fixture,
+        fixtureCleanup,
+        elementUpdated,
+      } from "@open-wc/testing";
+      import { setViewport } from "@web/test-runner-commands";
       import { runTests } from "@web/test-runner-mocha";
       import * as ethicalads from "../src/ethicalads.js";
 
@@ -24,8 +30,14 @@
         });
 
         afterEach(() => {
-          // Remove all the fixtures added by each test.
+          // Remove all the fixtures added
           fixtureCleanup();
+
+          // Remove the script added
+
+          document.querySelector("#ethicaladsjs")?.remove();
+          // Remove the ad added
+          document.querySelector("#readthedocs-ea")?.remove();
         });
 
         describe("EthicalAd addon", () => {
@@ -50,6 +62,15 @@
             expect(element).to.have.class("ad-flat");
 
             // Required `await` on this to generate the snapshot file
+            await expect(element).dom.to.equalSnapshot();
+          });
+
+          it("ad placement injected", async () => {
+            // We need the width to be bigger than 1300px for the ad to be injected
+            await setViewport({ width: 1600, height: 640 });
+
+            const addon = new ethicalads.EthicalAdsAddon(config);
+            const element = document.querySelector("#readthedocs-ea");
             await expect(element).dom.to.equalSnapshot();
           });
 
