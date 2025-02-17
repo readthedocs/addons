@@ -2,7 +2,12 @@
   <head></head>
   <body>
     <script type="module">
-      import { expect, elementUpdated } from "@open-wc/testing";
+      import {
+        expect,
+        aTimeout,
+        waitUntil,
+        elementUpdated,
+      } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import { default as sinon } from "sinon";
       import { EVENT_READTHEDOCS_ROOT_DOM_CHANGED } from "../src/events";
@@ -15,6 +20,7 @@
         beforeEach(() => {
           // Create a sinon fake server to mock requests
           server = sinon.fakeServer.create();
+          server.respondImmediately = true;
 
           config = {
             addons: {
@@ -61,11 +67,12 @@
             const mouseenterEvent = new Event("mouseenter");
             link.dispatchEvent(mouseenterEvent);
 
-            // I'm not sure how to solve this without a `setTimeout`, but
-            // we need to wait a fraction of second to give some time to the
+            // We need to wait a fraction of second to give some time to the
             // tooltip to be displayed.
-            // TODO: check https://open-wc.org/docs/testing/helpers/#testing-events
-            await new Promise((resolve) => setTimeout(resolve, 10));
+            await waitUntil(
+              () => document.querySelector(".tooltip"),
+              "Tooltip was not rendered",
+            );
 
             const tooltip = document.querySelector(".tooltip");
             expect(tooltip).to.have.attribute("data-linkpreview-href");
@@ -89,9 +96,10 @@
             const mouseenterEvent = new Event("mouseenter");
             link.dispatchEvent(mouseenterEvent);
 
-            await new Promise((resolve) => setTimeout(resolve, 10));
-            server.respond();
-            await new Promise((resolve) => setTimeout(resolve, 10));
+            await waitUntil(
+              () => document.querySelector(".tooltip section"),
+              "Tooltip content was not found",
+            );
 
             const tooltip = document.querySelector(".tooltip");
             expect(tooltip).to.have.attribute("data-linkpreview-href");
