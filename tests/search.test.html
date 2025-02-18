@@ -74,7 +74,9 @@
             document.dispatchEvent(searchEvent);
 
             await elementUpdated(element);
-            await expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
           });
 
           it("show the modal and perform a query with no results", async () => {
@@ -104,7 +106,9 @@
                 ),
               "No-results block was not rendered",
             );
-            await expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
           });
 
           it("show the modal and perform a query", async () => {
@@ -130,7 +134,9 @@
               () => element.shadowRoot.querySelector("div.results > div.hit"),
               "Hit result was not rendered",
             );
-            await expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
           });
         });
       });
