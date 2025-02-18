@@ -3,6 +3,17 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.30.0
+---------------
+
+:date: Feb 18, 2025
+
+* Links preview caches API responses (:pr:`538`)
+* File Tree Diff style for mobile (:pr:`530`)
+* File Tree Diff match style with flyout (:pr:`526`)
+* Packages: updated via ncu -u (:pr:`536`)
+
+
 Version v0.29.1
 ---------------
 
