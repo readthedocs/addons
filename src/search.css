@@ -34,9 +34,8 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 0.875em;
-  font-family:
-    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   border-radius: 0;
 }
 
@@ -114,6 +113,7 @@
   width: 100%;
   padding: 6px;
   line-height: 1;
+  color: black; /* Fix https://github.com/readthedocs/addons/issues/420 */
 }
 
 :host > div .results {
