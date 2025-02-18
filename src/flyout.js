@@ -366,11 +366,11 @@ export class FlyoutElement extends LitElement {
   }
 
   _showFlyout = (e) => {
-    this.opened = true;
+    this._open();
   };
 
   _hideFlyout = (e) => {
-    this.opened = false;
+    this._close();
   };
 
   connectedCallback() {
