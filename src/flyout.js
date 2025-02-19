@@ -2,13 +2,22 @@ import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faCodeBranch, faLanguage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCodeBranch,
+  faCaretDown,
+  faLanguage,
+} from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./flyout.css";
-import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
+import {
+  AddonBase,
+  addUtmParameters,
+  getLinkWithFilename,
+  docTool,
+} from "./utils";
 import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
@@ -49,6 +58,19 @@ export class FlyoutElement extends LitElement {
       return;
     }
     this.config = config;
+
+    // The "position" is a value that can be defined from the dashboard.
+    // There are two main options: "Default" or a specific value.
+    // When "Default" is used, the value will be grabbed from the HTML element (e.g. explicitly set by the theme author).
+    // In case it's not defined, the value defined in the `constructor` will be used ("bottom-right")
+    const dashboardPosition = objectPath.get(
+      this.config,
+      "addons.flyout.position",
+      null,
+    );
+    if (dashboardPosition) {
+      this.position = dashboardPosition;
+    }
   }
 
   _close() {
@@ -85,23 +107,28 @@ export class FlyoutElement extends LitElement {
       this.config.projects.current.versioning_scheme !==
       "single_version_without_translations"
     ) {
-      version = html`<span
-        >${iconCodeBranch.node[0]} ${this.config.versions.current.slug}</span
-      >`;
+      version = html`<span class="version">
+        ${iconCodeBranch.node[0]} ${this.config.versions.current.slug}
+      </span> `;
     }
+
+    const iconCaretDown = icon(faCaretDown, {
+      classes: ["icon"],
+    });
 
     let translation = nothing;
     if (this.config.projects.translations.length > 0) {
-      translation = html`<span
-        >${iconLanguage.node[0]}
+      translation = html`<span class="language">
+        ${iconLanguage.node[0]}
         ${this.config.projects.current.language.code}</span
-      >`;
+      > `;
     }
 
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${this.readthedocsLogo}" alt="Read the Docs" />
         ${translation} ${version}
+        <span class="caret">${iconCaretDown.node[0]}</span>
       </header>
     `;
   }
@@ -259,7 +286,10 @@ export class FlyoutElement extends LitElement {
     }
 
     const getVersionLink = (version) => {
-      const url = getLinkWithFilename(version.urls.documentation);
+      const url = getLinkWithFilename(
+        version.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
       const link = html`<a href="${url}">${version.slug}</a>`;
       return this.config.versions.current.slug == version.slug
         ? html`<strong>${link}</strong>`
@@ -282,7 +312,10 @@ export class FlyoutElement extends LitElement {
     }
 
     const getLanguageLink = (translation) => {
-      const url = getLinkWithFilename(translation.urls.documentation);
+      const url = getLinkWithFilename(
+        translation.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
       const link = html`<a href="${url}">${translation.language.code}</a>`;
       return this.config.projects.current.slug === translation.slug
         ? html`<strong>${link}</strong>`
@@ -307,12 +340,19 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  updateCSSClasses() {
+    this.classes = { floating: this.floating, container: true };
+    this.classes[this.position] = true;
+  }
+
   render() {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
       // nothing is a special Lit response type
       return nothing;
     }
+
+    this.updateCSSClasses();
 
     return html`
       <div class=${classMap(this.classes)}>
@@ -370,25 +410,18 @@ export class FlyoutAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.flyout.json";
   static addonEnabledPath = "addons.flyout.enabled";
   static addonName = "Flyout";
+  static elementClass = FlyoutElement;
 
-  constructor(config) {
-    super();
-
-    // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-flyout");
-    if (!elems.length) {
-      elems = [new FlyoutElement()];
-
-      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
-      // So, we append the web-component first and then request an update of it.
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
+  static requiresUrlParam() {
+    // Flyout requires URL param for the feature "keep the same page when
+    // switching version". We need to know the URL path
+    // (``readthedocs.resolver.filename`` from the API or MEATA
+    // ``readthedocs-resolver-filename``) to be able to generate those URLs.
+    //
+    // NOTE: If we ever make this feature configurable and user disables it, we
+    // can adapt this code to return ``false`` in that case.
+    return docTool.isSinglePageApplication();
   }
 }
 
-customElements.define("readthedocs-flyout", FlyoutElement);
+customElements.define(FlyoutElement.elementName, FlyoutElement);

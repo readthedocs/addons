@@ -22,7 +22,7 @@
 
 .container {
   position: fixed;
-  max-width: 300px;
+  max-width: var(--readthedocs-flyout-max-width, 25em);
   width: auto;
   height: auto;
   max-height: calc(100% - 100px);
@@ -55,6 +55,7 @@
   font-size: var(--readthedocs-flyout-font-size);
   color: var(--readthedocs-flyout-color);
   background-color: var(--readthedocs-flyout-background-color);
+  line-height: var(--readthedocs-flyout-line-height, 1.2em);
   z-index: 3000;
   padding: 0 10px;
   overflow-y: auto;
@@ -62,34 +63,56 @@
 
 header {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  flex-flow: row nowrap;
+  gap: 1em;
   align-items: center;
   cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color);
   position: sticky;
-  top: 0;
-  padding: 10px 0;
+  top: 0px;
+  font-size: var(--readthedocs-flyout-header-font-size, 1.25em);
+}
+
+header > img.logo {
+  /* Total height of 1.5 + 0.5 + 0.5 = 2.5em */
+  max-height: 1.5em;
+  width: auto;
+  padding: 0.5em 0em;
+  /* Don't grow past content size, do shrink down to min-content */
+  flex: 0 1 auto;
 }
 
 header > span {
   color: var(--readthedocs-flyout-current-version-color);
   font-size: var(--readthedocs-flyout-header-font-size);
   margin-left: 10px;
+  /* Total height of 1 + 0.75 + 0.75 = 2.5em */
+  padding: 0.75em 0em;
+  line-height: 1em;
+  /* Don't grow past content size or shrink below min-content */
+  flex: 0 0 auto;
+  /* Trim content to get ellipsis on wide content */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+header > span.version {
+  /* Grow to fill parent based on content width, shrink content when needed (for ellipsis) */
+  flex: 0 1 auto;
+}
+
+/* Give the flex box extra spacing to the left of the first span item. This puts
+ * automatic spacing between the logo and the text detail spans */
+header > span:first-of-type {
+  margin-left: auto;
 }
 
 header > span svg.icon {
   color: rgb(128, 128, 128);
   height: var(--readthedocs-flyout-header-font-size);
-  padding-right: 5px;
+  padding-right: 0.25em;
   vertical-align: middle;
-}
-
-header > img.logo {
-  text-align: center;
-  max-width: 106px;
-  max-height: 22px;
-  margin-right: 10px;
 }
 
 main {

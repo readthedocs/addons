@@ -1,3 +1,4 @@
+import { default as fetch } from "unfetch";
 import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -14,6 +15,7 @@ import styleSheet from "./search.css";
 import {
   domReady,
   CLIENT_VERSION,
+  IS_TESTING,
   AddonBase,
   debounce,
   addUtmParameters,
@@ -29,7 +31,7 @@ import { classMap } from "lit/directives/class-map.js";
 // TODO: play more with the substring limit.
 // The idea is to try to fit most of the results in one line.
 const MAX_SUBSTRING_LIMIT = 80;
-const FETCH_RESULTS_DELAY = 250;
+const FETCH_RESULTS_DELAY = IS_TESTING ? 0 : 250;
 const CLEAR_RESULTS_DELAY = 300;
 const MIN_CHARACTERS_QUERY = 3;
 const API_ENDPOINT = "/_/api/v3/search/";
@@ -700,25 +702,7 @@ export class SearchAddon extends AddonBase {
   static addonEnabledPath = "addons.search.enabled";
   static addonName = "Search";
   static enabledOnHttpStatus = [200, 404];
-
-  constructor(config) {
-    super();
-
-    // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-search");
-    if (!elems.length) {
-      elems = [new SearchElement()];
-
-      // We cannot use `render(elems[0], document.body)` because there is a race conditions between all the addons.
-      // So, we append the web-component first and then request an update of it.
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
+  static elementClass = SearchElement;
 }
 
-customElements.define("readthedocs-search", SearchElement);
+customElements.define(SearchElement.elementName, SearchElement);

@@ -10,9 +10,15 @@
       import * as flyout from "../src/flyout";
 
       let config;
+      let metaResolverFilename;
 
       runTests(async () => {
         beforeEach(() => {
+          metaResolverFilename = document.querySelector(
+            "meta[name='readthedocs-resolver-filename']",
+          );
+          metaResolverFilename.content = "/";
+
           config = {
             addons: {
               search: {
@@ -20,6 +26,11 @@
               },
               flyout: {
                 enabled: true,
+              },
+            },
+            readthedocs: {
+              resolver: {
+                filename: "/",
               },
             },
             projects: {
@@ -241,8 +252,9 @@
               `
       <header>
         <img class="logo" alt="Read the Docs" />
-        <span>en</span>
-        <span>latest</span>
+        <span class="language">en</span>
+        <span class="version">latest</span>
+        <span class="caret"></span>
       </header>
       `,
               { ignoreAttributes: [{ tags: ["img"], attributes: ["src"] }] },
@@ -305,6 +317,42 @@
               '#flyout-search-form > input[name="q"',
             );
             expect(searchForm).to.not.exist;
+          });
+
+          it("flyout with readthedocs.resolver.filename being null", async () => {
+            metaResolverFilename.content = "/guides/tests.html";
+
+            // Disable the search from the config object
+            config.readthedocs.resolver.filename = null;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const versionLink = element.shadowRoot.querySelector(
+              "main > dl.versions > dd > a",
+            );
+            expect(versionLink).dom.to.equal(
+              '<a href="https://project.readthedocs.io/en/stable/guides/tests.html">stable</a>',
+            );
+          });
+
+          it("flyout with readthedocs.resolver.filename and different meta.content", async () => {
+            metaResolverFilename.content = "/guides/tests.html";
+
+            // Add a different value for the filename than the meta tag.
+            // This happens on SPA documentation tools
+            config.readthedocs.resolver.filename =
+              "/examples/single-page-application.html";
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const versionLink = element.shadowRoot.querySelector(
+              "main > dl.versions > dd > a",
+            );
+            expect(versionLink).dom.to.equal(
+              '<a href="https://project.readthedocs.io/en/stable/examples/single-page-application.html">stable</a>',
+            );
           });
         });
       });

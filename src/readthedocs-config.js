@@ -1,11 +1,13 @@
 import { default as fetch } from "unfetch";
 import {
-  EVENT_READTHEDOCS_ADDONS_DATA_READY,
+  EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
+  EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
   ReadTheDocsEventData,
 } from "./events";
 import {
   CLIENT_VERSION,
   IS_TESTING,
+  IS_LOCALHOST_DEVELOPMENT,
   ADDONS_API_VERSION,
   ADDONS_API_ENDPOINT,
   getMetadataValue,
@@ -17,7 +19,7 @@ import {
  * It uses META HTML tags to get project/version slugs and `sendUrlParam` to
  * decide whether or not sending `url=`.
  */
-function _getApiUrl(sendUrlParam, apiVersion) {
+export function _getApiUrl(sendUrlParam, apiVersion) {
   const metaProject = getMetadataValue("readthedocs-project-slug");
   const metaVersion = getMetadataValue("readthedocs-version-slug");
 
@@ -40,14 +42,14 @@ function _getApiUrl(sendUrlParam, apiVersion) {
   let url = ADDONS_API_ENDPOINT + "?" + new URLSearchParams(params);
 
   // Retrieve a static JSON file when working in development mode
-  if (window.location.href.startsWith("http://localhost") && !IS_TESTING) {
+  if (IS_LOCALHOST_DEVELOPMENT) {
     url = "/_/readthedocs-addons.json";
   }
 
   return url;
 }
 
-function getReadTheDocsUserConfig(sendUrlParam) {
+export function getReadTheDocsUserConfig(sendUrlParam) {
   // Create a Promise here to handle the user request in a different async task.
   // This allows us to start executing our integration independently from the user one.
   return new Promise((resolve, reject) => {
@@ -67,9 +69,7 @@ function getReadTheDocsUserConfig(sendUrlParam) {
       // this data is ready to be consumed under `event.detail.data()`.
       const userApiUrl = _getApiUrl(sendUrlParam, metadataAddonsAPIVersion);
 
-      // TODO: revert this change and use the correct URL here
-      const url = "/_/readthedocs-addons.json";
-      fetch(url, {
+      fetch(userApiUrl, {
         method: "GET",
       }).then((response) => {
         if (!response.ok) {
@@ -108,15 +108,25 @@ export function getReadTheDocsConfig(sendUrlParam) {
         return response.json();
       })
       .then((data) => {
+        return dispatchEvent(
+          EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
+          document,
+          new ReadTheDocsEventData(data),
+        );
+
         // Trigger a new task here to hit the API again in case the version
         // request missmatchs the one the user expects.
         getReadTheDocsUserConfig(sendUrlParam).then((dataUser) => {
           // Expose `dataUser` if available or the `data` already requested.
           const dataEvent = dataUser !== undefined ? dataUser : data;
 
+          // Add the data to the window so scripts loaded after the initial
+          // event was fired can still get access to the data
+          globalThis.ReadTheDocsEventData = new ReadTheDocsEventData(dataEvent);
+
           // Trigger the addons data ready CustomEvent to with the data the user is expecting.
           return dispatchEvent(
-            EVENT_READTHEDOCS_ADDONS_DATA_READY,
+            EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
             document,
             new ReadTheDocsEventData(dataEvent),
           );
@@ -129,7 +139,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
   });
 }
 
-function dispatchEvent(eventName, element, data) {
+export function dispatchEvent(eventName, element, data) {
   const event = new CustomEvent(eventName, { detail: data });
   element.dispatchEvent(event);
 }

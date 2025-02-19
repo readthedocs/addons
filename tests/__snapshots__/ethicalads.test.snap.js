@@ -13,3 +13,18 @@ snapshots["EthicalAd addon ad placement defined by the user"] = `<div
 </div>
 `;
 /* end snapshot EthicalAd addon ad placement defined by the user */
+snapshots["EthicalAd addon ad placement injected"] = 
+`<div
+  class="raised"
+  data-ea-campaign-types="community|paid"
+  data-ea-keywords="docs|data-science"
+  data-ea-manual="true"
+  data-ea-publisher="readthedocs"
+  data-ea-style="stickybox"
+  data-ea-type="image"
+  id="readthedocs-ea"
+>
+</div>
+`;
+/* end snapshot EthicalAd addon ad placement injected */
+

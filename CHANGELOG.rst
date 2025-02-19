@@ -3,6 +3,80 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.30.0
+---------------
+
+:date: Feb 18, 2025
+
+* Links preview caches API responses (:pr:`538`)
+* File Tree Diff style for mobile (:pr:`530`)
+* File Tree Diff match style with flyout (:pr:`526`)
+* Packages: updated via ncu -u (:pr:`536`)
+
+
+Version v0.29.1
+---------------
+
+:date: Feb 11, 2025
+
+* SPA bugix on URL handling (:pr:`531`)
+
+Version v0.29.0
+---------------
+
+:date: Feb 11, 2025
+
+* Visual diff: improve algorithm to jump between chunks (:pr:`527`)
+* Visual diff: small yellow background on selected chunk (:pr:`522`)
+* Support for SPA (Single Page Applications) (:pr:`504`)
+
+Version v0.28.0
+---------------
+
+:date: Feb 4, 2025
+
+* Visual diff: jump between diff chunks (:pr:`519`)
+* Docdiff: use Embed API to grab the base URL content (:pr:`520`)
+* Trigger the URL_CHANGED event only if from/to URL are different (:pr:`516`)
+
+Version v0.27.0
+---------------
+
+:date: Jan 21, 2025
+
+* Save the ``ReadTheDocsData`` event into the global object (:pr:`474`)
+* Improve File Tree Diff UI element to be more discrete (:pr:`494`)
+* Add VitePress as a known documentation tool (:pr:`505`)
+* Packages: updated via ncu -u (:pr:`509`)
+
+Version v0.26.0
+---------------
+
+:date: Jan 21, 2025
+
+* Search: small updates on look & feel (:pr:`497`)
+
+Version v0.25.0
+---------------
+
+:date: Jan 14, 2025
+
+* EthicalAds: better positioning for auto-detected Antora and mdBook (:pr:`475`)
+* Flyout: allow theme developers and project owners to define the position (:pr:`482`)
+* Flyout: add custom styles based on auto-detected documentation tool (:pr:`473`)
+* Flyout: show a caret next to the version (:pr:`394`)
+* Flyout: use flex grid for better spacing (:pr:`486`)
+* Packages: updated via ncu -u (:pr:`489`)
+
+Version v0.24.0
+---------------
+
+:date: Jan 8, 2025
+
+* Don't show the latest notification if it's the default version (:pr:`480`)
+* EthicalAd: better ad position for Docsify (:pr:`470`)
+* Packages: updated via ncu -u (:pr:`479`)
+
 Version v0.23.2
 ---------------
 

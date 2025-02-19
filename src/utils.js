@@ -14,20 +14,24 @@ import {
   ASCIIDOCTOR,
   JEKYLL,
   FALLBACK_DOCTOOL,
+  VITEPRESS,
   ANTORA,
   DOCSIFY,
 } from "./constants";
+import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.23.2";
+export const CLIENT_VERSION = "0.30.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
   typeof WEBPACK_IS_TESTING === "undefined" ? false : WEBPACK_IS_TESTING;
 export const IS_PRODUCTION =
   typeof WEBPACK_IS_PRODUCTION === "undefined" ? false : WEBPACK_IS_PRODUCTION;
+export const IS_LOCALHOST_DEVELOPMENT =
+  globalThis.location.href.startsWith("http://localhost") && !IS_TESTING;
 
 export const domReady = new Promise((resolve) => {
   if (
@@ -79,6 +83,34 @@ export class AddonBase {
   // will be used
   static addonLocalStorageKey = null;
   static enabledOnHttpStatus = [200];
+
+  constructor(config) {
+    // Store all the Read the Docs web component elements
+    this.elements = [];
+
+    // If the addon class defines a web component element, we query/instanciate it before initializing it.
+    if (this.constructor.elementClass !== undefined) {
+      // If there are no elements found, inject one
+      this.elements = document.querySelectorAll(
+        this.constructor.elementClass.elementName,
+      );
+      if (!this.elements.length) {
+        this.elements = [new this.constructor.elementClass()];
+
+        // We cannot use `render(this.elements[0], document.body)` because there is a race conditions between all the addons.
+        // So, we append the web-component first and then request an update of it.
+        document.body.append(this.elements[0]);
+      }
+    }
+
+    this.loadConfig(config);
+  }
+
+  loadConfig(config) {
+    for (const element of this.elements) {
+      element.loadConfig(config);
+    }
+  }
 
   /**
    * Validates the given configuration object against a predefined JSON schema.
@@ -161,6 +193,67 @@ export class AddonBase {
 }
 
 /**
+ * Setup events firing on history `pushState` and `replaceState`
+ *
+ * This is needed when addons are used in SPA. A lot of addons rely
+ * on the current URL. However in the SPA, the pages are not reloaded, so
+ * the addons never get notified of the changes in the URL.
+ *
+ * While History API does have `popstate` event, the only way to listen to
+ * changes via `pushState` and `replaceState` is using monkey-patching, which is
+ * what this function does. (See https://stackoverflow.com/a/4585031)
+ * It will fire a `READTHEDOCS_URL_CHANGED` event, on `pushState` and `replaceState`.
+ *
+ */
+export function setupHistoryEvents() {
+  // Let's ensure that the history will be patched only once, so we create a Symbol to check by
+  const patchKey = Symbol.for("addons-history");
+
+  if (
+    typeof history !== "undefined" &&
+    typeof window[patchKey] === "undefined"
+  ) {
+    for (const methodName of ["pushState", "replaceState"]) {
+      const originalMethod = history[methodName];
+      history[methodName] = function () {
+        // Save the from URL to compare against before triggering the event.
+        const fromURL = new URL(window.location.href);
+
+        const result = originalMethod.apply(this, arguments);
+
+        // Dispatch the event only when the third argument (url) is passed.
+        // Otherwise, we are triggering the event even then the URL hasn't changed.
+        //
+        // https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+        // https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
+        if (arguments.length === 3) {
+          const toURL = new URL(arguments[2], fromURL.origin);
+
+          // TODO: we can't import this here -- it has to be at the top.
+          // We can't import it at the top due to circular dependencies.
+          // I'm using the hardcoded name for now.
+          //
+          // import { DOCDIFF_URL_PARAM } from "./docdiff";
+          toURL.searchParams.delete("readthedocs-diff");
+
+          // Dispatch the event only if the new URL is not just the DOCDIFF_URL_PARAM added.
+          if (toURL.href !== fromURL.href) {
+            const event = new Event(EVENT_READTHEDOCS_URL_CHANGED);
+            event.arguments = arguments;
+            dispatchEvent(event);
+          }
+        }
+
+        return result;
+      };
+    }
+
+    // Let's leave a flag, so we know that history has been patched
+    Object.defineProperty(window, patchKey, { value: true });
+  }
+}
+
+/**
  * Debounce a function.
  *
  * Usage::
@@ -210,15 +303,14 @@ export function setupLogging() {
 }
 
 /**
- * Check if a specific query parameter exists in the current URL.
+ * Get a specific query parameter from the current URL.
  *
  * @param {string} param - The query parameter to check.
- * @returns {boolean} - Returns true if the parameter exists, otherwise false.
+ * @returns {boolean} - Returns the parameter if exists, otherwise null.
  */
-export function hasQueryParam(param) {
-  console.debug("Searching for query parameter", param);
+export function getQueryParam(param) {
   const url = new URL(window.location.href);
-  return url.searchParams.has(param);
+  return url.searchParams.get(param);
 }
 
 export function addUtmParameters(url, content) {
@@ -259,17 +351,27 @@ export function getMetadataValue(name) {
  * Resulting URL: https://docs.readthedocs.io/en/latest/
  *
  */
-export function getLinkWithFilename(url) {
-  // Get the resolver's filename returned by the application (as HTTP header)
-  // and injected by Cloudflare Worker as a meta HTML tag
-  const metaFilename = getMetadataValue("readthedocs-resolver-filename");
+export function getLinkWithFilename(url, resolverFilename) {
+  if (!resolverFilename) {
+    if (docTool.isSinglePageApplication()) {
+      // SPA without ``resolverFilename``.
+      // Just a protection, this shouldn't happen.
+      return new URL(url);
+    } else {
+      // No SPA without ``resolverFilename``.
+      // Normal case for most of the documentation tools.
+      // Get the resolver's filename returned by the application (as HTTP header)
+      // and injected by Cloudflare Worker as a meta HTML tag
+      resolverFilename = getMetadataValue("readthedocs-resolver-filename");
+    }
+  }
 
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
   // 1. remove initial slash to make it relative to the base
   // 2. remove the trailing "index.html"
-  const filename = metaFilename
+  const filename = resolverFilename
     .replace(/\/index.html$/, "/")
     .replace(/^\//, "");
 
@@ -299,6 +401,8 @@ export class DocumentationTool {
     [SPHINX]: "a.internal",
     [FALLBACK_DOCTOOL]: ["p a"],
   };
+
+  static SINGLE_PAGE_APPLICATIONS = [VITEPRESS, MDBOOK, DOCUSAURUS, DOCSIFY];
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
@@ -425,6 +529,10 @@ export class DocumentationTool {
       return ANTORA;
     }
 
+    if (this.isVitePress()) {
+      return VITEPRESS;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -449,9 +557,27 @@ export class DocumentationTool {
     return null;
   }
 
+  isSinglePageApplication() {
+    const isSPA = DocumentationTool.SINGLE_PAGE_APPLICATIONS.includes(
+      this.documentationTool,
+    );
+    console.debug("isSinglePageApplication:", isSPA);
+    return isSPA;
+  }
+
   isAntora() {
     if (
       document.querySelectorAll('meta[name="generator"][content^="Antora"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isVitePress() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="VitePress"]')
         .length
     ) {
       return true;

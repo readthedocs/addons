@@ -213,6 +213,8 @@ export class NotificationElement extends LitElement {
     if (
       this.readingLatestVersion &&
       this.stableVersionAvailable &&
+      this.config.versions.current.slug !==
+        this.config.projects.current.default_version &&
       objectPath.get(this.config, "addons.notifications.show_on_latest", false)
     ) {
       return this.renderLatestVersionWarning();
@@ -240,8 +242,9 @@ export class NotificationElement extends LitElement {
     //  - if the user is reading the "latest" version: shows a notification to warn
     //    the user about reading the latest development version.
     //  - if the user is reading a non-"stable" version: shows a notification to warn
-    //    the user about reading a version that may be old. Except if the reading version
-    //    is the project's default version.
+    //    the user about reading a version that may be old.
+    //  - Both notifications are skipped if the current version is the **default** version,
+    //    as we assume then the author wants the user to be reading that version.
     //
     // This does not cover all the cases where this notification could be useful,
     // but users with different needs should be able to implement their own custom logic.
@@ -277,7 +280,10 @@ export class NotificationElement extends LitElement {
 
     if (stableVersion !== undefined) {
       this.stableVersionAvailable = true;
-      this.urls.stable = getLinkWithFilename(stableVersion.urls.documentation);
+      this.urls.stable = getLinkWithFilename(
+        stableVersion.urls.documentation,
+        this.config.readthedocs.resolver.filename,
+      );
     }
   }
 
@@ -407,22 +413,7 @@ export class NotificationAddon extends AddonBase {
     "http://v1.schemas.readthedocs.org/addons.notifications.json";
   static addonEnabledPath = "addons.notifications.enabled";
   static addonName = "Notification";
-
-  constructor(config) {
-    super();
-
-    // If there are no elements found, inject one
-    let elems = document.querySelectorAll("readthedocs-notification");
-    if (!elems.length) {
-      elems = [new NotificationElement()];
-      document.body.append(elems[0]);
-      elems[0].requestUpdate();
-    }
-
-    for (const elem of elems) {
-      elem.loadConfig(config);
-    }
-  }
+  static elementClass = NotificationElement;
 }
 
-customElements.define("readthedocs-notification", NotificationElement);
+customElements.define(NotificationElement.elementName, NotificationElement);

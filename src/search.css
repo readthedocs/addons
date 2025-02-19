@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   z-index: 3000;
-  line-height: 1.875;
+  line-height: 1rem;
 }
 
 :host > div a {
@@ -34,8 +34,9 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 0.875em;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family:
+    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
   border-radius: 0;
 }
 
@@ -61,16 +62,15 @@
   right: 0;
   bottom: 0;
   z-index: 100000;
-  height: 60%;
+  height: 80%;
   width: 60%;
-  max-height: 1000px;
-  max-width: 1500px;
+  max-width: 43em;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--readthedocs-search-content-border-color, #e0e0e0);
   border-radius: 0.7rem;
-  line-height: 1.875;
+  line-height: 1.75rem;
   background-color: var(--readthedocs-search-content-background-color, #fcfcfc);
   box-shadow:
     rgba(0, 0, 0, 0.05) 5px 5px 5px 5px,
@@ -80,9 +80,9 @@
 
 :host > div form {
   background-color: var(--readthedocs-search-input-background-color, #eaeaea);
-  margin: 1.2rem;
+  margin: 0.5rem;
   border-radius: 0.25em;
-  font-size: 1.15em;
+  font-size: 1.05em;
   padding: 5px;
   display: flex;
 }
@@ -94,7 +94,7 @@
 
 :host > div form > label {
   font-size: 1.15em;
-  padding-left: 10px;
+  padding-left: 5px;
   color: #333;
 }
 
@@ -118,24 +118,18 @@
 
 :host > div .results {
   margin-top: 10px;
-  padding: 1.15em;
+  padding: 0.5em;
   overflow-y: scroll;
   height: 100%;
   hyphens: auto;
 }
 
 div.hit-block {
-  padding: 10px;
-  border-radius: 0.3rem;
-  border-style: solid;
-  border-width: 1px;
-  border-color: var(--readthedocs-search-result-section-border-color, #a0a0a0);
-  margin-bottom: 5px;
-
+  padding-top: 3px;
+  border-top: 1px solid rgb(224, 224, 224);
   display: flex;
   flex-direction: column;
-
-  box-shadow: 2px 2px 8px 0 rgba(34, 36, 38, 0.08);
+  margin-bottom: 10px;
 }
 
 div.hit-block a.hit-block-heading {
@@ -154,8 +148,8 @@ div.hit-block .hit-block-heading-container .close-icon {
   font-size: 1.15em;
   width: 1em;
   padding-right: 10px;
-  margin-bottom: 15px;
-  color: #333;
+  color: rgba(0, 0, 0, 0.54);
+  padding-top: 5px;
 }
 
 button.close-icon {
@@ -199,12 +193,10 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .results h2 {
   display: inline-block;
   font-weight: 700;
-  margin-bottom: 15px;
-  margin-top: 0;
-  font-size: 1.15em;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  font-size: 1em;
   color: black;
-  border-bottom: 1px solid
-    var(--readthedocs-search-result-section-border-color, #a0a0a0);
   line-height: inherit;
 }
 
@@ -218,7 +210,10 @@ div.hit-block .hit-block-heading-container svg {
 }
 
 :host > div .results .hit .subheading {
-  color: var(--readthedocs-search-result-section-subheading-color, #999);
+  color: var(
+    --readthedocs-search-result-section-subheading-color,
+    rgba(0, 0, 0, 0.64)
+  );
   font-weight: 700;
   font-size: 15px;
   margin-right: 10px;
@@ -230,7 +225,7 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .results .hit .content {
   margin: 0;
   text-decoration: none;
-  color: black;
+  color: rgba(0, 0, 0, 0.54);
   font-size: 15px;
   display: block;
   margin-bottom: 5px;
@@ -269,11 +264,13 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .credits {
   float: right;
   margin: 0 15px;
+  font-size: small;
+  padding-top: 3px;
 }
 
 :host > div .credits a img {
   display: inline-block;
-  width: 125px;
+  width: 100px;
   vertical-align: middle;
 }
 
@@ -297,7 +294,7 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .filters {
   position: relative;
   padding-top: 0.9rem;
-  margin: 0 1.15em;
+  margin: 0 0.5em;
 }
 
 :host > div .filters ul {
@@ -308,6 +305,7 @@ div.hit-block .hit-block-heading-container svg {
   border-style: solid;
   border-width: 1px;
   border-color: var(--readthedocs-search-filters-border-color, #e0e0e0);
+  border-bottom: 1px solid #e0e0e0;
 }
 
 :host > div .filters li {

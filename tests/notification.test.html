@@ -39,6 +39,11 @@
                 show_on_external: true,
               },
             },
+            readthedocs: {
+              resolver: {
+                filename: "/section/page.html",
+              },
+            },
             builds: {
               current: {
                 urls: {
@@ -192,6 +197,20 @@
           it("on default version when stable is available", async () => {
             config.projects.current.default_version = "default";
             config.versions.current.slug = "default";
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            // The notification should not be displayed
+            expect(element).shadowDom.to.equal("");
+          });
+
+          it("on default version that is latest", async () => {
+            config.projects.current.default_version = "latest";
+            config.versions.current.slug = "latest";
 
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");

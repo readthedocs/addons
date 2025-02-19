@@ -31,9 +31,14 @@ export class EthicalAdsAddon extends AddonBase {
   static addonEnabledPath = "addons.ethicalads.enabled";
   static addonName = "EthicalAds";
 
-  constructor(config) {
-    super();
+  loadConfig(config) {
     this.config = config;
+
+    // Do not add another ad if we already added one
+    if (document.querySelector(`#${AD_SCRIPT_ID}`) !== null) {
+      return;
+    }
+
     this.injectEthicalAds();
   }
 
@@ -146,6 +151,39 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docsify");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isAntora()) {
+        selector = "aside nav.nav-menu";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isMdBook()) {
+        selector = "nav#sidebar mdbook-sidebar-scrollbox";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isVitePress()) {
+        selector = "aside";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
@@ -285,8 +323,8 @@ export class EthicalAdsAddon extends AddonBase {
 
   static isEnabled(config, httpStatus) {
     return (
-      super.isEnabled(config, httpStatus) &&
-      config.addons.ethicalads.ad_free === false
+      objectPath.get(config, "addons.ethicalads.ad_free", false) === false &&
+      super.isEnabled(config, httpStatus)
     );
   }
 }
