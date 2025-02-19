@@ -3,14 +3,8 @@
     --readthedocs-notification-font-size,
     var(--readthedocs-font-size, 1rem)
   );
-  --addons-notification-color: var(
-    --readthedocs-notification-color,
-    rgb(252, 252, 252)
-  );
-  --addons-notification-background-color: var(
-    --readthedocs-notification-background-color,
-    rgb(39, 39, 37)
-  );
+  --addons-notification-light-color: rgb(252, 252, 252);
+  --addons-notification-dark-color: rgb(39, 39, 37);
   --addons-notification-link-color: var(
     --readthedocs-notification-link-color,
     rgb(42, 128, 185)
@@ -40,8 +34,8 @@
     "sans-serif"
   );
   font-size: var(--addons-notification-font-size);
-  color: var(--addons-notification-color);
-  background-color: var(--addons-notification-background-color);
+  color: var(--addons-notification-light-color);
+  background-color: var(--addons-notification-dark-color);
 }
 
 :host(.floating) > div {
@@ -105,17 +99,13 @@
 }
 
 :host(.inverted) > div {
-  color: var(--addons-notification-color);
-  background-color: var(--addons-notification-background-color);
+  color: var(--addons-notification-dark-color);
+  background-color: var(--addons-notification-light-color);
 }
 
 :host > div a {
   color: var(--addons-notification-link-color);
   text-decoration: none;
-}
-
-:host(.inverted) > div a {
-  color: var(--addons-notification-link-color);
 }
 
 :host > div > .title {
@@ -152,11 +142,11 @@
 }
 
 :host(.inverted) > div > .title {
-  color: var(--addons-notification-title-color);
+  color: var(--addons-notification-dark-color);
 }
 
 :host(.inverted.titled) > div > .title {
-  background-color: var(--addons-notification-title-background-color);
+  background-color: var(--addons-notification-light-color);
 }
 
 :host > div > .title > .right {
@@ -173,7 +163,7 @@
 }
 
 :host(.inverted) > div > .title > .right > svg {
-  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--addons-notification-dark-color);
 }
 :host(.titled) > div > .title > .right > svg {
   margin: 0.5rem 0rem;
