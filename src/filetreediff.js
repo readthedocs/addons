@@ -11,6 +11,7 @@ import {
 } from "./events";
 import { getQueryParam } from "./utils";
 import { AddonBase } from "./utils";
+import { addUtmParameters } from "./utils";
 
 const SCROLL_OFFSET_Y = 0.1;
 
@@ -197,10 +198,28 @@ export class FileTreeDiffElement extends LitElement {
           ${this.renderDocDiff()}
           <select @change=${this.handleFileChange}>
             <option value="" ?selected=${!hasCurrentFile} disabled>
-              Files changed
+              Files changed in #${this.config.versions.current.slug}
             </option>
             ${renderSection(diffData.added, "Added")}
             ${renderSection(diffData.modified, "Changed")}
+            <optgroup label="Links">
+              <option
+                value="${addUtmParameters(
+                  this.config.builds.current.urls.build,
+                  "notification",
+                )}"
+              >
+                Go to build log
+              </option>
+              <option value="${this.config.versions.current.urls.vcs}">
+                Go to #${this.config.versions.current.slug}
+              </option>
+              <option
+                value="https://docs.readthedocs.com/platform/stable/visual-diff.html"
+              >
+                Go to Visual Diff documentation
+              </option>
+            </optgroup>
           </select>
         </div>
       </div>
@@ -347,8 +366,10 @@ export class FileTreeDiffAddon extends AddonBase {
       // The order is important since we don't even want to run the data
       // validation if the version is not external.
       // We have to use `objectPath` here becase we haven't validated the data yet.
-      objectPath.get(config, "versions.current.type") === "external" &&
-      super.isEnabled(config, httpStatus)
+      (objectPath.get(config, "versions.current.type") === "external" &&
+        super.isEnabled(config, httpStatus)) ||
+      window.location.host.endsWith(".devthedocs.org") ||
+      window.location.host.endsWith(".devthedocs.com")
     );
   }
 }
