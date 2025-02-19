@@ -3,6 +3,26 @@
     --readthedocs-notification-font-size,
     var(--readthedocs-font-size, 1rem)
   );
+  --addons-notification-color: var(
+    --readthedocs-notification-color,
+    rgb(252, 252, 252)
+  );
+  --addons-notification-background-color: var(
+    --readthedocs-notification-background-color,
+    rgb(39, 39, 37)
+  );
+  --addons-notification-link-color: var(
+    --readthedocs-notification-link-color,
+    rgb(42, 128, 185)
+  );
+  --addons-notification-title-color: var(
+    --readthedocs-notification-title-color,
+    rgb(96, 96, 96)
+  );
+  --addons-notification-title-background-color: var(
+    --readthedocs-notification-title-background-color,
+    rgb(224, 224, 224)
+  );
 }
 
 :host > div {
@@ -20,11 +40,8 @@
     "sans-serif"
   );
   font-size: var(--addons-notification-font-size);
-  color: var(--readthedocs-notification-color, rgb(64, 64, 64));
-  background-color: var(
-    --readthedocs-notification-background-color,
-    rgb(234, 234, 234)
-  );
+  color: var(--addons-notification-color);
+  background-color: var(--addons-notification-background-color);
 }
 
 :host(.floating) > div {
@@ -88,20 +105,17 @@
 }
 
 :host(.inverted) > div {
-  color: var(--readthedocs-notification-color, rgb(234, 234, 234));
-  background-color: var(
-    --readthedocs-notification-background-color,
-    rgb(64, 64, 64)
-  );
+  color: var(--addons-notification-color);
+  background-color: var(--addons-notification-background-color);
 }
 
 :host > div a {
-  color: var(--readthedocs-notification-link-color, rgb(8, 140, 219));
+  color: var(--addons-notification-link-color);
   text-decoration: none;
 }
 
 :host(.inverted) > div a {
-  color: var(--readthedocs-notification-link-color, rgb(134, 203, 243));
+  color: var(--addons-notification-link-color);
 }
 
 :host > div > .title {
@@ -126,11 +140,8 @@
   padding: 0.1rem var(--addons-notification-font-size);
   line-height: calc(var(--addons-notification-font-size) * 2);
   border-radius: 0.5rem 0.5rem 0 0;
-  color: var(--readthedocs-notification-title-color, rgb(96, 96, 96));
-  background-color: var(
-    --readthedocs-notification-title-background-color,
-    rgb(224, 224, 224)
-  );
+  color: var(--addons-notification-title-color);
+  background-color: var(--addons-notification-title-background-color);
   vertical-align: middle;
   font-weight: bold;
 }
@@ -141,14 +152,11 @@
 }
 
 :host(.inverted) > div > .title {
-  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--addons-notification-title-color);
 }
 
 :host(.inverted.titled) > div > .title {
-  background-color: var(
-    --readthedocs-notification-title-background-color,
-    rgb(48, 48, 48)
-  );
+  background-color: var(--addons-notification-title-background-color);
 }
 
 :host > div > .title > .right {
