@@ -30,8 +30,8 @@ defaultStyleSheet.replaceSync(`
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
-    --readthedocs-font-size: 0.75rem;
-    --readthedocs-flyout-font-size: 0.75rem;
+    --readthedocs-font-size: 0.725rem;
+    --readthedocs-flyout-font-size: 0.725rem;
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
