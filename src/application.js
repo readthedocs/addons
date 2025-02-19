@@ -125,11 +125,7 @@ export class AddonsApplication {
     const elementHtml = document.querySelector("html");
     if (elementHtml) {
       // Inject styles at the parent DOM to set variables at :root
-      let styleSheet = defaultStyleSheet;
-      if (defaultStyleSheet instanceof CSSResult) {
-        styleSheet = defaultStyleSheet.styleSheet;
-      }
-      document.adoptedStyleSheets = [styleSheet];
+      document.adoptedStyleSheets = [defaultStyleSheet];
 
       // If we detect a documentation tool, set attributes on :root to allow
       // for CSS selectors to utilize these values.
