@@ -212,7 +212,7 @@ export class FileTreeDiffElement extends LitElement {
                 Go to build log
               </option>
               <option value="${this.config.versions.current.urls.vcs}">
-                Go to #${this.config.versions.current.slug}
+                Go to pull request #${this.config.versions.current.slug}
               </option>
               <option
                 value="https://docs.readthedocs.com/platform/stable/visual-diff.html"
