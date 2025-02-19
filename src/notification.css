@@ -7,7 +7,7 @@
   --addons-notification-dark-color: rgb(39, 39, 37);
   --addons-notification-link-color: var(
     --readthedocs-notification-link-color,
-    rgb(42, 128, 185)
+    rgb(134, 203, 243)
   );
   --addons-notification-title-color: var(
     --readthedocs-notification-title-color,
@@ -106,6 +106,10 @@
 :host > div a {
   color: var(--addons-notification-link-color);
   text-decoration: none;
+}
+
+:host(.inverted) > div a {
+  color: var(--addons-notification-link-color, rgb(8, 140, 219));
 }
 
 :host > div > .title {
