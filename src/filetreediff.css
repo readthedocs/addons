@@ -76,7 +76,8 @@
   min-width: 2.5rem;
 }
 
-@media (max-width: 1023px) {
+/* Expand to full width on smaller screens */
+@media (max-width: 768px) {
   :host > div {
     width: calc(100% - 1rem);
     margin: 0;
