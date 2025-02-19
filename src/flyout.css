@@ -2,6 +2,8 @@
 
 @layer defaults {
   :root {
+    --readthedocs-flyout-max-width: 25em;
+
     --readthedocs-flyout-font-family: var(--readthedocs-font-family);
     --readthedocs-flyout-font-size: var(--readthedocs-font-size);
     --readthedocs-flyout-line-height: 1.25em;
@@ -22,7 +24,7 @@
 
 .container {
   position: fixed;
-  max-width: var(--readthedocs-flyout-max-width, 25em);
+  max-width: var(--readthedocs-flyout-max-width);
   width: auto;
   height: auto;
   max-height: calc(100% - 100px);
@@ -55,7 +57,7 @@
   font-size: var(--readthedocs-flyout-font-size);
   color: var(--readthedocs-flyout-color);
   background-color: var(--readthedocs-flyout-background-color);
-  line-height: var(--readthedocs-flyout-line-height, 1.2em);
+  line-height: var(--readthedocs-flyout-line-height);
   z-index: 3000;
   padding: 0 10px;
   overflow-y: auto;
@@ -70,7 +72,7 @@ header {
   background-color: var(--readthedocs-flyout-background-color);
   position: sticky;
   top: 0px;
-  font-size: var(--readthedocs-flyout-header-font-size, 1.25em);
+  font-size: var(--readthedocs-flyout-header-font-size);
 }
 
 header > img.logo {
