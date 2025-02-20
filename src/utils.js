@@ -235,6 +235,9 @@ export function setupHistoryEvents() {
           //
           // import { DOCDIFF_URL_PARAM } from "./docdiff";
           toURL.searchParams.delete("readthedocs-diff");
+          toURL.searchParams.delete("readthedocs-diff-chunk");
+          fromURL.searchParams.delete("readthedocs-diff");
+          fromURL.searchParams.delete("readthedocs-diff-chunk");
 
           // Dispatch the event only if the new URL is not just the DOCDIFF_URL_PARAM added.
           if (toURL.href !== fromURL.href) {
