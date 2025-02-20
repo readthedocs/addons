@@ -53,6 +53,10 @@ describe("FileTreeDiff addon", () => {
         versions: {
           current: {
             type: "external",
+            slug: "1234",
+            urls: {
+              vcs: "https://github.com/organization/repository/pull/1234/",
+            },
           },
         },
       }),
