@@ -1,5 +1,9 @@
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
-import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUp,
+  faArrowDown,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
@@ -41,6 +45,9 @@ export class FileTreeDiffElement extends LitElement {
       classes: ["icon"],
     });
     this.iconArrowDown = icon(faArrowDown, {
+      classes: ["icon"],
+    });
+    this.iconCircleInfo = icon(faCircleInfo, {
       classes: ["icon"],
     });
   }
@@ -202,6 +209,17 @@ export class FileTreeDiffElement extends LitElement {
             ${renderSection(diffData.added, "Added")}
             ${renderSection(diffData.modified, "Changed")}
           </select>
+          <a
+            href="${this.config.versions.current.urls.vcs}"
+            target="_blank"
+            class="version"
+            >#${this.config.versions.current.slug}</a
+          >
+          <a
+            href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
+            target="_blank"
+            >${this.iconCircleInfo.node[0]}</a
+          >
         </div>
       </div>
     `;
