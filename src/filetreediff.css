@@ -87,7 +87,8 @@
   color: var(--readthedocs-filetreediff-chunks-color, #27ae60);
 }
 
-@media (max-width: 1023px) {
+/* Expand to full width on smaller screens */
+@media (max-width: 768px) {
   :host > div {
     width: calc(100% - 1rem);
     margin: 0;

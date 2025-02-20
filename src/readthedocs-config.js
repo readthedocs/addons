@@ -108,7 +108,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
         return response.json();
       })
       .then((data) => {
-        return dispatchEvent(
+        dispatchEvent(
           EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
           document,
           new ReadTheDocsEventData(data),
