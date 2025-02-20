@@ -97,13 +97,50 @@ export class AddonBase {
       if (!this.elements.length) {
         this.elements = [new this.constructor.elementClass()];
 
-        // We cannot use `render(this.elements[0], document.body)` because there is a race conditions between all the addons.
-        // So, we append the web-component first and then request an update of it.
-        document.body.append(this.elements[0]);
+        const injectBehavior = this.constructor.elementInjectBehavior;
+        const selector = this.getElementInjectSelector();
+        const elementSelector = document.querySelector(selector);
+
+        // Setup the initial behavior only if we are using a custom position for it.
+        if (selector !== "body") {
+          this.setupInitialBehavior();
+        }
+
+        if (injectBehavior === "prepend") {
+          elementSelector.prepend(this.elements[0]);
+        } else if (injectBehavior === "append") {
+          elementSelector.append(this.elements[0]);
+        } else {
+          // We cannot use `render(this.elements[0], document.body)` because there is a race conditions between all the addons.
+          // So, we append the web-component first and then request an update of it.
+          document.body.append(this.elements[0]);
+        }
       }
     }
 
     this.loadConfig(config);
+  }
+
+  /**
+   * Setup the initial behavior of the addon after instatiated.
+   *
+   * There are some addons we want to behave differently if we are injecting
+   * them into a known position in the page, using a custom CSS selector.
+   *
+   * This method has to be overriden by the addon.
+   */
+  setupInitialBehavior() {
+    return null;
+  }
+
+  /**
+   * Returns the selector where the element has to be injected.
+   *
+   * The element will be "appended" or "prepended" based on
+   * `elementInjectBehavior` static class property.
+   */
+  getElementInjectSelector() {
+    return docTool.getRootSelector() || "body";
   }
 
   loadConfig(config) {
