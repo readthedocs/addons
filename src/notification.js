@@ -34,8 +34,6 @@ export class NotificationElement extends LitElement {
     this.timerID = null;
     this.config = null;
     this.urls = {
-      build: null,
-      external: null,
       stable: null,
     };
     this.readingLatestVersion = false;
@@ -133,21 +131,6 @@ export class NotificationElement extends LitElement {
     }
 
     this.config = config;
-
-    if (
-      this.config.addons.notifications.enabled &&
-      this.config.versions.current.type === "external"
-    ) {
-      this.urls = {
-        // NOTE: point users to the new beta dashboard for now so we promote it more.
-        // We will revert this once we are fully migrated to the new dashboard.
-        build: config.builds.current.urls.build
-          .replace("readthedocs.org", "app.readthedocs.org")
-          .replace("readthedocs.com", "app.readthedocs.com")
-          .replace("app.app.", "app."),
-        external: config.versions.current.urls.vcs,
-      };
-    }
 
     if (
       objectPath.get(
