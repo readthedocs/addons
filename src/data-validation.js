@@ -291,9 +291,17 @@ const addons_filetreediff = {
       properties: {
         current: {
           type: "object",
-          required: ["type"],
+          required: ["type", "slug", "urls"],
           properties: {
             type: { type: "string" },
+            slug: { type: "string" },
+            urls: {
+              type: "object",
+              required: ["vcs"],
+              properties: {
+                vcs: { type: "string" },
+              },
+            },
           },
         },
       },
