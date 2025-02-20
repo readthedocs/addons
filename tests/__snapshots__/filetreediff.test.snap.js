@@ -31,12 +31,14 @@ snapshots["Filetreediff tests snapshot filetreediff completely"] =
       class="version"
       href="https://github.com/organization/repository/pull/1234/"
       target="_blank"
+      title="Go to pull request"
     >
       #1234
     </a>
     <a
       href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
       target="_blank"
+      title="Open documentation"
     >
     </a>
   </div>
@@ -82,12 +84,14 @@ snapshots["Filetreediff tests toggle Show diff checkbox"] =
       class="version"
       href="https://github.com/organization/repository/pull/1234/"
       target="_blank"
+      title="Go to pull request"
     >
       #1234
     </a>
     <a
       href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
       target="_blank"
+      title="Open documentation"
     >
     </a>
   </div>

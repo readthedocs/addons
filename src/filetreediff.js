@@ -211,12 +211,14 @@ export class FileTreeDiffElement extends LitElement {
           </select>
           <a
             href="${this.config.versions.current.urls.vcs}"
+            title="Go to pull request"
             target="_blank"
             class="version"
             >#${this.config.versions.current.slug}</a
           >
           <a
             href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
+            title="Open documentation"
             target="_blank"
             >${this.iconCircleInfo.node[0]}</a
           >
