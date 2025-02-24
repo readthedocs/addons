@@ -22,6 +22,10 @@
     --readthedocs-notification-font-size: 0.8rem;
   }
 
+  :root[data-readthedocs-tool="jekyll"] {
+    --readthedocs-notification-font-size: 0.9rem;
+  }
+
   :root[data-readthedocs-tool="mkdocs-material"] {
     --readthedocs-font-size: 0.65rem;
     --readthedocs-flyout-header-font-size: 0.75rem;
