@@ -57,6 +57,7 @@
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="alabaster"] {
+    --readthedocs-flyout-header-font-size: 0.95rem;
     --readthedocs-notification-font-size: 0.9rem;
   }
 }
