@@ -99,10 +99,11 @@ export class AddonBase {
 
         const injectBehavior = this.constructor.elementInjectBehavior;
         const selector = this.getElementInjectSelector();
-        const elementSelector = document.querySelector(selector);
+        const elementSelector =
+          document.querySelector(selector) || document.querySelector("body");
 
         // Setup the initial behavior only if we are using a custom position for it.
-        if (selector !== "body") {
+        if (elementSelector.tagName.toLocaleLowerCase() !== "body") {
           this.setupInitialBehavior();
         }
 

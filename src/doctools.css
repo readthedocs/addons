@@ -7,13 +7,27 @@
  **/
 @layer defaults {
   :root[data-readthedocs-tool="docusaurus"] {
-    --readthedocs-flyout-header-font-size: 0.9rem;
+    --readthedocs-flyout-header-font-size: 0.95rem;
+  }
+
+  :root[data-readthedocs-tool="docsify"] {
+    --readthedocs-notification-font-size: 0.95rem;
+  }
+
+  :root[data-readthedocs-tool="asciidoctor"] {
+    --readthedocs-notification-font-size: 0.95rem;
+  }
+
+  :root[data-readthedocs-tool="antora"] {
+    --readthedocs-notification-font-size: 0.8rem;
   }
 
   :root[data-readthedocs-tool="mkdocs-material"] {
-    --readthedocs-font-size: 0.58rem;
-    --readthedocs-flyout-header-font-size: 0.7rem;
-    --readthedocs-flyout-font-size: 0.58rem;
+    --readthedocs-font-size: 0.65rem;
+    --readthedocs-flyout-header-font-size: 0.75rem;
+    --readthedocs-flyout-font-size: 0.65rem;
+
+    --readthedocs-notification-font-size: 0.75rem;
   }
 
   :root[data-readthedocs-tool="antora"] {
@@ -29,14 +43,20 @@
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
-    --readthedocs-font-size: 0.725rem;
-    --readthedocs-flyout-header-font-size: 0.845rem;
-    --readthedocs-flyout-font-size: 0.725rem;
+    --readthedocs-font-size: 0.9rem;
+    --readthedocs-flyout-header-font-size: 0.9rem;
+    --readthedocs-flyout-font-size: 0.8rem;
+
+    --readthedocs-notification-font-size: 0.9rem;
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
     --readthedocs-font-size: 0.58rem;
     --readthedocs-flyout-header-font-size: 0.7rem;
     --readthedocs-flyout-font-size: 0.58rem;
+  }
+
+  :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="alabaster"] {
+    --readthedocs-notification-font-size: 0.9rem;
   }
 }
