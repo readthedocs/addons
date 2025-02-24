@@ -76,6 +76,17 @@
   min-width: 2.5rem;
 }
 
+:host > div > div > a {
+  width: 0.8rem;
+  color: var(--addons-filetreediff-color);
+}
+
+:host > div > div > a.version {
+  width: auto;
+  text-decoration: none;
+  color: var(--readthedocs-filetreediff-chunks-color, #27ae60);
+}
+
 /* Expand to full width on smaller screens */
 @media (max-width: 768px) {
   :host > div {
