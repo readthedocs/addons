@@ -114,6 +114,7 @@
   width: 100%;
   padding: 6px;
   line-height: 1;
+  color: var(--readthedocs-search-color, rgb(64, 64, 64));
 }
 
 :host > div .results {
