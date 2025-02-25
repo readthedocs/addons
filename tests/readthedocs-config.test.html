@@ -107,7 +107,18 @@
               '{"test": "readthedocs-addons-data-ready", "builds": {"current": {"id": 12345}}}',
             ]);
 
+            const fakeFunction = sinon.fake();
+            document.addEventListener(
+              "readthedocs-addons-data-ready",
+              (event) => {
+                // Call the `fakeFunction` inside the event listener to check later it was called once.
+                fakeFunction();
+              },
+            );
+
             const config = await readthedocsConfig.getReadTheDocsConfig(true);
+
+            expect(fakeFunction.calledOnce).to.be.true;
             const element = document.querySelector("#injected-by-event");
             expect(element).to.not.be.null;
             expect(element).dom.to.be.equal(
