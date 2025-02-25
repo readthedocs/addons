@@ -20,6 +20,8 @@
         beforeEach(() => {
           // Create a sinon fake server to mock requests
           server = sinon.fakeServer.create();
+          server.respondImmediately = true;
+
           if (metadataAddonsAPIVersion) {
             metadataAddonsAPIVersion.remove();
           }
@@ -57,13 +59,10 @@
             server.respondWith("GET", matchMockedUrl, [
               200,
               {},
-              "fake response body",
+              '{}'
             ]);
 
             const config = readthedocsConfig.getReadTheDocsConfig(false);
-
-            // Respond to all the request waiting for a response
-            server.respond();
 
             expect(server.requests).to.have.length(1);
             expect(server.requests[0].status).to.be.equal(200);
@@ -78,18 +77,16 @@
             metadataAddonsAPIVersion.content = "2";
             document.head.appendChild(metadataAddonsAPIVersion);
 
-            // Response 204 on requests made to Read the Docs analytics' API
+            // Response 200 on requests made to Read the Docs analytics' API
             const matchMockedUrl = new RegExp(`^/_/addons/`, "g");
             server.respondWith("GET", matchMockedUrl, [
               200,
               {},
-              "fake response body",
+              '{"addons": {}, "builds": {"current": {"id": 12345}}, "projects": {}, "versions": {}}'
             ]);
 
-            const config = readthedocsConfig.getReadTheDocsUserConfig(true);
-
-            // Respond to all the request waiting for a response
-            server.respond();
+            const config = await readthedocsConfig.getReadTheDocsUserConfig(true);
+            expect(config).to.deep.equal({addons: {}, builds: {current: {id: 12345}}, projects: {}, versions: {}});
 
             expect(server.requests).to.have.length(1);
             expect(server.requests[0].status).to.be.equal(200);
@@ -98,8 +95,40 @@
               /^\/_\/addons\/\?client-version=.+&api-version=2&url=.+$/;
             expect(server.requests[0].url).to.match(matchApiUrl);
           });
+
+          it("check readthedocs-addons-data-ready event", async () => {
+            // Response 200 on requests made to Read the Docs analytics' API
+            const matchMockedUrl = new RegExp(`^/_/addons/`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"test": "readthedocs-addons-data-ready", "builds": {"current": {"id": 12345}}}'
+            ]);
+
+            const config = await readthedocsConfig.getReadTheDocsConfig(true);
+            const element = document.querySelector("#injected-by-event");
+            expect(element).to.not.be.null;
+            expect(element).dom.to.be.equal("<span id='injected-by-event'>builds.current.id=12345</span>");
+
+            // Clean up injected tags
+            element.remove()
+          });
         });
       });
     </script>
+
+    <!-- TODO: this should only be injected in the test "check readthedocs-addons-data-ready event",
+         to not interfere with the other tests, but I didn't find a good way to do that yet. -->
+    <script id="script-event" type="text/javascript">
+      document.addEventListener("readthedocs-addons-data-ready", function (event) {
+        const data = event.detail.data(true);
+        if (data?.test === "readthedocs-addons-data-ready") {
+          const span = document.createElement("span");
+          span.id = "injected-by-event";
+          span.innerHTML = `builds.current.id=${data.builds.current.id}`;
+          document.body.appendChild(span);
+        }
+      });
+    </script>`;
   </body>
 </html>
