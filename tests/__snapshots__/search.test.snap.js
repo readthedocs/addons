@@ -1,12 +1,11 @@
 /* @web/test-runner snapshot v1 */
 export const snapshots = {};
-
 snapshots["Search tests initial trigger by event and DOM check"] = 
 `<div role="search">
   <div class="background">
   </div>
   <div class="content">
-    <form class="focus">
+    <form>
       <label>
       </label>
       <input
