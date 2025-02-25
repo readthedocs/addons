@@ -3,6 +3,19 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.31.0
+---------------
+
+:date: Feb 25, 2025
+
+* Force black text for search input (:pr:`540`)
+* File Tree Diff: updates to UI (info and PR link) (:pr:`551`)
+* Packages: updated via ncu -u (:pr:`556`)
+* Event: not trigger URL changed when readthedocs-* params changed (:pr:`553`)
+* FTD: Reduce width of full size display (:pr:`539`)
+* Fix bug with ready event (:pr:`544`)
+
+
 Version v0.30.0
 ---------------
 
