@@ -107,47 +107,32 @@
               '{"test": "readthedocs-addons-data-ready", "builds": {"current": {"id": 12345}}}',
             ]);
 
+            let eventData;
             const fakeFunction = sinon.fake();
             document.addEventListener(
               "readthedocs-addons-data-ready",
               (event) => {
+                // Store the event data to check later
+                eventData = event.detail.data(true);
+
                 // Call the `fakeFunction` inside the event listener to check later it was called once.
                 fakeFunction();
               },
             );
 
             const config = await readthedocsConfig.getReadTheDocsConfig(true);
-
             expect(fakeFunction.calledOnce).to.be.true;
-            const element = document.querySelector("#injected-by-event");
-            expect(element).to.not.be.null;
-            expect(element).dom.to.be.equal(
-              "<span id='injected-by-event'>builds.current.id=12345</span>",
-            );
-
-            // Clean up injected tags
-            element.remove();
+            expect(eventData).to.deep.equal({
+              test: "readthedocs-addons-data-ready",
+              builds: {
+                current: {
+                  id: 12345,
+                },
+              },
+            });
           });
         });
       });
     </script>
-
-    <!-- TODO: this should only be injected in the test "check readthedocs-addons-data-ready event",
-         to not interfere with the other tests, but I didn't find a good way to do that yet. -->
-    <script id="script-event" type="text/javascript">
-      document.addEventListener(
-        "readthedocs-addons-data-ready",
-        function (event) {
-          const data = event.detail.data(true);
-          if (data?.test === "readthedocs-addons-data-ready") {
-            const span = document.createElement("span");
-            span.id = "injected-by-event";
-            span.innerHTML = `builds.current.id=${data.builds.current.id}`;
-            document.body.appendChild(span);
-          }
-        },
-      );
-    </script>
-    `;
   </body>
 </html>
