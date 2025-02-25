@@ -179,7 +179,7 @@ snapshots["Search tests show the modal and perform a query with no results"] =
                 Exact phrase
               </strong>
               : use double quotes to match a whole
-              pharse:
+              phrase:
               <code>
                 "adding a subproject"
               </code>
