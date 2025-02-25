@@ -3,7 +3,15 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
-Version v0.31.0
+Version v0.32.1
+---------------
+
+:date: Feb 25, 2025
+
+* Re-release to fix small issues.
+
+
+Version v0.32.0
 ---------------
 
 :date: Feb 25, 2025
@@ -14,6 +22,12 @@ Version v0.31.0
 * Event: not trigger URL changed when readthedocs-* params changed (:pr:`553`)
 * FTD: Reduce width of full size display (:pr:`539`)
 * Fix bug with ready event (:pr:`544`)
+
+
+Version v0.31.0
+---------------
+
+There was a release 0.31.0 done without following the release process that break some stuffs.
 
 
 Version v0.30.0
