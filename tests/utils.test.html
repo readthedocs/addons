@@ -42,10 +42,7 @@
             document.head.appendChild(element);
 
             eventListener = function func(event) {
-              // We need to use `JSON.stringify` because objects are not equal in javascript
-              expect(JSON.stringify(event.detail.data())).to.be.equal(
-                JSON.stringify({ addons: "data" }),
-              );
+              expect(event.detail.data()).to.deep.equal({addons: "data"});
               expect(event.detail.httpStatus()).to.be.equal("200");
             };
 
@@ -87,10 +84,7 @@
 
           it("use readthedocs-addons-data-ready without META tag and internal=true", async () => {
             eventListener = function func(event) {
-              // We need to use `JSON.stringify` because objects are not equal in javascript
-              expect(JSON.stringify(event.detail.data(true))).to.be.equal(
-                JSON.stringify({ addons: "data" }),
-              );
+              expect(event.detail.data(true)).to.deep.equal({addons: "data"});
             };
             document.addEventListener(
               events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,

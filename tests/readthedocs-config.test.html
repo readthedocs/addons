@@ -9,6 +9,7 @@
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as readthedocsConfig from "../src/readthedocs-config";
+      import * as events from "../src/events";
       import * as utils from "../src/utils";
 
       let server;
@@ -110,7 +111,7 @@
             let eventData;
             const fakeFunction = sinon.fake();
             document.addEventListener(
-              "readthedocs-addons-data-ready",
+              events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
               (event) => {
                 // Store the event data to check later
                 eventData = event.detail.data(true);
