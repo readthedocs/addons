@@ -4,8 +4,10 @@
   </head>
   <body>
     <script type="module">
+      import { default as sinon } from "sinon";
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
+      import * as docdiff from "../src/docdiff";
       import * as utils from "../src/utils";
       import * as events from "../src/events";
       import * as readthedocsConfig from "../src/readthedocs-config";
@@ -31,6 +33,8 @@
             );
             eventListener = null;
           }
+
+          sinon.restore();
         });
 
         describe("DocumentationTool tests", () => {
@@ -42,7 +46,7 @@
             document.head.appendChild(element);
 
             eventListener = function func(event) {
-              expect(event.detail.data()).to.deep.equal({addons: "data"});
+              expect(event.detail.data()).to.deep.equal({ addons: "data" });
               expect(event.detail.httpStatus()).to.be.equal("200");
             };
 
@@ -84,7 +88,7 @@
 
           it("use readthedocs-addons-data-ready without META tag and internal=true", async () => {
             eventListener = function func(event) {
-              expect(event.detail.data(true)).to.deep.equal({addons: "data"});
+              expect(event.detail.data(true)).to.deep.equal({ addons: "data" });
             };
             document.addEventListener(
               events.EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
@@ -96,6 +100,43 @@
               document,
               new events.ReadTheDocsEventData({ addons: "data" }),
             );
+          });
+
+          it("trigger URL_CHANGED on SPA without GET parameters", async () => {
+            utils.setupHistoryEvents();
+
+            const fakeFunction = sinon.fake();
+            window.addEventListener(
+              events.EVENT_READTHEDOCS_URL_CHANGED,
+              (event) => {
+                fakeFunction();
+              },
+            );
+
+            expect(fakeFunction.notCalled).to.be.true;
+            history.pushState({}, "", "#newpage");
+            expect(fakeFunction.calledOnce).to.be.true;
+          });
+
+          it("trigger URL_CHANGED on SPA with `?readthedocs-diff-chunk` parameter", async () => {
+            utils.setupHistoryEvents();
+
+            const fakeFunction = sinon.fake();
+            window.addEventListener(
+              events.EVENT_READTHEDOCS_URL_CHANGED,
+              (event) => {
+                fakeFunction();
+              },
+            );
+
+            expect(fakeFunction.notCalled).to.be.true;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set(docdiff.DOCDIFF_CHUNK_URL_PARAM, 1);
+            history.pushState({}, "", url);
+
+            expect(fakeFunction.notCalled).to.be.true;
+            expect(fakeFunction.calledOnce).to.be.false;
           });
 
           it("Sphinx Alabaster", async () => {
