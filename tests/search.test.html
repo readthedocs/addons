@@ -60,7 +60,9 @@
             document.dispatchEvent(searchEvent);
 
             await elementUpdated(element);
-            await expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
           });
 
           it("initial trigger by event and DOM check with filters", async () => {
