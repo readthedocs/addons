@@ -199,6 +199,8 @@ export class EthicalAdsAddon extends AddonBase {
       } else {
         // Default to a text ad appended to the root selector when no known placement found
         placement.setAttribute("data-ea-type", "text");
+        // TODO: Check this placement on the dashboard,
+        // and see how this is performing.
         placement.setAttribute("id", "readthedocs-text-footer");
 
         const rootSelector = docTool.getRootSelector();

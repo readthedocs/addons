@@ -66,11 +66,12 @@
           });
 
           it("ad placement injected", async () => {
-            // We need the width to be bigger than 1300px for the ad to be injected
-            await setViewport({ width: 1600, height: 640 });
-
             const addon = new ethicalads.EthicalAdsAddon(config);
-            const element = document.querySelector("#readthedocs-ea");
+            const element = document.querySelector("#readthedocs-text-footer");
+
+            expect(element).to.exist;
+            expect(element).to.have.attribute("data-ea-type", "text");
+            expect(element).to.have.attribute("data-ea-publisher", "readthedocs");
             await expect(element).dom.to.equalSnapshot();
           });
 
