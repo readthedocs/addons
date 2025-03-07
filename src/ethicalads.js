@@ -199,6 +199,7 @@ export class EthicalAdsAddon extends AddonBase {
       } else {
         // Default to a text ad appended to the root selector when no known placement found
         placement.setAttribute("data-ea-type", "text");
+        placement.setAttribute("id", "readthedocs-text-footer");
 
         const rootSelector = docTool.getRootSelector();
         const rootElement = document.querySelector(rootSelector);
@@ -239,6 +240,11 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   elementAboveTheFold(element) {
+    // Return false if element doesn't exist
+    if (!element) {
+      return false;
+    }
+
     // Determine if this element would be above the fold.
     // If this is off screen, instead create an ad in the footer.
     // Assumes the ad would be AD_SIZE pixels high.
