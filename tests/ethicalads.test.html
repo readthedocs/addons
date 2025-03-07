@@ -71,7 +71,10 @@
 
             expect(element).to.exist;
             expect(element).to.have.attribute("data-ea-type", "text");
-            expect(element).to.have.attribute("data-ea-publisher", "readthedocs");
+            expect(element).to.have.attribute(
+              "data-ea-publisher",
+              "readthedocs",
+            );
             await expect(element).dom.to.equalSnapshot();
           });
 
