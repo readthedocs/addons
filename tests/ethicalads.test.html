@@ -1,4 +1,4 @@
-<html>
+html>
   <body>
     <script type="module">
       import {
@@ -67,7 +67,7 @@
 
           it("ad placement injected", async () => {
             const addon = new ethicalads.EthicalAdsAddon(config);
-            const element = document.querySelector("#readthedocs-text-footer");
+            const element = document.querySelector("#readthedocs-ea-text-footer");
 
             expect(element).to.exist;
             expect(element).to.have.attribute("data-ea-type", "text");
