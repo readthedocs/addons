@@ -201,7 +201,9 @@ export class EthicalAdsAddon extends AddonBase {
         placement.setAttribute("data-ea-type", "text");
         // TODO: Check this placement on the dashboard,
         // and see how this is performing.
-        placement.setAttribute("id", "readthedocs-text-footer");
+        const docToolName = docTool.getDocumentationTool();
+        const idSuffix = docToolName ? `-${docToolName}` : "";
+        placement.setAttribute("id", `readthedocs-ea-text-footer${idSuffix}`);
 
         const rootSelector = docTool.getRootSelector();
         const rootElement = document.querySelector(rootSelector);
