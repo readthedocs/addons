@@ -16,7 +16,7 @@
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.26.9",
+    "@babel/core": "^7.26.10",
     "@babel/plugin-syntax-import-assertions": "^7.26.0",
     "@babel/preset-env": "^7.26.9",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -29,7 +29,7 @@
     "@web/dev-server-import-maps": "^0.2.1",
     "@web/test-runner": "^0.20.0",
     "ajv": "^8.17.1",
-    "babel-loader": "^9.2.1",
+    "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "diff-match-patch": "1.0.5",
     "express-interceptor": "^1.2.0",
@@ -37,13 +37,13 @@
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.2.1",
     "object-path": "^0.11.8",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "rollup-plugin-lit-css": "^5.0.2",
     "sinon": "^19.0.2",
     "tippy.js": "^6.3.7",
     "tslib": "^2.8.1",
     "unfetch": "^4.2.0",
-    "visual-dom-diff": "^0.7.2",
+    "visual-dom-diff": "^0.7.3",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
@@ -62,6 +62,7 @@
     }
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.13"
+    "@floating-ui/dom": "^1.6.13",
+    "npm-check-updates": "^17.1.15"
   }
 }
