@@ -147,8 +147,13 @@ export class DocDiffElement extends LitElement {
   }
 
   compare() {
-    let promiseData;
+    // First check the root selector is in the current body
+    if (document.querySelector(this.rootSelector) === null) {
+      console.error("Element not found in current document.");
+      return;
+    }
 
+    let promiseData;
     if (this.cachedRemoteResponse !== null) {
       promiseData = Promise.resolve(this.cachedRemoteResponse);
     } else {
@@ -186,8 +191,8 @@ export class DocDiffElement extends LitElement {
     );
     const newBody = document.querySelector(this.rootSelector);
 
-    if (oldBody == null || newBody == null) {
-      throw new Error("Element not found in both documents.");
+    if (oldBody === null) {
+      throw new Error("Element not found in base document.");
     }
 
     // Depending on the context, visualDomDiff function is found under a different path.
