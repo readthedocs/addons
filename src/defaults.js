@@ -14,29 +14,29 @@ export const defaultStyleSheet = new CSSStyleSheet();
  **/
 defaultStyleSheet.replaceSync(`
 @layer defaults {
+  :root {
+    --readthedocs-font-family: "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif";
+    --readthedocs-font-size: 0.8rem;
+  }
+
   :root[data-readthedocs-tool="mkdocs-material"] {
     --readthedocs-font-size: 0.58rem;
-    --readthedocs-flyout-font-size: 0.58rem;
   }
 
   :root[data-readthedocs-tool="antora"] {
     --readthedocs-font-size: 0.7rem;
-    --readthedocs-flyout-font-size: 0.7rem;
   }
 
   :root[data-readthedocs-tool="mdbook"] {
     --readthedocs-font-size: 1.3rem;
-    --readthedocs-flyout-font-size: 1.3rem;
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
     --readthedocs-font-size: 0.725rem;
-    --readthedocs-flyout-font-size: 0.725rem;
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
     --readthedocs-font-size: 0.58rem;
-    --readthedocs-flyout-font-size: 0.58rem;
   }
 }
 `);
