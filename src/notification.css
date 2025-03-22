@@ -1,30 +1,38 @@
-:host {
-  --addons-notification-font-size: var(
-    --readthedocs-notification-font-size,
-    var(--readthedocs-font-size, 1rem)
-  );
+@layer defaults {
+  :root {
+    --readthedocs-notification-font-size: var(--readthedocs-font-size);
+    --readthedocs-notification-font-family: var(--readthedocs-font-family);
+
+    --readthedocs-notification-toast-font-size: calc(
+      var(--readthedocs-notification-font-size) * 0.85
+    );
+
+    --readthedocs-notification-color: rgb(64, 64, 64);
+    --readthedocs-notification-background-color: rgb(234, 234, 234);
+    --readthedocs-notification-title-color: rgba(96, 96, 96);
+    --readthedocs-notification-title-background-color: rgb(224, 224, 224);
+    --readthedocs-notification-link-color: rgb(8, 140, 219);
+
+    /* TODO these should be replaced with a better pattern for splitting up
+     * light and dark mode colors. Do not reuse this pattern. */
+    --readthedocs-notification-inverted-color: rgb(234, 234, 234);
+    --readthedocs-notification-inverted-background-color: rgb(64, 64, 64);
+    --readthedocs-notification-inverted-title-color: rgba(255, 255, 255, 0.9);
+    --readthedocs-notification-title-background-color: rgb(48, 48, 48);
+    --readthedocs-notification-inverted-link-color: rgb(134, 203, 243);
+  }
 }
 
 :host > div {
   margin: 1rem 0rem;
-  padding-top: var(--addons-notification-font-size);
-  padding-bottom: var(--addons-notification-font-size);
+  padding-top: var(--readthedocs-notification-font-size);
+  padding-bottom: var(--readthedocs-notification-font-size);
   overflow: auto;
   border-radius: 0.5rem;
-  font-family: var(
-    --readthedocs-notification-font-family,
-    "Lato",
-    "proxima-nova",
-    "Helvetica Neue",
-    "Arial",
-    "sans-serif"
-  );
-  font-size: var(--addons-notification-font-size);
-  color: var(--readthedocs-notification-color, rgb(64, 64, 64));
-  background-color: var(
-    --readthedocs-notification-background-color,
-    rgb(234, 234, 234)
-  );
+  font-family: var(--readthedocs-notification-font-family);
+  font-size: var(--readthedocs-notification-font-size);
+  color: var(--readthedocs-notification-color);
+  background-color: var(--readthedocs-notification-background-color);
 }
 
 :host(.floating) > div {
@@ -37,16 +45,13 @@
 
 :host(.toast) > div {
   position: fixed;
-  padding-top: calc(var(--addons-notification-font-size) * 0.75);
-  padding-bottom: calc(var(--addons-notification-font-size) * 0.75);
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
   margin: 0.75rem 0rem;
   top: 2rem;
   right: 2rem;
   z-index: 1750;
-  font-size: var(
-    --readthedocs-notification-toast-font-size,
-    calc(var(--addons-notification-font-size) * 0.85)
-  );
+  font-size: var(--readthedocs-notification-toast-font-size);
   width: 35rem;
   max-width: calc(100vw - 4rem);
 }
@@ -74,13 +79,13 @@
 }
 
 :host > div > svg.header.icon {
-  height: calc(var(--addons-notification-font-size) * 2);
+  height: 2em;
   padding: 0.5rem 1.5rem;
   float: left;
 }
 
 :host(.toast) > div > svg.header.icon {
-  height: calc(var(--addons-notification-font-size) * 1.5);
+  height: 1.5em;
 }
 
 :host(.titled) > div > svg.header.icon {
@@ -88,49 +93,43 @@
 }
 
 :host(.inverted) > div {
-  color: var(--readthedocs-notification-color, rgb(234, 234, 234));
-  background-color: var(
-    --readthedocs-notification-background-color,
-    rgb(64, 64, 64)
-  );
+  color: var(--readthedocs-notification-inverted-color);
+  background-color: var(--readthedocs-notification-inverted-background-color);
 }
 
 :host > div a {
-  color: var(--readthedocs-notification-link-color, rgb(8, 140, 219));
+  color: var(--readthedocs-notification-link-color);
   text-decoration: none;
 }
 
 :host(.inverted) > div a {
-  color: var(--readthedocs-notification-link-color, rgb(134, 203, 243));
+  color: var(--readthedocs-notification-inverted-link-color);
 }
 
 :host > div > .title {
-  padding: 0.25rem var(--addons-notification-font-size);
+  padding: 0.25rem 1em;
   margin-bottom: 0.25rem;
-  line-height: var(--addons-notification-font-size);
+  line-height: 1em;
   font-weight: bold;
 }
 :host > div > div.content {
-  line-height: var(--addons-notification-font-size);
-  font-size: calc(var(--addons-notification-font-size) * 0.85);
-  padding: 0 calc(var(--addons-notification-font-size) * 1.5);
+  line-height: 1em;
+  font-size: 0.85em;
+  padding: 0 1.5em;
 }
 
 :host(.toast) > div > .title {
-  padding: 0rem var(--addons-notification-font-size);
+  padding: 0rem 1em;
 }
 
 :host(.titled) > div > .title {
   display: block;
   margin: 0rem;
-  padding: 0.1rem var(--addons-notification-font-size);
-  line-height: calc(var(--addons-notification-font-size) * 2);
+  padding: 0.1rem 1em;
+  line-height: 2em;
   border-radius: 0.5rem 0.5rem 0 0;
-  color: var(--readthedocs-notification-title-color, rgb(96, 96, 96));
-  background-color: var(
-    --readthedocs-notification-title-background-color,
-    rgb(224, 224, 224)
-  );
+  color: var(--readthedocs-notification-title-color);
+  background-color: var(--readthedocs-notification-title-background-color);
   vertical-align: middle;
   font-weight: bold;
 }
@@ -141,14 +140,11 @@
 }
 
 :host(.inverted) > div > .title {
-  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--readthedocs-notification-inverted-title-color);
 }
 
 :host(.inverted.titled) > div > .title {
-  background-color: var(
-    --readthedocs-notification-title-background-color,
-    rgb(48, 48, 48)
-  );
+  background-color: var(--readthedocs-notification-title-background-color);
 }
 
 :host > div > .title > .right {
@@ -157,15 +153,15 @@
 
 :host > div > .title > .right > svg {
   display: inline-block;
-  height: var(--addons-notification-font-size);
+  height: 1em;
   vertical-align: middle;
   cursor: pointer;
-  color: var(--readthedocs-notification-title-color, rgba(96, 96, 96));
+  color: var(--readthedocs-notification-title-color);
   font-weight: normal;
 }
 
 :host(.inverted) > div > .title > .right > svg {
-  color: var(--readthedocs-notification-title-color, rgba(255, 255, 255, 0.9));
+  color: var(--readthedocs-notification-inverted-title-color);
 }
 :host(.titled) > div > .title > .right > svg {
   margin: 0.5rem 0rem;

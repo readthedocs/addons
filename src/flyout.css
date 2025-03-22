@@ -5,7 +5,7 @@
     --readthedocs-flyout-max-width: 25em;
 
     --readthedocs-flyout-font-family: var(--readthedocs-font-family);
-    --readthedocs-flyout-font-size: var(--readthedocs-font-size);
+    --readthedocs-flyout-font-size: calc(var(--readthedocs-font-size) * 0.8);
     --readthedocs-flyout-line-height: 1.25em;
     --readthedocs-flyout-header-font-size: 1.125em;
     --readthedocs-flyout-dt-font-size: 1.125em;

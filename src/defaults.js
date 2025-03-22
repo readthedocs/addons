@@ -1,4 +1,6 @@
 import styleSheetFlyout from "./flyout.css";
+import styleSheetFiletreediff from "./filetreediff.css";
+import styleSheetNotification from "./notification.css";
 
 import { CSSResult } from "lit";
 
@@ -15,8 +17,8 @@ export const defaultStyleSheet = new CSSStyleSheet();
 defaultStyleSheet.replaceSync(`
 @layer defaults {
   :root {
-    --readthedocs-font-family: "Lato, proxima-nova, Helvetica Neue, Arial, sans-serif";
-    --readthedocs-font-size: 0.8rem;
+    --readthedocs-font-family: Lato, proxima-nova, "Helvetica Neue", Arial, sans-serif;
+    --readthedocs-font-size: 1rem;
   }
 
   :root[data-readthedocs-tool="mkdocs-material"] {
@@ -41,7 +43,11 @@ defaultStyleSheet.replaceSync(`
 }
 `);
 
-const styleSheets = [styleSheetFlyout];
+const styleSheets = [
+  styleSheetFlyout,
+  styleSheetFiletreediff,
+  styleSheetNotification,
+];
 
 for (let styleSheet of styleSheets) {
   if (styleSheet instanceof CSSResult) {
