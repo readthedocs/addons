@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.33.0
+---------------
+
+:date: Mar 18, 2025
+
+* Use footer text content ad for unknown themes (:pr:`562`)
+
+
 Version v0.32.1
 ---------------
 
