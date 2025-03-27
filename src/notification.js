@@ -47,6 +47,7 @@ export class NotificationElement extends LitElement {
     this.localStorageKey = null;
     this.dismissedTimestamp = null;
     this.autoDismissed = false;
+    this.autoDismissEnabled = true;
 
     // Trigger the auto-dismiss timer at startup
     this.triggerAutoDismissTimer();
@@ -66,7 +67,7 @@ export class NotificationElement extends LitElement {
   }
 
   triggerAutoDismissTimer() {
-    if (!document.hidden && !this.autoDismissed) {
+    if (this.autoDismissEnabled && !document.hidden && !this.autoDismissed) {
       clearTimeout(this.timerID);
       this.timerID = setTimeout(() => {
         this.autoDismissed = true;
@@ -414,6 +415,15 @@ export class NotificationAddon extends AddonBase {
   static addonEnabledPath = "addons.notifications.enabled";
   static addonName = "Notification";
   static elementClass = NotificationElement;
+  static elementInjectBehavior = "prepend";
+
+  setupInitialBehavior() {
+    for (const element of this.elements) {
+      element.autoDismissEnabled = false;
+      element.clearAutoDismissTimer();
+      element.className = "raised";
+    }
+  }
 }
 
 customElements.define(NotificationElement.elementName, NotificationElement);
