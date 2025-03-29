@@ -31,7 +31,6 @@ export class FlyoutElement extends LitElement {
   static properties = {
     config: { state: true },
     opened: { type: Boolean },
-    floating: { type: Boolean },
     position: { type: String },
   };
 
@@ -42,7 +41,6 @@ export class FlyoutElement extends LitElement {
 
     this.config = null;
     this.opened = false;
-    this.floating = true;
     this.position = "bottom-right";
     this.readthedocsLogo = READTHEDOCS_LOGO;
   }
@@ -338,7 +336,7 @@ export class FlyoutElement extends LitElement {
   }
 
   updateCSSClasses() {
-    this.classes = { floating: this.floating, container: true };
+    this.classes = { container: true };
     this.classes[this.position] = true;
   }
 
