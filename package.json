@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.13",
+    "nise": "^6.1.1",
     "npm-check-updates": "^17.1.16"
   }
 }

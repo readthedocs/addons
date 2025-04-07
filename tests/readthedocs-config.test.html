@@ -6,6 +6,7 @@
   <body>
     <script type="module">
       import { default as sinon } from "sinon";
+      import { default as nise } from "nise";
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as readthedocsConfig from "../src/readthedocs-config";
@@ -20,7 +21,7 @@
       runTests(async () => {
         beforeEach(() => {
           // Create a sinon fake server to mock requests
-          server = sinon.fakeServer.create();
+          server = nise.fakeServer.create();
           server.respondImmediately = true;
 
           if (metadataAddonsAPIVersion) {
