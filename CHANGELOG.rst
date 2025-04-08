@@ -3,6 +3,17 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.34.0
+---------------
+
+:date: Apr 8, 2025
+
+* Hotkeys: support contenteditable (:pr:`560`)
+* Visual diff: check for rootSelector before making request API (:pr:`561`)
+* Update nodejs to 22.14.0 (latest LTS) (:pr:`564`)
+* Packages: updated via ncu -u (:pr:`536`)
+
+
 Version v0.33.0
 ---------------
 
