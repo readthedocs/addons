@@ -127,10 +127,11 @@
 
 div.hit-block {
   padding-top: 3px;
-  border-top: 1px solid rgb(224, 224, 224);
+  border-top: 1px solid var(--readthedocs-search-result-section-border-color, rgb(224, 224, 224));
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  background-color: var(--readthedocs-search-content-background-color);
 }
 
 div.hit-block a.hit-block-heading {
@@ -188,7 +189,7 @@ div.hit-block .hit-block-heading-container svg {
 
 :host > div .results a.hit:hover,
 :host > div .results .hit .active {
-  background-color: rgb(245, 245, 245);
+  background-color: var(--readthedocs-search-result-section-highlight-color, rgb(245, 245, 245));
 }
 
 :host > div .results h2 {
@@ -197,7 +198,7 @@ div.hit-block .hit-block-heading-container svg {
   margin-top: 3px;
   margin-bottom: 5px;
   font-size: 1em;
-  color: black;
+  color: var(--readthedocs-search-color, black);
   line-height: inherit;
 }
 
@@ -226,7 +227,7 @@ div.hit-block .hit-block-heading-container svg {
 :host > div .results .hit .content {
   margin: 0;
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--readthedocs-search-color, rgba(0, 0, 0, 0.54));
   font-size: 15px;
   display: block;
   margin-bottom: 5px;
@@ -259,7 +260,7 @@ div.hit-block .hit-block-heading-container svg {
     --readthedocs-search-footer-background-color,
     rgb(234, 234, 234)
   );
-  color: #404040;
+  color: var(--readthedocs-search-color, #404040);
 }
 
 :host > div .credits {
