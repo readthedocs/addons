@@ -30,7 +30,7 @@
   background: var(--readthedocs-search-footer-code-background-color, #fff);
   padding: 2px 5px;
   border: solid 1px var(--readthedocs-search-footer-code-border-color, #e1e4e5);
-  color: #333;
+  color: var(--readthedocs-search-color, #333);
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 0.875em;
@@ -95,7 +95,7 @@
 :host > div form > label {
   font-size: 1.15em;
   padding-left: 5px;
-  color: #333;
+  color: var(--readthedocs-search-color, #333);
 }
 
 :host > div form label svg {
@@ -131,7 +131,7 @@ div.hit-block {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  background-color: var(--readthedocs-search-content-background-color);
+  background-color: var(--readthedocs-search-input-background-color);
 }
 
 div.hit-block a.hit-block-heading {
@@ -150,7 +150,7 @@ div.hit-block .hit-block-heading-container .close-icon {
   font-size: 1.15em;
   width: 1em;
   padding-right: 10px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--readthedocs-search-color, rgba(0, 0, 0, 0.54));
   padding-top: 5px;
 }
 
@@ -203,7 +203,7 @@ div.hit-block .hit-block-heading-container svg {
 }
 
 :host > div .results h2:hover {
-  border-bottom-color: black;
+  border-bottom-color: var(--readthedocs-search-result-section-highlight-color, black);
 }
 
 :host > div .results a.hit > div {
@@ -360,6 +360,7 @@ div.hit-block .hit-block-heading-container svg {
   list-style-position: inside;
   list-style-type: "\BB  ";
   margin: 0;
+  color: var(--readthedocs-search-color);
 }
 
 :host > div .help {
