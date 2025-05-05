@@ -1,7 +1,7 @@
 @layer defaults {
   :root {
-    --readthedocs-font-family: "Lato", "proxima-nova", "Helvetica Neue", "Arial",
-      sans-serif;
+    --readthedocs-font-family:
+      "Lato", "proxima-nova", "Helvetica Neue", "Arial", sans-serif;
     --readthedocs-font-size: 1rem;
   }
 

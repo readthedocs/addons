@@ -2,8 +2,9 @@
   :root {
     --readthedocs-search-font-family: var(--readthedocs-font-family);
     --readthedocs-search-font-size: var(--readthedocs-font-size); /* 16px? */
-    --readthedocs-search-code-font-family: SFMono-Regular, Menlo, Monaco,
-      Consolas, "Liberation Mono", "Courier New", monospace;
+    --readthedocs-search-code-font-family:
+      SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+      monospace;
     --readthedocs-search-code-font-size: 0.9em;
 
     --readthedocs-search-backdrop-color: rgba(0, 0, 0, 0.3);
