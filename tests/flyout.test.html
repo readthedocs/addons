@@ -8,6 +8,7 @@
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as flyout from "../src/flyout";
+      import { defaultStyleSheet } from "../src/defaults.js";
 
       let config;
       let metaResolverFilename;
@@ -353,6 +354,39 @@
             expect(versionLink).dom.to.equal(
               '<a href="https://project.readthedocs.io/en/stable/examples/single-page-application.html">stable</a>',
             );
+          });
+        });
+
+        describe("Flyout element styling", () => {
+          it("supports font size customization with fallback", async () => {
+            document.adoptedStyleSheets = [defaultStyleSheet];
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            // Addon default of 80% of global --readthedocs-font-size, default 16px
+            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("12.8px");
+            // Customization of global font size, still using 80% of global font size
+            document.documentElement.style.setProperty("--readthedocs-font-size", "11px");
+            expect(document.documentElement.style.cssText).to.equal("--readthedocs-font-size: 11px;");
+            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("8.8px");
+            // Customization of flyout font size, overrides 80% of global font size
+            document.documentElement.style.setProperty("--readthedocs-flyout-font-size", "17px");
+            expect(document.documentElement.style.cssText).to.equal("--readthedocs-font-size: 11px; --readthedocs-flyout-font-size: 17px;");
+            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("17px");
+          });
+
+          it("supports color customization with fallback", async () => {
+            document.adoptedStyleSheets = [defaultStyleSheet];
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            // Default
+            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).backgroundColor).to.equal("rgb(39, 39, 37)");
+            // With customization
+            document.documentElement.style.setProperty("--readthedocs-flyout-background-color", "red");
+            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).backgroundColor).to.equal("rgb(255, 0, 0)");
           });
         });
       });
