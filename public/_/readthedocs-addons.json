@@ -104,7 +104,7 @@
       "load_when_embedded": false
     },
     "ethicalads": {
-      "ad_free": true,
+      "ad_free": false,
       "enabled": true,
       "publisher": "readthedocs",
       "campaign_types": ["community", "house", "paid"],
