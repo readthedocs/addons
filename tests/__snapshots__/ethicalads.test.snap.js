@@ -20,9 +20,8 @@ snapshots["EthicalAd addon ad placement injected"] =
   data-ea-keywords="docs|data-science"
   data-ea-manual="true"
   data-ea-publisher="readthedocs"
-  data-ea-style="stickybox"
-  data-ea-type="image"
-  id="readthedocs-ea"
+  data-ea-type="text"
+  id="readthedocs-ea-text-footer"
 >
 </div>
 `;

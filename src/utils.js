@@ -23,7 +23,7 @@ import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.30.0";
+export const CLIENT_VERSION = "0.34.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -235,6 +235,9 @@ export function setupHistoryEvents() {
           //
           // import { DOCDIFF_URL_PARAM } from "./docdiff";
           toURL.searchParams.delete("readthedocs-diff");
+          toURL.searchParams.delete("readthedocs-diff-chunk");
+          fromURL.searchParams.delete("readthedocs-diff");
+          fromURL.searchParams.delete("readthedocs-diff-chunk");
 
           // Dispatch the event only if the new URL is not just the DOCDIFF_URL_PARAM added.
           if (toURL.href !== fromURL.href) {

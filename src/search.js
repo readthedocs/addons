@@ -193,7 +193,7 @@ export class SearchElement extends LitElement {
           <ul>
             <li>
               <strong>Exact phrase</strong>: use double quotes to match a whole
-              pharse: <code>"adding a subproject"</code>.
+              phrase: <code>"adding a subproject"</code>.
             </li>
             <li>
               <strong>Prefix</strong>: use an asterisk at the end of any term to

@@ -69,17 +69,19 @@ export function getReadTheDocsUserConfig(sendUrlParam) {
       // this data is ready to be consumed under `event.detail.data()`.
       const userApiUrl = _getApiUrl(sendUrlParam, metadataAddonsAPIVersion);
 
-      fetch(userApiUrl, {
-        method: "GET",
-      }).then((response) => {
-        if (!response.ok) {
-          return reject(
-            "Error hitting addons API endpoint for user api-version",
-          );
-        }
-        // Return the data in the API version requested.
-        return resolve(response.json());
-      });
+      return resolve(
+        fetch(userApiUrl, {
+          method: "GET",
+        }).then((response) => {
+          if (!response.ok) {
+            return reject(
+              "Error hitting addons API endpoint for user api-version",
+            );
+          }
+          // Return the data in the API version requested.
+          return response.json();
+        }),
+      );
     }
 
     // If the API versions match, we return `undefined`.
@@ -108,7 +110,7 @@ export function getReadTheDocsConfig(sendUrlParam) {
         return response.json();
       })
       .then((data) => {
-        return dispatchEvent(
+        dispatchEvent(
           EVENT_READTHEDOCS_ADDONS_INTERNAL_DATA_READY,
           document,
           new ReadTheDocsEventData(data),
@@ -124,8 +126,8 @@ export function getReadTheDocsConfig(sendUrlParam) {
           // event was fired can still get access to the data
           globalThis.ReadTheDocsEventData = new ReadTheDocsEventData(dataEvent);
 
-          // Trigger the addons data ready CustomEvent to with the data the user is expecting.
-          return dispatchEvent(
+          // Trigger the addons data ready CustomEvent with the data the user is expecting.
+          dispatchEvent(
             EVENT_READTHEDOCS_ADDONS_USER_DATA_READY,
             document,
             new ReadTheDocsEventData(dataEvent),

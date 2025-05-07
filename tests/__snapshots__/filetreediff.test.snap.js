@@ -27,6 +27,20 @@ snapshots["Filetreediff tests snapshot filetreediff completely"] =
         </option>
       </optgroup>
     </select>
+    <a
+      class="version"
+      href="https://github.com/organization/repository/pull/1234/"
+      target="_blank"
+      title="Go to pull request"
+    >
+      #1234
+    </a>
+    <a
+      href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
+      target="_blank"
+      title="Open documentation"
+    >
+    </a>
   </div>
 </div>
 `;
@@ -66,6 +80,20 @@ snapshots["Filetreediff tests toggle Show diff checkbox"] =
         </option>
       </optgroup>
     </select>
+    <a
+      class="version"
+      href="https://github.com/organization/repository/pull/1234/"
+      target="_blank"
+      title="Go to pull request"
+    >
+      #1234
+    </a>
+    <a
+      href="https://docs.readthedocs.com/platform/stable/visual-diff.html"
+      target="_blank"
+      title="Open documentation"
+    >
+    </a>
   </div>
 </div>
 `;
