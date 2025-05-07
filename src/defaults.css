@@ -1,0 +1,27 @@
+@layer defaults {
+  :root {
+    --readthedocs-font-family:
+      "Lato", "proxima-nova", "Helvetica Neue", "Arial", sans-serif;
+    --readthedocs-font-size: 1rem;
+  }
+
+  :root[data-readthedocs-tool="mkdocs-material"] {
+    --readthedocs-font-size: 0.58rem;
+  }
+
+  :root[data-readthedocs-tool="antora"] {
+    --readthedocs-font-size: 0.7rem;
+  }
+
+  :root[data-readthedocs-tool="mdbook"] {
+    --readthedocs-font-size: 1.3rem;
+  }
+
+  :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
+    --readthedocs-font-size: 0.725rem;
+  }
+
+  :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
+    --readthedocs-font-size: 0.58rem;
+  }
+}
