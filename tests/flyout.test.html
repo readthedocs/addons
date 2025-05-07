@@ -365,15 +365,34 @@
             await elementUpdated(element);
 
             // Addon default of 80% of global --readthedocs-font-size, default 16px
-            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("12.8px");
+            expect(
+              getComputedStyle(element.shadowRoot.querySelector(":host > div"))
+                .fontSize,
+            ).to.equal("12.8px");
             // Customization of global font size, still using 80% of global font size
-            document.documentElement.style.setProperty("--readthedocs-font-size", "11px");
-            expect(document.documentElement.style.cssText).to.equal("--readthedocs-font-size: 11px;");
-            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("8.8px");
+            document.documentElement.style.setProperty(
+              "--readthedocs-font-size",
+              "11px",
+            );
+            expect(document.documentElement.style.cssText).to.equal(
+              "--readthedocs-font-size: 11px;",
+            );
+            expect(
+              getComputedStyle(element.shadowRoot.querySelector(":host > div"))
+                .fontSize,
+            ).to.equal("8.8px");
             // Customization of flyout font size, overrides 80% of global font size
-            document.documentElement.style.setProperty("--readthedocs-flyout-font-size", "17px");
-            expect(document.documentElement.style.cssText).to.equal("--readthedocs-font-size: 11px; --readthedocs-flyout-font-size: 17px;");
-            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).fontSize).to.equal("17px");
+            document.documentElement.style.setProperty(
+              "--readthedocs-flyout-font-size",
+              "17px",
+            );
+            expect(document.documentElement.style.cssText).to.equal(
+              "--readthedocs-font-size: 11px; --readthedocs-flyout-font-size: 17px;",
+            );
+            expect(
+              getComputedStyle(element.shadowRoot.querySelector(":host > div"))
+                .fontSize,
+            ).to.equal("17px");
           });
 
           it("supports color customization with fallback", async () => {
@@ -383,10 +402,19 @@
             await elementUpdated(element);
 
             // Default
-            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).backgroundColor).to.equal("rgb(39, 39, 37)");
+            expect(
+              getComputedStyle(element.shadowRoot.querySelector(":host > div"))
+                .backgroundColor,
+            ).to.equal("rgb(39, 39, 37)");
             // With customization
-            document.documentElement.style.setProperty("--readthedocs-flyout-background-color", "red");
-            expect(getComputedStyle(element.shadowRoot.querySelector(":host > div")).backgroundColor).to.equal("rgb(255, 0, 0)");
+            document.documentElement.style.setProperty(
+              "--readthedocs-flyout-background-color",
+              "red",
+            );
+            expect(
+              getComputedStyle(element.shadowRoot.querySelector(":host > div"))
+                .backgroundColor,
+            ).to.equal("rgb(255, 0, 0)");
           });
         });
       });
