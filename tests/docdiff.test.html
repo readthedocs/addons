@@ -10,6 +10,7 @@
       import { expect, waitUntil, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import { default as sinon } from "sinon";
+      import { default as nise } from "nise";
       import { EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW } from "../src/events";
       import * as docdiff from "../src/docdiff";
 
@@ -19,7 +20,7 @@
       runTests(async () => {
         beforeEach(() => {
           // Create a sinon fake server to mock requests
-          server = sinon.fakeServer.create();
+          server = nise.fakeServer.create();
           server.respondImmediately = true;
 
           config = {
@@ -67,6 +68,25 @@
 
             const content = document.querySelector("main");
             await expect(content).dom.to.equalSnapshot();
+          });
+
+          it("check root selector is in current document before making request", async () => {
+            config.addons.options.root_selector = "#non-existent-id";
+
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [200, {}, "{}"]);
+
+            const addon = new docdiff.DocDiffAddon(config);
+            const element = document.querySelector("readthedocs-docdiff");
+
+            const event = new CustomEvent(
+              EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+            );
+            document.dispatchEvent(event);
+
+            await elementUpdated(element);
+            // The request shouldn't be done because the root selector is not found in the current document.
+            expect(server.requests).to.have.length(0);
           });
         });
       });

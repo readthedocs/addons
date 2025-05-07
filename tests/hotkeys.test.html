@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <meta name="readthedocs-http-status" content="200" />
+  </head>
+  <body>
+    <script type="module">
+      import { default as sinon } from "sinon";
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as events from "../src/events";
+      import * as hotkeys from "../src/hotkeys";
+
+      let config;
+
+      runTests(async () => {
+        beforeEach(() => {
+          config = {
+            addons: {
+              hotkeys: {
+                enabled: true,
+                doc_diff: {
+                  enabled: true,
+                  trigger: "KeyD",
+                },
+                search: {
+                  enabled: true,
+                  trigger: "Slash",
+                },
+              },
+            },
+          };
+        });
+
+        afterEach(() => {
+          sinon.restore();
+        });
+
+        describe("HotKeys tests", () => {
+          it("trigger docdiff when pressing 'd'", async () => {
+            const addon = new hotkeys.HotKeysAddon(config);
+            const element = document.querySelector("readthedocs-hotkeys");
+            await elementUpdated(element);
+
+            // Empty shadowDom
+            await expect(element).shadowDom.to.equal("");
+
+            const fakeFunction = sinon.fake();
+            document.addEventListener(
+              events.EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
+              (event) => {
+                fakeFunction();
+              },
+            );
+
+            const event = new Event("keydown");
+            event.code = "KeyD";
+            document.dispatchEvent(event);
+
+            expect(fakeFunction.calledOnce).to.be.true;
+          });
+
+          it("trigger search modal when pressing '/'", async () => {
+            const addon = new hotkeys.HotKeysAddon(config);
+            const element = document.querySelector("readthedocs-hotkeys");
+            await elementUpdated(element);
+
+            // Empty shadowDom
+            await expect(element).shadowDom.to.equal("");
+
+            const fakeFunction = sinon.fake();
+            document.addEventListener(
+              events.EVENT_READTHEDOCS_SEARCH_SHOW,
+              (event) => {
+                fakeFunction();
+              },
+            );
+
+            const event = new Event("keydown");
+            event.code = "Slash";
+            document.dispatchEvent(event);
+
+            expect(fakeFunction.calledOnce).to.be.true;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -28,17 +28,17 @@ commands:
 jobs:
   checks:
     docker:
-      - image: "cimg/node:18.15.0"
+      - image: "cimg/node:22.14.0"
     steps:
       - run-checks: {}
   test:
     docker:
-      - image: "cimg/node:18.15.0-browsers"
+      - image: "cimg/node:22.14.0-browsers"
     steps:
       - run-tests: {}
   build:
     docker:
-      - image: "cimg/node:18.15.0"
+      - image: "cimg/node:22.14.0"
     steps:
       - run-build: {}
 

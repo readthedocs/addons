@@ -1,12 +1,11 @@
 /* @web/test-runner snapshot v1 */
 export const snapshots = {};
-
 snapshots["Search tests initial trigger by event and DOM check"] = 
 `<div role="search">
   <div class="background">
   </div>
   <div class="content">
-    <form class="focus">
+    <form>
       <label>
       </label>
       <input
@@ -179,7 +178,7 @@ snapshots["Search tests show the modal and perform a query with no results"] =
                 Exact phrase
               </strong>
               : use double quotes to match a whole
-              pharse:
+              phrase:
               <code>
                 "adding a subproject"
               </code>

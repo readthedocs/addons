@@ -42,6 +42,15 @@ export class HotKeysElement extends LitElement {
     this.searchHotKeyEnabled = this.config.addons.hotkeys.search.enabled;
   }
 
+  isInput(element) {
+    return (
+      element.tagName === "INPUT" ||
+      element.tagName === "TEXTAREA" ||
+      element.tagName === "READTHEDOCS-SEARCH" ||
+      element.contentEditable === "true"
+    );
+  }
+
   _handleKeydown = (e) => {
     // Close docdiff with single-stroke `d` (no Ctrl, no Shift, no Alt and no Meta)
     // (I'm checking `document.activeElement` to check if it not inside an INPUT to avoid enable/disable while typing on forms)
@@ -54,9 +63,7 @@ export class HotKeysElement extends LitElement {
       this.docDiffHotKeyEnabled &&
       keyboardEventToString(e) ===
         this.config.addons.hotkeys.doc_diff.trigger &&
-      document.activeElement.tagName !== "INPUT" &&
-      document.activeElement.tagName !== "TEXTAREA" &&
-      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
+      !this.isInput(document.activeElement)
     ) {
       if (this.docDiffEnabled) {
         event = new CustomEvent(EVENT_READTHEDOCS_DOCDIFF_HIDE);
@@ -69,9 +76,7 @@ export class HotKeysElement extends LitElement {
     if (
       this.searchHotKeyEnabled &&
       keyboardEventToString(e) === this.config.addons.hotkeys.search.trigger &&
-      document.activeElement.tagName !== "INPUT" &&
-      document.activeElement.tagName !== "TEXTAREA" &&
-      document.activeElement.tagName !== "READTHEDOCS-SEARCH"
+      !this.isInput(document.activeElement)
     ) {
       event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     }

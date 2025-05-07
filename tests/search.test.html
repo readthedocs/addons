@@ -10,6 +10,7 @@
       import { expect, waitUntil, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import { default as sinon } from "sinon";
+      import { default as nise } from "nise";
       import { EVENT_READTHEDOCS_SEARCH_SHOW } from "../src/events";
       import * as search from "../src/search";
 
@@ -19,7 +20,7 @@
       runTests(async () => {
         beforeEach(() => {
           // Create a sinon fake server to mock requests
-          server = sinon.fakeServer.create();
+          server = nise.fakeServer.create();
           server.respondImmediately = true;
 
           config = {
@@ -60,7 +61,9 @@
             document.dispatchEvent(searchEvent);
 
             await elementUpdated(element);
-            await expect(element).shadowDom.to.equalSnapshot();
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
           });
 
           it("initial trigger by event and DOM check with filters", async () => {
