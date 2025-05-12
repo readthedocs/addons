@@ -396,6 +396,7 @@
           });
 
           it("supports color customization with fallback", async () => {
+            // Addons initialization was skipped, load default stylesheet manually
             document.adoptedStyleSheets = [defaultStyleSheet];
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
