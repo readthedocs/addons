@@ -3,6 +3,14 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.34.1
+---------------
+
+:date: May 14, 2025
+
+* EthicalAds: better placement for ad on blog post pages under Material for MkDocs
+
+
 Version v0.34.0
 ---------------
 
