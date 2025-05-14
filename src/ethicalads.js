@@ -119,7 +119,9 @@ export class EthicalAdsAddon extends AddonBase {
           knownPlacementFound = true;
         }
       } else if (docTool.isMaterialMkDocsTheme()) {
-        selector = ".md-sidebar__scrollwrap";
+        // Detect the left navbar if it's not hidden or grab the navbar from a post page
+        selector =
+          ".md-sidebar--primary:not([hidden]) > .md-sidebar__scrollwrap, .md-sidebar--post > .md-sidebar__scrollwrap";
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
