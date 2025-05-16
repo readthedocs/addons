@@ -28,7 +28,7 @@ import * as customscript from "./customscript";
 import * as application from "./application";
 import { default as objectPath } from "object-path";
 
-import doctoolsStyleSheet from "./doctools.css";
+import { defaultStyleSheet } from "./defaults.js";
 
 export class AddonsApplication {
   constructor() {
@@ -125,11 +125,7 @@ export class AddonsApplication {
     const elementHtml = document.querySelector("html");
     if (elementHtml) {
       // Inject styles at the parent DOM to set variables at :root
-      let styleSheet = doctoolsStyleSheet;
-      if (doctoolsStyleSheet instanceof CSSResult) {
-        styleSheet = doctoolsStyleSheet.styleSheet;
-      }
-      document.adoptedStyleSheets = [styleSheet];
+      document.adoptedStyleSheets = [defaultStyleSheet];
 
       // If we detect a documentation tool, set attributes on :root to allow
       // for CSS selectors to utilize these values.
