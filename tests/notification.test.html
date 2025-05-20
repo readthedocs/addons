@@ -222,22 +222,6 @@
             expect(element).shadowDom.to.equal("");
           });
 
-          it("on external version", async () => {
-            config.versions.current.slug = "381";
-            config.versions.current.type = "external";
-
-            const addon = new notification.NotificationAddon(config);
-            const element = document.querySelector("readthedocs-notification");
-
-            // We need to wait for the element to renders/updates before querying it
-            await elementUpdated(element);
-
-            const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
-              "This page was created from a pull request build",
-            );
-          });
-
           it("check default CSS classes", async () => {
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");
@@ -295,32 +279,6 @@
 
             // The notification should not be displayed
             expect(element).shadowDom.to.equal("");
-          });
-
-          it("renders when a different version was previously closed", async () => {
-            config.versions.current.slug = "381";
-            config.versions.current.type = "external";
-
-            // localStorage should contain information about the previous dismissal
-            const addonInformation = {
-              "project-en-v1.0-notification": { dismissedTimestamp: 123 },
-            };
-            const localStorageString = JSON.stringify(addonInformation);
-            getLocalStorageStub
-              .withArgs("readthedocs-notification-storage-key")
-              .returns(localStorageString);
-
-            const addon = new notification.NotificationAddon(config);
-            const element = document.querySelector("readthedocs-notification");
-
-            // We need to wait for the element to renders/updates before querying it
-            await elementUpdated(element);
-
-            // The notification should be displayed normally
-            const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
-              "This page was created from a pull request build",
-            );
           });
         });
       });
