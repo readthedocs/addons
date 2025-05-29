@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.35.0
+---------------
+
+:date: May 29, 2025
+
+* Expand the ability to customize addons through CSS variables (:pr:`545`)
+
 Version v0.34.1
 ---------------
 
