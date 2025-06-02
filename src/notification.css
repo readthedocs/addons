@@ -1,11 +1,9 @@
 @layer defaults {
   :root {
-    --readthedocs-notification-font-size: var(--readthedocs-font-size);
-    --readthedocs-notification-font-family: var(--readthedocs-font-family);
-
-    --readthedocs-notification-toast-font-size: calc(
-      var(--readthedocs-notification-font-size) * 0.85
+    --readthedocs-notification-font-size: calc(
+      var(--readthedocs-font-size) * 0.85
     );
+    --readthedocs-notification-font-family: var(--readthedocs-font-family);
 
     --readthedocs-notification-color: rgb(64, 64, 64);
     --readthedocs-notification-background-color: rgb(234, 234, 234);
@@ -51,7 +49,6 @@
   top: 2rem;
   right: 2rem;
   z-index: 1750;
-  font-size: var(--readthedocs-notification-toast-font-size);
   width: 35rem;
   max-width: calc(100vw - 4rem);
 }
@@ -114,7 +111,6 @@
 }
 :host > div > div.content {
   line-height: 1em;
-  font-size: 0.85em;
   padding: 0 1.5em;
 }
 

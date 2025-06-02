@@ -6,11 +6,12 @@
   }
 
   :root[data-readthedocs-tool="mkdocs-material"] {
-    --readthedocs-font-size: 0.58rem;
+    --readthedocs-font-size: 1.455em;
   }
 
   :root[data-readthedocs-tool="antora"] {
-    --readthedocs-font-size: 0.7rem;
+    --readthedocs-flyout-font-size: 0.7em;
+    --readthedocs-notification-font-size: 0.75em;
   }
 
   :root[data-readthedocs-tool="mdbook"] {
@@ -18,10 +19,10 @@
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="furo"] {
-    --readthedocs-font-size: 0.725rem;
+    --readthedocs-font-size: 0.9em;
   }
 
   :root[data-readthedocs-tool="sphinx"][data-readthedocs-tool-theme="immaterial"] {
-    --readthedocs-font-size: 0.58rem;
+    --readthedocs-font-size: 1.45em;
   }
 }
