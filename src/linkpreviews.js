@@ -189,7 +189,21 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
       );
       newTooltip.setAttribute(TOOLTIP_DATA_HREF, anchorElement.href);
       newTooltip.classList.add("tooltip");
-      anchorElement.insertAdjacentElement("afterend", newTooltip);
+
+      // Workaround to add the element outside header elements
+      // https://github.com/readthedocs/addons/issues/584
+      if (
+        ["h1", "h2", "h3", "h4"].includes(
+          anchorElement.parentElement.tagName.toLowerCase(),
+        )
+      ) {
+        anchorElement.parentElement.insertAdjacentElement(
+          "afterend",
+          newTooltip,
+        );
+      } else {
+        anchorElement.insertAdjacentElement("afterend", newTooltip);
+      }
       // Let's add event listeners on the tooltip as well, to prevent hiding, when
       // mouse moves away from the anchor element
       newTooltip.addEventListener("mouseenter", cancelHideDelay);
