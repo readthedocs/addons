@@ -110,7 +110,7 @@
   font-weight: bold;
 }
 :host > div > div.content {
-  line-height: 1em;
+  line-height: 1.2em;
   padding: 0 1.5em;
 }
 
