@@ -186,9 +186,21 @@ export class DocDiffElement extends LitElement {
   performDiff(remoteContent) {
     const parser = new DOMParser();
     const htmlDocument = parser.parseFromString(remoteContent, "text/html");
-    const oldBody = htmlDocument.documentElement.querySelector(
-      this.rootSelector,
-    );
+
+    // We first try to get the `rootSelector` from the `remoteContent`.
+    // However, depending on how the selector is constructed, it may not exist
+    // even if the response is valid.
+    //
+    // This happens when we send `?maincontent=` to the API backend with a
+    // complex selector (eg. "main > div > div.md-content") since in the
+    // response the first elements (e.g. "main > div") won't exist because the
+    // content is already parsed to return only the `?maincontent=` selector.
+    //
+    // In those cases, we always pick the `firstElementChild` of the body.
+    const oldBody =
+      htmlDocument.documentElement.querySelector(this.rootSelector) ||
+      htmlDocument.documentElement.querySelector("body").firstElementChild;
+
     const newBody = document.querySelector(this.rootSelector);
 
     if (oldBody === null) {
