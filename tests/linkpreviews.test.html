@@ -38,6 +38,8 @@
         afterEach(() => {
           // Restore the fake server to its original state
           server.restore();
+
+          document.querySelectorAll("div.tooltip").forEach((el) => el.remove());
         });
 
         describe("Link previews tests", () => {

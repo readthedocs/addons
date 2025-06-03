@@ -189,7 +189,7 @@ function setupTooltip(el, doctoolname, doctoolversion, selector) {
       );
       newTooltip.setAttribute(TOOLTIP_DATA_HREF, anchorElement.href);
       newTooltip.classList.add("tooltip");
-      anchorElement.insertAdjacentElement("afterend", newTooltip);
+      document.body.insertAdjacentElement("beforeend", newTooltip);
       // Let's add event listeners on the tooltip as well, to prevent hiding, when
       // mouse moves away from the anchor element
       newTooltip.addEventListener("mouseenter", cancelHideDelay);
