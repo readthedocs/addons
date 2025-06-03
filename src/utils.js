@@ -673,14 +673,14 @@ export class DocumentationTool {
 
   isSphinxAlabasterLikeTheme() {
     const selectors = [
-      'link[href^="_static/alabaster.css"]',
-      'link[href^="_static/flask.css"]',
-      'link[href^="_static/jinja.css"]',
-      'link[href^="_static/click.css"]',
-      'link[href^="_static/celery.css"]',
-      'link[href^="_static/babel.css"]',
-      'link[href^="_static/platter.css"]',
-      'link[href^="_static/werkzeug.css"]',
+      'link[href*="_static/alabaster.css"]',
+      'link[href*="_static/flask.css"]',
+      'link[href*="_static/jinja.css"]',
+      'link[href*="_static/click.css"]',
+      'link[href*="_static/celery.css"]',
+      'link[href*="_static/babel.css"]',
+      'link[href*="_static/platter.css"]',
+      'link[href*="_static/werkzeug.css"]',
     ];
 
     if (document.querySelectorAll(selectors.join(", ")).length) {
@@ -691,7 +691,7 @@ export class DocumentationTool {
 
   isSphinxReadTheDocsLikeTheme() {
     if (
-      document.querySelectorAll('script[src^="_static/js/theme.js"]').length ===
+      document.querySelectorAll('script[src*="_static/js/theme.js"]').length ===
       1
     ) {
       return true;
@@ -701,7 +701,7 @@ export class DocumentationTool {
 
   isSphinxFuroLikeTheme() {
     if (
-      document.querySelectorAll('link[href^="_static/styles/furo.css"]')
+      document.querySelectorAll('link[href*="_static/styles/furo.css"]')
         .length === 1
     ) {
       return true;
@@ -712,7 +712,7 @@ export class DocumentationTool {
   isSphinxBookThemeLikeTheme() {
     if (
       document.querySelectorAll(
-        'link[href^="_static/styles/sphinx-book-theme.css"]',
+        'link[href*="_static/styles/sphinx-book-theme.css"]',
       ).length === 1
     ) {
       return true;
@@ -723,7 +723,7 @@ export class DocumentationTool {
   isSphinxImmaterialLikeTheme() {
     if (
       document.querySelectorAll(
-        'link[href^="_static/sphinx_immaterial_theme"]',
+        'link[href*="_static/sphinx_immaterial_theme"]',
         'a[href="https://github.com/jbms/sphinx-immaterial/"][rel="noopener"]',
       ).length
     ) {
