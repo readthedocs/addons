@@ -1,12 +1,7 @@
 <html>
   <body>
     <script type="module">
-      import {
-        expect,
-        fixture,
-        fixtureCleanup,
-        elementUpdated,
-      } from "@open-wc/testing";
+      import { expect, elementUpdated } from "@open-wc/testing";
       import { setViewport } from "@web/test-runner-commands";
       import { runTests } from "@web/test-runner-mocha";
       import * as ethicalads from "../src/ethicalads.js";
@@ -30,21 +25,21 @@
         });
 
         afterEach(() => {
-          // Remove all the fixtures added
-          fixtureCleanup();
-
           // Remove the script added
-
           document.querySelector("#ethicaladsjs")?.remove();
+
           // Remove the ad added
           document.querySelector("#readthedocs-ea")?.remove();
+          document.querySelector("#ethical-ad-placement")?.remove();
         });
 
         describe("EthicalAd addon", () => {
           it("ad placement defined by the user", async () => {
-            await fixture(
-              '<div id="ethical-ad-placement" class="ad-flat"></div>',
-            );
+            // Create the custom ad position
+            const content =
+              '<div id="ethical-ad-placement" class="ad-flat"></div>';
+            document.body.insertAdjacentHTML("beforeend", content);
+
             const addon = new ethicalads.EthicalAdsAddon(config);
 
             const element = document.querySelector("#ethical-ad-placement");
