@@ -3,6 +3,16 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.35.1
+---------------
+
+:date: Jun 3, 2025
+
+* Docs: replace typlog by shibuya (:pr:`591`)
+* Link preview: do not add elements inside headers (:pr:`592`)
+* CSS: update default styles (:pr:`590`)
+
+
 Version v0.35.0
 ---------------
 
