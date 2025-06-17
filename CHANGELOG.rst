@@ -3,6 +3,13 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version v0.35.3
+---------------
+
+:date: Jun 17, 2025
+
+* Bug fix for change in project downloads field (:pr:`600`)
+
 Version v0.35.2
 ---------------
 
