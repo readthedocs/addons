@@ -167,11 +167,10 @@ const addons_flyout = {
             slug: { type: "string" },
             urls: {
               type: "object",
-              required: ["home", "builds", "downloads"],
+              required: ["home", "builds"],
               properties: {
                 home: { type: "string" },
                 builds: { type: "string" },
-                downloads: { type: "string" },
               },
             },
             versioning_scheme: {
