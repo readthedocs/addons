@@ -448,7 +448,7 @@ export class DocumentationTool {
     }
 
     console.warning(
-      "We were not able to find the root selector. Some addons features may not work as expected.",
+      "Not able to find main content for link previews. Link previews may not function.",
     );
     return null;
   }
@@ -484,7 +484,7 @@ export class DocumentationTool {
     }
 
     console.warning(
-      "We were not able to find the root selector. Some addons features may not work as expected.",
+      "Not able to find the main content CSS selector. Some addons features may not work as expected.",
     );
     return null;
   }
