@@ -447,7 +447,9 @@ export class DocumentationTool {
       }
     }
 
-    console.warning("We were not able to find the root selector. Some addons features may not work as expected.");
+    console.warning(
+      "We were not able to find the root selector. Some addons features may not work as expected.",
+    );
     return null;
   }
 
@@ -481,7 +483,9 @@ export class DocumentationTool {
       }
     }
 
-    console.warning("We were not able to find the root selector. Some addons features may not work as expected.");
+    console.warning(
+      "We were not able to find the root selector. Some addons features may not work as expected.",
+    );
     return null;
   }
 
