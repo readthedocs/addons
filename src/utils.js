@@ -122,8 +122,8 @@ export class AddonBase {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
     if (!valid && !IS_TESTING) {
-      console.debug(`Validation error on addon "${this.addonName}":`);
-      console.debug(validate.errors);
+      console.error(`Validation error on addon "${this.addonName}":`);
+      console.error(validate.errors);
     }
     return valid;
   }
@@ -447,7 +447,7 @@ export class DocumentationTool {
       }
     }
 
-    console.debug("We were not able to find the root selector.");
+    console.warning("We were not able to find the root selector. Some addons features may not work as expected.");
     return null;
   }
 
@@ -481,7 +481,7 @@ export class DocumentationTool {
       }
     }
 
-    console.debug("We were not able to find the root selector.");
+    console.warning("We were not able to find the root selector. Some addons features may not work as expected.");
     return null;
   }
 
