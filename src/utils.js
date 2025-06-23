@@ -122,8 +122,10 @@ export class AddonBase {
     const validate = ajv.getSchema(this.jsonValidationURI);
     const valid = validate(config);
     if (!valid && !IS_TESTING) {
-      console.error(`Validation error on addon "${this.addonName}":`);
-      console.error(validate.errors);
+      console.error(
+        `Validation error on addon "${this.addonName}":`,
+        validate.errors,
+      );
     }
     return valid;
   }
