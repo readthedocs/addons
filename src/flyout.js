@@ -165,6 +165,9 @@ export class FlyoutElement extends LitElement {
     // Dispatch the custom event the search addon is listening to show the modal
     const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
     document.dispatchEvent(searchEvent);
+
+    // Close the flyout after showing the search modal
+    this._close();
   }
 
   renderSearch() {
