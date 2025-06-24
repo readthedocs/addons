@@ -66,7 +66,7 @@
 header {
   display: flex;
   flex-flow: row nowrap;
-  gap: 1em;
+  gap: 0.5em;
   align-items: center;
   cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color);
@@ -80,6 +80,7 @@ header > img.logo {
   max-height: 1.5em;
   width: auto;
   padding: 0.5em 0em;
+  margin-right: 0.75em;
   /* Don't grow past content size, do shrink down to min-content */
   flex: 0 1 auto;
 }
