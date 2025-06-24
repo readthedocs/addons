@@ -3,6 +3,21 @@ CHANGELOG
 
 .. The text for the changelog is manually generated for now.
 
+Version 0.36.0
+--------------
+
+## What's Changed
+
+* Increase log levels on real issues by @ericholscher in https://github.com/readthedocs/addons/pull/601
+* Packages: updated via `ncu -u` by @github-actions in https://github.com/readthedocs/addons/pull/605
+* Small logging fix by @agjohnson in https://github.com/readthedocs/addons/pull/603
+* Reintroduce the stickybox on wide screens by @davidfischer in https://github.com/readthedocs/addons/pull/604
+* Render flyout properly when showing search modal by @humitos in https://github.com/readthedocs/addons/pull/606
+* Equalize flyout grid spacing by @agjohnson in https://github.com/readthedocs/addons/pull/602
+
+
+**Full Changelog**: https://github.com/readthedocs/addons/compare/0.35.3...0.36.0
+
 Version v0.35.3
 ---------------
 
