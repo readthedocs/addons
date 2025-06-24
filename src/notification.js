@@ -3,7 +3,6 @@ import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCircleXmark,
   faFlask,
-  faCodePullRequest,
   faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
@@ -198,18 +197,6 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
-    if (this.config.versions.current.type === "external") {
-      if (
-        objectPath.get(
-          this.config,
-          "addons.notifications.show_on_external",
-          false,
-        )
-      ) {
-        return this.renderExternalVersionWarning();
-      }
-    }
-
     if (
       this.readingLatestVersion &&
       this.stableVersionAvailable &&
@@ -329,35 +316,6 @@ export class NotificationElement extends LitElement {
           <a href="${this.urls.stable}"
             >latest stable version of this documentation</a
           >.
-        </div>
-      </div>
-    `;
-  }
-
-  renderExternalVersionWarning() {
-    library.add(faCodePullRequest);
-    const iconPullRequest = icon(faCodePullRequest, {
-      title: "This version is a pull request version",
-      classes: ["header", "icon"],
-    });
-
-    return html`
-      <div>
-        ${iconPullRequest.node[0]}
-        <div class="title">
-          This page was created from a pull request build
-          ${this.renderCloseButton()}
-        </div>
-        <div class="content">
-          See the
-          <a href="${addUtmParameters(this.urls.build, "notification")}"
-            >build's detail page</a
-          >
-          or
-          <a href="${this.urls.external}"
-            >pull request #${this.config.versions.current.slug}</a
-          >
-          for more information.
         </div>
       </div>
     `;
