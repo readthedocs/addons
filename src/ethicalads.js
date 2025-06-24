@@ -1,4 +1,3 @@
-import { ajv } from "./data-validation";
 import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
@@ -198,7 +197,12 @@ export class EthicalAdsAddon extends AddonBase {
         if (elementToAppend) {
           elementToAppend.append(placement);
         }
-      } else if (window.innerWidth > 1300 && Math.random() > 0.5) {
+
+        // Use the length of the user agent divided into increments of 10, and select 50% of them
+        const uaLength = navigator.userAgent.length;
+        const increments = Math.floor(uaLength / 10);
+        const shouldShowStickybox = increments % 2 === 0;
+      } else if (window.innerWidth > 1300 && shouldShowStickybox) {
         // https://ethical-ad-client.readthedocs.io/en/latest/#stickybox
         placement.setAttribute("data-ea-type", "image");
         placement.setAttribute("data-ea-style", "stickybox");
