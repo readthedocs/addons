@@ -198,22 +198,11 @@ export class EthicalAdsAddon extends AddonBase {
         if (elementToAppend) {
           elementToAppend.append(placement);
         }
-      } else if (window.innerWidth > 1300 && Math.random() > 0.5) {
-        // https://ethical-ad-client.readthedocs.io/en/latest/#stickybox
-        placement.setAttribute("data-ea-type", "image");
-        placement.setAttribute("data-ea-style", "stickybox");
-        placement.setAttribute("id", "readthedocs-ea-image-stickybox");
-        this.addEaPlacementToElement(placement);
-        // `document.body` here is not too much relevant, since we are going to
-        // use this selector only for a floating stickybox ad
-        const elementInsertBefore = document.body;
-        elementInsertBefore.insertBefore(
-          placement,
-          elementInsertBefore.lastChild,
-        );
       } else {
         // Default to a text ad appended to the root selector when no known placement found
         placement.setAttribute("data-ea-type", "text");
+        // TODO: Check this placement on the dashboard,
+        // and see how this is performing.
         const docToolName = docTool.getDocumentationTool();
         const idSuffix = docToolName ? `-${docToolName}` : "";
         placement.setAttribute("id", `readthedocs-ea-text-footer${idSuffix}`);
