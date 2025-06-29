@@ -16,7 +16,7 @@
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^7.27.7",
     "@babel/plugin-syntax-import-assertions": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -37,7 +37,7 @@
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.3.0",
     "object-path": "^0.11.8",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "rollup-plugin-lit-css": "^5.0.2",
     "sinon": "^21.0.0",
     "tippy.js": "^6.3.7",
@@ -62,7 +62,7 @@
     }
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.1",
+    "@floating-ui/dom": "^1.7.2",
     "nise": "^6.1.1",
     "npm-check-updates": "^18.0.1"
   }
