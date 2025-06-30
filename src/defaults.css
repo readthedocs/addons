@@ -7,6 +7,7 @@
 
   :root[data-readthedocs-tool="mkdocs-material"] {
     --readthedocs-font-size: 1.455em;
+    --readthedocs-filetreediff-icon-width: 0.6rem;
   }
 
   :root[data-readthedocs-tool="antora"] {
