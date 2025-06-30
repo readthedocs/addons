@@ -111,6 +111,7 @@ export class SearchElement extends LitElement {
         userFilters.push({
           name: filter[0],
           value: filter[1],
+          default: filter[2],
         });
       }
       this.filters = userFilters;
@@ -239,6 +240,7 @@ export class SearchElement extends LitElement {
                   id="filter-${index}"
                   type="checkbox"
                   value="${filter.value}"
+                  ?checked=${filter.default}
                 />
                 <label for="filter-${index}"> ${filter.name} </label>
               </li>
