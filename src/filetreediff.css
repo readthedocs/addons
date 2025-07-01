@@ -10,6 +10,7 @@
     --readthedocs-filetreediff-border-color: #ddd;
     --readthedocs-filetreediff-label-color: #333;
     --readthedocs-filetreediff-chunks-color: #27ae60;
+    --readthedocs-filetreediff-icon-width: 0.8rem;
   }
 }
 
@@ -41,7 +42,6 @@
   background-color: var(--readthedocs-filetreediff-background-color);
   border-radius: 0.25em;
   appearance: revert;
-  font-size: var(--readthedocs-filetreediff-font-size);
 }
 
 :host > div > div > label {
@@ -70,8 +70,8 @@
 }
 
 :host > div > div > a {
-  width: 0.8rem;
-  color: var(--addons-filetreediff-color);
+  width: var(--readthedocs-filetreediff-icon-width);
+  color: var(--readthedocs-filetreediff-color);
 }
 
 :host > div > div > a.version {
