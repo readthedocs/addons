@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-.. The text for the changelog is manually generated for now.
+.. note::
+   This repository has moved to using releases on GitHub. The versions documented here
+   are historical and won't be reflected in the release changelog.
+
+   `See the latest releases <https://github.com/readthedocs/addons/releases>`_
 
 Version 0.36.0
 --------------
