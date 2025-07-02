@@ -67,13 +67,7 @@ Contents
 
 .. toctree::
 
-   releasing
    testing
-
-.. toctree::
-   :maxdepth: 1
-
-   Changelog <changelog>
 
 .. raw:: html
 
