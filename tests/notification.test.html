@@ -238,6 +238,13 @@
             );
           });
 
+          it("handles null current build", async () => {
+            config.builds.current = null;
+
+            expect(notification.NotificationAddon.isConfigValid(config)).to.be
+              .true;
+          });
+
           it("check default CSS classes", async () => {
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");
