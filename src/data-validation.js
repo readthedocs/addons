@@ -369,7 +369,7 @@ const addons_notifications = {
       required: ["current"],
       properties: {
         current: {
-          type: "object",
+          type: ["object", "null"],
           required: ["urls"],
           properties: {
             urls: {
