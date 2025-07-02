@@ -241,7 +241,8 @@
           it("handles null current build", async () => {
             config.builds.current = null;
 
-            expect(notification.NotificationAddon.isConfigValid(config)).to.be.true;
+            expect(notification.NotificationAddon.isConfigValid(config)).to.be
+              .true;
           });
 
           it("check default CSS classes", async () => {
