@@ -99,6 +99,16 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("id", "furo-sidebar-ad-placement");
           knownPlacementFound = true;
+        } else {
+          // We know it's furo theme and the ad in the navbar is not above the fold at this point.
+          // Then, we render the ad as fixed footer.
+          selector = "div.page";
+          element = document.querySelector(selector);
+          element.style.setProperty("padding-bottom", "47.2px");
+          placement.setAttribute("data-ea-type", "text");
+          placement.setAttribute("data-ea-style", "fixedfooter");
+          placement.setAttribute("id", "furo-fixed-footer-ad-placement");
+          knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
@@ -130,6 +140,20 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          knownPlacementFound = true;
+        } else {
+          // We know it's Material for MkDocs theme and the ad in the navbar
+          // is not above the fold at this point. Then, we render the ad as
+          // fixed footer.
+          selector = "div.md-container";
+          element = document.querySelector(selector);
+          element.style.setProperty("padding-bottom", "47.2px");
+          placement.setAttribute("data-ea-type", "text");
+          placement.setAttribute("data-ea-style", "fixedfooter");
+          placement.setAttribute(
+            "id",
+            "mkdocs-material-fixed-footer-ad-placement",
+          );
           knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
