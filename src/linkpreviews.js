@@ -247,7 +247,8 @@ export class LinkPreviewsElement extends LitElement {
     const rootSelector =
       this.config.addons.options.root_selector || docTool.getRootSelector();
 
-    const selector = docTool.getLinkSelector();
+    const selector =
+      this.config.addons.linkpreviews.selector || docTool.getLinkSelector();
 
     console.debug(
       `${LinkPreviewsAddon.addonName}: Using '${selector}' as CSS selector.`,

@@ -534,9 +534,10 @@ const addons_linkpreviews = {
         },
         linkpreviews: {
           type: "object",
-          required: ["enabled"],
+          required: ["enabled", "selector"],
           properties: {
             enabled: { type: "boolean" },
+            selector: { type: ["string", "null"] },
           },
         },
       },

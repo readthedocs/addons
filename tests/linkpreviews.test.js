@@ -23,6 +23,7 @@ describe("LinkPreviews addon", () => {
           },
           linkpreviews: {
             enabled: false,
+            selector: "[role=main] a.internal",
           },
         },
       }),
@@ -38,6 +39,7 @@ describe("LinkPreviews addon", () => {
           },
           linkpreviews: {
             enabled: true,
+            selector: "[role=main] a.internal",
           },
         },
       }),
