@@ -44,6 +44,8 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
+    const docToolName = docTool.getDocumentationTool();
+    const placementIdSuffix = docToolName ? `${docToolName}` : "unknown";
 
     // TODO: fix this on testing. It works fine on production/regular browser.
     // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
@@ -67,7 +69,6 @@ export class EthicalAdsAddon extends AddonBase {
     } else {
       // Inject our own floating element
       placement = document.createElement("div");
-      placement.setAttribute("id", "readthedocs-ea");
       placement.classList.add("raised");
 
       // Define where to inject the Ad based on the theme and if it's above the fold or not.
@@ -97,7 +98,6 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("id", "furo-sidebar-ad-placement");
           knownPlacementFound = true;
         } else {
           // We know it's furo theme and the ad in the navbar is not above the fold at this point.
@@ -107,7 +107,6 @@ export class EthicalAdsAddon extends AddonBase {
           element.style.setProperty("padding-bottom", "47.2px");
           placement.setAttribute("data-ea-type", "text");
           placement.setAttribute("data-ea-style", "fixedfooter");
-          placement.setAttribute("id", "furo-fixed-footer-ad-placement");
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
@@ -150,10 +149,6 @@ export class EthicalAdsAddon extends AddonBase {
           element.style.setProperty("padding-bottom", "47.2px");
           placement.setAttribute("data-ea-type", "text");
           placement.setAttribute("data-ea-style", "fixedfooter");
-          placement.setAttribute(
-            "id",
-            "mkdocs-material-fixed-footer-ad-placement",
-          );
           knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
@@ -175,7 +170,6 @@ export class EthicalAdsAddon extends AddonBase {
           element.style.setProperty("padding-bottom", "47.2px");
           placement.setAttribute("data-ea-type", "text");
           placement.setAttribute("data-ea-style", "fixedfooter");
-          placement.setAttribute("id", "docusaurus-fixed-footer-ad-placement");
           knownPlacementFound = true;
         }
       } else if (docTool.isDocsify()) {
@@ -233,11 +227,6 @@ export class EthicalAdsAddon extends AddonBase {
       } else {
         // Default to a text ad appended to the root selector when no known placement found
         placement.setAttribute("data-ea-type", "text");
-        // TODO: Check this placement on the dashboard,
-        // and see how this is performing.
-        const docToolName = docTool.getDocumentationTool();
-        const idSuffix = docToolName ? `-${docToolName}` : "";
-        placement.setAttribute("id", `readthedocs-ea-text-footer${idSuffix}`);
 
         const rootSelector = docTool.getRootSelector();
         const rootElement = document.querySelector(rootSelector);
@@ -272,6 +261,15 @@ export class EthicalAdsAddon extends AddonBase {
           campaign_types.join("|"),
         );
       }
+
+      // Set a standardized id attribute
+      const placementStyle = placement.getAttribute("data-ea-style");
+      const placementType = placement.getAttribute("data-ea-type");
+      const placementIdPrefix = `${placementType}-${placementStyle}`;
+      placement.setAttribute(
+        "id",
+        `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
+      );
     }
 
     return placement;
