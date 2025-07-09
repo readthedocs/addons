@@ -88,12 +88,7 @@ export class EthicalAdsAddon extends AddonBase {
           // We know it's RTD theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
           const selectors = ["section", "nav"];
-          for (selector of selectors) {
-            element = document.querySelector(selector);
-            element.style.setProperty("padding-bottom", "47.2px");
-          }
-          placement.setAttribute("data-ea-type", "text");
-          placement.setAttribute("data-ea-style", "fixedfooter");
+          this.injectFixedFooterAd(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
@@ -112,11 +107,8 @@ export class EthicalAdsAddon extends AddonBase {
         } else {
           // We know it's furo theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
-          selector = "div.page";
-          element = document.querySelector(selector);
-          element.style.setProperty("padding-bottom", "47.2px");
-          placement.setAttribute("data-ea-type", "text");
-          placement.setAttribute("data-ea-style", "fixedfooter");
+          const selectors = ["div.page"];
+          this.injectFixedFooterAd(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
@@ -154,11 +146,8 @@ export class EthicalAdsAddon extends AddonBase {
           // We know it's Material for MkDocs theme and the ad in the navbar
           // is not above the fold at this point. Then, we render the ad as
           // fixed footer.
-          selector = "div.md-container";
-          element = document.querySelector(selector);
-          element.style.setProperty("padding-bottom", "47.2px");
-          placement.setAttribute("data-ea-type", "text");
-          placement.setAttribute("data-ea-style", "fixedfooter");
+          const selectors = ["div.md-container"];
+          this.injectFixedFooterAd(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
@@ -175,11 +164,9 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         } else {
-          selector = "div#__docusaurus";
-          element = document.querySelector(selector);
-          element.style.setProperty("padding-bottom", "47.2px");
-          placement.setAttribute("data-ea-type", "text");
-          placement.setAttribute("data-ea-style", "fixedfooter");
+          const selectors = ["div#__docusaurus"];
+          this.injectFixedFooterAd(selectors, placement);
+
           knownPlacementFound = true;
         }
       } else if (docTool.isDocsify()) {
@@ -313,6 +300,15 @@ export class EthicalAdsAddon extends AddonBase {
     }
 
     return true;
+  }
+
+  injectFixedFooterAd(selectors, placement) {
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      element.style.setProperty("padding-bottom", "47.2px");
+    }
+    placement.setAttribute("data-ea-type", "text");
+    placement.setAttribute("data-ea-style", "fixedfooter");
   }
 
   addEaPlacementToElement(element) {
