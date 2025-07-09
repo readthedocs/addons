@@ -84,6 +84,17 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-rtd");
           placement.classList.add("ethical-dark-theme");
           knownPlacementFound = true;
+        } else {
+          // We know it's RTD theme and the ad in the navbar is not above the fold at this point.
+          // Then, we render the ad as fixed footer.
+          const selectors = ["section", "nav"];
+          for (selector of selectors) {
+            element = document.querySelector(selector);
+            element.style.setProperty("padding-bottom", "47.2px");
+          }
+          placement.setAttribute("data-ea-type", "text");
+          placement.setAttribute("data-ea-style", "fixedfooter");
+          knownPlacementFound = true;
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
         // NOTE: The code to handle furo theme shouldn't be required,
