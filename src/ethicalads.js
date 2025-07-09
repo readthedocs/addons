@@ -88,7 +88,7 @@ export class EthicalAdsAddon extends AddonBase {
           // We know it's RTD theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
           const selectors = ["section", "nav"];
-          this.injectFixedFooterAd(selectors, placement);
+          this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
@@ -108,7 +108,7 @@ export class EthicalAdsAddon extends AddonBase {
           // We know it's furo theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
           const selectors = ["div.page"];
-          this.injectFixedFooterAd(selectors, placement);
+          this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
@@ -147,7 +147,7 @@ export class EthicalAdsAddon extends AddonBase {
           // is not above the fold at this point. Then, we render the ad as
           // fixed footer.
           const selectors = ["div.md-container"];
-          this.injectFixedFooterAd(selectors, placement);
+          this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
@@ -165,7 +165,7 @@ export class EthicalAdsAddon extends AddonBase {
           knownPlacementFound = true;
         } else {
           const selectors = ["div#__docusaurus"];
-          this.injectFixedFooterAd(selectors, placement);
+          this.setFixedFooterAdProperties(selectors, placement);
 
           knownPlacementFound = true;
         }
@@ -302,7 +302,7 @@ export class EthicalAdsAddon extends AddonBase {
     return true;
   }
 
-  injectFixedFooterAd(selectors, placement) {
+  setFixedFooterAdProperties(selectors, placement) {
     for (const selector of selectors) {
       const element = document.querySelector(selector);
       element.style.setProperty("padding-bottom", "47.2px");
