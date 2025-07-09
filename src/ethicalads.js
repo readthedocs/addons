@@ -44,8 +44,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
-    const docToolName = docTool.getDocumentationTool();
-    const placementIdSuffix = docToolName ? `${docToolName}` : "unknown";
+    const placementIdSuffix = docTool.getDocumentationTool() || "nodoctool";
 
     // TODO: fix this on testing. It works fine on production/regular browser.
     // TypeError: Failed to execute 'indexed value' on 'ObservableArray<CSSStyleSheet>': Failed to convert value to 'CSSStyleSheet'.
@@ -262,14 +261,18 @@ export class EthicalAdsAddon extends AddonBase {
         );
       }
 
-      // Set a standardized id attribute
-      const placementStyle = placement.getAttribute("data-ea-style");
-      const placementType = placement.getAttribute("data-ea-type");
-      const placementIdPrefix = `${placementType}-${placementStyle}`;
-      placement.setAttribute(
-        "id",
-        `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
-      );
+      if (!placement.getAttribute("id")) {
+        // Set a standardized id attribute
+        const placementStyle =
+          placement.getAttribute("data-ea-style") || "nostyle";
+        const placementType =
+          placement.getAttribute("data-ea-type") || "notype";
+        const placementIdPrefix = `${placementType}-${placementStyle}`;
+        placement.setAttribute(
+          "id",
+          `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
+        );
+      }
     }
 
     return placement;

@@ -63,12 +63,12 @@
           it("ad placement injected", async () => {
             const addon = new ethicalads.EthicalAdsAddon(config);
             const element = document.querySelector(
-              "#readthedocs-ea-text-footer",
+              "[id^=readthedocs-ea",
             );
 
             expect(element).to.exist;
-            expect(element).to.have.attribute("data-ea-type", "text");
-            expect(element).to.have.attribute(
+              expect(element).to.have.attribute("data-ea-type", "text");
+              expect(element).to.have.attribute(
               "data-ea-publisher",
               "readthedocs",
             );
