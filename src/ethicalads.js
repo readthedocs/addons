@@ -44,6 +44,8 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
+    let selectors;
+
     const placementIdSuffix = docTool.getDocumentationTool() || "nodoctool";
 
     // TODO: fix this on testing. It works fine on production/regular browser.
@@ -87,7 +89,7 @@ export class EthicalAdsAddon extends AddonBase {
         } else {
           // We know it's RTD theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
-          const selectors = ["section", "nav"];
+          selectors = ["section", "nav"];
           this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
@@ -107,7 +109,7 @@ export class EthicalAdsAddon extends AddonBase {
         } else {
           // We know it's furo theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
-          const selectors = ["div.page"];
+          selectors = ["div.page"];
           this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
@@ -146,7 +148,7 @@ export class EthicalAdsAddon extends AddonBase {
           // We know it's Material for MkDocs theme and the ad in the navbar
           // is not above the fold at this point. Then, we render the ad as
           // fixed footer.
-          const selectors = ["div.md-container"];
+          selectors = ["div.md-container"];
           this.setFixedFooterAdProperties(selectors, placement);
           knownPlacementFound = true;
         }
@@ -164,7 +166,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         } else {
-          const selectors = ["div#__docusaurus"];
+          selectors = ["div#__docusaurus"];
           this.setFixedFooterAdProperties(selectors, placement);
 
           knownPlacementFound = true;
@@ -259,17 +261,41 @@ export class EthicalAdsAddon extends AddonBase {
         );
       }
 
+      const placementStyle =
+        placement.getAttribute("data-ea-style") || "nostyle";
+      const placementType = placement.getAttribute("data-ea-type") || "notype";
+      const placementIdPrefix = `${placementType}-${placementStyle}`;
       if (!placement.getAttribute("id")) {
         // Set a standardized id attribute
-        const placementStyle =
-          placement.getAttribute("data-ea-style") || "nostyle";
-        const placementType =
-          placement.getAttribute("data-ea-type") || "notype";
-        const placementIdPrefix = `${placementType}-${placementStyle}`;
         placement.setAttribute(
           "id",
           `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
         );
+      }
+
+      if (placementStyle == "fixedfooter") {
+        // Use a ``MutationObserver`` to listen to style changes in the fixed footer ad.
+        // Grab the height of it and use to add some ``padding-bottom`` to the required elements.
+        const config = { attributes: true, childList: false, subtree: false };
+        const callback = (mutationList, observer) => {
+          for (const mutation of mutationList) {
+            if (mutation.type === "attributes") {
+              const fixedFooterAdHeight = window.getComputedStyle(
+                mutation.target,
+              ).height;
+              console.debug("fixedFooterAdHeight", fixedFooterAdHeight);
+              for (const selector of selectors) {
+                const element = document.querySelector(selector);
+                element.style.setProperty(
+                  "padding-bottom",
+                  fixedFooterAdHeight,
+                );
+              }
+            }
+          }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(placement, config);
       }
     }
 
@@ -303,10 +329,6 @@ export class EthicalAdsAddon extends AddonBase {
   }
 
   setFixedFooterAdProperties(selectors, placement) {
-    for (const selector of selectors) {
-      const element = document.querySelector(selector);
-      element.style.setProperty("padding-bottom", "47.2px");
-    }
     placement.setAttribute("data-ea-type", "text");
     placement.setAttribute("data-ea-style", "fixedfooter");
   }
