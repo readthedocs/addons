@@ -35,7 +35,7 @@
     "express-interceptor": "^1.2.0",
     "jquery": "^3.7.1",
     "keyboard-event-to-string": "^2.1.0",
-    "lit": "^3.3.0",
+    "lit": "^3.3.1",
     "object-path": "^0.11.8",
     "prettier": "^3.6.2",
     "rollup-plugin-lit-css": "^5.0.2",
@@ -44,7 +44,7 @@
     "tslib": "^2.8.1",
     "unfetch": "^4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.99.9",
+    "webpack": "^5.100.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
   },
