@@ -121,6 +121,7 @@
     },
     "linkpreviews": {
       "enabled": true
+      "selector": "[role=main] a",
     },
     "notifications": {
       "enabled": true,

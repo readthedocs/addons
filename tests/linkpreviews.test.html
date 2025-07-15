@@ -30,6 +30,7 @@
               },
               linkpreviews: {
                 enabled: true,
+                selector: null,
               },
             },
           };
@@ -40,6 +41,9 @@
           server.restore();
 
           document.querySelectorAll("div.tooltip").forEach((el) => el.remove());
+          document
+            .querySelectorAll(".link-preview")
+            .forEach((el) => el.classList.remove("link-preview"));
         });
 
         describe("Link previews tests", () => {
@@ -59,6 +63,28 @@
 
             // External link shouldn't be previewed
             expect(linkExternal).to.not.have.class("link-preview");
+          });
+
+          it("use CSS selector from API", async () => {
+            config.addons.linkpreviews.selector = "section p a";
+            let linkInternal = document.querySelector("#linkpreview-internal");
+            let linkExternal = document.querySelector("#linkpreview-external");
+            let linkCustom = document.querySelector("#linkpreview-custom");
+
+            expect(linkInternal).to.not.have.class("link-preview");
+            expect(linkExternal).to.not.have.class("link-preview");
+            expect(linkCustom).to.not.have.class("link-preview");
+
+            const addon = new linkpreviews.LinkPreviewsAddon(config);
+            const element = document.querySelector("readthedocs-linkpreviews");
+            await elementUpdated(element);
+
+            // Custom link should have a specific class
+            expect(linkCustom).to.have.class("link-preview");
+
+            // Intenrnal and external link shouldn't be previewed
+            expect(linkExternal).to.not.have.class("link-preview");
+            expect(linkInternal).to.not.have.class("link-preview");
           });
 
           it("trigger mouseenter event without response to show Loading... tooltip", async () => {
@@ -150,5 +176,15 @@
         >.
       </p>
     </main>
+
+    <!-- Add a link _outside_ main to use with a custom CSS selector -->
+    <section>
+      <p>
+        Link with
+        <a id="linkpreview-custom" href="http://localhost:8000/custom.html"
+          >custom CSS selector</a
+        >.
+      </p>
+    </section>
   </body>
 </html>
