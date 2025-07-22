@@ -17,6 +17,9 @@ import {
   VITEPRESS,
   ANTORA,
   DOCSIFY,
+  THEME_LIGHT_MODE,
+  THEME_DARK_MODE,
+  THEME_UNKNOWN_MODE,
 } from "./constants";
 import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 
@@ -412,7 +415,32 @@ export class DocumentationTool {
   constructor() {
     this.documentationTool = this.getDocumentationTool();
     this.documentationTheme = this.getDocumentationTheme();
+    this.documentationThemeMode = this.getDocumentationThemeMode();
+
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
+    console.debug(`Documentation theme detected: ${this.documentationTheme}`);
+    console.debug(
+      `Documentation theme mode detected: ${this.documentationThemeMode}`,
+    );
+
+    this.connectEvents();
+  }
+
+  /**
+   * Connect all required events.
+   *
+   * There may be events that are doctool agnostic and some others that are
+   * specific for paticular doctools or themes.
+   */
+  connectEvents() {
+    if (this.isSphinxFuroLikeTheme()) {
+      // Connect theme mode toggle button to click so we update the ad style.
+      // https://github.com/pradyunsg/furo/blob/03c8880/src/furo/assets/scripts/furo.js#L150-L156
+      const buttons = document.getElementsByClassName("theme-toggle");
+      for (const btn of buttons) {
+        btn.addEventListener("click", this._updateThemeMode);
+      }
+    }
   }
 
   /**
@@ -565,6 +593,40 @@ export class DocumentationTool {
     // TODO: add the other known themes
     return null;
   }
+
+  getDocumentationThemeMode() {
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+
+    if (this.isSphinxFuroLikeTheme()) {
+      const themes = {
+        auto: THEME_UNKNOWN_MODE,
+        light: THEME_LIGHT_MODE,
+        dark: THEME_DARK_MODE,
+      };
+
+      const theme = document.querySelector("body").dataset.theme;
+      if (theme !== "auto") {
+        return themes[theme];
+      } else if (prefersDarkMode) {
+        return THEME_DARK_MODE;
+      } else {
+        return THEME_LIGHT_MODE;
+      }
+    }
+    return THEME_UNKNOWN_MODE;
+  }
+
+  _updateThemeMode = (e) => {
+    const placement = document.querySelector("div[id^='readthedocs-ea'");
+    const documentationThemeMode = this.getDocumentationThemeMode();
+    if (documentationThemeMode === THEME_DARK_MODE) {
+      placement.classList.add("dark");
+    } else {
+      placement.classList.remove("dark");
+    }
+  };
 
   isSinglePageApplication() {
     const isSPA = DocumentationTool.SINGLE_PAGE_APPLICATIONS.includes(
