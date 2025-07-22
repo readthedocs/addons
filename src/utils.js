@@ -434,12 +434,18 @@ export class DocumentationTool {
    */
   connectEvents() {
     if (this.isSphinxFuroLikeTheme()) {
-      // Connect theme mode toggle button to click so we update the ad style.
-      // https://github.com/pradyunsg/furo/blob/03c8880/src/furo/assets/scripts/furo.js#L150-L156
-      const buttons = document.getElementsByClassName("theme-toggle");
-      for (const btn of buttons) {
-        btn.addEventListener("click", this._updateThemeMode);
-      }
+      // Use a ``MutationObserver`` to listen to attribute changes in the body.
+      // Furo updates the `data-theme` attribute with light/dark/auto value.
+      const config = { attributes: true, childList: false, subtree: false };
+      const callback = (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          if (mutation.type === "attributes") {
+            this.updateAdThemeMode();
+          }
+        }
+      };
+      const observer = new MutationObserver(callback);
+      observer.observe(document.body, config);
     }
   }
 
@@ -606,7 +612,7 @@ export class DocumentationTool {
         dark: THEME_DARK_MODE,
       };
 
-      const theme = document.querySelector("body").dataset.theme;
+      const theme = document.body.dataset.theme;
       if (theme !== "auto") {
         return themes[theme];
       } else if (prefersDarkMode) {
@@ -618,15 +624,26 @@ export class DocumentationTool {
     return THEME_UNKNOWN_MODE;
   }
 
-  _updateThemeMode = (e) => {
-    const placement = document.querySelector("div[id^='readthedocs-ea'");
+  updateAdThemeMode() {
+    let placement;
+    // NOTE: can't be imported from `ethicalads.js` because cycle importing
+    const EXPLICIT_PLACEMENT_SELECTORS = [
+      "#ethical-ad-placement",
+      "[data-ea-publisher]",
+    ];
+
+    for (const explicitSelector of EXPLICIT_PLACEMENT_SELECTORS) {
+      placement = document.querySelector(explicitSelector);
+      if (placement) break;
+    }
+
     const documentationThemeMode = this.getDocumentationThemeMode();
     if (documentationThemeMode === THEME_DARK_MODE) {
       placement.classList.add("dark");
     } else {
       placement.classList.remove("dark");
     }
-  };
+  }
 
   isSinglePageApplication() {
     const isSPA = DocumentationTool.SINGLE_PAGE_APPLICATIONS.includes(
