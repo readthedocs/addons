@@ -48,20 +48,6 @@ const addons_analytics = {
         },
       },
     },
-    versions: {
-      type: "object",
-      required: ["current"],
-      properties: {
-        current: {
-          type: "object",
-          required: ["slug", "type"],
-          properties: {
-            slug: { type: "string" },
-            type: { type: "string" },
-          },
-        },
-      },
-    },
   },
 };
 
