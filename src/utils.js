@@ -434,7 +434,7 @@ export class DocumentationTool {
    */
   connectEvents() {
     if (this.isSphinxFuroLikeTheme()) {
-      // Use a ``MutationObserver`` to listen to attribute changes in the body.
+      // Use a ``MutationObserver`` to listen to attribute changes on the ``document.body``.
       // Furo updates the `data-theme` attribute with light/dark/auto value.
       const config = { attributes: true, childList: false, subtree: false };
       const callback = (mutationList, observer) => {
