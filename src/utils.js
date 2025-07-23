@@ -660,8 +660,8 @@ export class DocumentationTool {
 
     if (!placement) return;
 
-    const documentationThemeMode = this.getDocumentationThemeMode();
-    if (documentationThemeMode === THEME_DARK_MODE) {
+    this.documentationThemeMode = this.getDocumentationThemeMode();
+    if (this.documentationThemeMode === THEME_DARK_MODE) {
       placement.classList.add("dark");
     } else {
       placement.classList.remove("dark");
