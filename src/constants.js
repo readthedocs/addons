@@ -20,3 +20,8 @@ export const SPHINX_IMMATERIAL = "immaterial";
 
 // API URLs
 export const EMBED_API_ENDPOINT = "/_/api/v3/embed/";
+
+// Theme modes
+export const THEME_LIGHT_MODE = "light-mode";
+export const THEME_DARK_MODE = "dark-mode";
+export const THEME_UNKNOWN_MODE = "unknown-mode";

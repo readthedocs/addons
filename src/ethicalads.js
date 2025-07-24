@@ -3,6 +3,7 @@ import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
 import { IS_TESTING, docTool } from "./utils.js";
+import { THEME_DARK_MODE } from "./constants.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTORS = [
@@ -103,8 +104,12 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
-          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          // NOTE: I'm using `image` instead of `readthedocs-sidebar` because
+          // the later doesn't support dark mode.
+          //
+          // placement.classList.add("ethical-alabaster");
+          // placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
@@ -149,8 +154,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docusaurus");
 
-          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("data-ea-style", "image");
+          placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
         }
       } else if (docTool.isDocsify()) {
@@ -253,6 +257,11 @@ export class EthicalAdsAddon extends AddonBase {
           "id",
           `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
         );
+      }
+
+      // Add dark class to the ad when we detect dark mode from the beginning
+      if (docTool.documentationThemeMode === THEME_DARK_MODE) {
+        placement.classList.add("dark");
       }
 
       if (placementStyle == "fixedfooter") {

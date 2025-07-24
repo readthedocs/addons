@@ -17,6 +17,9 @@ import {
   VITEPRESS,
   ANTORA,
   DOCSIFY,
+  THEME_LIGHT_MODE,
+  THEME_DARK_MODE,
+  THEME_UNKNOWN_MODE,
 } from "./constants";
 import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 
@@ -412,7 +415,47 @@ export class DocumentationTool {
   constructor() {
     this.documentationTool = this.getDocumentationTool();
     this.documentationTheme = this.getDocumentationTheme();
+    this.documentationThemeMode = this.getDocumentationThemeMode();
+
     console.debug(`Documentation tool detected: ${this.documentationTool}`);
+    console.debug(`Documentation theme detected: ${this.documentationTheme}`);
+    console.debug(
+      `Documentation theme mode detected: ${this.documentationThemeMode}`,
+    );
+
+    this.connectEvents();
+  }
+
+  /**
+   * Connect all required events.
+   *
+   * There may be events that are doctool agnostic and some others that are
+   * specific for paticular doctools or themes.
+   */
+  connectEvents() {
+    // Use a ``MutationObserver`` to listen to attribute changes in the `document.html` and `document.body` elements.
+    // Different frameworks update different attributes:
+    //   - Furo Sphinx Theme: `document.body.data-theme`
+    //   - Docusaurus: `document.html.data-theme`
+    //   - VitePress: `document.html.class` ("dark" or nothing)
+    //   - PyData Sphinx Theme: `document.html.data-theme` and `document.html.data-mode`
+    //   - Shibuya Sphinx Theme: `document.html.data-color`
+    //   - mystmd: `document.html.class`
+
+    const config = { attributes: true, childList: false, subtree: false };
+    const callback = (mutationList, observer) => {
+      console.debug("Observed element mutated.", mutationList, observer);
+      for (const mutation of mutationList) {
+        if (mutation.type === "attributes") {
+          this.updateAdThemeMode();
+        }
+      }
+    };
+    const observer = new MutationObserver(callback);
+    // <html> element
+    observer.observe(document.documentElement, config);
+    // <body> element
+    observer.observe(document.body, config);
   }
 
   /**
@@ -564,6 +607,67 @@ export class DocumentationTool {
 
     // TODO: add the other known themes
     return null;
+  }
+
+  getDocumentationThemeMode() {
+    let theme;
+    const themeSelector =
+      "html[data-theme], html[data-mode], html[data-color], body[data-theme]";
+    const themes = {
+      auto: THEME_UNKNOWN_MODE,
+      light: THEME_LIGHT_MODE,
+      dark: THEME_DARK_MODE,
+    };
+
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+
+    for (const attribute of ["theme", "mode", "color"]) {
+      theme = document.querySelector(themeSelector)?.dataset[attribute];
+      if (theme) break;
+    }
+    if (theme === undefined) {
+      theme = document.querySelector("html.dark") ? "dark" : undefined;
+    }
+    if (theme === undefined) {
+      theme = document.querySelector("html.light") ? "light" : undefined;
+    }
+
+    if (Object.keys(themes).includes(theme)) {
+      if (theme !== "auto") {
+        return themes[theme];
+      } else if (prefersDarkMode) {
+        return THEME_DARK_MODE;
+      } else {
+        return THEME_LIGHT_MODE;
+      }
+    }
+
+    return THEME_UNKNOWN_MODE;
+  }
+
+  updateAdThemeMode() {
+    let placement;
+    // NOTE: can't be imported from `ethicalads.js` because cycle importing
+    const EXPLICIT_PLACEMENT_SELECTORS = [
+      "#ethical-ad-placement",
+      "[data-ea-publisher]",
+    ];
+
+    for (const explicitSelector of EXPLICIT_PLACEMENT_SELECTORS) {
+      placement = document.querySelector(explicitSelector);
+      if (placement) break;
+    }
+
+    if (!placement) return;
+
+    this.documentationThemeMode = this.getDocumentationThemeMode();
+    if (this.documentationThemeMode === THEME_DARK_MODE) {
+      placement.classList.add("dark");
+    } else {
+      placement.classList.remove("dark");
+    }
   }
 
   isSinglePageApplication() {
