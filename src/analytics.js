@@ -3,7 +3,8 @@
 import { default as fetch } from "unfetch";
 
 import { ajv } from "./data-validation";
-import { AddonBase, CLIENT_VERSION } from "./utils";
+import { AddonBase, getMetadataValue, CLIENT_VERSION } from "./utils";
+import { default as objectPath } from "object-path";
 
 export const API_ENDPOINT = "/_/api/v2/analytics/";
 
@@ -29,17 +30,32 @@ export class AnalyticsAddon extends AddonBase {
   loadConfig(config) {
     this.config = config;
 
-    // Only register pageviews on non-external versions
-    if (this.config.versions.current.type !== "external") {
-      this.registerPageView();
+    const versionType = objectPath.get(
+      this.config,
+      "versions.current.type",
+      null,
+    );
+
+    // Don't register pageviews on external versions
+    if (versionType === "external") {
+      return;
     }
+
+    this.registerPageView();
   }
 
   registerPageView() {
+    const httpStatus = getMetadataValue("readthedocs-http-status");
+    const versionSlug = objectPath.get(
+      this.config,
+      "versions.current.slug",
+      null,
+    );
     const params = {
       project: this.config.projects.current.slug,
-      version: this.config.versions.current.slug,
+      version: versionSlug,
       absolute_uri: window.location.href,
+      status: httpStatus,
     };
 
     const url = API_ENDPOINT + "?" + new URLSearchParams(params).toString();
