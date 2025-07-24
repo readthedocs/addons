@@ -452,8 +452,10 @@ export class DocumentationTool {
       }
     };
     const observer = new MutationObserver(callback);
-    observer.observe(document.body, config);
+    // <html> element
     observer.observe(document.documentElement, config);
+    // <body> element
+    observer.observe(document.body, config);
   }
 
   /**
