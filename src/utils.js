@@ -26,7 +26,7 @@ import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.39.0";
+export const CLIENT_VERSION = "0.42.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -433,20 +433,29 @@ export class DocumentationTool {
    * specific for paticular doctools or themes.
    */
   connectEvents() {
-    if (this.isSphinxFuroLikeTheme()) {
-      // Use a ``MutationObserver`` to listen to attribute changes on the ``document.body``.
-      // Furo updates the `data-theme` attribute with light/dark/auto value.
-      const config = { attributes: true, childList: false, subtree: false };
-      const callback = (mutationList, observer) => {
-        for (const mutation of mutationList) {
-          if (mutation.type === "attributes") {
-            this.updateAdThemeMode();
-          }
+    // Use a ``MutationObserver`` to listen to attribute changes in the `document.html` and `document.body` elements.
+    // Different frameworks update different attributes:
+    //   - Furo Sphinx Theme: `document.body.data-theme`
+    //   - Docusaurus: `document.html.data-theme`
+    //   - VitePress: `document.html.class` ("dark" or nothing)
+    //   - PyData Sphinx Theme: `document.html.data-theme` and `document.html.data-mode`
+    //   - Shibuya Sphinx Theme: `document.html.data-color`
+    //   - mystmd: `document.html.class`
+
+    const config = { attributes: true, childList: false, subtree: false };
+    const callback = (mutationList, observer) => {
+      console.debug("Observed element mutated.", mutationList, observer);
+      for (const mutation of mutationList) {
+        if (mutation.type === "attributes") {
+          this.updateAdThemeMode();
         }
-      };
-      const observer = new MutationObserver(callback);
-      observer.observe(document.body, config);
-    }
+      }
+    };
+    const observer = new MutationObserver(callback);
+    // <html> element
+    observer.observe(document.documentElement, config);
+    // <body> element
+    observer.observe(document.body, config);
   }
 
   /**
@@ -601,18 +610,31 @@ export class DocumentationTool {
   }
 
   getDocumentationThemeMode() {
+    let theme;
+    const themeSelector =
+      "html[data-theme], html[data-mode], html[data-color], body[data-theme]";
+    const themes = {
+      auto: THEME_UNKNOWN_MODE,
+      light: THEME_LIGHT_MODE,
+      dark: THEME_DARK_MODE,
+    };
+
     const prefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)",
     ).matches;
 
-    if (this.isSphinxFuroLikeTheme()) {
-      const themes = {
-        auto: THEME_UNKNOWN_MODE,
-        light: THEME_LIGHT_MODE,
-        dark: THEME_DARK_MODE,
-      };
+    for (const attribute of ["theme", "mode", "color"]) {
+      theme = document.querySelector(themeSelector)?.dataset[attribute];
+      if (theme) break;
+    }
+    if (theme === undefined) {
+      theme = document.querySelector("html.dark") ? "dark" : undefined;
+    }
+    if (theme === undefined) {
+      theme = document.querySelector("html.light") ? "light" : undefined;
+    }
 
-      const theme = document.body.dataset.theme;
+    if (Object.keys(themes).includes(theme)) {
       if (theme !== "auto") {
         return themes[theme];
       } else if (prefersDarkMode) {
@@ -621,6 +643,7 @@ export class DocumentationTool {
         return THEME_LIGHT_MODE;
       }
     }
+
     return THEME_UNKNOWN_MODE;
   }
 
@@ -637,8 +660,10 @@ export class DocumentationTool {
       if (placement) break;
     }
 
-    const documentationThemeMode = this.getDocumentationThemeMode();
-    if (documentationThemeMode === THEME_DARK_MODE) {
+    if (!placement) return;
+
+    this.documentationThemeMode = this.getDocumentationThemeMode();
+    if (this.documentationThemeMode === THEME_DARK_MODE) {
       placement.classList.add("dark");
     } else {
       placement.classList.remove("dark");

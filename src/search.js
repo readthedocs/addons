@@ -266,7 +266,7 @@ export class SearchElement extends LitElement {
               <a
                 @click=${this.followResultLink}
                 class="hit-block-heading"
-                href="${result.path}"
+                href="${this.getResultLink(result)}"
               >
                 <i>${listIcon.node[0]}</i>
                 <h2>${result.title} ${this.renderExternalProject(result)}</h2>
@@ -290,6 +290,14 @@ export class SearchElement extends LitElement {
     // Close the modal if the link is on the same page
     const event = new CustomEvent(EVENT_READTHEDOCS_SEARCH_HIDE);
     document.dispatchEvent(event);
+  }
+
+  getResultLink(result) {
+    let link = result.path;
+    if (result.project.slug !== this.config.projects.current.slug) {
+      link = `${result.domain}${result.path}`;
+    }
+    return link;
   }
 
   renderBlockResult(block, index, result) {
@@ -318,7 +326,7 @@ export class SearchElement extends LitElement {
         @mouseenter=${this.mouseenterResultHit}
         @click=${() => this.storeRecentSearch(block, result)}
         class="hit"
-        href="${result.path}#${block.id}"
+        href="${this.getResultLink(result)}#${block.id}"
       >
         <div id="hit-${index}">
           <p class="hit subheading">${title}</p>
@@ -355,7 +363,10 @@ export class SearchElement extends LitElement {
           ({ block, result }) =>
             html`<div class="hit-block">
               <div class="hit-block-heading-container">
-                <a class="hit-block-heading" href="${result.path}">
+                <a
+                  class="hit-block-heading"
+                  href="${this.getResultLink(result)}"
+                >
                   <i>${listIcon.node[0]}</i>
                   <h2>${result.title} ${this.renderExternalProject(result)}</h2>
                 </a>

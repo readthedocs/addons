@@ -154,8 +154,7 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
           placement.classList.add("ethical-docusaurus");
 
-          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
-          placement.setAttribute("data-ea-style", "image");
+          placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
         }
       } else if (docTool.isDocsify()) {
