@@ -35,6 +35,13 @@ module.exports = (env, argv) => {
       chunkFilename: "[name].js?[chunkhash]",
       path: path.join(__dirname, "dist"),
     },
+
+    // Use filesystem for cache instead memory (default) to be re-use the cache
+    // between Docker container starts/stops. This speeds up boot time a lot.
+    cache: {
+      type: "filesystem",
+    },
+
     optimization: {
       minimize: is_production,
       minimizer: [
