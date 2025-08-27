@@ -3,7 +3,6 @@ import { AddonBase } from "./utils";
 import { default as objectPath } from "object-path";
 import styleSheet from "./ethicalads.css";
 import { IS_TESTING, docTool } from "./utils.js";
-import { THEME_DARK_MODE } from "./constants.js";
 
 // https://docs.readthedocs.io/en/stable/advertising/ad-customization.html#controlling-the-placement-of-an-ad
 const EXPLICIT_PLACEMENT_SELECTORS = [
@@ -231,6 +230,9 @@ export class EthicalAdsAddon extends AddonBase {
     const campaign_types = objectPath.get(data, "campaign_types", []);
 
     if (placement !== null) {
+      // Allow EA to switch between light/dark mode
+      placement.classList.add("adaptive-css");
+
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
       placement.setAttribute("data-ea-manual", "true");
 
@@ -257,11 +259,6 @@ export class EthicalAdsAddon extends AddonBase {
           "id",
           `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
         );
-      }
-
-      // Add dark class to the ad when we detect dark mode from the beginning
-      if (docTool.documentationThemeMode === THEME_DARK_MODE) {
-        placement.classList.add("dark");
       }
 
       if (placementStyle == "fixedfooter") {
