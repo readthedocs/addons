@@ -2,7 +2,7 @@
 export const snapshots = {};
 
 snapshots["EthicalAd addon ad placement defined by the user"] = `<div
-  class="ad-flat"
+  class="ad-flat adaptive-css"
   data-ea-campaign-types="community|paid"
   data-ea-keywords="docs|data-science"
   data-ea-manual="true"
@@ -15,7 +15,7 @@ snapshots["EthicalAd addon ad placement defined by the user"] = `<div
 /* end snapshot EthicalAd addon ad placement defined by the user */
 snapshots["EthicalAd addon ad placement injected"] =
 `<div
-  class="raised"
+  class="adaptive-css raised"
   data-ea-campaign-types="community|paid"
   data-ea-keywords="docs|data-science"
   data-ea-manual="true"
