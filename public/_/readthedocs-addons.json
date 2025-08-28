@@ -120,8 +120,8 @@
       "code": "UA-12345"
     },
     "linkpreviews": {
-      "enabled": true
-      "selector": "[role=main] a",
+      "enabled": true,
+      "selector": "[role=main] a"
     },
     "notifications": {
       "enabled": true,
