@@ -345,6 +345,8 @@ export class EthicalAdsAddon extends AddonBase {
     if (
       window.location.hostname === "docs.readthedocs.com" ||
       window.location.hostname.endsWith(".devthedocs.org") ||
+      // Use new beta client on Furo like themes for now.
+      // This allows us to test the dark/light mode.
       docTool.isSphinxFuroLikeTheme()
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
