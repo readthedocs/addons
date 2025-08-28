@@ -447,7 +447,7 @@ export class DocumentationTool {
       console.debug("Observed element mutated.", mutationList, observer);
       for (const mutation of mutationList) {
         if (mutation.type === "attributes") {
-          this.updateAdThemeMode();
+          this.documentationThemeMode = this.getDocumentationThemeMode();
         }
       }
     };
@@ -645,29 +645,6 @@ export class DocumentationTool {
     }
 
     return THEME_UNKNOWN_MODE;
-  }
-
-  updateAdThemeMode() {
-    let placement;
-    // NOTE: can't be imported from `ethicalads.js` because cycle importing
-    const EXPLICIT_PLACEMENT_SELECTORS = [
-      "#ethical-ad-placement",
-      "[data-ea-publisher]",
-    ];
-
-    for (const explicitSelector of EXPLICIT_PLACEMENT_SELECTORS) {
-      placement = document.querySelector(explicitSelector);
-      if (placement) break;
-    }
-
-    if (!placement) return;
-
-    this.documentationThemeMode = this.getDocumentationThemeMode();
-    if (this.documentationThemeMode === THEME_DARK_MODE) {
-      placement.classList.add("dark");
-    } else {
-      placement.classList.remove("dark");
-    }
   }
 
   isSinglePageApplication() {
