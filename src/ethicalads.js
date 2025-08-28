@@ -343,8 +343,9 @@ export class EthicalAdsAddon extends AddonBase {
     // Inject the Ethical Ad client (beta) only for our own documentation.
     let src;
     if (
-      window.location.hostname === "docs.readthedocs.io" ||
-      window.location.hostname.endsWith(".devthedocs.org")
+      window.location.hostname === "docs.readthedocs.com" ||
+      window.location.hostname.endsWith(".devthedocs.org") ||
+      docTool.isSphinxFuroLikeTheme()
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
     } else {
