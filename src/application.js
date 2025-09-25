@@ -17,9 +17,12 @@ import {
 
 import * as notification from "./notification";
 import * as analytics from "./analytics";
+import * as addonsui from "./addons-ui";
 import * as search from "./search";
 import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
+import * as newFlyout from "./new-ui/flyout";
+import * as newSearch from "./new-ui/search";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
@@ -45,10 +48,12 @@ export class AddonsApplication {
 
     this.addons = [
       flyout.FlyoutAddon,
+      newFlyout.NewFlyoutAddon,
       notification.NotificationAddon,
       analytics.AnalyticsAddon,
       ethicalads.EthicalAdsAddon,
       search.SearchAddon,
+      newSearch.NewSearchAddon,
 
       // HotKeys & FileTreeDiff have to be initialized before DocDiff because when
       // `?readthedocs-diff=true` DocDiff triggers an event that HotKeys has to
@@ -60,6 +65,7 @@ export class AddonsApplication {
 
       linkpreviews.LinkPreviewsAddon,
       customscript.CustomScriptAddon,
+      addonsui.AddonsUI,
     ];
 
     this.httpStatus = getMetadataValue("readthedocs-http-status");

@@ -1,0 +1,65 @@
+.ui-container {
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+main .top-menu {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    /*max-height: 3rem;*/
+    background-color: grey;
+}
+
+main .top-menu .bars {
+    width: 2rem;
+    padding: 5px 20px;
+    display: block;
+    cursor: pointer;
+}
+
+main .top-menu .top-menu-content {
+    flex: 1;
+    height: 100%;
+}
+
+main .menu {
+    align-self: start;
+    background-color: grey;
+    padding: 10px 20px;
+    min-width: 120px;
+}
+
+.addon-icons {
+    display: flex;
+    width: 100%;
+}
+
+.addon-icons > div {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+.addon-icons > div span {
+    display: flex;
+    justify-content: center;
+    height: 20px;
+}
+
+.addon-icons svg {
+    height: 100%;
+}
+
+.addon-specific-menu-content {
+    padding-top: 20px;
+}
