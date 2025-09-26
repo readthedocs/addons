@@ -12,7 +12,7 @@ main {
     width: 50%;
 }
 
-:root .hide {
+::slotted(.hide) {
     display: none;
 }
 

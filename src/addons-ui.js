@@ -54,18 +54,18 @@ export class AddonsUIElement extends LitElement {
  _onSlotChange(e) {
     const slot = e.target;
     this._children = slot.assignedElements();
-    this._children.forEach(c => c.style = "display: none;");
+    this._children.forEach(c => c.classList.add("hide"));
     if (this.selectedAddon === null) {
       this.selectedAddon = this._children[0];
-      this.selectedAddon.style = "";
+      this.selectedAddon.classList.remove("hide");
     }
     this.requestUpdate(); // force re-render when new children arrive
   }
 
   _onAddonSelect(addon) {
     this.selectedAddon = addon;
-    this._children.forEach(c => c.style = "display: none;");
-    this.selectedAddon.style = "";
+    this._children.forEach(c => c.classList.add("hide"));
+    this.selectedAddon.classList.remove("hide");
   }
 
   render() {
