@@ -23,34 +23,13 @@
 }
 
 .container {
-  position: fixed;
   max-width: var(--readthedocs-flyout-max-width);
   width: auto;
   height: auto;
-  max-height: calc(100% - 100px);
   overflow-y: auto;
   line-height: var(--readthedocs-flyout-line-height);
 }
 
-.container.bottom-right {
-  right: 20px;
-  bottom: 50px;
-}
-
-.container.bottom-left {
-  left: 20px;
-  bottom: 50px;
-}
-
-.container.top-left {
-  left: 20px;
-  top: 50px;
-}
-
-.container.top-right {
-  right: 20px;
-  top: 50px;
-}
 
 :host > div {
   font-family: var(--readthedocs-flyout-font-family);

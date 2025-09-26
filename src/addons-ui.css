@@ -12,6 +12,10 @@ main {
     width: 50%;
 }
 
+:root .hide {
+    display: none;
+}
+
 main .top-menu {
     width: 100%;
     display: flex;

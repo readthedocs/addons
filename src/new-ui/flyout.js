@@ -353,7 +353,7 @@ export class FlyoutElement extends LitElement {
   }
 
   render() {
-    return nothing;
+    return this.renderMain();
   }
 
   renderMain() {

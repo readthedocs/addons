@@ -72,7 +72,7 @@
   border-radius: 0;
 }
 
-:host > div > div.content {
+div.content {
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
@@ -86,7 +86,7 @@
   text-align: left;
 }
 
-:host > div form {
+div form {
   background-color: var(--readthedocs-search-input-background-color);
   border-radius: 0.25em;
   font-size: 1.05em;
@@ -95,23 +95,23 @@
   height: 100%;
 }
 
-:host > div form.focus {
+div form.focus {
   outline: 2px solid #6ea0ec;
   border-shadow: inset 0 0 1px white transparent;
 }
 
-:host > div form > label {
+div form > label {
   font-size: 1.15em;
   padding-left: 5px;
   color: var(--readthedocs-search-color);
 }
 
-:host > div form label svg {
+div form label svg {
   height: 1em;
   position: relative;
 }
 
-:host > div form > input {
+div form > input {
   border: 0;
   outline: none;
   background: inherit;
@@ -124,7 +124,7 @@
   color: var(--readthedocs-search-color, rgb(64, 64, 64));
 }
 
-:host > div .results {
+div .results {
   margin-top: 10px;
   padding: 0.5em;
   overflow-y: scroll;
@@ -187,19 +187,19 @@ div.hit-block .hit-block-heading-container svg {
   width: 1em;
 }
 
-:host > div .results a.hit {
+div .results a.hit {
   width: 100%;
   display: inline-block;
   padding: 0.15em calc(1.15em + 10px);
   box-sizing: border-box;
 }
 
-:host > div .results a.hit:hover,
-:host > div .results .hit .active {
+div .results a.hit:hover,
+div .results .hit .active {
   background-color: var(--readthedocs-search-result-active-background-color);
 }
 
-:host > div .results h2 {
+div .results h2 {
   display: inline-block;
   font-weight: 700;
   margin-top: 3px;
@@ -209,12 +209,12 @@ div.hit-block .hit-block-heading-container svg {
   line-height: inherit;
 }
 
-:host > div .results a.hit > div {
+div .results a.hit > div {
   display: flex;
   flex-direction: column;
 }
 
-:host > div .results .hit .subheading {
+div .results .hit .subheading {
   color: var(--readthedocs-search-result-subheading-color);
   font-weight: 700;
   font-size: 15px;
@@ -224,7 +224,7 @@ div.hit-block .hit-block-heading-container svg {
   line-height: inherit;
 }
 
-:host > div .results .hit .content {
+div .results .hit .content {
   margin: 0;
   text-decoration: none;
   color: var(--readthedocs-search-result-color);
@@ -236,17 +236,17 @@ div.hit-block .hit-block-heading-container svg {
   text-align: left;
 }
 
-:host > div .results span {
+div .results span {
   font-style: normal;
 }
 
-:host > div .results .hit h2 span {
+div .results .hit h2 span {
   background-color: #e5f6ff;
   padding-bottom: 3px;
   border-bottom-color: black;
 }
 
-:host > div .results .hit span {
+div .results .hit span {
   color: var(--readthedocs-search-result-highlight-color);
   font-style: italic;
   font-weight: bold;
@@ -260,26 +260,26 @@ div.hit-block .hit-block-heading-container svg {
   color: var(--readthedocs-search-footer-color);
 }
 
-:host > div .credits {
+div .credits {
   float: right;
   margin: 0 15px;
   font-size: small;
   padding-top: 3px;
 }
 
-:host > div .credits a img {
+div .credits a img {
   display: inline-block;
   width: 100px;
   vertical-align: middle;
 }
 
 /* TODO: find an example for domain role and style it properly */
-:host > div .readthedocs-search-result-hit--domain-role {
+div .readthedocs-search-result-hit--domain-role {
   font-size: 80%;
   letter-spacing: 1px;
 }
 
-:host > div .filters-title {
+div .filters-title {
   display: block;
   font-size: 0.9rem;
   position: absolute;
@@ -290,13 +290,13 @@ div.hit-block .hit-block-heading-container svg {
   padding: 0 5px;
 }
 
-:host > div .filters {
+div .filters {
   position: relative;
   padding-top: 0.9rem;
   margin: 0 0.5em;
 }
 
-:host > div .filters ul {
+div .filters ul {
   display: block;
   margin: 0;
   padding: 5px 14px;
@@ -307,20 +307,20 @@ div.hit-block .hit-block-heading-container svg {
   border-bottom: 1px solid #e0e0e0;
 }
 
-:host > div .filters li {
+div .filters li {
   display: inline-block;
   margin: 0 0 0 15px;
 }
 
-:host > div .filters li label {
+div .filters li label {
   padding: 3px;
 }
 
-:host > div .filters label {
+div .filters label {
   font-size: 0.9rem;
 }
 
-:host > div .no-results {
+div .no-results {
   text-align: center;
   margin-top: 1.15em;
   padding: 15px;
@@ -328,46 +328,46 @@ div.hit-block .hit-block-heading-container svg {
   width: 80%;
 }
 
-:host > div .no-results > p.title {
+div .no-results > p.title {
   margin-top: 0;
   margin-bottom: 0.5em;
 }
 
-:host > div .no-results > svg {
+div .no-results > svg {
   height: 5.5rem;
   margin-bottom: 1.15em;
 }
 
-:host > div .no-results > div.footer p {
+div .no-results > div.footer p {
   font-size: small;
 }
 
-:host > div .no-results > .tips {
+div .no-results > .tips {
   padding: 0;
   text-align: left;
   font-size: 15px;
   margin-bottom: 1.15em;
 }
 
-:host > div .no-results > .tips ul {
+div .no-results > .tips ul {
   padding: 0 0 0 0.7em;
   margin: 0;
 }
-:host > div .no-results > .tips li {
+div .no-results > .tips li {
   list-style-position: inside;
   list-style-type: "\BB  ";
   margin: 0;
   color: var(--readthedocs-search-color);
 }
 
-:host > div .help {
+div .help {
   display: inline-block;
   font-size: small;
   margin: 0 15px;
   padding: 0;
 }
 
-:host > div .help li {
+div .help li {
   list-style: none;
   display: inline-block;
   margin: 0 0.4em;

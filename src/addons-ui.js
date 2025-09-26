@@ -54,10 +54,18 @@ export class AddonsUIElement extends LitElement {
  _onSlotChange(e) {
     const slot = e.target;
     this._children = slot.assignedElements();
+    this._children.forEach(c => c.style = "display: none;");
     if (this.selectedAddon === null) {
       this.selectedAddon = this._children[0];
+      this.selectedAddon.style = "";
     }
     this.requestUpdate(); // force re-render when new children arrive
+  }
+
+  _onAddonSelect(addon) {
+    this.selectedAddon = addon;
+    this._children.forEach(c => c.style = "display: none;");
+    this.selectedAddon.style = "";
   }
 
   render() {
@@ -66,6 +74,8 @@ export class AddonsUIElement extends LitElement {
       return nothing;
     }
 
+    console.log(this.selectedAddon);
+
     return html`
       <div class="ui-container">
         <main>
@@ -73,14 +83,14 @@ export class AddonsUIElement extends LitElement {
             <span class="bars" @click=${() => this.menuOpened = !this.menuOpened}>${this.iconBars.node[0]}</span>
             <!-- children’s main body goes here -->
             <div class="top-menu-content">
-              ${this.selectedAddon ? this.selectedAddon.renderMain() : nothing}
+              <!-- ${this.selectedAddon ? this.selectedAddon.renderMain() : nothing} -->
               <slot @slotchange=${this._onSlotChange}></slot>
             </div>
           </div>
           ${!this.menuOpened ? nothing : html`
             <div class="menu">
               <div class="addon-icons">
-                ${this._children.map(child => html`<div @click=${() => this.selectedAddon = child}>${child.renderIcon()}</div>`)}
+                ${this._children.map(child => html`<div @click=${() => this._onAddonSelect(child)}>${child.renderIcon()}</div>`)}
               </div>
               <!-- children can project extra menu content here -->
               <div class="addon-specific-menu-content">

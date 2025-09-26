@@ -162,7 +162,7 @@ export class SearchElement extends LitElement {
       // nothing is a special Lit response type
       return nothing;
     }
-    return this.renderSearchModal();
+    return this.renderMain();
   }
 
   renderSearchModal() {
