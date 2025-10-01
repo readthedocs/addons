@@ -44,7 +44,7 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
-    let selectors;
+    let fixedFooterAdSelectors;
 
     const placementIdSuffix = docTool.getDocumentationTool() || "nodoctool";
 
@@ -89,8 +89,8 @@ export class EthicalAdsAddon extends AddonBase {
         } else {
           // We know it's RTD theme and the ad in the navbar is not above the fold at this point.
           // Then, we render the ad as fixed footer.
-          selectors = ["section", "nav"];
-          this.setFixedFooterAdProperties(selectors, placement);
+          fixedFooterAdSelectors = ["section", "nav"];
+          this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
@@ -110,6 +110,10 @@ export class EthicalAdsAddon extends AddonBase {
           // placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div.main", "aside.sidebar-drawer"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
         }
       } else if (docTool.isSphinxBookThemeLikeTheme()) {
         selector = ".sidebar-primary-items__start.sidebar-primary__section";
@@ -119,6 +123,10 @@ export class EthicalAdsAddon extends AddonBase {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div.bd-container__inner"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
         }
       } else if (docTool.isSphinxAlabasterLikeTheme()) {
         selector = "div.sphinxsidebar > div.sphinxsidebarwrapper";
@@ -127,6 +135,10 @@ export class EthicalAdsAddon extends AddonBase {
         if (this.elementAboveTheFold(element)) {
           placement.classList.add("ethical-alabaster");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div.footer"];
+          this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isMaterialMkDocsTheme()) {
@@ -142,6 +154,12 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
+          // TODO: re-enable fixed footer ad for Material for MkDocs when we are ready.
+          // https://github.com/readthedocs/addons/pull/641#pullrequestreview-3288251971
+          // } else {
+          //   fixedFooterAdSelectors = ["footer.md-footer"];
+          //   this.setFixedFooterAdProperties(placement);
+          //   knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
@@ -155,6 +173,16 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
+        } else {
+          // TODO
+          // We need this to avois other elements being show on top of the ad.
+          // We can probably always use `body` for the fixed footer ad in a
+          // generic way at the bottom of this function.
+          selector = "body";
+
+          fixedFooterAdSelectors = ["footer.footer"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
         }
       } else if (docTool.isDocsify()) {
         selector = "main > aside > div.sidebar-nav";
@@ -167,6 +195,15 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
+        } else {
+          selector = "body";
+          fixedFooterAdSelectors = [
+            "section.content",
+            "aside.sidebar",
+            "button.sidebar-toggle",
+          ];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
         }
       } else if (docTool.isAntora()) {
         selector = "aside nav.nav-menu";
@@ -177,6 +214,10 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["footer.footer"];
+          this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
       } else if (docTool.isMdBook()) {
@@ -189,6 +230,10 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div#body-container"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
         }
       } else if (docTool.isVitePress()) {
         selector = "aside";
@@ -199,6 +244,11 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        } else {
+          selector = "body";
+          fixedFooterAdSelectors = ["div#VPContent"];
+          this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
       }
@@ -272,7 +322,7 @@ export class EthicalAdsAddon extends AddonBase {
                 mutation.target,
               ).height;
               console.debug("fixedFooterAdHeight", fixedFooterAdHeight);
-              for (const selector of selectors) {
+              for (const selector of fixedFooterAdSelectors) {
                 const element = document.querySelector(selector);
                 element.style.setProperty(
                   "padding-bottom",
@@ -316,7 +366,7 @@ export class EthicalAdsAddon extends AddonBase {
     return true;
   }
 
-  setFixedFooterAdProperties(selectors, placement) {
+  setFixedFooterAdProperties(placement) {
     placement.setAttribute("data-ea-type", "text");
     placement.setAttribute("data-ea-style", "fixedfooter");
   }
