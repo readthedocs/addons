@@ -154,10 +154,12 @@ export class EthicalAdsAddon extends AddonBase {
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
-        } else {
-          fixedFooterAdSelectors = ["footer.md-footer"];
-          this.setFixedFooterAdProperties(placement);
-          knownPlacementFound = true;
+          // TODO: re-enable fixed footer ad for Material for MkDocs when we are ready.
+          // https://github.com/readthedocs/addons/pull/641#pullrequestreview-3288251971
+          // } else {
+          //   fixedFooterAdSelectors = ["footer.md-footer"];
+          //   this.setFixedFooterAdProperties(placement);
+          //   knownPlacementFound = true;
         }
       } else if (docTool.isDocusaurusTheme()) {
         selector = ".menu.thin-scrollbar.menu_SIkG";
