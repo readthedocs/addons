@@ -176,3 +176,10 @@ small a {
   text-decoration: none;
   color: var(--readthedocs-flyout-link-color);
 }
+
+/* Hide flyout when printing or generating PDFs */
+@media print {
+  :host {
+    display: none !important;
+  }
+}
