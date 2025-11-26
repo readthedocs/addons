@@ -9,6 +9,7 @@ import {
   MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
+  ZENSICAL,
   DOCUSAURUS,
   PELICAN,
   ASCIIDOCTOR,
@@ -400,6 +401,7 @@ export class DocumentationTool {
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
     [DOCUSAURUS]: "article div.markdown",
+    [ZENSICAL]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
     [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
@@ -555,6 +557,10 @@ export class DocumentationTool {
 
     if (this.isDocusaurus()) {
       return DOCUSAURUS;
+    }
+
+    if (this.isZensical()) {
+      return ZENSICAL;
     }
 
     if (this.isAsciiDoctor()) {
@@ -715,6 +721,10 @@ export class DocumentationTool {
     return this.isDocusaurusTheme();
   }
 
+  isZensical() {
+    return this.isZensicalTheme();
+  }
+
   isPelican() {
     if (
       document.querySelectorAll('meta[name="generator"][content="Pelican"]')
@@ -833,6 +843,16 @@ export class DocumentationTool {
   isDocusaurusTheme() {
     if (
       document.querySelectorAll('meta[name="generator"][content*="Docusaurus"]')
+        .length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isZensicalTheme() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content*="zensical"]')
         .length === 1
     ) {
       return true;

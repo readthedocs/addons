@@ -2,6 +2,7 @@
 export const SPHINX = "sphinx";
 export const MKDOCS = "mkdocs";
 export const MKDOCS_MATERIAL = "mkdocs-material";
+export const ZENSICAL = "zensical";
 export const DOCUSAURUS = "docusaurus";
 export const PELICAN = "pelican";
 export const ASCIIDOCTOR = "asciidoctor";
