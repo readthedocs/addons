@@ -259,6 +259,9 @@ export class SearchElement extends LitElement {
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     this.results = html`
+      <div class="results-count">
+        ${data.count} ${data.count === 1 ? "result" : "results"}
+      </div>
       <div class="hit">
         ${data.results.map(
           (result, rindex) =>
