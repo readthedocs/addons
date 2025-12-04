@@ -161,6 +161,16 @@
   hyphens: auto;
 }
 
+:host > div .results .recent-searches-header {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--readthedocs-search-result-subheading-color);
+  margin-bottom: 0.75em;
+  padding-left: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 div.hit-block {
   padding-top: 3px;
   border-top: 1px solid var(--readthedocs-search-result-border-color);
@@ -168,6 +178,14 @@ div.hit-block {
   flex-direction: column;
   margin-bottom: 10px;
   background-color: var(--readthedocs-search-result-background-color);
+}
+
+div.hit-block.recent-search-item {
+  background-color: rgba(110, 160, 236, 0.04);
+  border-left: 3px solid rgba(110, 160, 236, 0.3);
+  padding-left: 0.5em;
+  border-radius: 4px;
+  margin-bottom: 0.5em;
 }
 
 div.hit-block a.hit-block-heading {
@@ -205,6 +223,15 @@ button.close-icon {
 
   background: transparent;
   cursor: pointer;
+  opacity: 0.5;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+button.close-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 button.close-icon svg {

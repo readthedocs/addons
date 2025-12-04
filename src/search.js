@@ -358,10 +358,10 @@ export class SearchElement extends LitElement {
 
     return html`
       <div class="hit">
-        <p>Recent:</p>
+        <div class="recent-searches-header">Recent Searches</div>
         ${recentSearches.map(
           ({ block, result }) =>
-            html`<div class="hit-block">
+            html`<div class="hit-block recent-search-item">
               <div class="hit-block-heading-container">
                 <a
                   class="hit-block-heading"
