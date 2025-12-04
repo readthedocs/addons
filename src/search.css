@@ -43,6 +43,13 @@
     );
     --readthedocs-search-result-active-background-color: rgb(245, 245, 245);
     --readthedocs-search-result-border-color: rgb(224, 224, 224);
+    --readthedocs-search-recent-item-background-color: rgba(
+      110,
+      160,
+      236,
+      0.04
+    );
+    --readthedocs-search-recent-item-border-color: rgba(110, 160, 236, 0.3);
   }
 }
 
@@ -181,8 +188,8 @@ div.hit-block {
 }
 
 div.hit-block.recent-search-item {
-  background-color: rgba(110, 160, 236, 0.04);
-  border-left: 3px solid rgba(110, 160, 236, 0.3);
+  background-color: var(--readthedocs-search-recent-item-background-color);
+  border-left: 3px solid var(--readthedocs-search-recent-item-border-color);
   padding-left: 0.5em;
   border-radius: 4px;
   margin-bottom: 0.5em;
