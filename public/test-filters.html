@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta name="readthedocs-addons-api-version" content="1" />
+    <title>Test Search Filters - Read the Docs</title>
+    <meta name="readthedocs-project-slug" content="test-builds" />
+    <meta name="readthedocs-version-slug" content="latest" />
+    <meta name="readthedocs-resolver-filename" content="/index.html" />
+    <script>
+      // Configure search with filters
+      document.addEventListener("readthedocs-addons-data-ready", function (event) {
+        const config = event.detail.data();
+        // Add filters to the config
+        if (config.addons && config.addons.search) {
+          config.addons.search.filters = [
+            ["Include subprojects", "subprojects:test-builds/latest", true],
+            ["Search in documentation", "type:page", false],
+            ["Search in API", "type:api", false]
+          ];
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Test Search Filters Display</h1>
+    <p>Hit <code>/</code> to trigger the search modal and see the filters with checkboxes.</p>
+    <readthedocs-search></readthedocs-search>
+  </body>
+</html>
