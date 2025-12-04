@@ -74,6 +74,9 @@ snapshots["Search tests show the modal and perform a query"] =
       >
     </form>
     <div class="results">
+      <div class="results-count">
+        1 result
+      </div>
       <div class="hit">
         <div class="hit-block">
           <a
