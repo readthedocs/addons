@@ -168,14 +168,31 @@
   hyphens: auto;
 }
 
-:host > div .results .recent-searches-header {
+:host > div .recent-searches {
+  position: relative;
+  padding-top: 0.9rem;
+  margin: 0 0.5em 1em 0.5em;
+}
+
+:host > div .recent-searches-title {
+  display: block;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--readthedocs-search-result-subheading-color);
-  margin-bottom: 0.75em;
-  padding-left: 0.5em;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  position: absolute;
+  top: 0;
+  left: 14px;
+  background: var(--readthedocs-search-content-background-color);
+  margin: 0 5px;
+  padding: 0 5px;
+}
+
+:host > div .recent-searches-container {
+  display: block;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 0.3rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--readthedocs-search-filters-border-color);
 }
 
 div.hit-block {
@@ -188,11 +205,13 @@ div.hit-block {
 }
 
 div.hit-block.recent-search-item {
-  background-color: var(--readthedocs-search-recent-item-background-color);
-  border-left: 3px solid var(--readthedocs-search-recent-item-border-color);
-  padding-left: 0.5em;
-  border-radius: 4px;
-  margin-bottom: 0.5em;
+  border-top: none;
+  padding-top: 0;
+  margin-bottom: 0.75em;
+}
+
+div.hit-block.recent-search-item:last-child {
+  margin-bottom: 0;
 }
 
 div.hit-block a.hit-block-heading {
