@@ -205,6 +205,10 @@ div.hit-block {
 }
 
 div.hit-block.recent-search-item {
+  background-color: var(--readthedocs-search-recent-item-background-color);
+  border-left: 3px solid var(--readthedocs-search-recent-item-border-color);
+  padding-left: 0.5em;
+  border-radius: 4px;
   border-top: none;
   padding-top: 0;
   margin-bottom: 0.75em;
