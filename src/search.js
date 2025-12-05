@@ -358,7 +358,7 @@ export class SearchElement extends LitElement {
 
     return html`
       <div class="recent-searches">
-        <span class="recent-searches-title">Recent Searches</span>
+        <span class="recent-searches-title">Recent results</span>
         <div class="recent-searches-container">
           ${recentSearches.map(
             ({ block, result }) =>
