@@ -43,6 +43,13 @@
     );
     --readthedocs-search-result-active-background-color: rgb(245, 245, 245);
     --readthedocs-search-result-border-color: rgb(224, 224, 224);
+    --readthedocs-search-recent-item-background-color: rgba(
+      110,
+      160,
+      236,
+      0.04
+    );
+    --readthedocs-search-recent-item-border-color: rgba(110, 160, 236, 0.3);
   }
 }
 
@@ -161,6 +168,33 @@
   hyphens: auto;
 }
 
+:host > div .recent-searches {
+  position: relative;
+  padding-top: 0.9rem;
+  margin: 0 0.5em 1em 0.5em;
+}
+
+:host > div .recent-searches-title {
+  display: block;
+  font-size: 0.9rem;
+  position: absolute;
+  top: 0;
+  left: 14px;
+  background: var(--readthedocs-search-content-background-color);
+  margin: 0 5px;
+  padding: 0 5px;
+}
+
+:host > div .recent-searches-container {
+  display: block;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 0.3rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--readthedocs-search-filters-border-color);
+}
+
 div.hit-block {
   padding-top: 3px;
   border-top: 1px solid var(--readthedocs-search-result-border-color);
@@ -168,6 +202,20 @@ div.hit-block {
   flex-direction: column;
   margin-bottom: 10px;
   background-color: var(--readthedocs-search-result-background-color);
+}
+
+div.hit-block.recent-search-item {
+  background-color: var(--readthedocs-search-recent-item-background-color);
+  border-left: 3px solid var(--readthedocs-search-recent-item-border-color);
+  padding-left: 0.5em;
+  border-radius: 4px;
+  border-top: none;
+  padding-top: 0;
+  margin-bottom: 0.75em;
+}
+
+div.hit-block.recent-search-item:last-child {
+  margin-bottom: 0;
 }
 
 div.hit-block a.hit-block-heading {
@@ -205,6 +253,15 @@ button.close-icon {
 
   background: transparent;
   cursor: pointer;
+  opacity: 0.5;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+button.close-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 button.close-icon svg {

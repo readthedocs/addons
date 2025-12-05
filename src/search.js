@@ -357,34 +357,38 @@ export class SearchElement extends LitElement {
     });
 
     return html`
-      <div class="hit">
-        <p>Recent:</p>
-        ${recentSearches.map(
-          ({ block, result }) =>
-            html`<div class="hit-block">
-              <div class="hit-block-heading-container">
-                <a
-                  class="hit-block-heading"
-                  href="${this.getResultLink(result)}"
-                >
-                  <i>${listIcon.node[0]}</i>
-                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
-                </a>
-                <button
-                  class="close-icon"
-                  @click=${() => this.removeRecentSearch(block, result)}
-                >
-                  ${xmark.node[0]}
-                </button>
-              </div>
+      <div class="recent-searches">
+        <span class="recent-searches-title">Recent results</span>
+        <div class="recent-searches-container">
+          ${recentSearches.map(
+            ({ block, result }) =>
+              html`<div class="hit-block recent-search-item">
+                <div class="hit-block-heading-container">
+                  <a
+                    class="hit-block-heading"
+                    href="${this.getResultLink(result)}"
+                  >
+                    <i>${listIcon.node[0]}</i>
+                    <h2>
+                      ${result.title} ${this.renderExternalProject(result)}
+                    </h2>
+                  </a>
+                  <button
+                    class="close-icon"
+                    @click=${() => this.removeRecentSearch(block, result)}
+                  >
+                    ${xmark.node[0]}
+                  </button>
+                </div>
 
-              ${html`${this.renderBlockResult(
-                block,
-                `recent-search-${block.id}`,
-                result,
-              )}`}
-            </div>`,
-        )}
+                ${html`${this.renderBlockResult(
+                  block,
+                  `recent-search-${block.id}`,
+                  result,
+                )}`}
+              </div>`,
+          )}
+        </div>
       </div>
     `;
   }
