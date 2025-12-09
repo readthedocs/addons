@@ -58,6 +58,7 @@
 
 :host > div > div > span:not(.chunks) {
   display: flex;
+  align-items: center;
   width: 0.5em;
   cursor: pointer;
 }
