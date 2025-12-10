@@ -251,6 +251,21 @@ export class EthicalAdsAddon extends AddonBase {
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
+      } else if (docTool.isZensical()) {
+        selector = "div.md-sidebar__scrollwrap";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-alabaster");
+
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.setAttribute("data-ea-style", "image");
+          knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div.md-footer-meta"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
+        }
       }
 
       if (selector && knownPlacementFound) {
