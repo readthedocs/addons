@@ -101,7 +101,7 @@ export class DocDiffElement extends LitElement {
     }
     this.config = config;
     this.rootSelector =
-      objectPath.get(this.config, "options.root_selector") ||
+      objectPath.get(this.config, "addons.options.root_selector") ||
       docTool.getRootSelector();
 
     // NOTE: maybe there is a better way to inject this styles?
