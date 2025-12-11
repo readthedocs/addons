@@ -174,12 +174,6 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-type", "image");
           knownPlacementFound = true;
         } else {
-          // TODO
-          // We need this to avois other elements being show on top of the ad.
-          // We can probably always use `body` for the fixed footer ad in a
-          // generic way at the bottom of this function.
-          selector = "body";
-
           fixedFooterAdSelectors = ["footer.footer"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
@@ -196,7 +190,6 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         } else {
-          selector = "body";
           fixedFooterAdSelectors = [
             "section.content",
             "aside.sidebar",
@@ -246,7 +239,6 @@ export class EthicalAdsAddon extends AddonBase {
           placement.setAttribute("data-ea-style", "image");
           knownPlacementFound = true;
         } else {
-          selector = "body";
           fixedFooterAdSelectors = ["div#VPContent"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
@@ -266,6 +258,15 @@ export class EthicalAdsAddon extends AddonBase {
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
+      }
+
+      const placementStyle =
+        placement.getAttribute("data-ea-style") || "nostyle";
+
+      // Always append the ad to the body when it's fixed footer.
+      // This avoid issues with z-index on parent elements.
+      if (placementStyle == "fixedfooter") {
+        selector = "body";
       }
 
       if (selector && knownPlacementFound) {
