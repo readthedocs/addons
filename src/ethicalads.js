@@ -264,8 +264,8 @@ export class EthicalAdsAddon extends AddonBase {
         placement.getAttribute("data-ea-style") || "nostyle";
 
       // Always append the ad to the body when it's fixed footer.
-      // This avoid issues with z-index on parent elements.
-      if (placementStyle == "fixedfooter") {
+      // This avoids issues with z-index on parent elements.
+      if (placementStyle === "fixedfooter") {
         selector = "body";
       }
 
