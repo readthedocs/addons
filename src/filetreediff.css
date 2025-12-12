@@ -63,6 +63,10 @@
   cursor: pointer;
 }
 
+:host > div > div > span:not(.chunks) svg {
+  min-height: 1em;
+}
+
 :host > div > div > span.chunks {
   color: var(--readthedocs-filetreediff-chunks-color);
   font-weight: bold;
