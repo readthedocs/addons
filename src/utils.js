@@ -709,7 +709,8 @@ export class DocumentationTool {
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
       this.isSphinxBookThemeLikeTheme() ||
-      this.isSphinxImmaterialLikeTheme()
+      this.isSphinxImmaterialLikeTheme() ||
+      this.isSphinxPyDataLikeTheme()
     );
   }
 
@@ -823,6 +824,17 @@ export class DocumentationTool {
         'link[href*="_static/sphinx_immaterial_theme"]',
         'a[href="https://github.com/jbms/sphinx-immaterial/"][rel="noopener"]',
       ).length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxPyDataLikeTheme() {
+    if (
+      document.querySelectorAll(
+        'link[href*="_static/styles/pydata-sphinx-theme.css"]',
+      ).length === 1
     ) {
       return true;
     }
