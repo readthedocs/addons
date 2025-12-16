@@ -6,6 +6,7 @@ import {
   SPHINX_ALABASTER,
   SPHINX_READTHEDOCS,
   SPHINX_IMMATERIAL,
+  SPHINX_PYDATA,
   MDBOOK,
   MKDOCS,
   MKDOCS_MATERIAL,
@@ -608,6 +609,8 @@ export class DocumentationTool {
         return SPHINX_FURO;
       } else if (this.isSphinxImmaterialLikeTheme()) {
         return SPHINX_IMMATERIAL;
+      } else if (this.isSphinxPyDataLikeTheme()) {
+        return SPHINX_PYDATA;
       }
     }
 
