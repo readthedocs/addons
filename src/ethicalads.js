@@ -120,7 +120,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
         } else {
@@ -148,9 +148,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          // TODO: use a more styled CSS class.
-          // See https://github.com/readthedocs/ethical-ad-client/issues/193
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           knownPlacementFound = true;
@@ -166,9 +164,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          // TODO: use a more styled CSS class.
-          // See https://github.com/readthedocs/ethical-ad-client/issues/193
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
           placement.classList.add("ethical-docusaurus");
 
           placement.setAttribute("data-ea-type", "image");
@@ -183,7 +179,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
           placement.classList.add("ethical-docsify");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
@@ -203,7 +199,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
@@ -218,7 +214,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
@@ -233,7 +229,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
@@ -248,7 +244,7 @@ export class EthicalAdsAddon extends AddonBase {
         element = document.querySelector(selector);
 
         if (this.elementAboveTheFold(element)) {
-          placement.classList.add("ethical-alabaster");
+          placement.classList.add("ethical-light-theme");
 
           placement.setAttribute("data-ea-type", "readthedocs-sidebar");
           placement.setAttribute("data-ea-style", "image");
