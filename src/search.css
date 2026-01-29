@@ -258,7 +258,6 @@ div.hit-block .hit-block-heading-container svg {
   border-radius: 0.25em;
   color: var(--readthedocs-search-result-color);
   font-weight: 600;
-  padding: 0 0.35em;
 }
 
 :host > div .results .hit .content {
