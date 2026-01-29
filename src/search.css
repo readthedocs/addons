@@ -282,6 +282,12 @@ div.hit-block .hit-block-heading-container svg {
   white-space: nowrap;
 }
 
+:host > div .results .project-badge-prefix {
+  color: var(--readthedocs-search-result-subheading-color);
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
 :host > div .results .project-badge--compact {
   font-size: 0.8em;
   padding: 0.2em 0.5em;

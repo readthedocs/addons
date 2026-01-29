@@ -464,6 +464,7 @@ export class SearchElement extends LitElement {
       const extraClasses = options.extraClasses || "";
       return html`
         <span class="project-badge ${extraClasses}">
+          <span class="project-badge-prefix">Project:</span>
           <span class="project-badge-label">${projectLabel}</span>
         </span>
       `;
