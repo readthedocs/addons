@@ -450,8 +450,9 @@ export class SearchElement extends LitElement {
 
   renderExternalProject(result) {
     if (result.project.slug !== this.config.projects.current.slug) {
+      const projectLabel = result.project.alias || result.project.slug;
       return html`
-        <small class="subtitle"> (from project ${result.project.slug}) </small>
+        <small class="subtitle"> (from project ${projectLabel}) </small>
       `;
     }
     return nothing;
