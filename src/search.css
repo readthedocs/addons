@@ -173,12 +173,27 @@ div.hit-block {
 div.hit-block a.hit-block-heading {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 div.hit-block .hit-block-heading-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+div.hit-block .hit-block-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  width: 100%;
+}
+
+div.hit-block .hit-block-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
 }
 
 div.hit-block a.hit-block-heading i,
@@ -253,11 +268,23 @@ div.hit-block .hit-block-heading-container svg {
   line-height: inherit;
 }
 
-:host > div .results .subtitle .project-label {
+:host > div .results .project-badge {
+  align-items: center;
   background-color: #e5f6ff;
-  border-radius: 0.25em;
+  border-radius: 999px;
   color: var(--readthedocs-search-result-color);
+  display: inline-flex;
+  font-size: 0.85em;
   font-weight: 600;
+  gap: 0.25em;
+  line-height: 1;
+  padding: 0.25em 0.6em;
+  white-space: nowrap;
+}
+
+:host > div .results .project-badge--compact {
+  font-size: 0.8em;
+  padding: 0.2em 0.5em;
 }
 
 :host > div .results .hit .content {

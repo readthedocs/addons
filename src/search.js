@@ -269,7 +269,10 @@ export class SearchElement extends LitElement {
                 href="${this.getResultLink(result)}"
               >
                 <i>${listIcon.node[0]}</i>
-                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                <div class="hit-block-heading-row">
+                  <h2>${result.title}</h2>
+                  ${this.renderExternalProjectBadge(result)}
+                </div>
               </a>
 
               ${result.blocks.map(
@@ -368,14 +371,21 @@ export class SearchElement extends LitElement {
                   href="${this.getResultLink(result)}"
                 >
                   <i>${listIcon.node[0]}</i>
-                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                  <div class="hit-block-heading-row">
+                    <h2>${result.title}</h2>
+                  </div>
                 </a>
-                <button
-                  class="close-icon"
-                  @click=${() => this.removeRecentSearch(block, result)}
-                >
-                  ${xmark.node[0]}
-                </button>
+                <div class="hit-block-heading-actions">
+                  ${this.renderExternalProjectBadge(result, {
+                    extraClasses: "project-badge--compact",
+                  })}
+                  <button
+                    class="close-icon"
+                    @click=${() => this.removeRecentSearch(block, result)}
+                  >
+                    ${xmark.node[0]}
+                  </button>
+                </div>
               </div>
 
               ${html`${this.renderBlockResult(
@@ -448,13 +458,14 @@ export class SearchElement extends LitElement {
     this.requestUpdate();
   }
 
-  renderExternalProject(result) {
+  renderExternalProjectBadge(result, options = {}) {
     if (result.project.slug !== this.config.projects.current.slug) {
       const projectLabel = result.project.alias || result.project.slug;
+      const extraClasses = options.extraClasses || "";
       return html`
-        <small class="subtitle">
-          (from <span class="project-label">${projectLabel}</span>)
-        </small>
+        <span class="project-badge ${extraClasses}">
+          <span class="project-badge-label">${projectLabel}</span>
+        </span>
       `;
     }
     return nothing;
