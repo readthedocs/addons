@@ -452,7 +452,9 @@ export class SearchElement extends LitElement {
     if (result.project.slug !== this.config.projects.current.slug) {
       const projectLabel = result.project.alias || result.project.slug;
       return html`
-        <small class="subtitle"> (from project ${projectLabel}) </small>
+        <small class="subtitle">
+          (from <span class="project-label">${projectLabel}</span>)
+        </small>
       `;
     }
     return nothing;

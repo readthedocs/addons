@@ -253,6 +253,14 @@ div.hit-block .hit-block-heading-container svg {
   line-height: inherit;
 }
 
+:host > div .results .subtitle .project-label {
+  background-color: #e5f6ff;
+  border-radius: 0.25em;
+  color: var(--readthedocs-search-result-color);
+  font-weight: 600;
+  padding: 0 0.35em;
+}
+
 :host > div .results .hit .content {
   margin: 0;
   text-decoration: none;
