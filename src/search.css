@@ -43,6 +43,8 @@
     );
     --readthedocs-search-result-active-background-color: rgb(245, 245, 245);
     --readthedocs-search-result-border-color: rgb(224, 224, 224);
+    --readthedocs-search-badge-background-color: #e5f6ff;
+    --readthedocs-search-badge-color: rgba(0, 0, 0, 0.75);
   }
 }
 
@@ -173,12 +175,27 @@ div.hit-block {
 div.hit-block a.hit-block-heading {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 div.hit-block .hit-block-heading-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+div.hit-block .hit-block-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  width: 100%;
+  min-width: 0;
+}
+
+div.hit-block .hit-block-heading-row h2 {
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 div.hit-block a.hit-block-heading i,
@@ -251,6 +268,23 @@ div.hit-block .hit-block-heading-container svg {
   overflow-x: hidden;
   margin: inherit;
   line-height: inherit;
+}
+
+:host > div .results .project-badge {
+  align-items: center;
+  background-color: var(--readthedocs-search-badge-background-color);
+  border-radius: 999px;
+  color: var(--readthedocs-search-badge-color);
+  display: inline-flex;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.25em 0.6em;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 :host > div .results .hit .content {
