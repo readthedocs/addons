@@ -43,6 +43,7 @@
     );
     --readthedocs-search-result-active-background-color: rgb(245, 245, 245);
     --readthedocs-search-result-border-color: rgb(224, 224, 224);
+    --readthedocs-search-badge-background: #e5f6ff;
   }
 }
 
@@ -190,12 +191,6 @@ div.hit-block .hit-block-heading-row {
   width: 100%;
 }
 
-div.hit-block .hit-block-heading-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
-}
-
 div.hit-block a.hit-block-heading i,
 div.hit-block .hit-block-heading-container .close-icon {
   font-size: 1.15em;
@@ -270,27 +265,15 @@ div.hit-block .hit-block-heading-container svg {
 
 :host > div .results .project-badge {
   align-items: center;
-  background-color: #e5f6ff;
+  background-color: var(--readthedocs-search-badge-background);
   border-radius: 999px;
-  color: var(--readthedocs-search-result-color);
+  color: var(--readthedocs-search-result-subheading-color);
   display: inline-flex;
   font-size: 0.85em;
   font-weight: 600;
-  gap: 0.25em;
   line-height: 1;
   padding: 0.25em 0.6em;
   white-space: nowrap;
-}
-
-:host > div .results .project-badge-prefix {
-  color: var(--readthedocs-search-result-subheading-color);
-  font-size: 0.9em;
-  font-weight: 600;
-}
-
-:host > div .results .project-badge--compact {
-  font-size: 0.8em;
-  padding: 0.2em 0.5em;
 }
 
 :host > div .results .hit .content {

@@ -373,19 +373,15 @@ export class SearchElement extends LitElement {
                   <i>${listIcon.node[0]}</i>
                   <div class="hit-block-heading-row">
                     <h2>${result.title}</h2>
+                    ${this.renderExternalProjectBadge(result)}
                   </div>
                 </a>
-                <div class="hit-block-heading-actions">
-                  ${this.renderExternalProjectBadge(result, {
-                    extraClasses: "project-badge--compact",
-                  })}
-                  <button
-                    class="close-icon"
-                    @click=${() => this.removeRecentSearch(block, result)}
-                  >
-                    ${xmark.node[0]}
-                  </button>
-                </div>
+                <button
+                  class="close-icon"
+                  @click=${() => this.removeRecentSearch(block, result)}
+                >
+                  ${xmark.node[0]}
+                </button>
               </div>
 
               ${html`${this.renderBlockResult(
@@ -458,15 +454,11 @@ export class SearchElement extends LitElement {
     this.requestUpdate();
   }
 
-  renderExternalProjectBadge(result, options = {}) {
+  renderExternalProjectBadge(result) {
     if (result.project.slug !== this.config.projects.current.slug) {
       const projectLabel = result.project.alias || result.project.slug;
-      const extraClasses = options.extraClasses || "";
       return html`
-        <span class="project-badge ${extraClasses}">
-          <span class="project-badge-prefix">Project:</span>
-          <span class="project-badge-label">${projectLabel}</span>
-        </span>
+        <span class="project-badge"> Project: ${projectLabel} </span>
       `;
     }
     return nothing;

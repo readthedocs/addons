@@ -82,9 +82,11 @@ snapshots["Search tests show the modal and perform a query"] =
           >
             <i>
             </i>
-            <h2>
-              Title
-            </h2>
+            <div class="hit-block-heading-row">
+              <h2>
+                Title
+              </h2>
+            </div>
           </a>
           <a
             class="hit"

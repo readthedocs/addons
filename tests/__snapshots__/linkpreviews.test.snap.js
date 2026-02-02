@@ -5,7 +5,7 @@ snapshots["Link previews tests trigger mouseenter event to show tooltip"] =
 `<div
   class="tooltip"
   data-linkpreview-href="http://localhost:8000/link.html"
-  style="display: flex; left: 10px; top: 35px;"
+  style="display: flex; left: 10px; top: 36px;"
 >
   <div class="tooltip-content">
     <section>
