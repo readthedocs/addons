@@ -43,7 +43,8 @@
     );
     --readthedocs-search-result-active-background-color: rgb(245, 245, 245);
     --readthedocs-search-result-border-color: rgb(224, 224, 224);
-    --readthedocs-search-badge-background: #e5f6ff;
+    --readthedocs-search-badge-background-color: #e5f6ff;
+    --readthedocs-search-badge-color: rgba(0, 0, 0, 0.75);
   }
 }
 
@@ -271,9 +272,9 @@ div.hit-block .hit-block-heading-container svg {
 
 :host > div .results .project-badge {
   align-items: center;
-  background-color: var(--readthedocs-search-badge-background);
+  background-color: var(--readthedocs-search-badge-background-color);
   border-radius: 999px;
-  color: rgba(0, 0, 0, 0.75);
+  color: var(--readthedocs-search-badge-color);
   display: inline-flex;
   font-size: 0.85em;
   font-weight: 600;
