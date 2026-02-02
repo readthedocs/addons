@@ -189,6 +189,12 @@ div.hit-block .hit-block-heading-row {
   justify-content: space-between;
   gap: 0.5em;
   width: 100%;
+  min-width: 0;
+}
+
+div.hit-block .hit-block-heading-row h2 {
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 div.hit-block a.hit-block-heading i,
@@ -274,6 +280,10 @@ div.hit-block .hit-block-heading-container svg {
   line-height: 1;
   padding: 0.25em 0.6em;
   white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 :host > div .results .hit .content {
