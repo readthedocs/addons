@@ -267,7 +267,7 @@ div.hit-block .hit-block-heading-container svg {
   align-items: center;
   background-color: var(--readthedocs-search-badge-background);
   border-radius: 999px;
-  color: var(--readthedocs-search-result-subheading-color);
+  color: rgba(0, 0, 0, 0.75);
   display: inline-flex;
   font-size: 0.85em;
   font-weight: 600;
