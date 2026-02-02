@@ -141,6 +141,40 @@
               ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
             });
           });
+
+          it("show project badge for external project results", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"count":1,"next":null,"previous":null,"projects":[{"slug":"project","versions":[{"slug":"version"}]},{"slug":"subproject","versions":[{"slug":"latest"}]}],"query":"test","results":[{"blocks":[{"content":"Test content","highlights":{"content":["<span>test</span> content"],"title":[]},"id":"test-section","title":"Test Section","type":"section"}],"domain":"http://localhost:8000","highlights":{"title":[]},"path":"/en/latest/index.html","project":{"alias":"Subproject Name","slug":"subproject"},"title":"Test Page","type":"page","version":{"slug":"latest"}}]}',
+            ]);
+
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+            const inputForm = element.shadowRoot.querySelector("input");
+            inputForm.value = "test";
+            element.queryInput();
+
+            await elementUpdated(element);
+
+            await waitUntil(
+              () => element.shadowRoot.querySelector("div.results > div.hit"),
+              "Hit result was not rendered",
+            );
+
+            // Check that the project badge is rendered
+            const badge = element.shadowRoot.querySelector(".project-badge");
+            expect(badge).to.exist;
+            expect(badge.textContent.trim()).to.equal("Project: Subproject Name");
+
+            await expect(element).shadowDom.to.equalSnapshot({
+              ignoreAttributes: [{ tags: ["form"], attributes: ["class"] }],
+            });
+          });
         });
       });
     </script>
