@@ -133,7 +133,11 @@
             const tooltip = document.querySelector(".tooltip");
             expect(tooltip).to.have.attribute("data-linkpreview-href");
             // The tooltip should have the content from the response (title and paragraph)
-            await expect(tooltip).dom.to.equalSnapshot();
+            // Ignore style attributes as Tippy.js calculates positioning dynamically,
+            // which can vary slightly between environments (e.g., local vs CI)
+            await expect(tooltip).dom.to.equalSnapshot({
+              ignoreAttributes: ["style"],
+            });
 
             // TODO: I wasn't able to make the `mouseleave` event to hide the tooltip.
             // const mouseleaveEvent = new Event("mouseleave");
