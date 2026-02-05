@@ -201,6 +201,19 @@ div.ethical-footer {
   }
 }
 
+/* Light theme customizations for non-Alabaster themes */
+.ethical-light-theme hr {
+  /* Add spacing before the footer ad */
+  margin-top: 2em;
+}
+.ethical-light-theme::before {
+  /* Clear floating elements above the ad */
+  clear: both;
+  content: "";
+  display: table;
+  margin-top: 3em;
+}
+
 /* Alabaster specific customizations */
 .ethical-alabaster a.ethical-image-link {
   /* Alabaster adds a border even to image links on hover */
