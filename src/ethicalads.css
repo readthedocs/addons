@@ -202,10 +202,6 @@ div.ethical-footer {
 }
 
 /* Light theme customizations for non-Alabaster themes */
-.ethical-light-theme a.ethical-image-link {
-  /* Remove border on image links */
-  border: 0 !important;
-}
 .ethical-light-theme hr {
   /* Add spacing before the footer ad */
   margin-top: 2em;
