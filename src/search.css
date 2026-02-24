@@ -375,8 +375,13 @@ div.hit-block .hit-block-heading-container svg {
   margin: 0 0 0 15px;
 }
 
+:host > div .filters li input {
+  vertical-align: middle;
+}
+
 :host > div .filters li label {
   padding: 3px;
+  cursor: pointer;
 }
 
 :host > div .filters label {
