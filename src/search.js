@@ -269,7 +269,10 @@ export class SearchElement extends LitElement {
                 href="${this.getResultLink(result)}"
               >
                 <i>${listIcon.node[0]}</i>
-                <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                <div class="hit-block-heading-row">
+                  <h2>${result.title}</h2>
+                  ${this.renderExternalProjectBadge(result)}
+                </div>
               </a>
 
               ${result.blocks.map(
@@ -368,7 +371,10 @@ export class SearchElement extends LitElement {
                   href="${this.getResultLink(result)}"
                 >
                   <i>${listIcon.node[0]}</i>
-                  <h2>${result.title} ${this.renderExternalProject(result)}</h2>
+                  <div class="hit-block-heading-row">
+                    <h2>${result.title}</h2>
+                    ${this.renderExternalProjectBadge(result)}
+                  </div>
                 </a>
                 <button
                   class="close-icon"
@@ -448,10 +454,11 @@ export class SearchElement extends LitElement {
     this.requestUpdate();
   }
 
-  renderExternalProject(result) {
+  renderExternalProjectBadge(result) {
     if (result.project.slug !== this.config.projects.current.slug) {
+      const projectLabel = result.project.alias || result.project.slug;
       return html`
-        <small class="subtitle"> (from project ${result.project.slug}) </small>
+        <span class="project-badge"> Project: ${projectLabel} </span>
       `;
     }
     return nothing;

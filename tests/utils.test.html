@@ -179,6 +179,26 @@
             );
           });
 
+          it("Sphinx PyData", async () => {
+            element = document.createElement("link");
+            element.href = "_static/styles/pydata-sphinx-theme.css";
+            document.head.appendChild(element);
+
+            const tool = new utils.DocumentationTool();
+
+            expect(tool.isMkDocs()).to.be.false;
+            expect(tool.getDocumentationTool()).to.be.equal("sphinx");
+            expect(tool.isSphinx()).to.be.true;
+            expect(tool.isSphinxAlabasterLikeTheme()).to.be.false;
+            expect(tool.isSphinxReadTheDocsLikeTheme()).to.be.false;
+            expect(tool.isSphinxFuroLikeTheme()).to.be.false;
+            expect(tool.isSphinxPyDataLikeTheme()).to.be.true;
+            expect(tool.getRootSelector()).to.be.equal("[role=main]");
+            expect(tool.getLinkSelector()).to.be.equal(
+              "[role=main] a.internal",
+            );
+          });
+
           it("Sphinx Read the Docs", async () => {
             element = document.createElement("script");
             element.src = "_static/js/theme.js";
