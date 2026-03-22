@@ -18,7 +18,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/plugin-syntax-import-assertions": "^7.28.6",
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@open-wc/testing": "^4.0.0",
@@ -29,7 +29,7 @@
     "@web/dev-server-import-maps": "^0.2.1",
     "@web/test-runner": "^0.20.2",
     "ajv": "^8.18.0",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
     "diff-match-patch": "1.0.5",
     "express-interceptor": "^1.2.0",
@@ -38,14 +38,14 @@
     "lit": "^3.3.2",
     "object-path": "^0.11.8",
     "prettier": "^3.8.1",
-    "rollup-plugin-lit-css": "^6.0.0",
-    "sinon": "^21.0.1",
+    "rollup-plugin-lit-css": "^6.0.1",
+    "sinon": "^21.0.3",
     "tippy.js": "^6.3.7",
     "tslib": "^2.8.1",
     "unfetch": "^4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.105.3",
-    "webpack-cli": "^6.0.1",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.3"
   },
   "babel": {
@@ -62,8 +62,8 @@
     }
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.5",
-    "nise": "^6.1.1",
-    "npm-check-updates": "^19.6.3"
+    "@floating-ui/dom": "^1.7.6",
+    "nise": "^6.1.4",
+    "npm-check-updates": "^19.6.5"
   }
 }
