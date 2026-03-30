@@ -7,8 +7,10 @@ commands:
   run-tests:
     description: "Run test suite"
     steps:
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install_chrome:
+          timeout: 5m
+      - browser-tools/install_chromedriver:
+          timeout: 5m
       - checkout
       - run: npm ci
       - run: npm run test
