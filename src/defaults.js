@@ -1,5 +1,6 @@
 import styleSheetDefaults from "./defaults.css";
 import styleSheetFlyout from "./flyout.css";
+import styleSheetToolbar from "./toolbar.css";
 import styleSheetFiletreediff from "./filetreediff.css";
 import styleSheetNotification from "./notification.css";
 import styleSheetSearch from "./search.css";
@@ -12,6 +13,7 @@ export const defaultStyleSheet = new CSSStyleSheet();
 const styleSheets = [
   styleSheetDefaults,
   styleSheetFlyout,
+  styleSheetToolbar,
   styleSheetFiletreediff,
   styleSheetNotification,
   styleSheetSearch,

@@ -20,6 +20,7 @@ import * as analytics from "./analytics";
 import * as search from "./search";
 import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
+import * as toolbar from "./toolbar";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
@@ -44,6 +45,9 @@ export class AddonsApplication {
     );
 
     this.addons = [
+      // TODO: toolbar is a POC replacement for the flyout (issue #574).
+      // Eventually only one of these should be enabled based on config.
+      toolbar.ToolbarAddon,
       flyout.FlyoutAddon,
       notification.NotificationAddon,
       analytics.AnalyticsAddon,

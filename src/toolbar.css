@@ -1,0 +1,390 @@
+/* Toolbar styles - New top-center UI (issue #574) */
+
+@layer defaults {
+  :root {
+    --readthedocs-toolbar-font-family: var(--readthedocs-font-family);
+    --readthedocs-toolbar-font-size: calc(var(--readthedocs-font-size) * 0.85);
+
+    --readthedocs-toolbar-color: rgb(252, 252, 252);
+    --readthedocs-toolbar-color-muted: rgb(128, 128, 128);
+    --readthedocs-toolbar-background-color: rgb(39, 39, 37);
+    --readthedocs-toolbar-hover-background-color: rgb(58, 58, 56);
+    --readthedocs-toolbar-accent-color: #27ae60;
+    --readthedocs-toolbar-border-color: #413d3d;
+    --readthedocs-toolbar-link-color: rgb(42, 128, 185);
+    --readthedocs-toolbar-badge-color: #e74c3c;
+
+    --readthedocs-toolbar-height: 2.5rem;
+    --readthedocs-toolbar-peek-height: 4px;
+    --readthedocs-toolbar-transition-duration: 0.3s;
+    --readthedocs-toolbar-auto-hide-delay: 4000;
+    --readthedocs-toolbar-notification-auto-hide-delay: 5000;
+  }
+}
+
+/* === Container === */
+:host {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  font-family: var(--readthedocs-toolbar-font-family);
+  font-size: var(--readthedocs-toolbar-font-size);
+  transition:
+    transform var(--readthedocs-toolbar-transition-duration) ease,
+    opacity var(--readthedocs-toolbar-transition-duration) ease;
+}
+
+:host(.auto-hidden) {
+  transform: translateX(-50%)
+    translateY(calc(-100% + var(--readthedocs-toolbar-peek-height)));
+}
+
+:host(.auto-hidden:hover),
+:host(.auto-hidden:focus-within) {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* === Bar === */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--readthedocs-toolbar-background-color);
+  color: var(--readthedocs-toolbar-color);
+  height: var(--readthedocs-toolbar-height);
+  border-radius: 0 0 0.5rem 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  overflow: visible;
+  padding: 0 0.25rem;
+}
+
+/* === Logo === */
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  height: 100%;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.logo:hover {
+  opacity: 1;
+}
+
+.logo img {
+  height: 1.25rem;
+  width: auto;
+}
+
+/* === Divider === */
+.divider {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--readthedocs-toolbar-border-color);
+  flex-shrink: 0;
+}
+
+/* === Addon buttons === */
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 100%;
+  padding: 0 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--readthedocs-toolbar-color-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover,
+.btn.active {
+  background: var(--readthedocs-toolbar-hover-background-color);
+  color: var(--readthedocs-toolbar-color);
+}
+
+.btn svg.icon {
+  height: 1rem;
+  width: auto;
+}
+
+.btn .label {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn .label.accent {
+  color: var(--readthedocs-toolbar-accent-color);
+}
+
+.btn .caret svg {
+  height: 0.6rem;
+  width: auto;
+}
+
+/* === Dropdown panels === */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 14rem;
+  max-width: 22rem;
+  max-height: 24rem;
+  background: var(--readthedocs-toolbar-background-color);
+  border: 1px solid var(--readthedocs-toolbar-border-color);
+  border-radius: 0 0 0.5rem 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  display: none;
+  z-index: 10;
+}
+
+.dropdown.open {
+  display: block;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--readthedocs-toolbar-border-color);
+  font-size: 0.75rem;
+  color: var(--readthedocs-toolbar-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.dropdown-section {
+  padding: 0.35rem 0.75rem 0.2rem;
+  font-size: 0.7rem;
+  color: var(--readthedocs-toolbar-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.dropdown-list {
+  list-style: none;
+  padding: 0.25rem 0;
+  margin: 0;
+}
+
+.dropdown-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  color: var(--readthedocs-toolbar-color);
+  text-decoration: none;
+  font-size: var(--readthedocs-toolbar-font-size);
+  transition: background 0.15s;
+}
+
+.dropdown-list li a:hover {
+  background: var(--readthedocs-toolbar-hover-background-color);
+}
+
+.dropdown-list li.current a {
+  color: var(--readthedocs-toolbar-accent-color);
+  font-weight: 700;
+}
+
+.dropdown-list li a svg.icon-default {
+  color: #f1c40f;
+  height: 0.75rem;
+  width: auto;
+}
+
+.dropdown-list li a svg.icon-pinned {
+  color: var(--readthedocs-toolbar-link-color);
+  height: 0.7rem;
+  width: auto;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--readthedocs-toolbar-border-color);
+  margin: 0.25rem 0;
+}
+
+/* === Search panel === */
+.search-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36rem;
+  max-width: 90vw;
+  max-height: 28rem;
+  background: var(--readthedocs-toolbar-background-color);
+  border: 1px solid var(--readthedocs-toolbar-border-color);
+  border-radius: 0 0 0.75rem 0.75rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  display: none;
+  z-index: 10;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.search-panel.open {
+  display: flex;
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--readthedocs-toolbar-border-color);
+}
+
+.search-input-wrap svg {
+  height: 1rem;
+  color: var(--readthedocs-toolbar-color-muted);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--readthedocs-toolbar-color);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--readthedocs-toolbar-color-muted);
+}
+
+.search-results {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.search-result {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  text-decoration: none;
+  color: var(--readthedocs-toolbar-color);
+  border-radius: 0.25rem;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.search-result:hover,
+.search-result.active {
+  background: var(--readthedocs-toolbar-hover-background-color);
+}
+
+.search-result-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.search-result-content {
+  font-size: 0.8rem;
+  color: var(--readthedocs-toolbar-color-muted);
+  line-height: 1.4;
+}
+
+.search-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  border-top: 1px solid var(--readthedocs-toolbar-border-color);
+  font-size: 0.75rem;
+  color: var(--readthedocs-toolbar-color-muted);
+}
+
+.search-footer kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  background: var(--readthedocs-toolbar-hover-background-color);
+  border: 1px solid var(--readthedocs-toolbar-border-color);
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 0.7rem;
+  margin: 0 0.15rem;
+}
+
+/* === Notification badge === */
+.badge {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--readthedocs-toolbar-badge-color);
+  border-radius: 50%;
+  border: 1.5px solid var(--readthedocs-toolbar-background-color);
+}
+
+/* === Notification history dropdown === */
+.notification-history {
+  right: 0;
+  left: auto;
+  transform: none;
+  min-width: 20rem;
+  max-width: 24rem;
+}
+
+.notification-history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--readthedocs-toolbar-border-color);
+  color: var(--readthedocs-toolbar-color);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.notification-history-item:last-child {
+  border-bottom: none;
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .bar {
+    border-radius: 0;
+  }
+
+  :host {
+    width: 100%;
+  }
+
+  .btn .label {
+    display: none;
+  }
+
+  .search-panel {
+    width: 100vw;
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .dropdown {
+    min-width: 12rem;
+  }
+}

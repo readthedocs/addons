@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read the Docs Addons - New Toolbar UI POC</title>
+
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts - Lato (matches RTD brand) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== Page styles (simulating a documentation page) ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #fff;
+      padding-top: 0;
+    }
+
+    .doc-content {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .doc-content h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 0.5rem;
+    }
+
+    .doc-content h2 {
+      font-size: 1.5rem;
+      margin: 2rem 0 0.75rem;
+      color: #2980b9;
+    }
+
+    .doc-content p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .doc-content pre {
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+    }
+
+    .doc-content ul {
+      margin: 0 0 1rem 1.5rem;
+    }
+
+    .doc-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ===== Toolbar Component Styles ===== */
+
+    :root {
+      --rtd-toolbar-bg: #272725;
+      --rtd-toolbar-color: #fcfcfc;
+      --rtd-toolbar-color-muted: #808080;
+      --rtd-toolbar-accent: #27ae60;
+      --rtd-toolbar-hover-bg: #3a3a38;
+      --rtd-toolbar-dropdown-bg: #2f2f2d;
+      --rtd-toolbar-border: #413d3d;
+      --rtd-toolbar-link: #2a80b9;
+      --rtd-toolbar-font-size: 0.85rem;
+      --rtd-toolbar-height: 2.5rem;
+      --rtd-toolbar-peek-height: 4px;
+      --rtd-toolbar-transition: 0.3s ease;
+      --rtd-toolbar-z-index: 3000;
+
+      /* Notification colors */
+      --rtd-notification-bg: #fef3cd;
+      --rtd-notification-color: #856404;
+      --rtd-notification-border: #ffc107;
+      --rtd-notification-info-bg: #d1ecf1;
+      --rtd-notification-info-color: #0c5460;
+      --rtd-notification-info-border: #bee5eb;
+      --rtd-notification-warning-bg: #f8d7da;
+      --rtd-notification-warning-color: #721c24;
+      --rtd-notification-warning-border: #f5c6cb;
+    }
+
+    /* ---- Toolbar container ---- */
+    .rtd-toolbar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: var(--rtd-toolbar-z-index);
+      font-family: 'Lato', sans-serif;
+      font-size: var(--rtd-toolbar-font-size);
+      transition: transform var(--rtd-toolbar-transition),
+                  opacity var(--rtd-toolbar-transition);
+    }
+
+    .rtd-toolbar.auto-hidden {
+      transform: translateX(-50%) translateY(calc(-100% + var(--rtd-toolbar-peek-height)));
+    }
+
+    .rtd-toolbar.auto-hidden:hover,
+    .rtd-toolbar.auto-hidden:focus-within {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ---- The main bar ---- */
+    .rtd-toolbar__bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--rtd-toolbar-bg);
+      color: var(--rtd-toolbar-color);
+      height: var(--rtd-toolbar-height);
+      border-radius: 0 0 0.5rem 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      overflow: visible;
+      padding: 0 0.25rem;
+    }
+
+    /* ---- Logo ---- */
+    .rtd-toolbar__logo {
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      height: 100%;
+      text-decoration: none;
+      color: var(--rtd-toolbar-color);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .rtd-toolbar__logo:hover {
+      opacity: 1;
+    }
+
+    .rtd-toolbar__logo svg {
+      height: 1.25rem;
+      width: auto;
+    }
+
+    /* ---- Divider ---- */
+    .rtd-toolbar__divider {
+      width: 1px;
+      height: 1.5rem;
+      background: var(--rtd-toolbar-border);
+      flex-shrink: 0;
+    }
+
+    /* ---- Addon buttons (icon-based) ---- */
+    .rtd-toolbar__btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      height: 100%;
+      padding: 0 0.75rem;
+      border: none;
+      background: transparent;
+      color: var(--rtd-toolbar-color-muted);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .rtd-toolbar__btn:hover,
+    .rtd-toolbar__btn.active {
+      background: var(--rtd-toolbar-hover-bg);
+      color: var(--rtd-toolbar-color);
+    }
+
+    .rtd-toolbar__btn i {
+      font-size: 1rem;
+    }
+
+    .rtd-toolbar__btn .label {
+      max-width: 10rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rtd-toolbar__btn .label.accent {
+      color: var(--rtd-toolbar-accent);
+    }
+
+    /* ---- Dropdown panels ---- */
+    .rtd-toolbar__dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 14rem;
+      max-width: 22rem;
+      max-height: 24rem;
+      background: var(--rtd-toolbar-dropdown-bg);
+      border: 1px solid var(--rtd-toolbar-border);
+      border-radius: 0 0 0.5rem 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      overflow-y: auto;
+      display: none;
+      z-index: 10;
+    }
+
+    .rtd-toolbar__dropdown.open {
+      display: block;
+    }
+
+    .rtd-toolbar__dropdown-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--rtd-toolbar-border);
+      font-size: 0.75rem;
+      color: var(--rtd-toolbar-color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .rtd-toolbar__dropdown-list {
+      list-style: none;
+      padding: 0.25rem 0;
+      margin: 0;
+    }
+
+    .rtd-toolbar__dropdown-list li a,
+    .rtd-toolbar__dropdown-list li button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.45rem 0.75rem;
+      border: none;
+      background: transparent;
+      color: var(--rtd-toolbar-color);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: var(--rtd-toolbar-font-size);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .rtd-toolbar__dropdown-list li a:hover,
+    .rtd-toolbar__dropdown-list li button:hover {
+      background: var(--rtd-toolbar-hover-bg);
+    }
+
+    .rtd-toolbar__dropdown-list li.current a {
+      color: var(--rtd-toolbar-accent);
+      font-weight: 700;
+    }
+
+    .rtd-toolbar__dropdown-list li .icon-default {
+      color: #f1c40f;
+      font-size: 0.75rem;
+    }
+
+    .rtd-toolbar__dropdown-list li .icon-pinned {
+      color: var(--rtd-toolbar-link);
+      font-size: 0.7rem;
+    }
+
+    .rtd-toolbar__dropdown-divider {
+      height: 1px;
+      background: var(--rtd-toolbar-border);
+      margin: 0.25rem 0;
+    }
+
+    /* Pinned section header inside dropdown */
+    .rtd-toolbar__dropdown-section {
+      padding: 0.35rem 0.75rem 0.2rem;
+      font-size: 0.7rem;
+      color: var(--rtd-toolbar-color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    /* ---- Search expanded view ---- */
+    .rtd-toolbar__search-panel {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36rem;
+      max-width: 90vw;
+      max-height: 28rem;
+      background: var(--rtd-toolbar-dropdown-bg);
+      border: 1px solid var(--rtd-toolbar-border);
+      border-radius: 0 0 0.75rem 0.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+      display: none;
+      z-index: 10;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .rtd-toolbar__search-panel.open {
+      display: flex;
+    }
+
+    .rtd-toolbar__search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--rtd-toolbar-border);
+      background: var(--rtd-toolbar-bg);
+    }
+
+    .rtd-toolbar__search-input-wrap i {
+      color: var(--rtd-toolbar-color-muted);
+      font-size: 1rem;
+    }
+
+    .rtd-toolbar__search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--rtd-toolbar-color);
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .rtd-toolbar__search-input::placeholder {
+      color: var(--rtd-toolbar-color-muted);
+    }
+
+    .rtd-toolbar__search-results {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0.5rem;
+    }
+
+    .rtd-toolbar__search-result {
+      display: block;
+      padding: 0.6rem 0.75rem;
+      text-decoration: none;
+      color: var(--rtd-toolbar-color);
+      border-radius: 0.25rem;
+      transition: background 0.15s;
+    }
+
+    .rtd-toolbar__search-result:hover,
+    .rtd-toolbar__search-result.active {
+      background: var(--rtd-toolbar-hover-bg);
+    }
+
+    .rtd-toolbar__search-result-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .rtd-toolbar__search-result-title span {
+      color: #6ea0ec;
+      font-style: italic;
+    }
+
+    .rtd-toolbar__search-result-content {
+      font-size: 0.8rem;
+      color: var(--rtd-toolbar-color-muted);
+      line-height: 1.4;
+    }
+
+    .rtd-toolbar__search-result-content span {
+      color: #6ea0ec;
+      font-weight: 600;
+    }
+
+    .rtd-toolbar__search-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 0.75rem;
+      border-top: 1px solid var(--rtd-toolbar-border);
+      font-size: 0.75rem;
+      color: var(--rtd-toolbar-color-muted);
+      background: var(--rtd-toolbar-bg);
+    }
+
+    .rtd-toolbar__search-footer kbd {
+      display: inline-block;
+      padding: 0.1rem 0.35rem;
+      background: var(--rtd-toolbar-hover-bg);
+      border: 1px solid var(--rtd-toolbar-border);
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.7rem;
+      margin: 0 0.15rem;
+    }
+
+    /* ---- Notifications ---- */
+    .rtd-toolbar__notifications {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: var(--rtd-toolbar-z-index);
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 0.5rem;
+      max-width: 40rem;
+      width: 90vw;
+      pointer-events: none;
+    }
+
+    .rtd-notification {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      pointer-events: all;
+      animation: rtd-slide-up 0.3s ease-out;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .rtd-notification.hiding {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .rtd-notification--warning {
+      background: var(--rtd-notification-bg);
+      color: var(--rtd-notification-color);
+      border: 1px solid var(--rtd-notification-border);
+    }
+
+    .rtd-notification--info {
+      background: var(--rtd-notification-info-bg);
+      color: var(--rtd-notification-info-color);
+      border: 1px solid var(--rtd-notification-info-border);
+    }
+
+    .rtd-notification--danger {
+      background: var(--rtd-notification-warning-bg);
+      color: var(--rtd-notification-warning-color);
+      border: 1px solid var(--rtd-notification-warning-border);
+    }
+
+    .rtd-notification__icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .rtd-notification__body {
+      flex: 1;
+    }
+
+    .rtd-notification__title {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .rtd-notification__close {
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      opacity: 0.6;
+      padding: 0;
+      font-size: 1rem;
+      transition: opacity 0.15s;
+    }
+
+    .rtd-notification__close:hover {
+      opacity: 1;
+    }
+
+    @keyframes rtd-slide-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ---- Notification badge on toolbar bell icon ---- */
+    .rtd-toolbar__badge {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.4rem;
+      width: 0.55rem;
+      height: 0.55rem;
+      background: #e74c3c;
+      border-radius: 50%;
+      border: 1.5px solid var(--rtd-toolbar-bg);
+    }
+
+    /* ---- Notification history dropdown ---- */
+    .rtd-toolbar__notification-history {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: auto;
+      transform: none;
+      min-width: 20rem;
+      max-width: 24rem;
+    }
+
+    .rtd-notification-history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--rtd-toolbar-border);
+      color: var(--rtd-toolbar-color);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .rtd-notification-history-item:last-child {
+      border-bottom: none;
+    }
+
+    .rtd-notification-history-item i {
+      margin-top: 0.15rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .rtd-notification-history-item .warning-icon { color: #f39c12; }
+    .rtd-notification-history-item .info-icon { color: #3498db; }
+    .rtd-notification-history-item .danger-icon { color: #e74c3c; }
+
+    /* ---- Links in toolbar (Downloads, VCS, etc) ---- */
+    .rtd-toolbar__dropdown-list li a i {
+      width: 1rem;
+      text-align: center;
+      color: var(--rtd-toolbar-color-muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 640px) {
+      .rtd-toolbar__bar {
+        border-radius: 0;
+        width: 100vw;
+      }
+
+      .rtd-toolbar {
+        width: 100%;
+      }
+
+      .rtd-toolbar__btn .label {
+        display: none;
+      }
+
+      .rtd-toolbar__search-panel {
+        width: 100vw;
+        max-width: 100vw;
+        border-radius: 0;
+      }
+
+      .rtd-toolbar__dropdown {
+        min-width: 12rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== TOOLBAR ===== -->
+<div class="rtd-toolbar" id="toolbar">
+  <div class="rtd-toolbar__bar">
+
+    <!-- Logo -->
+    <a href="https://about.readthedocs.com/" class="rtd-toolbar__logo" title="Read the Docs">
+      <svg viewBox="0 0 200 200" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 25C45 25.5 35 36 35 36v185c0 0 9-8 38-6.5c29 1.2 35 11.3 70 12c35 0.7 45-5.5 45-5.5l0.5-188c0 0-16 4.5-47 4.8s-39-8-67-8.9zM82 46c0 0 15 5 43 6.3c23 1.1 47-2.3 47-2.3v167.5c0 0-12 6.2-41.5 4.1c-23-1.6-48.3-10.3-48.3-10.3V46z"/>
+        <path d="M105 80c-2.6 0.3-4.4 2.7-4.1 5.3c0.2 1.9 1.6 3.5 3.5 3.9c0 0 11.6 3.8 31.2 5.4c15.8 1.3 33.7-1.1 33.7-1.1c2.6-0.1 4.7-2.3 4.6-4.9s-2.3-4.7-4.9-4.6c-0.3 0-0.6 0-0.9 0.1c0 0-17.6 2.2-31.8 1c-18.8-1.5-29-5-29-5C106.6 79.8 105.8 79.8 105 80z"/>
+        <path d="M105 103.5c-2.6 0.3-4.4 2.7-4.1 5.3c0.2 1.9 1.6 3.5 3.5 3.9c0 0 11.6 3.8 31.2 5.4c15.8 1.3 33.7-1.1 33.7-1.1c2.6-0.1 4.7-2.3 4.6-4.9s-2.3-4.7-4.9-4.6c-0.3 0-0.6 0-0.9 0.1c0 0-17.6 2.2-31.8 1c-18.8-1.5-29-5-29-5C106.6 103.3 105.8 103.3 105 103.5z"/>
+        <path d="M105 127c-2.6 0.3-4.4 2.7-4.1 5.3c0.2 1.9 1.6 3.5 3.5 3.9c0 0 11.6 3.8 31.2 5.4c15.8 1.3 33.7-1.1 33.7-1.1c2.6-0.1 4.7-2.3 4.6-4.9s-2.3-4.7-4.9-4.6c-0.3 0-0.6 0-0.9 0.1c0 0-17.6 2.2-31.8 1c-18.8-1.5-29-5-29-5C106.6 126.8 105.8 126.8 105 127z"/>
+        <path d="M105 150.5c-2.6 0.3-4.4 2.7-4.1 5.3c0.2 1.9 1.6 3.5 3.5 3.9c0 0 11.6 3.8 31.2 5.4c15.8 1.3 33.7-1.1 33.7-1.1c2.6-0.1 4.7-2.3 4.6-4.9s-2.3-4.7-4.9-4.6c-0.3 0-0.6 0-0.9 0.1c0 0-17.6 2.2-31.8 1c-18.8-1.5-29-5-29-5C106.6 150.3 105.8 150.3 105 150.5z"/>
+        <path d="M72.5 63c2.6 0 4.8 2.2 4.8 4.8s-2.2 4.8-4.8 4.8c0 0-7.8 0-12.5 0.5c-7.9 0.8-13.3 3.7-13.3 3.7c-2.3 1.2-5.2 0.3-6.4-2s-0.3-5.2 2-6.4c0 0 7-3.7 16.8-4.7C63.5 63 72.5 63 72.5 63z"/>
+        <path d="M72.5 86.5c2.6 0 4.8 2.2 4.8 4.8s-2.2 4.8-4.8 4.8c0 0-7.8 0-12.5 0.5c-7.9 0.8-13.3 3.7-13.3 3.7c-2.3 1.2-5.2 0.3-6.4-2s-0.3-5.2 2-6.4c0 0 7-3.7 16.8-4.7C63.5 86.5 72.5 86.5 72.5 86.5z"/>
+        <path d="M72.5 110c2.6 0 4.8 2.2 4.8 4.8s-2.2 4.8-4.8 4.8c0 0-7.8-0.1-12.5 0.4c-7.9 0.8-13.3 3.7-13.3 3.7c-2.3 1.2-5.2 0.3-6.4-2s-0.3-5.2 2-6.4c0 0 7-3.7 16.8-4.7C63.5 110 72.5 110 72.5 110z"/>
+      </svg>
+    </a>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- Version selector -->
+    <button class="rtd-toolbar__btn" id="btn-version" title="Version selector">
+      <i class="fa-solid fa-code-branch"></i>
+      <span class="label accent">stable</span>
+      <i class="fa-solid fa-caret-down" style="font-size: 0.7rem;"></i>
+    </button>
+
+    <!-- Version dropdown -->
+    <div class="rtd-toolbar__dropdown" id="dropdown-version">
+      <div class="rtd-toolbar__dropdown-header">Versions</div>
+      <div class="rtd-toolbar__dropdown-section">
+        <i class="fa-solid fa-thumbtack" style="font-size: 0.6rem;"></i> Pinned
+      </div>
+      <ul class="rtd-toolbar__dropdown-list">
+        <li class="current">
+          <a href="#">
+            <i class="fa-solid fa-code-branch icon-default" title="Default version"></i>
+            <i class="fa-solid fa-star icon-default" style="font-size: 0.6rem; margin-left: -0.4rem;" title="Default version"></i>
+            stable
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icon-pinned"><i class="fa-solid fa-thumbtack"></i></span>
+            v2.0
+          </a>
+        </li>
+      </ul>
+      <div class="rtd-toolbar__dropdown-divider"></div>
+      <div class="rtd-toolbar__dropdown-section">All Versions</div>
+      <ul class="rtd-toolbar__dropdown-list">
+        <li><a href="#">latest</a></li>
+        <li class="current">
+          <a href="#">
+            <i class="fa-solid fa-code-branch icon-default"></i>
+            <i class="fa-solid fa-star icon-default" style="font-size: 0.6rem; margin-left: -0.4rem;"></i>
+            stable
+          </a>
+        </li>
+        <li><a href="#">v2.0</a></li>
+        <li><a href="#">v1.9</a></li>
+        <li><a href="#">v1.8</a></li>
+        <li><a href="#">v1.7</a></li>
+        <li><a href="#">v1.6</a></li>
+      </ul>
+    </div>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- Language selector -->
+    <button class="rtd-toolbar__btn" id="btn-language" title="Language selector">
+      <i class="fa-solid fa-language"></i>
+      <span class="label">en</span>
+      <i class="fa-solid fa-caret-down" style="font-size: 0.7rem;"></i>
+    </button>
+
+    <!-- Language dropdown -->
+    <div class="rtd-toolbar__dropdown" id="dropdown-language">
+      <div class="rtd-toolbar__dropdown-header">Languages</div>
+      <ul class="rtd-toolbar__dropdown-list">
+        <li><a href="#">de (Deutsch)</a></li>
+        <li class="current"><a href="#">en (English)</a></li>
+        <li><a href="#">es (Espa&ntilde;ol)</a></li>
+        <li><a href="#">fr (Fran&ccedil;ais)</a></li>
+        <li><a href="#">ja (&#26085;&#26412;&#35486;)</a></li>
+        <li><a href="#">pt (Portugu&ecirc;s)</a></li>
+        <li><a href="#">zh (&#20013;&#25991;)</a></li>
+      </ul>
+    </div>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- Search -->
+    <button class="rtd-toolbar__btn" id="btn-search" title="Search docs (/)">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
+    <!-- Search expanded panel -->
+    <div class="rtd-toolbar__search-panel" id="panel-search">
+      <div class="rtd-toolbar__search-input-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="search"
+          class="rtd-toolbar__search-input"
+          id="search-input"
+          placeholder="Search docs..."
+          autocomplete="off"
+        >
+        <kbd>Esc</kbd>
+      </div>
+      <div class="rtd-toolbar__search-results" id="search-results">
+        <!-- Results populated by JS -->
+      </div>
+      <div class="rtd-toolbar__search-footer">
+        <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> navigate &nbsp; <kbd>Enter</kbd> select &nbsp; <kbd>Esc</kbd> close</span>
+        <span>Search by Read the Docs</span>
+      </div>
+    </div>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- Downloads -->
+    <button class="rtd-toolbar__btn" id="btn-downloads" title="Downloads">
+      <i class="fa-solid fa-download"></i>
+    </button>
+
+    <div class="rtd-toolbar__dropdown" id="dropdown-downloads">
+      <div class="rtd-toolbar__dropdown-header">Downloads</div>
+      <ul class="rtd-toolbar__dropdown-list">
+        <li><a href="#"><i class="fa-solid fa-file-pdf"></i> PDF</a></li>
+        <li><a href="#"><i class="fa-solid fa-book"></i> EPUB</a></li>
+        <li><a href="#"><i class="fa-solid fa-file-zipper"></i> HTML</a></li>
+      </ul>
+    </div>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- VCS / External links -->
+    <button class="rtd-toolbar__btn" id="btn-links" title="Project links">
+      <i class="fa-solid fa-link"></i>
+    </button>
+
+    <div class="rtd-toolbar__dropdown" id="dropdown-links">
+      <div class="rtd-toolbar__dropdown-header">Links</div>
+      <ul class="rtd-toolbar__dropdown-list">
+        <li><a href="#"><i class="fa-brands fa-github"></i> View on GitHub</a></li>
+        <li><a href="#"><i class="fa-solid fa-house"></i> Project Home</a></li>
+        <li><a href="#"><i class="fa-solid fa-hammer"></i> Builds</a></li>
+      </ul>
+    </div>
+
+    <div class="rtd-toolbar__divider"></div>
+
+    <!-- Notifications bell -->
+    <button class="rtd-toolbar__btn" id="btn-notifications" title="Notifications">
+      <i class="fa-solid fa-bell"></i>
+      <span class="rtd-toolbar__badge" id="notification-badge"></span>
+    </button>
+
+    <!-- Notification history dropdown -->
+    <div class="rtd-toolbar__dropdown rtd-toolbar__notification-history" id="dropdown-notifications">
+      <div class="rtd-toolbar__dropdown-header">
+        Notifications
+        <button id="clear-notifications-btn" style="border: none; background: transparent; color: var(--rtd-toolbar-color-muted); cursor: pointer; font-size: 0.7rem;">
+          Clear all
+        </button>
+      </div>
+      <div id="notification-history-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== NOTIFICATION TOASTS (bottom stacked) ===== -->
+<div class="rtd-toolbar__notifications" id="notifications-container">
+  <!-- Populated by JS -->
+</div>
+
+
+<!-- ===== PAGE CONTENT ===== -->
+<div class="doc-content">
+  <h1>Build Customization</h1>
+  <p>Read the Docs supports customizing builds through a variety of mechanisms. This guide covers the most common use cases for build customization.</p>
+
+  <h2>Using build.commands</h2>
+  <p>The most powerful way to customize your build is by using the <code>build.commands</code> configuration key in your <code>.readthedocs.yaml</code> file. This allows you to run arbitrary commands during the build process.</p>
+
+  <pre>version: 2
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.11"
+  commands:
+    - pip install -r requirements.txt
+    - sphinx-build -b html docs/ _readthedocs/html/</pre>
+
+  <h2>Build environment</h2>
+  <p>Every build runs in a fresh, isolated Docker container. The build environment includes common system packages and tools needed for documentation generation.</p>
+
+  <ul>
+    <li><strong>Operating System</strong>: Ubuntu 22.04 LTS</li>
+    <li><strong>Python</strong>: Multiple versions available (3.8 - 3.12)</li>
+    <li><strong>Node.js</strong>: Available for JavaScript-based documentation tools</li>
+    <li><strong>Rust</strong>: Available for mdBook and similar tools</li>
+  </ul>
+
+  <h2>Build process overview</h2>
+  <p>The build process follows these steps:</p>
+  <ul>
+    <li>Clone the repository</li>
+    <li>Install system dependencies</li>
+    <li>Create a virtual environment</li>
+    <li>Install Python dependencies</li>
+    <li>Run the build command</li>
+    <li>Upload the build output</li>
+  </ul>
+
+  <h2>Customizing with .readthedocs.yaml</h2>
+  <p>The <code>.readthedocs.yaml</code> configuration file in the root of your repository is the primary way to configure Read the Docs. It supports the following top-level keys:</p>
+
+  <pre>version: 2
+
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.11"
+    nodejs: "18"
+
+sphinx:
+  configuration: docs/conf.py
+  builder: html
+
+python:
+  install:
+    - requirements: docs/requirements.txt</pre>
+
+  <h2>Extending the build</h2>
+  <p>For advanced use cases, you can extend the build process by adding pre- and post-build commands. These commands run before or after the main documentation build step.</p>
+
+  <h2>Troubleshooting builds</h2>
+  <p>If your build fails, check the build log for error messages. Common issues include:</p>
+  <ul>
+    <li>Missing dependencies in requirements file</li>
+    <li>Incorrect path to configuration file</li>
+    <li>Incompatible Python or tool versions</li>
+    <li>Syntax errors in <code>.readthedocs.yaml</code></li>
+  </ul>
+
+  <p>For more help, visit the <a href="#">Read the Docs support</a> page or ask in our <a href="#">community forum</a>.</p>
+
+  <!-- Extra content for scrolling -->
+  <h2>Advanced configuration</h2>
+  <p>Read the Docs provides several advanced configuration options for power users. These include custom build images, private dependency installation, and build notifications.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+  <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+
+<script>
+// ===== TOOLBAR CONTROLLER =====
+
+(function() {
+  'use strict';
+
+  const toolbar = document.getElementById('toolbar');
+  const notificationsContainer = document.getElementById('notifications-container');
+  const notificationBadge = document.getElementById('notification-badge');
+  const notificationHistoryList = document.getElementById('notification-history-list');
+
+  // Track state
+  let autoHideTimer = null;
+  let activeDropdown = null;
+  const AUTO_HIDE_DELAY = 4000; // ms before toolbar auto-hides
+  const NOTIFICATION_AUTO_HIDE_DELAY = 5000; // ms before notifications auto-hide
+
+  // Notification data (simulated)
+  const notifications = [
+    {
+      id: 1,
+      type: 'warning',
+      icon: 'fa-solid fa-flask',
+      title: 'Latest development version',
+      message: 'You are reading the latest development version of this documentation. The stable version is available <a href="#">here</a>.',
+      iconClass: 'warning-icon',
+    },
+    {
+      id: 2,
+      type: 'info',
+      icon: 'fa-solid fa-hourglass-half',
+      title: 'Older version',
+      message: 'You may be reading an old version. The latest stable version is <a href="#">v2.0</a>.',
+      iconClass: 'info-icon',
+    },
+  ];
+
+  // Mock search results
+  const mockResults = [
+    {
+      title: '<span>Build</span> Customization',
+      content: 'Read the Docs supports customizing <span>build</span>s through a variety of mechanisms...',
+      url: '#build-customization',
+    },
+    {
+      title: '<span>Build</span> Process Overview',
+      content: 'The <span>build</span> process follows these steps: clone, install, <span>build</span>, upload...',
+      url: '#build-process',
+    },
+    {
+      title: 'Extending the <span>Build</span>',
+      content: 'For advanced use cases, you can extend the <span>build</span> process by adding pre- and post-<span>build</span> commands...',
+      url: '#extending',
+    },
+    {
+      title: 'Troubleshooting <span>Build</span>s',
+      content: 'If your <span>build</span> fails, check the <span>build</span> log for error messages. Common issues include...',
+      url: '#troubleshooting',
+    },
+    {
+      title: '<span>Build</span> Environment',
+      content: 'Every <span>build</span> runs in a fresh, isolated Docker container with Ubuntu 22.04 LTS...',
+      url: '#environment',
+    },
+  ];
+
+
+  // === Dropdown toggle logic ===
+
+  function openDropdown(btnId, dropdownId) {
+    closeAllDropdowns();
+    const btn = document.getElementById(btnId);
+    const dropdown = document.getElementById(dropdownId);
+    btn.classList.add('active');
+    dropdown.classList.add('open');
+    activeDropdown = { btn, dropdown };
+
+    // Cancel auto-hide while interacting
+    cancelAutoHide();
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.rtd-toolbar__dropdown, .rtd-toolbar__search-panel').forEach(el => {
+      el.classList.remove('open');
+    });
+    document.querySelectorAll('.rtd-toolbar__btn').forEach(el => {
+      el.classList.remove('active');
+    });
+    activeDropdown = null;
+  }
+
+  function toggleDropdown(btnId, dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown.classList.contains('open')) {
+      closeAllDropdowns();
+      scheduleAutoHide();
+    } else {
+      openDropdown(btnId, dropdownId);
+    }
+  }
+
+  // Wire up buttons
+  document.getElementById('btn-version').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown('btn-version', 'dropdown-version');
+  });
+
+  document.getElementById('btn-language').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown('btn-language', 'dropdown-language');
+  });
+
+  document.getElementById('btn-downloads').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown('btn-downloads', 'dropdown-downloads');
+  });
+
+  document.getElementById('btn-links').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown('btn-links', 'dropdown-links');
+  });
+
+  document.getElementById('btn-notifications').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown('btn-notifications', 'dropdown-notifications');
+  });
+
+  // Search button
+  document.getElementById('btn-search').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const panel = document.getElementById('panel-search');
+    if (panel.classList.contains('open')) {
+      closeAllDropdowns();
+      scheduleAutoHide();
+    } else {
+      closeAllDropdowns();
+      const btn = document.getElementById('btn-search');
+      btn.classList.add('active');
+      panel.classList.add('open');
+      activeDropdown = { btn, dropdown: panel };
+      cancelAutoHide();
+
+      // Focus the input
+      setTimeout(() => {
+        document.getElementById('search-input').focus();
+      }, 50);
+    }
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!toolbar.contains(e.target)) {
+      closeAllDropdowns();
+      scheduleAutoHide();
+    }
+  });
+
+  // Prevent dropdown clicks from closing
+  document.querySelectorAll('.rtd-toolbar__dropdown, .rtd-toolbar__search-panel').forEach(el => {
+    el.addEventListener('click', (e) => e.stopPropagation());
+  });
+
+
+  // === Search logic ===
+
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+
+  searchInput.addEventListener('input', debounce(function() {
+    const query = searchInput.value.trim().toLowerCase();
+    if (query.length < 2) {
+      searchResults.innerHTML = '<div style="padding: 1rem; color: var(--rtd-toolbar-color-muted); text-align: center;">Type to search...</div>';
+      return;
+    }
+
+    // Filter mock results
+    const filtered = mockResults.filter(r =>
+      r.title.toLowerCase().includes(query) ||
+      r.content.toLowerCase().includes(query)
+    );
+
+    if (filtered.length === 0) {
+      searchResults.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: var(--rtd-toolbar-color-muted);">
+          <i class="fa-solid fa-binoculars" style="font-size: 2.5rem; margin-bottom: 0.75rem; display: block;"></i>
+          <p style="font-weight: 700; margin-bottom: 0.5rem;">No results for "${escapeHtml(query)}"</p>
+          <p style="font-size: 0.8rem;">Try different keywords or check your spelling.</p>
+        </div>`;
+      return;
+    }
+
+    searchResults.innerHTML = filtered.map((r, i) => `
+      <a href="${r.url}" class="rtd-toolbar__search-result ${i === 0 ? 'active' : ''}">
+        <div class="rtd-toolbar__search-result-title">${r.title}</div>
+        <div class="rtd-toolbar__search-result-content">${r.content}</div>
+      </a>
+    `).join('');
+  }, 200));
+
+  // Keyboard navigation in search
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeAllDropdowns();
+      scheduleAutoHide();
+      searchInput.blur();
+      return;
+    }
+
+    const results = searchResults.querySelectorAll('.rtd-toolbar__search-result');
+    if (!results.length) return;
+
+    const current = searchResults.querySelector('.rtd-toolbar__search-result.active');
+    let currentIndex = Array.from(results).indexOf(current);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (current) current.classList.remove('active');
+      currentIndex = (currentIndex + 1) % results.length;
+      results[currentIndex].classList.add('active');
+      results[currentIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (current) current.classList.remove('active');
+      currentIndex = currentIndex <= 0 ? results.length - 1 : currentIndex - 1;
+      results[currentIndex].classList.add('active');
+      results[currentIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (current) current.click();
+    }
+  });
+
+  // Global "/" hotkey to open search
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      toolbar.classList.remove('auto-hidden');
+      document.getElementById('btn-search').click();
+    }
+  });
+
+
+  // === Auto-hide logic ===
+
+  function scheduleAutoHide() {
+    cancelAutoHide();
+    autoHideTimer = setTimeout(() => {
+      if (!activeDropdown) {
+        toolbar.classList.add('auto-hidden');
+      }
+    }, AUTO_HIDE_DELAY);
+  }
+
+  function cancelAutoHide() {
+    if (autoHideTimer) {
+      clearTimeout(autoHideTimer);
+      autoHideTimer = null;
+    }
+  }
+
+  // Toolbar hover behavior
+  toolbar.addEventListener('mouseenter', () => {
+    cancelAutoHide();
+    toolbar.classList.remove('auto-hidden');
+  });
+
+  toolbar.addEventListener('mouseleave', () => {
+    if (!activeDropdown) {
+      scheduleAutoHide();
+    }
+  });
+
+  // Start auto-hide on page load
+  scheduleAutoHide();
+
+
+  // === Notifications ===
+
+  let notificationHistory = [...notifications];
+  let activeNotifications = [];
+
+  function renderNotificationBadge() {
+    if (notificationHistory.length > 0) {
+      notificationBadge.style.display = 'block';
+    } else {
+      notificationBadge.style.display = 'none';
+    }
+  }
+
+  function renderNotificationHistory() {
+    if (notificationHistory.length === 0) {
+      notificationHistoryList.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--rtd-toolbar-color-muted); font-size: 0.8rem;">No notifications</div>';
+      return;
+    }
+
+    notificationHistoryList.innerHTML = notificationHistory.map(n => `
+      <div class="rtd-notification-history-item">
+        <i class="${n.icon} ${n.iconClass}"></i>
+        <div>
+          <strong>${n.title}</strong><br>
+          <span style="font-size: 0.75rem; color: var(--rtd-toolbar-color-muted);">${n.message}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function showNotificationToast(notification) {
+    const typeClass = {
+      warning: 'rtd-notification--warning',
+      info: 'rtd-notification--info',
+      danger: 'rtd-notification--danger',
+    };
+
+    const el = document.createElement('div');
+    el.className = `rtd-notification ${typeClass[notification.type] || typeClass.info}`;
+    el.id = `notification-${notification.id}`;
+    el.innerHTML = `
+      <i class="${notification.icon} rtd-notification__icon"></i>
+      <div class="rtd-notification__body">
+        <div class="rtd-notification__title">${notification.title}</div>
+        <div>${notification.message}</div>
+      </div>
+      <button class="rtd-notification__close" data-id="${notification.id}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    `;
+
+    notificationsContainer.appendChild(el);
+    activeNotifications.push(notification.id);
+
+    // Close button
+    el.querySelector('.rtd-notification__close').addEventListener('click', () => {
+      dismissNotification(notification.id);
+    });
+
+    // Pause auto-dismiss on hover
+    let dismissTimer = setTimeout(() => {
+      dismissNotification(notification.id);
+    }, NOTIFICATION_AUTO_HIDE_DELAY);
+
+    el.addEventListener('mouseenter', () => {
+      clearTimeout(dismissTimer);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      dismissTimer = setTimeout(() => {
+        dismissNotification(notification.id);
+      }, NOTIFICATION_AUTO_HIDE_DELAY);
+    });
+  }
+
+  function dismissNotification(id) {
+    const el = document.getElementById(`notification-${id}`);
+    if (el) {
+      el.classList.add('hiding');
+      setTimeout(() => el.remove(), 300);
+    }
+    activeNotifications = activeNotifications.filter(n => n !== id);
+  }
+
+  // Clear all notifications from history
+  document.getElementById('clear-notifications-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    notificationHistory = [];
+    renderNotificationHistory();
+    renderNotificationBadge();
+  });
+
+  // Initialize notifications
+  renderNotificationBadge();
+  renderNotificationHistory();
+
+  // Show notification toasts after a short delay (staggered)
+  setTimeout(() => showNotificationToast(notifications[0]), 800);
+  setTimeout(() => showNotificationToast(notifications[1]), 1500);
+
+
+  // === Utility functions ===
+
+  function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Initialize search results placeholder
+  searchResults.innerHTML = '<div style="padding: 1rem; color: var(--rtd-toolbar-color-muted); text-align: center;">Type to search...</div>';
+
+})();
+</script>
+
+</body>
+</html>
