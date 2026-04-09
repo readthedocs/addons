@@ -84,6 +84,28 @@
   color: var(--readthedocs-filetreediff-chunks-color, #27ae60);
 }
 
+:host > div > div > select.diff-source-toggle {
+  flex: 0;
+  padding: 0.15em 0.35em;
+  font-size: 0.85em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25em;
+}
+
+:host > div > .outdated-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.25em 0;
+  font-size: 0.85em;
+  color: #f0ad4e;
+}
+
+:host > div > .outdated-warning svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+
 /* Expand to full width on smaller screens */
 @media (max-width: 768px) {
   :host > div {

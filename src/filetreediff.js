@@ -3,6 +3,7 @@ import {
   faArrowUp,
   faArrowDown,
   faCircleInfo,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
@@ -18,6 +19,11 @@ import { AddonBase } from "./utils";
 
 const SCROLL_OFFSET_Y = 0.1;
 
+// Diff source types: "build" uses built doc comparison (current behavior),
+// "vcs" uses VCS-level merge-base diff (matches PR file list on GitHub/GitLab).
+export const DIFF_SOURCE_BUILD = "build";
+export const DIFF_SOURCE_VCS = "vcs";
+
 export class FileTreeDiffElement extends LitElement {
   static elementName = "readthedocs-filetreediff";
 
@@ -26,6 +32,7 @@ export class FileTreeDiffElement extends LitElement {
     docDiffEnabled: { state: true },
     chunks: { state: true },
     chunkIndex: { state: true },
+    diffSource: { state: true },
   };
 
   static styles = styleSheet;
@@ -34,12 +41,14 @@ export class FileTreeDiffElement extends LitElement {
     super();
     this.config = null;
     this.docDiffEnabled = false;
+    this.diffSource = DIFF_SOURCE_BUILD;
 
     this.chunkIndex = 1;
     this.chunks = [];
 
     library.add(faArrowDown);
     library.add(faArrowUp);
+    library.add(faTriangleExclamation);
 
     this.iconArrowUp = icon(faArrowUp, {
       classes: ["icon"],
@@ -50,6 +59,9 @@ export class FileTreeDiffElement extends LitElement {
     this.iconCircleInfo = icon(faCircleInfo, {
       classes: ["icon"],
     });
+    this.iconWarning = icon(faTriangleExclamation, {
+      classes: ["icon"],
+    });
   }
 
   loadConfig(config) {
@@ -57,6 +69,25 @@ export class FileTreeDiffElement extends LitElement {
       return;
     }
     this.config = config;
+
+    // Determine the default diff source. Prefer VCS diff when available since
+    // it uses the merge-base and won't include false positives from base branch
+    // updates. The backend can override this via `diff_source`.
+    const configuredSource = objectPath.get(
+      config,
+      "addons.filetreediff.diff_source",
+    );
+    const hasVcsDiff = objectPath.get(config, "addons.filetreediff.vcs_diff");
+
+    if (configuredSource === DIFF_SOURCE_VCS && hasVcsDiff) {
+      this.diffSource = DIFF_SOURCE_VCS;
+    } else if (configuredSource === DIFF_SOURCE_BUILD) {
+      this.diffSource = DIFF_SOURCE_BUILD;
+    } else if (hasVcsDiff) {
+      this.diffSource = DIFF_SOURCE_VCS;
+    } else {
+      this.diffSource = DIFF_SOURCE_BUILD;
+    }
   }
 
   handleFileChange(event) {
@@ -168,8 +199,71 @@ export class FileTreeDiffElement extends LitElement {
     });
   }
 
+  /**
+   * Get the active diff data based on the selected diff source.
+   *
+   * When `diffSource` is "vcs", returns the VCS-level merge-base diff
+   * (accurate for stale branches). Falls back to the build diff.
+   */
+  getDiffData() {
+    if (this.diffSource === DIFF_SOURCE_VCS) {
+      return (
+        objectPath.get(this.config, "addons.filetreediff.vcs_diff") ||
+        objectPath.get(this.config, "addons.filetreediff.diff")
+      );
+    }
+    return objectPath.get(this.config, "addons.filetreediff.diff");
+  }
+
+  /**
+   * Whether both diff sources are available, enabling the toggle UI.
+   */
+  hasBothDiffSources() {
+    return (
+      objectPath.get(this.config, "addons.filetreediff.diff") &&
+      objectPath.get(this.config, "addons.filetreediff.vcs_diff")
+    );
+  }
+
+  handleDiffSourceChange(event) {
+    this.diffSource = event.target.value;
+  }
+
+  renderOutdatedWarning() {
+    if (!objectPath.get(this.config, "addons.filetreediff.outdated", false)) {
+      return nothing;
+    }
+    return html`
+      <div class="outdated-warning">
+        ${this.iconWarning.node[0]} Base branch updated since last build
+      </div>
+    `;
+  }
+
+  renderDiffSourceToggle() {
+    if (!this.hasBothDiffSources()) {
+      return nothing;
+    }
+    return html`
+      <select class="diff-source-toggle" @change=${this.handleDiffSourceChange}>
+        <option
+          value=${DIFF_SOURCE_VCS}
+          ?selected=${this.diffSource === DIFF_SOURCE_VCS}
+        >
+          PR files
+        </option>
+        <option
+          value=${DIFF_SOURCE_BUILD}
+          ?selected=${this.diffSource === DIFF_SOURCE_BUILD}
+        >
+          Build diff
+        </option>
+      </select>
+    `;
+  }
+
   render() {
-    const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
+    const diffData = this.getDiffData();
     if (!diffData) {
       return nothing;
     }
@@ -201,7 +295,7 @@ export class FileTreeDiffElement extends LitElement {
     return html`
       <div>
         <div>
-          ${this.renderDocDiff()}
+          ${this.renderDocDiff()} ${this.renderDiffSourceToggle()}
           <select @change=${this.handleFileChange}>
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
@@ -223,6 +317,7 @@ export class FileTreeDiffElement extends LitElement {
             >${this.iconCircleInfo.node[0]}</a
           >
         </div>
+        ${this.renderOutdatedWarning()}
       </div>
     `;
   }

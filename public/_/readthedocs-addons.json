@@ -162,6 +162,34 @@
                     "current": "",
                     "base": ""
                 }
+            },
+            {
+                "filename": "stale-base-change.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ]
+      },
+      "vcs_diff": {
+        "added": [
+            {
+                "filename": "added.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
+            }
+        ],
+        "deleted": [],
+        "modified": [
+            {
+                "filename": "modified.html",
+                "urls": {
+                    "current": "",
+                    "base": ""
+                }
             }
         ]
       }

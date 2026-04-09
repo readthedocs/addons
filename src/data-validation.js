@@ -243,6 +243,16 @@ const addons_flyout = {
   },
 };
 
+// Shared schema for a diff object (added/deleted/modified file arrays)
+const filetreediff_diff_schema = {
+  type: "object",
+  properties: {
+    added: { type: "array" },
+    deleted: { type: "array" },
+    modified: { type: "array" },
+  },
+};
+
 // Validator for File Tree Diff Addon
 const addons_filetreediff = {
   $id: "http://v1.schemas.readthedocs.org/addons.filetreediff.json",
@@ -258,14 +268,18 @@ const addons_filetreediff = {
           required: ["enabled", "diff"],
           properties: {
             enabled: { type: "boolean" },
-            diff: {
-              type: "object",
-              properties: {
-                added: { type: "array" },
-                deleted: { type: "array" },
-                modified: { type: "array" },
-              },
-            },
+            // Whether the diff data may be outdated because the base branch
+            // has been updated since the PR was last built.
+            outdated: { type: "boolean" },
+            // Which diff source to show by default: "build" (built doc
+            // comparison) or "vcs" (merge-base diff from VCS provider).
+            diff_source: { enum: ["build", "vcs"] },
+            // Diff computed from built documentation artifacts (current behavior).
+            diff: filetreediff_diff_schema,
+            // Diff computed from VCS provider (e.g. GitHub API) using the
+            // merge-base. Immune to the stale-branch problem since it
+            // reflects only changes in the PR, not base branch updates.
+            vcs_diff: filetreediff_diff_schema,
           },
         },
       },
