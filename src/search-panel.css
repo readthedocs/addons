@@ -1,0 +1,137 @@
+/* Search panel styles (inline panel within the flyout) */
+
+:host {
+  display: block;
+}
+
+.search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.25em;
+  padding: 0.35em 0.5em;
+  margin: 0;
+}
+
+form label {
+  display: flex;
+  align-items: center;
+  padding-right: 0.5em;
+}
+
+form label svg {
+  height: 1em;
+  color: rgb(128, 128, 128);
+}
+
+form input {
+  border: 0;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1em;
+  color: rgb(252, 252, 252);
+  padding: 0.25em;
+  font-family: inherit;
+  box-shadow: none;
+}
+
+form input::placeholder {
+  color: rgb(128, 128, 128);
+}
+
+.results {
+  overflow-y: auto;
+  max-height: 20em;
+}
+
+.placeholder {
+  color: rgb(128, 128, 128);
+  font-size: 0.9em;
+  padding: 0.5em;
+  margin: 0;
+}
+
+.no-results {
+  color: rgb(128, 128, 128);
+  font-size: 0.9em;
+  padding: 0.5em;
+}
+
+.no-results p {
+  margin: 0;
+}
+
+/* Search result styling */
+.hit-block {
+  padding: 0.35em 0;
+  border-bottom: 1px solid #413d3d;
+}
+
+.hit-block:last-child {
+  border-bottom: none;
+}
+
+.hit-block-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  color: rgb(252, 252, 252);
+}
+
+.hit-block-heading i {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.hit-block-heading i svg {
+  height: 0.85em;
+  color: rgb(128, 128, 128);
+}
+
+.hit-block-heading h2 {
+  margin: 0;
+  font-size: 0.95em;
+  font-weight: 600;
+  line-height: 1.25em;
+}
+
+a.hit-detail {
+  display: block;
+  padding: 0.2em 0 0.2em 1.5em;
+  text-decoration: none;
+  color: rgb(252, 252, 252);
+}
+
+a.hit-detail:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.hit-title {
+  font-size: 0.85em;
+  font-weight: 500;
+  margin: 0;
+  color: rgb(128, 128, 128);
+  line-height: 1.25em;
+}
+
+.hit-content {
+  font-size: 0.8em;
+  margin: 0;
+  color: rgb(128, 128, 128);
+  line-height: 1.25em;
+}
+
+/* Highlighted search terms */
+.hit-detail span {
+  color: #6ea0ec;
+  font-style: italic;
+  font-weight: bold;
+}

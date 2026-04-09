@@ -6,6 +6,8 @@ import {
   faCodeBranch,
   faCaretDown,
   faLanguage,
+  faMagnifyingGlass,
+  faFileLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
@@ -23,7 +25,12 @@ import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_FLYOUT_HIDE,
   EVENT_READTHEDOCS_FLYOUT_SHOW,
+  EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
 } from "./events";
+
+// Import panel components so their custom elements are registered
+import "./search-panel.js";
+import "./filetreediff-panel.js";
 
 export class FlyoutElement extends LitElement {
   static elementName = "readthedocs-flyout";
@@ -33,6 +40,7 @@ export class FlyoutElement extends LitElement {
     opened: { type: Boolean },
     floating: { type: Boolean },
     position: { type: String },
+    activePanel: { state: true },
   };
 
   static styles = styleSheet;
@@ -45,6 +53,7 @@ export class FlyoutElement extends LitElement {
     this.floating = true;
     this.position = "bottom-right";
     this.readthedocsLogo = READTHEDOCS_LOGO;
+    this.activePanel = null;
   }
 
   loadConfig(config) {
@@ -72,6 +81,7 @@ export class FlyoutElement extends LitElement {
 
   _close() {
     this.opened = false;
+    this.activePanel = null;
     this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
@@ -84,11 +94,75 @@ export class FlyoutElement extends LitElement {
     this.opened ? this._close() : this._open();
   }
 
+  _setPanel(panelName, e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    if (this.activePanel === panelName) {
+      // Same panel clicked again - clear panel, show default content
+      this.activePanel = null;
+    } else {
+      this.activePanel = panelName;
+      if (!this.opened) {
+        this._open();
+      }
+    }
+  }
+
   _onOutsideClick = (e) => {
     if (e.target !== this) {
       this._close();
     }
   };
+
+  renderPanelIcons() {
+    library.add(faMagnifyingGlass);
+    library.add(faFileLines);
+
+    const searchEnabled = objectPath.get(
+      this.config,
+      "addons.search.enabled",
+      false,
+    );
+    const fileTreeDiffEnabled =
+      objectPath.get(this.config, "versions.current.type") === "external" &&
+      objectPath.get(this.config, "addons.filetreediff.enabled", false);
+
+    if (!searchEnabled && !fileTreeDiffEnabled) {
+      return nothing;
+    }
+
+    const iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
+    const iconFileLines = icon(faFileLines, { classes: ["icon"] });
+
+    return html`
+      <nav class="panel-icons">
+        ${searchEnabled
+          ? html`<button
+              class=${classMap({ active: this.activePanel === "search" })}
+              @click=${(e) => this._setPanel("search", e)}
+              title="Search"
+              aria-label="Toggle search panel"
+            >
+              ${iconSearch.node[0]}
+            </button>`
+          : nothing}
+        ${fileTreeDiffEnabled
+          ? html`<button
+              class=${classMap({
+                active: this.activePanel === "filetreediff",
+              })}
+              @click=${(e) => this._setPanel("filetreediff", e)}
+              title="Changed files"
+              aria-label="Toggle changed files panel"
+            >
+              ${iconFileLines.node[0]}
+            </button>`
+          : nothing}
+      </nav>
+    `;
+  }
 
   renderHeader() {
     library.add(faCodeBranch);
@@ -124,7 +198,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <header @click="${this._toggleOpen}">
         <img class="logo" src="${this.readthedocsLogo}" alt="Read the Docs" />
-        ${translation} ${version}
+        ${this.renderPanelIcons()} ${translation} ${version}
         <span class="caret">${iconCaretDown.node[0]}</span>
       </header>
     `;
@@ -345,6 +419,29 @@ export class FlyoutElement extends LitElement {
     this.classes[this.position] = true;
   }
 
+  renderDefaultContent() {
+    return html`
+      ${this.renderLanguages()} ${this.renderVersions()}
+      ${this.renderDownloads()} ${this.renderReadTheDocs()}
+      ${this.renderVCS()} ${this.renderSearch()}
+    `;
+  }
+
+  renderPanelContent() {
+    switch (this.activePanel) {
+      case "search":
+        return html`<readthedocs-search-panel
+          .config=${this.config}
+        ></readthedocs-search-panel>`;
+      case "filetreediff":
+        return html`<readthedocs-filetreediff-panel
+          .config=${this.config}
+        ></readthedocs-filetreediff-panel>`;
+      default:
+        return this.renderDefaultContent();
+    }
+  }
+
   render() {
     // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
@@ -358,9 +455,9 @@ export class FlyoutElement extends LitElement {
       <div class=${classMap(this.classes)}>
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
-          ${this.renderLanguages()} ${this.renderVersions()}
-          ${this.renderDownloads()} ${this.renderReadTheDocs()}
-          ${this.renderVCS()} ${this.renderSearch()}
+          ${this.activePanel
+            ? this.renderPanelContent()
+            : this.renderDefaultContent()}
           <hr />
           ${this.renderFooter()}
         </main>
@@ -376,23 +473,38 @@ export class FlyoutElement extends LitElement {
     this.opened = false;
   };
 
+  _handlePanelSet = (e) => {
+    const panelName = e.detail && e.detail.panel;
+    if (panelName) {
+      this._setPanel(panelName);
+    }
+  };
+
   connectedCallback() {
     super.connectedCallback();
 
     document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
     document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+    document.addEventListener(
+      EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
+      this._handlePanelSet,
+    );
     window.addEventListener("click", this._onOutsideClick);
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_SHOW,
-      this.showFlyout,
+      this._showFlyout,
     );
 
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_HIDE,
-      this.hideFlyout,
+      this._hideFlyout,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
+      this._handlePanelSet,
     );
     window.removeEventListener("click", this._onOutsideClick);
 

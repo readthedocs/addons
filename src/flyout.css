@@ -176,3 +176,37 @@ small a {
   text-decoration: none;
   color: var(--readthedocs-flyout-link-color);
 }
+
+/* Panel icon navigation */
+nav.panel-icons {
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
+  margin-left: auto;
+}
+
+nav.panel-icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35em;
+  border-radius: 0.25em;
+  display: flex;
+  align-items: center;
+  color: var(--readthedocs-flyout-section-heading-color);
+  font-size: inherit;
+}
+
+nav.panel-icons button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--readthedocs-flyout-item-link-color);
+}
+
+nav.panel-icons button.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--readthedocs-flyout-current-version-color);
+}
+
+nav.panel-icons button svg {
+  height: 1em;
+}
