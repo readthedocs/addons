@@ -25,6 +25,8 @@
 
 .container {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   max-width: var(--readthedocs-flyout-max-width);
   height: auto;
   line-height: var(--readthedocs-flyout-line-height);
@@ -33,11 +35,8 @@
 /* New default: top-center bar */
 .container.top-center {
   top: 0;
-  left: 0;
-  right: 0;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
+  left: 50%;
+  transform: translateX(-50%);
   border-radius: 0 0 0.375em 0.375em;
 }
 
@@ -75,7 +74,7 @@
 /* ---- Header bar ---- */
 
 header {
-  display: flex;
+  display: inline-flex;
   flex-flow: row nowrap;
   gap: 0.5em;
   align-items: center;
@@ -86,12 +85,12 @@ header {
 }
 
 header > img.logo {
-  max-height: 1.5em;
+  height: 1.5em;
   width: auto;
   padding: 0.5em 0em;
   cursor: pointer;
   /* Don't grow past content size, do shrink down to min-content */
-  flex: 0 1 auto;
+  flex: 0 0 auto;
 }
 
 header > span.caret {
@@ -186,11 +185,6 @@ button.badge span {
 
 button.badge.version {
   flex: 0 1 auto;
-}
-
-/* Push badges to the right of the logo */
-button.badge:first-of-type {
-  margin-left: auto;
 }
 
 /* ---- Main panel area ---- */
