@@ -8,8 +8,6 @@
     --readthedocs-flyout-font-size: calc(var(--readthedocs-font-size) * 0.8);
     --readthedocs-flyout-line-height: 1.25em;
     --readthedocs-flyout-header-font-size: 1.125em;
-    --readthedocs-flyout-dt-font-size: 1.125em;
-    --readthedocs-flyout-dd-font-size: 1.125em;
 
     --readthedocs-flyout-color: rgb(128, 128, 128);
     --readthedocs-flyout-background-color: rgb(39, 39, 37);
@@ -84,31 +82,17 @@ header {
   font-size: var(--readthedocs-flyout-header-font-size);
 }
 
-header > img.logo {
+a.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+a.logo img {
   height: 1.5em;
   width: auto;
   padding: 0.5em 0em;
-  cursor: pointer;
-  /* Don't grow past content size, do shrink down to min-content */
-  flex: 0 0 auto;
-}
-
-header > span.caret {
-  cursor: pointer;
-  color: var(--readthedocs-flyout-section-heading-color);
-  padding: 0.75em 0em;
-  line-height: 1em;
-  flex: 0 0 auto;
-}
-
-header > span.caret:hover {
-  color: var(--readthedocs-flyout-item-link-color);
-}
-
-header > span svg.icon {
-  color: inherit;
-  height: var(--readthedocs-flyout-header-font-size);
-  vertical-align: middle;
 }
 
 /* ---- Panel icon navigation (left side of bar) ---- */
@@ -191,7 +175,7 @@ button.badge.version {
 
 main {
   padding: 5px;
-  padding-bottom: 15px;
+  padding-bottom: 0;
   margin-top: 5px;
   max-height: 60vh;
   overflow-y: auto;
@@ -246,45 +230,30 @@ main.closed {
   margin: 0;
 }
 
-/* ---- Default content (Downloads, RTD links, VCS) ---- */
+/* ---- Footer ---- */
 
-dl {
-  margin: 0;
-  padding: 0;
+footer {
+  border-top: 1px solid var(--readthedocs-flyout-divider-color);
+  margin-top: 0.75em;
+  padding: 0.5em 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25em 1em;
+  font-size: 0.9em;
 }
 
-dl > dt {
-  font-size: var(--readthedocs-flyout-dt-font-size);
-  color: var(--readthedocs-flyout-section-heading-color);
-}
-
-dl > dd {
-  display: inline-block;
-  margin: 0;
-  font-size: var(--readthedocs-flyout-dd-font-size);
-}
-
-dd a {
-  text-decoration: none;
-  color: var(--readthedocs-flyout-item-link-color);
-  padding: 6px;
-  display: inline-block;
-}
-
-/* ---- Divider & footer ---- */
-
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  margin: 20px 0;
-  padding: 0;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: var(--readthedocs-flyout-divider-color);
-}
-
-small a {
+footer a {
   text-decoration: none;
   color: var(--readthedocs-flyout-link-color);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em 0.75em;
+}
+
+.footer-branding {
+  color: var(--readthedocs-flyout-section-heading-color);
 }

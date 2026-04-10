@@ -3,7 +3,6 @@ import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCodeBranch,
-  faCaretDown,
   faLanguage,
   faMagnifyingGlass,
   faFileLines,
@@ -82,17 +81,6 @@ export class FlyoutElement extends LitElement {
     this.activePanel = null;
   }
 
-  _open() {
-    this.opened = true;
-  }
-
-  _toggleOpen(e) {
-    if (e) {
-      e.stopPropagation();
-    }
-    this.opened ? this._close() : this._open();
-  }
-
   _setPanel(panelName, e) {
     if (e) {
       e.stopPropagation();
@@ -120,11 +108,9 @@ export class FlyoutElement extends LitElement {
     library.add(faLanguage);
     library.add(faMagnifyingGlass);
     library.add(faFileLines);
-    library.add(faCaretDown);
 
     const iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
     const iconLanguage = icon(faLanguage, { classes: ["icon"] });
-    const iconCaretDown = icon(faCaretDown, { classes: ["icon"] });
     const iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
     const iconFileLines = icon(faFileLines, { classes: ["icon"] });
 
@@ -203,44 +189,70 @@ export class FlyoutElement extends LitElement {
               </button>`
             : nothing}
         </nav>
-        <img
+        <a
           class="logo"
-          src="${READTHEDOCS_LOGO_WORDMARK}"
-          alt="Read the Docs"
-          @click=${this._toggleOpen}
-        />
-        ${languageBadge} ${versionBadge}
-        <span class="caret" @click=${this._toggleOpen}
-          >${iconCaretDown.node[0]}</span
+          href="${addUtmParameters(
+            this.config.projects.current.urls.home
+              .replace("readthedocs.org", "app.readthedocs.org")
+              .replace("readthedocs.com", "app.readthedocs.com")
+              .replace("app.app.", "app."),
+            "flyout",
+          )}"
         >
+          <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
+        </a>
+        ${languageBadge} ${versionBadge}
       </header>
     `;
   }
 
   renderFooter() {
+    const downloads = this.config.versions.current.downloads;
+    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
+    const hasDownloads = Object.keys(downloads).length > 0;
+    const vcs = this.config.addons.flyout.vcs;
+    const hasVCS = vcs && vcs.view_url;
+
     return html`
-      <small>
-        <span>
+      <footer>
+        <span class="footer-links">
           <a
             href="${addUtmParameters(
-              "https://docs.readthedocs.io/page/addons.html",
+              this.config.projects.current.urls.home
+                .replace("readthedocs.org", "app.readthedocs.org")
+                .replace("readthedocs.com", "app.readthedocs.com")
+                .replace("app.app.", "app."),
               "flyout",
             )}"
-            >Addons documentation</a
-          ></span
-        >
-        <span> ― </span>
-        <span
-          >Hosted by
+            >Project Home</a
+          >
+          <a
+            href="${addUtmParameters(
+              this.config.projects.current.urls.builds
+                .replace("readthedocs.org", "app.readthedocs.org")
+                .replace("readthedocs.com", "app.readthedocs.com")
+                .replace("app.app.", "app."),
+              "flyout",
+            )}"
+            >Builds</a
+          >
+          ${hasDownloads
+            ? Object.entries(downloads).map(
+                ([name, url]) => html`<a href="${url}">${nameDisplay[name]}</a>`,
+              )
+            : nothing}
+          ${hasVCS ? html`<a href="${vcs.view_url}">View source</a>` : nothing}
+        </span>
+        <span class="footer-branding">
           <a
             href="${addUtmParameters(
               "https://about.readthedocs.com/",
               "flyout",
             )}"
-            >Read the Docs</a
-          ></span
-        >
-      </small>
+            >Hosted by Read the Docs</a
+          >
+        </span>
+      </footer>
     `;
   }
 
@@ -255,82 +267,6 @@ export class FlyoutElement extends LitElement {
 
     // Close the flyout after showing the search modal
     this._close();
-  }
-
-  renderVCS() {
-    if (
-      // TODO: remove this check when ``vcs`` property becomes required
-      !this.config.addons.flyout.vcs ||
-      !this.config.addons.flyout.vcs.view_url
-    ) {
-      return nothing;
-    }
-    const { vcs } = this.config.addons.flyout;
-
-    return html`
-      <dl>
-        <dt>On ${vcs.name}</dt>
-        <dd>
-          <a href="${vcs.view_url}">View</a>
-        </dd>
-      </dl>
-    `;
-  }
-
-  renderReadTheDocs() {
-    return html`
-      <dl>
-        <dt>On Read the Docs</dt>
-        <dd>
-          <a
-            href="${addUtmParameters(
-              this.config.projects.current.urls.home
-                .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com")
-                .replace("app.app.", "app."),
-              "flyout",
-            )}"
-            >Project Home</a
-          >
-        </dd>
-        <dd>
-          <a
-            href="${addUtmParameters(
-              this.config.projects.current.urls.builds
-                .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com")
-                .replace("app.app.", "app."),
-              "flyout",
-            )}"
-            >Builds</a
-          >
-        </dd>
-      </dl>
-    `;
-  }
-
-  renderDownloads() {
-    if (!Object.keys(this.config.versions.current.downloads).length) {
-      return nothing;
-    }
-
-    const nameDisplay = {
-      pdf: "PDF",
-      epub: "EPUB",
-      htmlzip: "HTML",
-    };
-
-    return html`
-      <dl class="downloads">
-        <dt>Downloads</dt>
-        ${Object.entries(this.config.versions.current.downloads).map(
-          ([name, url]) =>
-            html`<dd>
-              <a href="${url}">${nameDisplay[name]}</a>
-            </dd>`,
-        )}
-      </dl>
-    `;
   }
 
   renderVersionsPanel() {
@@ -399,12 +335,6 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
-  renderDefaultContent() {
-    return html`
-      ${this.renderDownloads()} ${this.renderReadTheDocs()} ${this.renderVCS()}
-    `;
-  }
-
   renderPanelContent() {
     switch (this.activePanel) {
       case "search":
@@ -420,7 +350,7 @@ export class FlyoutElement extends LitElement {
       case "languages":
         return this.renderLanguagesPanel();
       default:
-        return this.renderDefaultContent();
+        return nothing;
     }
   }
 
@@ -442,9 +372,7 @@ export class FlyoutElement extends LitElement {
       <div class=${classMap(this.classes)}>
         ${this.renderHeader()}
         <main class=${classMap({ closed: !this.opened })}>
-          ${this.renderPanelContent()}
-          <hr />
-          ${this.renderFooter()}
+          ${this.renderPanelContent()} ${this.renderFooter()}
         </main>
       </div>
     `;
