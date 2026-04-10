@@ -172,11 +172,6 @@ export class FlyoutElement extends LitElement {
                 ${iconDownload.node[0]}
               </button>`
             : nothing}
-        </nav>
-        <span class="logo">
-          <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
-        </span>
-        <nav class="panel-icons">
           ${hasLanguages
             ? html`<button
                 class=${classMap({
@@ -215,14 +210,15 @@ export class FlyoutElement extends LitElement {
   renderFooter() {
     return html`
       <footer>
-        Hosted by
+        <span>Hosted by</span>
         <a
           href="${addUtmParameters(
             "https://about.readthedocs.com/",
             "flyout",
           )}"
-          >Read the Docs</a
         >
+          <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
+        </a>
       </footer>
     `;
   }

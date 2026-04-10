@@ -85,38 +85,45 @@ export class FileTreeDiffPanelElement extends LitElement {
       return html`<p class="empty">No changed files</p>`;
     }
 
-    const currentUrl = this._getCurrentPageUrl();
+    const currentPath = window.location.pathname;
 
     return html`
       <ul>
-        ${files.map(
-          (f) => html`
+        ${files.map((f) => {
+          let isCurrent = false;
+          try {
+            const fileUrl = new URL(f.urls.current, window.location.origin);
+            isCurrent = fileUrl.pathname === currentPath;
+          } catch (e) {
+            isCurrent = f.urls.current === currentPath;
+          }
+          return html`
             <li class="${f.changeType}">
               <span class="badge ${f.changeType}"
                 >${f.changeType === "added" ? "+" : "±"}</span
               >
               <a
                 href="${this._getFileUrl(f)}"
-                class="${f.urls.current === currentUrl ? "current" : ""}"
+                class="${isCurrent ? "current" : ""}"
                 >${f.filename}</a
               >
             </li>
-          `,
-        )}
+          `;
+        })}
       </ul>
     `;
   }
 
   _getFileUrl(file) {
-    const url = new URL(file.urls.current);
-    if (this.docDiffEnabled) {
-      url.searchParams.set(DOCDIFF_URL_PARAM, "true");
+    try {
+      const url = new URL(file.urls.current, window.location.origin);
+      if (this.docDiffEnabled) {
+        url.searchParams.set(DOCDIFF_URL_PARAM, "true");
+      }
+      return url.toString();
+    } catch (e) {
+      return file.urls.current;
     }
-    return url.toString();
-  }
-
-  _getCurrentPageUrl() {
-    return `${window.location.origin}${window.location.pathname}`;
   }
 
   _handleToggleDiff(event) {

@@ -82,19 +82,7 @@ header {
   font-size: var(--readthedocs-flyout-header-font-size);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-}
-
-.logo img {
-  height: 1.5em;
-  width: auto;
-  padding: 0.5em 0em;
-}
-
-/* ---- Panel icon navigation (left side of bar) ---- */
+/* ---- Panel icon navigation ---- */
 
 nav.panel-icons {
   display: flex;
@@ -204,10 +192,16 @@ footer {
   margin-top: 0.75em;
   padding: 0.4em 0;
   font-size: 0.85em;
-  text-align: center;
+  text-align: right;
+  color: var(--readthedocs-flyout-section-heading-color);
 }
 
 footer a {
   text-decoration: none;
-  color: var(--readthedocs-flyout-link-color);
+}
+
+footer a img {
+  display: inline-block;
+  width: 100px;
+  vertical-align: middle;
 }
