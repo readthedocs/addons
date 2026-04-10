@@ -26,10 +26,8 @@
 .container {
   position: fixed;
   max-width: var(--readthedocs-flyout-max-width);
-  width: auto;
+  width: max-content;
   height: auto;
-  max-height: calc(100% - 100px);
-  overflow-y: auto;
   line-height: var(--readthedocs-flyout-line-height);
 }
 
@@ -72,7 +70,6 @@
   line-height: var(--readthedocs-flyout-line-height);
   z-index: 3000;
   padding: 0 10px;
-  overflow-y: auto;
 }
 
 /* ---- Header bar ---- */
@@ -202,6 +199,8 @@ main {
   padding: 5px;
   padding-bottom: 15px;
   margin-top: 5px;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 main.closed {
