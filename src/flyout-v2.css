@@ -1,0 +1,207 @@
+/* Flyout styles - New top-center bar layout with panel system */
+
+@layer defaults {
+  :root {
+    --readthedocs-flyout-max-width: 40em;
+
+    --readthedocs-flyout-font-family: var(--readthedocs-font-family);
+    --readthedocs-flyout-font-size: calc(var(--readthedocs-font-size) * 0.8);
+    --readthedocs-flyout-line-height: 1.25em;
+    --readthedocs-flyout-header-font-size: 1.125em;
+
+    --readthedocs-flyout-color: rgb(128, 128, 128);
+    --readthedocs-flyout-background-color: rgb(39, 39, 37);
+    --readthedocs-flyout-current-version-color: #27ae60;
+    --readthedocs-flyout-section-heading-color: rgb(128, 128, 128);
+    --readthedocs-flyout-item-link-color: rgb(252, 252, 252);
+    --readthedocs-flyout-divider-color: #413d3d;
+    --readthedocs-flyout-link-color: rgb(42, 128, 185);
+  }
+}
+
+/* ---- Container ---- */
+
+.container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  max-width: var(--readthedocs-flyout-max-width);
+  height: auto;
+  line-height: var(--readthedocs-flyout-line-height);
+}
+
+/* New default: top-center bar */
+.container.top-center {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 0 0 0.375em 0.375em;
+}
+
+/* Legacy positions kept for backward compatibility */
+.container.bottom-right {
+  right: 20px;
+  bottom: 50px;
+}
+
+.container.bottom-left {
+  left: 20px;
+  bottom: 50px;
+}
+
+.container.top-left {
+  left: 20px;
+  top: 50px;
+}
+
+.container.top-right {
+  right: 20px;
+  top: 50px;
+}
+
+:host > div {
+  font-family: var(--readthedocs-flyout-font-family);
+  font-size: var(--readthedocs-flyout-font-size);
+  color: var(--readthedocs-flyout-color);
+  background-color: var(--readthedocs-flyout-background-color);
+  line-height: var(--readthedocs-flyout-line-height);
+  z-index: 3000;
+  padding: 0 10px;
+}
+
+/* ---- Header bar ---- */
+
+header {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  gap: 0.5em;
+  align-items: center;
+  background-color: var(--readthedocs-flyout-background-color);
+  position: sticky;
+  top: 0px;
+  font-size: var(--readthedocs-flyout-header-font-size);
+}
+
+/* ---- Panel icon navigation ---- */
+
+nav.panel-icons {
+  display: flex;
+  gap: 0.25em;
+  align-items: center;
+}
+
+nav.panel-icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35em;
+  border-radius: 0.25em;
+  display: flex;
+  align-items: center;
+  color: var(--readthedocs-flyout-section-heading-color);
+  font-size: inherit;
+}
+
+nav.panel-icons button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--readthedocs-flyout-item-link-color);
+}
+
+nav.panel-icons button.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--readthedocs-flyout-current-version-color);
+}
+
+nav.panel-icons button svg {
+  height: 1em;
+}
+
+nav.panel-icons button .label {
+  color: var(--readthedocs-flyout-current-version-color);
+  font-size: 0.9em;
+  margin-left: 0.15em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 8em;
+}
+
+/* ---- Main panel area ---- */
+
+main {
+  padding: 5px;
+  padding-bottom: 0;
+  margin-top: 5px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+main.closed {
+  display: none;
+}
+
+/* ---- Version/Language panel lists ---- */
+
+.panel h3 {
+  margin: 0 0 0.5em 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--readthedocs-flyout-section-heading-color);
+}
+
+.panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.panel li {
+  padding: 0;
+}
+
+.panel li a {
+  display: block;
+  text-decoration: none;
+  color: var(--readthedocs-flyout-item-link-color);
+  padding: 0.3em 0.5em;
+  border-radius: 0.2em;
+}
+
+.panel li a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.panel li.current a {
+  color: var(--readthedocs-flyout-current-version-color);
+  font-weight: bold;
+}
+
+.panel-empty {
+  color: var(--readthedocs-flyout-section-heading-color);
+  font-size: 0.9em;
+  padding: 0.5em;
+  margin: 0;
+}
+
+/* ---- Footer ---- */
+
+footer {
+  border-top: 1px solid var(--readthedocs-flyout-divider-color);
+  margin-top: 0.75em;
+  padding: 0.4em 0;
+  font-size: 0.85em;
+  text-align: right;
+  color: var(--readthedocs-flyout-section-heading-color);
+}
+
+footer a {
+  text-decoration: none;
+}
+
+footer a img {
+  display: inline-block;
+  width: 100px;
+  vertical-align: middle;
+}

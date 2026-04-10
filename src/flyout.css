@@ -1,13 +1,16 @@
-/* Flyout styles - New top-center bar layout with panel system */
+/* Flyout styles */
 
 @layer defaults {
   :root {
-    --readthedocs-flyout-max-width: 40em;
+    --readthedocs-flyout-max-width: 25em;
 
     --readthedocs-flyout-font-family: var(--readthedocs-font-family);
     --readthedocs-flyout-font-size: calc(var(--readthedocs-font-size) * 0.8);
     --readthedocs-flyout-line-height: 1.25em;
     --readthedocs-flyout-header-font-size: 1.125em;
+    --readthedocs-flyout-dt-font-size: 1.125em;
+    --readthedocs-flyout-dd-font-size: 1.125em;
+    --readthedocs-flyout-line-height: 1.25em;
 
     --readthedocs-flyout-color: rgb(128, 128, 128);
     --readthedocs-flyout-background-color: rgb(39, 39, 37);
@@ -19,26 +22,16 @@
   }
 }
 
-/* ---- Container ---- */
-
 .container {
   position: fixed;
-  display: flex;
-  flex-direction: column;
   max-width: var(--readthedocs-flyout-max-width);
+  width: auto;
   height: auto;
+  max-height: calc(100% - 100px);
+  overflow-y: auto;
   line-height: var(--readthedocs-flyout-line-height);
 }
 
-/* New default: top-center bar */
-.container.top-center {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 0 0 0.375em 0.375em;
-}
-
-/* Legacy positions kept for backward compatibility */
 .container.bottom-right {
   right: 20px;
   bottom: 50px;
@@ -67,141 +60,119 @@
   line-height: var(--readthedocs-flyout-line-height);
   z-index: 3000;
   padding: 0 10px;
+  overflow-y: auto;
 }
 
-/* ---- Header bar ---- */
-
 header {
-  display: inline-flex;
+  display: flex;
   flex-flow: row nowrap;
   gap: 0.5em;
   align-items: center;
+  cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color);
   position: sticky;
   top: 0px;
   font-size: var(--readthedocs-flyout-header-font-size);
 }
 
-/* ---- Panel icon navigation ---- */
-
-nav.panel-icons {
-  display: flex;
-  gap: 0.25em;
-  align-items: center;
+header > img.logo {
+  /* Total height of 1.5 + 0.5 + 0.5 = 2.5em */
+  max-height: 1.5em;
+  width: auto;
+  padding: 0.5em 0em;
+  margin-right: 0.75em;
+  /* Don't grow past content size, do shrink down to min-content */
+  flex: 0 1 auto;
 }
 
-nav.panel-icons button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.35em;
-  border-radius: 0.25em;
-  display: flex;
-  align-items: center;
-  color: var(--readthedocs-flyout-section-heading-color);
-  font-size: inherit;
-}
-
-nav.panel-icons button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--readthedocs-flyout-item-link-color);
-}
-
-nav.panel-icons button.active {
-  background-color: rgba(255, 255, 255, 0.15);
+header > span {
   color: var(--readthedocs-flyout-current-version-color);
-}
-
-nav.panel-icons button svg {
-  height: 1em;
-}
-
-nav.panel-icons button .label {
-  color: var(--readthedocs-flyout-current-version-color);
-  font-size: 0.9em;
-  margin-left: 0.15em;
+  font-size: var(--readthedocs-flyout-header-font-size);
+  margin-left: 10px;
+  /* Total height of 1 + 0.75 + 0.75 = 2.5em */
+  padding: 0.75em 0em;
+  line-height: 1em;
+  /* Don't grow past content size or shrink below min-content */
+  flex: 0 0 auto;
+  /* Trim content to get ellipsis on wide content */
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 8em;
 }
 
-/* ---- Main panel area ---- */
+header > span.version {
+  /* Grow to fill parent based on content width, shrink content when needed (for ellipsis) */
+  flex: 0 1 auto;
+}
+
+/* Give the flex box extra spacing to the left of the first span item. This puts
+ * automatic spacing between the logo and the text detail spans */
+header > span:first-of-type {
+  margin-left: auto;
+}
+
+header > span svg.icon {
+  color: rgb(128, 128, 128);
+  height: var(--readthedocs-flyout-header-font-size);
+  padding-right: 0.25em;
+  vertical-align: middle;
+}
 
 main {
   padding: 5px;
-  padding-bottom: 0;
+  padding-bottom: 15px;
   margin-top: 5px;
-  max-height: 60vh;
-  overflow-y: auto;
 }
 
 main.closed {
   display: none;
 }
 
-/* ---- Version/Language panel lists ---- */
+dl {
+  margin: 0;
+  padding: 0;
+}
 
-.panel h3 {
-  margin: 0 0 0.5em 0;
-  font-size: 1em;
-  font-weight: 600;
+dl > dt {
+  font-size: var(--readthedocs-flyout-dt-font-size);
   color: var(--readthedocs-flyout-section-heading-color);
 }
 
-.panel ul {
-  list-style: none;
+dl > dd {
+  display: inline-block;
   margin: 0;
-  padding: 0;
-  max-height: 20em;
-  overflow-y: auto;
+  font-size: var(--readthedocs-flyout-dd-font-size);
 }
 
-.panel li {
-  padding: 0;
-}
-
-.panel li a {
-  display: block;
+dd a {
   text-decoration: none;
   color: var(--readthedocs-flyout-item-link-color);
-  padding: 0.3em 0.5em;
-  border-radius: 0.2em;
+  padding: 6px;
+  display: inline-block;
 }
 
-.panel li a:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.panel li.current a {
-  color: var(--readthedocs-flyout-current-version-color);
-  font-weight: bold;
-}
-
-.panel-empty {
-  color: var(--readthedocs-flyout-section-heading-color);
-  font-size: 0.9em;
-  padding: 0.5em;
+dd form {
+  padding: 6px;
   margin: 0;
 }
 
-/* ---- Footer ---- */
-
-footer {
-  border-top: 1px solid var(--readthedocs-flyout-divider-color);
-  margin-top: 0.75em;
-  padding: 0.4em 0;
-  font-size: 0.85em;
-  text-align: right;
-  color: var(--readthedocs-flyout-section-heading-color);
+dd input {
+  padding: 6px;
+  font-size: 80%;
 }
 
-footer a {
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  margin: 20px 0;
+  padding: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--readthedocs-flyout-divider-color);
+}
+
+small a {
   text-decoration: none;
-}
-
-footer a img {
-  display: inline-block;
-  width: 100px;
-  vertical-align: middle;
+  color: var(--readthedocs-flyout-link-color);
 }

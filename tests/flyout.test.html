@@ -98,57 +98,7 @@
         });
 
         describe("Flyout addon", () => {
-          it("render versions panel", async () => {
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            // Open the versions panel
-            element.activePanel = "versions";
-            element.opened = true;
-            await elementUpdated(element);
-
-            const panel = element.shadowRoot.querySelector(
-              "main .panel.versions-panel",
-            );
-            expect(panel).to.exist;
-
-            const items = panel.querySelectorAll("ul li");
-            expect(items.length).to.equal(3);
-
-            // Check current version is highlighted
-            const currentItem = panel.querySelector("li.current a");
-            expect(currentItem).to.exist;
-            expect(currentItem.textContent.trim()).to.equal("latest");
-
-            // Check version links
-            const links = panel.querySelectorAll("ul li a");
-            expect(links[0].textContent.trim()).to.equal("stable");
-            expect(links[0].href).to.include("/en/stable/");
-            expect(links[1].textContent.trim()).to.equal("latest");
-            expect(links[2].textContent.trim()).to.equal("v1.0");
-          });
-
-          it("render languages panel", async () => {
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "languages";
-            element.opened = true;
-            await elementUpdated(element);
-
-            const panel = element.shadowRoot.querySelector(
-              "main .panel.languages-panel",
-            );
-            expect(panel).to.exist;
-
-            const items = panel.querySelectorAll("ul li");
-            expect(items.length).to.equal(2);
-
-            // Current language is highlighted
-            const currentItem = panel.querySelector("li.current a");
-            expect(currentItem).to.exist;
-            expect(currentItem.textContent.trim()).to.equal("en");
-          });
-
-          it("render languages panel with translation selected", async () => {
+          it("render languages section translation selected", async () => {
             // Select one of the translations as current project
             let currentProject = config.projects.current;
             let translationProject = config.projects.translations[0];
@@ -157,129 +107,230 @@
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "languages";
-            element.opened = true;
             await elementUpdated(element);
 
-            const panel = element.shadowRoot.querySelector(
-              "main .panel.languages-panel",
+            const section = element.shadowRoot.querySelector(
+              "main > dl.languages",
             );
-            expect(panel).to.exist;
-
-            const currentItem = panel.querySelector("li.current a");
-            expect(currentItem).to.exist;
-            expect(currentItem.textContent.trim()).to.equal("es");
+            expect(section).dom.to.equal(`
+      <dl class="languages">
+        <dt>Languages</dt>
+        <dd>
+          <a href="https://project.readthedocs.io/en/latest/">en</a>
+        </dd>
+        <dd>
+          <strong>
+            <a href="https://project.readthedocs.io/es/latest/">es</a>
+          </strong>
+        </dd>
+      </dl>
+      `);
           });
 
-          it("render downloads panel", async () => {
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "downloads";
-            element.opened = true;
-            await elementUpdated(element);
-
-            const panel = element.shadowRoot.querySelector(
-              "main .panel.downloads-panel",
-            );
-            expect(panel).to.exist;
-
-            const links = panel.querySelectorAll("ul li a");
-            expect(links.length).to.equal(1);
-            expect(links[0].textContent.trim()).to.equal("PDF");
-            expect(links[0].href).to.include("/_/downloads/en/latest/pdf/");
-          });
-
-          it("render header with icon buttons", async () => {
+          it("render languages section", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
             await elementUpdated(element);
 
-            const nav = element.shadowRoot.querySelector(
-              "header nav.panel-icons",
+            const section = element.shadowRoot.querySelector(
+              "main > dl.languages",
             );
-            expect(nav).to.exist;
-
-            // Search icon should be present (search.enabled = true)
-            const searchBtn = nav.querySelector('button[title="Search"]');
-            expect(searchBtn).to.exist;
-
-            // Downloads icon should be present (has downloads)
-            const downloadsBtn = nav.querySelector('button[title="Downloads"]');
-            expect(downloadsBtn).to.exist;
-
-            // Version button with label
-            const versionBtn = nav.querySelector(
-              'button[title="Switch version"]',
-            );
-            expect(versionBtn).to.exist;
-            expect(
-              versionBtn.querySelector(".label").textContent.trim(),
-            ).to.equal("latest");
-
-            // Language button with label
-            const langBtn = nav.querySelector(
-              'button[title="Switch language"]',
-            );
-            expect(langBtn).to.exist;
-            expect(langBtn.querySelector(".label").textContent.trim()).to.equal(
-              "en",
-            );
+            expect(section).dom.to.equal(`
+      <dl class="languages">
+        <dt>Languages</dt>
+        <dd>
+          <strong>
+            <a href="https://project.readthedocs.io/en/latest/">en</a>
+          </strong>
+        </dd>
+        <dd>
+          <a href="https://project.readthedocs.io/es/latest/">es</a>
+        </dd>
+      </dl>
+      `);
           });
 
-          it("render footer with branding", async () => {
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "versions";
-            element.opened = true;
-            await elementUpdated(element);
-
-            const footer = element.shadowRoot.querySelector("main footer");
-            expect(footer).to.exist;
-
-            const link = footer.querySelector("a");
-            expect(link).to.exist;
-            expect(link.href).to.include("about.readthedocs.com");
-
-            const img = footer.querySelector("a img");
-            expect(img).to.exist;
-            expect(img.alt).to.equal("Read the Docs");
-          });
-
-          it("panel is closed by default", async () => {
+          it("render versions section", async () => {
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
             await elementUpdated(element);
 
-            const main = element.shadowRoot.querySelector("main");
-            expect(main.classList.contains("closed")).to.be.true;
+            const section =
+              element.shadowRoot.querySelector("main > dl.versions");
+            expect(section).dom.to.equal(`
+      <dl class="versions">
+        <dt>Versions</dt>
+        <dd>
+          <a href="https://project.readthedocs.io/en/stable/">stable</a>
+        </dd>
+        <dd>
+          <strong>
+            <a href="https://project.readthedocs.io/en/latest/">latest</a>
+          </strong>
+        </dd>
+        <dd>
+          <a href="https://project.readthedocs.io/en/v1.0/">v1.0</a>
+        </dd>
+      </dl>
+      `);
           });
 
-          it("search disabled hides search icon", async () => {
+          it("render downloads section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            const section = element.shadowRoot.querySelector(
+              "main > dl.downloads",
+            );
+            expect(section).dom.to.equal(`
+      <dl class="downloads">
+        <dt>Downloads</dt>
+        <dd>
+          <a href="https://project.readthedocs.io/_/downloads/en/latest/pdf/">PDF</a>
+        </dd>
+      </dl>
+      `);
+          });
+
+          it("render on read the docs section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector(
+              "main > dl:nth-child(4)",
+            );
+            expect(section).dom.to.equal(`
+      <dl>
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="https://app.readthedocs.org/projects/project/?utm_source=project&amp;utm_content=flyout">Project Home</a>
+        </dd>
+        <dd>
+          <a href="https://app.readthedocs.org/projects/project/builds/?utm_source=project&amp;utm_content=flyout">Builds</a>
+        </dd>
+      </dl>
+      `);
+          });
+
+          it("render search section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector(
+              "main > dl:nth-child(5)",
+            );
+            expect(section).dom.to.equal(`
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <form id="flyout-search-form">
+            <input
+              type="text"
+              name="q"
+              aria-label="Search docs"
+              placeholder="Search docs"
+            />
+          </form>
+        </dd>
+      </dl>
+      `);
+          });
+
+          it("render header section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            const section = element.shadowRoot.querySelector("header");
+            expect(section).dom.to.equal(
+              `
+      <header>
+        <img class="logo" alt="Read the Docs" />
+        <span class="language">en</span>
+        <span class="version">latest</span>
+        <span class="caret"></span>
+      </header>
+      `,
+              { ignoreAttributes: [{ tags: ["img"], attributes: ["src"] }] },
+            );
+          });
+
+          it("render footer section", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+
+            // NOTE: I'd like to make this "querySelector" not that fragile.
+            // Does it make sense to add `id=` or `class=` to these sections?
+            const section = element.shadowRoot.querySelector("main > small");
+            expect(section).dom.to.equal(`
+      <small>
+        <span>
+          <a href="https://docs.readthedocs.io/page/addons.html?utm_source=project&amp;utm_content=flyout">
+            Addons documentation
+          </a>
+        </span>
+        <span>
+        ―
+        </span>
+        <span>Hosted by <a href="https://about.readthedocs.com/?utm_source=project&amp;utm_content=flyout">Read the Docs</a></span>
+      </small>
+      `);
+          });
+
+          // Use a snapshot saved into a file to compare against.
+          // The snapshot file is generated automatically if it doesn't exist,
+          // or loaded and compare against if it's found already.
+          // It matches the full name of the test: "Flyout addon snapshot flyout completely".
+          // https://open-wc.org/docs/testing/semantic-dom-diff/#snapshot-testing
+          it("snapshot flyout completely", async () => {
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
+
+          it("snapshot flyout with search disabled", async () => {
+            // Disable the search from the config object
             config.addons.search.enabled = false;
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
             await elementUpdated(element);
+            await expect(element).shadowDom.to.equalSnapshot();
+          });
 
-            const searchBtn = element.shadowRoot.querySelector(
-              'button[title="Search"]',
+          it("flyout with search disabled does not contain the search input", async () => {
+            // Disable the search from the config object
+            config.addons.search.enabled = false;
+
+            const addon = new flyout.FlyoutAddon(config);
+            const element = document.querySelector("readthedocs-flyout");
+            await elementUpdated(element);
+            const searchForm = element.shadowRoot.querySelector(
+              '#flyout-search-form > input[name="q"',
             );
-            expect(searchBtn).to.not.exist;
+            expect(searchForm).to.not.exist;
           });
 
           it("flyout with readthedocs.resolver.filename being null", async () => {
             metaResolverFilename.content = "/guides/tests.html";
 
+            // Disable the search from the config object
             config.readthedocs.resolver.filename = null;
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "versions";
-            element.opened = true;
             await elementUpdated(element);
-
             const versionLink = element.shadowRoot.querySelector(
-              ".versions-panel ul li a",
+              "main > dl.versions > dd > a",
             );
             expect(versionLink).dom.to.equal(
               '<a href="https://project.readthedocs.io/en/stable/guides/tests.html">stable</a>',
@@ -289,38 +340,20 @@
           it("flyout with readthedocs.resolver.filename and different meta.content", async () => {
             metaResolverFilename.content = "/guides/tests.html";
 
+            // Add a different value for the filename than the meta tag.
+            // This happens on SPA documentation tools
             config.readthedocs.resolver.filename =
               "/examples/single-page-application.html";
 
             const addon = new flyout.FlyoutAddon(config);
             const element = document.querySelector("readthedocs-flyout");
-            element.activePanel = "versions";
-            element.opened = true;
             await elementUpdated(element);
-
             const versionLink = element.shadowRoot.querySelector(
-              ".versions-panel ul li a",
+              "main > dl.versions > dd > a",
             );
             expect(versionLink).dom.to.equal(
               '<a href="https://project.readthedocs.io/en/stable/examples/single-page-application.html">stable</a>',
             );
-          });
-
-          // Snapshot tests - these will auto-regenerate on first run
-          it("snapshot flyout completely", async () => {
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            await elementUpdated(element);
-            await expect(element).shadowDom.to.equalSnapshot();
-          });
-
-          it("snapshot flyout with search disabled", async () => {
-            config.addons.search.enabled = false;
-
-            const addon = new flyout.FlyoutAddon(config);
-            const element = document.querySelector("readthedocs-flyout");
-            await elementUpdated(element);
-            await expect(element).shadowDom.to.equalSnapshot();
           });
         });
 
