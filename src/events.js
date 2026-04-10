@@ -7,6 +7,8 @@ export const EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW =
 export const EVENT_READTHEDOCS_DOCDIFF_HIDE = "readthedocs-docdiff-hide";
 export const EVENT_READTHEDOCS_FLYOUT_SHOW = "readthedocs-flyout-show";
 export const EVENT_READTHEDOCS_FLYOUT_HIDE = "readthedocs-flyout-hide";
+export const EVENT_READTHEDOCS_FLYOUT_PANEL_SET =
+  "readthedocs-flyout-panel-set";
 
 /**
  * Event triggered when the URL has changed dynamically (modifying the history object)

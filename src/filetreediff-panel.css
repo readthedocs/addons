@@ -1,0 +1,144 @@
+/* File tree diff panel styles (inline panel within the flyout) */
+
+@layer defaults {
+  :root {
+    --readthedocs-filetreediff-panel-color: var(
+      --readthedocs-flyout-item-link-color,
+      rgb(252, 252, 252)
+    );
+    --readthedocs-filetreediff-panel-muted-color: var(
+      --readthedocs-flyout-section-heading-color,
+      rgb(128, 128, 128)
+    );
+    --readthedocs-filetreediff-panel-divider-color: var(
+      --readthedocs-flyout-divider-color,
+      #413d3d
+    );
+    --readthedocs-filetreediff-panel-added-color: var(
+      --readthedocs-flyout-current-version-color,
+      #27ae60
+    );
+    --readthedocs-filetreediff-panel-added-background-color: rgba(
+      39,
+      174,
+      96,
+      0.15
+    );
+    --readthedocs-filetreediff-panel-modified-color: #e67e22;
+    --readthedocs-filetreediff-panel-modified-background-color: rgba(
+      230,
+      126,
+      34,
+      0.15
+    );
+  }
+}
+
+:host {
+  display: block;
+}
+
+.filetreediff-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--readthedocs-filetreediff-panel-muted-color);
+}
+
+.diff-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: var(--readthedocs-filetreediff-panel-color);
+  white-space: nowrap;
+}
+
+.diff-toggle input {
+  margin: 0;
+}
+
+.file-list {
+  overflow-y: auto;
+  max-height: 20em;
+}
+
+.file-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.3em 0;
+  border-bottom: 1px solid var(--readthedocs-filetreediff-panel-divider-color);
+  font-size: 0.9em;
+}
+
+.file-list li:last-child {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  font-size: 0.85em;
+  font-weight: bold;
+  border-radius: 0.2em;
+  flex-shrink: 0;
+}
+
+.badge.added {
+  color: var(--readthedocs-filetreediff-panel-added-color);
+  background-color: var(
+    --readthedocs-filetreediff-panel-added-background-color
+  );
+}
+
+.badge.modified {
+  color: var(--readthedocs-filetreediff-panel-modified-color);
+  background-color: var(
+    --readthedocs-filetreediff-panel-modified-background-color
+  );
+}
+
+.file-list a {
+  text-decoration: none;
+  color: var(--readthedocs-filetreediff-panel-color);
+  word-break: break-all;
+}
+
+.file-list a:hover {
+  text-decoration: underline;
+}
+
+.file-list a.current {
+  color: var(--readthedocs-filetreediff-panel-added-color);
+  font-weight: 600;
+}
+
+.empty {
+  color: var(--readthedocs-filetreediff-panel-muted-color);
+  font-size: 0.9em;
+  padding: 0.5em;
+  margin: 0;
+}

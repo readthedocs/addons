@@ -15,6 +15,7 @@ import styleSheet from "./flyout.css";
 import {
   AddonBase,
   addUtmParameters,
+  getQueryParam,
   getLinkWithFilename,
   docTool,
 } from "./utils";
@@ -411,6 +412,14 @@ export class FlyoutAddon extends AddonBase {
   static addonEnabledPath = "addons.flyout.enabled";
   static addonName = "Flyout";
   static elementClass = FlyoutElement;
+
+  static isEnabled(config, httpStatus) {
+    // Disable original flyout when v2 is active
+    if (getQueryParam("readthedocs-flyout-v2") === "true") {
+      return false;
+    }
+    return super.isEnabled(config, httpStatus);
+  }
 
   static requiresUrlParam() {
     // Flyout requires URL param for the feature "keep the same page when
