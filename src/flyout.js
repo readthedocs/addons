@@ -3,6 +3,7 @@ import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCodeBranch,
+  faDownload,
   faLanguage,
   faMagnifyingGlass,
   faFileLines,
@@ -105,11 +106,13 @@ export class FlyoutElement extends LitElement {
 
   renderHeader() {
     library.add(faCodeBranch);
+    library.add(faDownload);
     library.add(faLanguage);
     library.add(faMagnifyingGlass);
     library.add(faFileLines);
 
     const iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
+    const iconDownload = icon(faDownload, { classes: ["icon"] });
     const iconLanguage = icon(faLanguage, { classes: ["icon"] });
     const iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
     const iconFileLines = icon(faFileLines, { classes: ["icon"] });
@@ -123,6 +126,8 @@ export class FlyoutElement extends LitElement {
     const fileTreeDiffEnabled =
       objectPath.get(this.config, "versions.current.type") === "external" &&
       objectPath.get(this.config, "addons.filetreediff.enabled", false);
+    const hasDownloads =
+      Object.keys(this.config.versions.current.downloads).length > 0;
 
     // Version badge (clickable - toggles versions panel)
     let versionBadge = nothing;
@@ -188,70 +193,38 @@ export class FlyoutElement extends LitElement {
                 ${iconFileLines.node[0]}
               </button>`
             : nothing}
+          ${hasDownloads
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === "downloads",
+                })}
+                @click=${(e) => this._setPanel("downloads", e)}
+                title="Downloads"
+                aria-label="Toggle downloads panel"
+              >
+                ${iconDownload.node[0]}
+              </button>`
+            : nothing}
         </nav>
-        <a
-          class="logo"
-          href="${addUtmParameters(
-            this.config.projects.current.urls.home
-              .replace("readthedocs.org", "app.readthedocs.org")
-              .replace("readthedocs.com", "app.readthedocs.com")
-              .replace("app.app.", "app."),
-            "flyout",
-          )}"
-        >
+        <span class="logo">
           <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
-        </a>
+        </span>
         ${languageBadge} ${versionBadge}
       </header>
     `;
   }
 
   renderFooter() {
-    const downloads = this.config.versions.current.downloads;
-    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
-    const hasDownloads = Object.keys(downloads).length > 0;
-    const vcs = this.config.addons.flyout.vcs;
-    const hasVCS = vcs && vcs.view_url;
-
     return html`
       <footer>
-        <span class="footer-links">
-          <a
-            href="${addUtmParameters(
-              this.config.projects.current.urls.home
-                .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com")
-                .replace("app.app.", "app."),
-              "flyout",
-            )}"
-            >Project Home</a
-          >
-          <a
-            href="${addUtmParameters(
-              this.config.projects.current.urls.builds
-                .replace("readthedocs.org", "app.readthedocs.org")
-                .replace("readthedocs.com", "app.readthedocs.com")
-                .replace("app.app.", "app."),
-              "flyout",
-            )}"
-            >Builds</a
-          >
-          ${hasDownloads
-            ? Object.entries(downloads).map(
-                ([name, url]) => html`<a href="${url}">${nameDisplay[name]}</a>`,
-              )
-            : nothing}
-          ${hasVCS ? html`<a href="${vcs.view_url}">View source</a>` : nothing}
-        </span>
-        <span class="footer-branding">
-          <a
-            href="${addUtmParameters(
-              "https://about.readthedocs.com/",
-              "flyout",
-            )}"
-            >Hosted by Read the Docs</a
-          >
-        </span>
+        Hosted by
+        <a
+          href="${addUtmParameters(
+            "https://about.readthedocs.com/",
+            "flyout",
+          )}"
+          >Read the Docs</a
+        >
       </footer>
     `;
   }
@@ -335,6 +308,30 @@ export class FlyoutElement extends LitElement {
     `;
   }
 
+  renderDownloadsPanel() {
+    const downloads = this.config.versions.current.downloads;
+    if (!Object.keys(downloads).length) {
+      return html`<p class="panel-empty">No downloads available</p>`;
+    }
+
+    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
+
+    return html`
+      <div class="panel downloads-panel">
+        <h3>Downloads</h3>
+        <ul>
+          ${Object.entries(downloads).map(
+            ([name, url]) => html`
+              <li>
+                <a href="${url}">${nameDisplay[name] || name}</a>
+              </li>
+            `,
+          )}
+        </ul>
+      </div>
+    `;
+  }
+
   renderPanelContent() {
     switch (this.activePanel) {
       case "search":
@@ -349,6 +346,8 @@ export class FlyoutElement extends LitElement {
         return this.renderVersionsPanel();
       case "languages":
         return this.renderLanguagesPanel();
+      case "downloads":
+        return this.renderDownloadsPanel();
       default:
         return nothing;
     }

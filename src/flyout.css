@@ -82,14 +82,13 @@ header {
   font-size: var(--readthedocs-flyout-header-font-size);
 }
 
-a.logo {
+.logo {
   display: flex;
   align-items: center;
-  text-decoration: none;
   flex: 0 0 auto;
 }
 
-a.logo img {
+.logo img {
   height: 1.5em;
   width: auto;
   padding: 0.5em 0em;
@@ -235,25 +234,12 @@ main.closed {
 footer {
   border-top: 1px solid var(--readthedocs-flyout-divider-color);
   margin-top: 0.75em;
-  padding: 0.5em 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.25em 1em;
-  font-size: 0.9em;
+  padding: 0.4em 0;
+  font-size: 0.85em;
+  text-align: center;
 }
 
 footer a {
   text-decoration: none;
   color: var(--readthedocs-flyout-link-color);
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25em 0.75em;
-}
-
-.footer-branding {
-  color: var(--readthedocs-flyout-section-heading-color);
 }
