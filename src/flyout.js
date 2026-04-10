@@ -1,6 +1,5 @@
 import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
-import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faCodeBranch,
@@ -52,7 +51,6 @@ export class FlyoutElement extends LitElement {
     this.opened = false;
     this.floating = true;
     this.position = "top-center";
-    this.readthedocsLogo = READTHEDOCS_LOGO;
     this.activePanel = null;
   }
 
@@ -82,12 +80,10 @@ export class FlyoutElement extends LitElement {
   _close() {
     this.opened = false;
     this.activePanel = null;
-    this.readthedocsLogo = READTHEDOCS_LOGO;
   }
 
   _open() {
     this.opened = true;
-    this.readthedocsLogo = READTHEDOCS_LOGO_WORDMARK;
   }
 
   _toggleOpen(e) {
@@ -103,12 +99,12 @@ export class FlyoutElement extends LitElement {
     }
 
     if (this.activePanel === panelName) {
-      // Same panel clicked again - clear panel, show default content
-      this.activePanel = null;
+      // Same panel clicked again - close entirely
+      this._close();
     } else {
       this.activePanel = panelName;
       if (!this.opened) {
-        this._open();
+        this.opened = true;
       }
     }
   }
@@ -209,7 +205,7 @@ export class FlyoutElement extends LitElement {
         </nav>
         <img
           class="logo"
-          src="${this.readthedocsLogo}"
+          src="${READTHEDOCS_LOGO_WORDMARK}"
           alt="Read the Docs"
           @click=${this._toggleOpen}
         />
