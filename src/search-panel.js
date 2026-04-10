@@ -64,9 +64,7 @@ export class SearchPanelElement extends LitElement {
         </form>
         <div class="results">
           ${this.results ||
-          html`<p class="placeholder">
-            Search this project's documentation
-          </p>`}
+          html`<p class="placeholder">Search this project's documentation</p>`}
         </div>
       </div>
     `;

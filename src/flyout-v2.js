@@ -198,9 +198,7 @@ export class FlyoutV2Element extends LitElement {
                 aria-label="Toggle versions panel"
               >
                 ${this.iconCodeBranch.node[0]}
-                <span class="label"
-                  >${this.config.versions.current.slug}</span
-                >
+                <span class="label">${this.config.versions.current.slug}</span>
               </button>`
             : nothing}
         </nav>
@@ -213,10 +211,7 @@ export class FlyoutV2Element extends LitElement {
       <footer>
         <span>Hosted by</span>
         <a
-          href="${addUtmParameters(
-            "https://about.readthedocs.com/",
-            "flyout",
-          )}"
+          href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
         >
           <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
         </a>

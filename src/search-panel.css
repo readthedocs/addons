@@ -10,12 +10,7 @@
       --readthedocs-flyout-section-heading-color,
       rgb(128, 128, 128)
     );
-    --readthedocs-search-panel-input-background-color: rgba(
-      255,
-      255,
-      255,
-      0.1
-    );
+    --readthedocs-search-panel-input-background-color: rgba(255, 255, 255, 0.1);
     --readthedocs-search-panel-divider-color: var(
       --readthedocs-flyout-divider-color,
       #413d3d

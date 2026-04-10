@@ -87,8 +87,7 @@
   align-items: center;
   gap: 0.5em;
   padding: 0.3em 0;
-  border-bottom: 1px solid
-    var(--readthedocs-filetreediff-panel-divider-color);
+  border-bottom: 1px solid var(--readthedocs-filetreediff-panel-divider-color);
   font-size: 0.9em;
 }
 
