@@ -368,7 +368,7 @@ export class FlyoutElement extends LitElement {
     return html`
       <div class=${classMap(this.classes)}>
         ${this.renderHeader()}
-        <main class=${classMap({ closed: !this.opened })}>
+        <main class=${classMap({ closed: !this.opened || !this.activePanel })}>
           ${this.renderPanelContent()} ${this.renderFooter()}
         </main>
       </div>
