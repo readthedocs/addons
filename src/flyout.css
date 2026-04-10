@@ -128,46 +128,14 @@ nav.panel-icons button svg {
   height: 1em;
 }
 
-/* ---- Version/Language badge buttons ---- */
-
-button.badge {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
+nav.panel-icons button .label {
   color: var(--readthedocs-flyout-current-version-color);
-  padding: 0.35em 0.5em;
-  border-radius: 0.25em;
-  font-size: inherit;
-  font-family: inherit;
-  line-height: 1em;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-button.badge:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-button.badge.active {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-button.badge svg.icon {
-  color: var(--readthedocs-flyout-section-heading-color);
-  height: 1em;
-}
-
-button.badge span {
+  font-size: 0.9em;
+  margin-left: 0.15em;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 10em;
-}
-
-button.badge.version {
-  flex: 0 1 auto;
+  white-space: nowrap;
+  max-width: 8em;
 }
 
 /* ---- Main panel area ---- */

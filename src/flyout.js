@@ -129,44 +129,11 @@ export class FlyoutElement extends LitElement {
     const hasDownloads =
       Object.keys(this.config.versions.current.downloads).length > 0;
 
-    // Version badge (clickable - toggles versions panel)
-    let versionBadge = nothing;
-    if (
+    const hasVersions =
+      this.config.versions.active.length > 0 &&
       this.config.projects.current.versioning_scheme !==
-      "single_version_without_translations"
-    ) {
-      versionBadge = html`<button
-        class=${classMap({
-          badge: true,
-          version: true,
-          active: this.activePanel === "versions",
-        })}
-        @click=${(e) => this._setPanel("versions", e)}
-        title="Switch version"
-        aria-label="Toggle versions panel"
-      >
-        ${iconCodeBranch.node[0]}
-        <span>${this.config.versions.current.slug}</span>
-      </button>`;
-    }
-
-    // Language badge (clickable - toggles languages panel)
-    let languageBadge = nothing;
-    if (this.config.projects.translations.length > 0) {
-      languageBadge = html`<button
-        class=${classMap({
-          badge: true,
-          language: true,
-          active: this.activePanel === "languages",
-        })}
-        @click=${(e) => this._setPanel("languages", e)}
-        title="Switch language"
-        aria-label="Toggle languages panel"
-      >
-        ${iconLanguage.node[0]}
-        <span>${this.config.projects.current.language.code}</span>
-      </button>`;
-    }
+        "single_version_without_translations";
+    const hasLanguages = this.config.projects.translations.length > 0;
 
     return html`
       <header>
@@ -209,7 +176,38 @@ export class FlyoutElement extends LitElement {
         <span class="logo">
           <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
         </span>
-        ${languageBadge} ${versionBadge}
+        <nav class="panel-icons">
+          ${hasLanguages
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === "languages",
+                })}
+                @click=${(e) => this._setPanel("languages", e)}
+                title="Switch language"
+                aria-label="Toggle languages panel"
+              >
+                ${iconLanguage.node[0]}
+                <span class="label"
+                  >${this.config.projects.current.language.code}</span
+                >
+              </button>`
+            : nothing}
+          ${hasVersions
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === "versions",
+                })}
+                @click=${(e) => this._setPanel("versions", e)}
+                title="Switch version"
+                aria-label="Toggle versions panel"
+              >
+                ${iconCodeBranch.node[0]}
+                <span class="label"
+                  >${this.config.versions.current.slug}</span
+                >
+              </button>`
+            : nothing}
+        </nav>
       </header>
     `;
   }
