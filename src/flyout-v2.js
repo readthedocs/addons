@@ -1,9 +1,11 @@
 import { ajv } from "./data-validation";
-import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
+import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
+  faArrowUpRightFromSquare,
   faCodeBranch,
   faDownload,
+  faHouse,
   faLanguage,
   faMagnifyingGlass,
   faFileLines,
@@ -54,14 +56,20 @@ export class FlyoutV2Element extends LitElement {
     this.position = "top-center";
     this.activePanel = null;
 
+    library.add(faArrowUpRightFromSquare);
     library.add(faCodeBranch);
     library.add(faDownload);
+    library.add(faHouse);
     library.add(faLanguage);
     library.add(faMagnifyingGlass);
     library.add(faFileLines);
 
     this.iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
     this.iconDownload = icon(faDownload, { classes: ["icon"] });
+    this.iconExternalLink = icon(faArrowUpRightFromSquare, {
+      classes: ["icon"],
+    });
+    this.iconHouse = icon(faHouse, { classes: ["icon"] });
     this.iconLanguage = icon(faLanguage, { classes: ["icon"] });
     this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
     this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
@@ -207,13 +215,39 @@ export class FlyoutV2Element extends LitElement {
   }
 
   renderFooter() {
+    const projectHomeUrl = addUtmParameters(
+      this.config.projects.current.urls.home
+        .replace("readthedocs.org", "app.readthedocs.org")
+        .replace("readthedocs.com", "app.readthedocs.com")
+        .replace("app.app.", "app."),
+      "flyout",
+    );
+
+    const vcs = this.config.addons.flyout.vcs;
+    const hasVCS = vcs && vcs.view_url;
+
     return html`
       <footer>
-        <span>Hosted by</span>
+        <span class="footer-links">
+          <a href="${projectHomeUrl}" title="Project home">
+            ${this.iconHouse.node[0]}
+          </a>
+          ${hasVCS
+            ? html`<a
+                href="${vcs.view_url}"
+                title="View source"
+                target="_blank"
+              >
+                ${this.iconExternalLink.node[0]}
+              </a>`
+            : nothing}
+        </span>
         <a
+          class="footer-branding"
           href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
+          title="Hosted by Read the Docs"
         >
-          <img src="${READTHEDOCS_LOGO_WORDMARK}" alt="Read the Docs" />
+          <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
         </a>
       </footer>
     `;

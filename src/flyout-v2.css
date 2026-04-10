@@ -191,17 +191,42 @@ footer {
   border-top: 1px solid var(--readthedocs-flyout-divider-color);
   margin-top: 0.75em;
   padding: 0.4em 0;
-  font-size: 0.85em;
-  text-align: right;
-  color: var(--readthedocs-flyout-section-heading-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-footer a {
+.footer-links {
+  display: flex;
+  gap: 0.75em;
+  align-items: center;
+}
+
+.footer-links a {
+  display: flex;
+  color: var(--readthedocs-flyout-section-heading-color);
   text-decoration: none;
 }
 
-footer a img {
-  display: inline-block;
-  width: 100px;
-  vertical-align: middle;
+.footer-links a:hover {
+  color: var(--readthedocs-flyout-item-link-color);
+}
+
+.footer-links a svg {
+  height: 0.9em;
+}
+
+.footer-branding {
+  display: flex;
+  text-decoration: none;
+}
+
+.footer-branding img {
+  height: 1.25em;
+  width: auto;
+  opacity: 0.5;
+}
+
+.footer-branding:hover img {
+  opacity: 0.8;
 }
