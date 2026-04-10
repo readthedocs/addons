@@ -1,8 +1,8 @@
-/* Flyout styles */
+/* Flyout styles - New top-center bar layout with panel system */
 
 @layer defaults {
   :root {
-    --readthedocs-flyout-max-width: 25em;
+    --readthedocs-flyout-max-width: 40em;
 
     --readthedocs-flyout-font-family: var(--readthedocs-font-family);
     --readthedocs-flyout-font-size: calc(var(--readthedocs-font-size) * 0.8);
@@ -10,7 +10,6 @@
     --readthedocs-flyout-header-font-size: 1.125em;
     --readthedocs-flyout-dt-font-size: 1.125em;
     --readthedocs-flyout-dd-font-size: 1.125em;
-    --readthedocs-flyout-line-height: 1.25em;
 
     --readthedocs-flyout-color: rgb(128, 128, 128);
     --readthedocs-flyout-background-color: rgb(39, 39, 37);
@@ -22,6 +21,8 @@
   }
 }
 
+/* ---- Container ---- */
+
 .container {
   position: fixed;
   max-width: var(--readthedocs-flyout-max-width);
@@ -32,6 +33,17 @@
   line-height: var(--readthedocs-flyout-line-height);
 }
 
+/* New default: top-center bar */
+.container.top-center {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  bottom: auto;
+  border-radius: 0 0 0.375em 0.375em;
+}
+
+/* Legacy positions kept for backward compatibility */
 .container.bottom-right {
   right: 20px;
   bottom: 50px;
@@ -63,12 +75,13 @@
   overflow-y: auto;
 }
 
+/* ---- Header bar ---- */
+
 header {
   display: flex;
   flex-flow: row nowrap;
   gap: 0.5em;
   align-items: center;
-  cursor: pointer;
   background-color: var(--readthedocs-flyout-background-color);
   position: sticky;
   top: 0px;
@@ -76,113 +89,38 @@ header {
 }
 
 header > img.logo {
-  /* Total height of 1.5 + 0.5 + 0.5 = 2.5em */
   max-height: 1.5em;
   width: auto;
   padding: 0.5em 0em;
-  margin-right: 0.75em;
+  cursor: pointer;
   /* Don't grow past content size, do shrink down to min-content */
   flex: 0 1 auto;
 }
 
-header > span {
-  color: var(--readthedocs-flyout-current-version-color);
-  font-size: var(--readthedocs-flyout-header-font-size);
-  margin-left: 10px;
-  /* Total height of 1 + 0.75 + 0.75 = 2.5em */
+header > span.caret {
+  cursor: pointer;
+  color: var(--readthedocs-flyout-section-heading-color);
   padding: 0.75em 0em;
   line-height: 1em;
-  /* Don't grow past content size or shrink below min-content */
   flex: 0 0 auto;
-  /* Trim content to get ellipsis on wide content */
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
-header > span.version {
-  /* Grow to fill parent based on content width, shrink content when needed (for ellipsis) */
-  flex: 0 1 auto;
-}
-
-/* Give the flex box extra spacing to the left of the first span item. This puts
- * automatic spacing between the logo and the text detail spans */
-header > span:first-of-type {
-  margin-left: auto;
+header > span.caret:hover {
+  color: var(--readthedocs-flyout-item-link-color);
 }
 
 header > span svg.icon {
-  color: rgb(128, 128, 128);
+  color: inherit;
   height: var(--readthedocs-flyout-header-font-size);
-  padding-right: 0.25em;
   vertical-align: middle;
 }
 
-main {
-  padding: 5px;
-  padding-bottom: 15px;
-  margin-top: 5px;
-}
+/* ---- Panel icon navigation (left side of bar) ---- */
 
-main.closed {
-  display: none;
-}
-
-dl {
-  margin: 0;
-  padding: 0;
-}
-
-dl > dt {
-  font-size: var(--readthedocs-flyout-dt-font-size);
-  color: var(--readthedocs-flyout-section-heading-color);
-}
-
-dl > dd {
-  display: inline-block;
-  margin: 0;
-  font-size: var(--readthedocs-flyout-dd-font-size);
-}
-
-dd a {
-  text-decoration: none;
-  color: var(--readthedocs-flyout-item-link-color);
-  padding: 6px;
-  display: inline-block;
-}
-
-dd form {
-  padding: 6px;
-  margin: 0;
-}
-
-dd input {
-  padding: 6px;
-  font-size: 80%;
-}
-
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  margin: 20px 0;
-  padding: 0;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: var(--readthedocs-flyout-divider-color);
-}
-
-small a {
-  text-decoration: none;
-  color: var(--readthedocs-flyout-link-color);
-}
-
-/* Panel icon navigation */
 nav.panel-icons {
   display: flex;
   gap: 0.25em;
   align-items: center;
-  margin-left: auto;
 }
 
 nav.panel-icons button {
@@ -209,4 +147,151 @@ nav.panel-icons button.active {
 
 nav.panel-icons button svg {
   height: 1em;
+}
+
+/* ---- Version/Language badge buttons ---- */
+
+button.badge {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  color: var(--readthedocs-flyout-current-version-color);
+  padding: 0.35em 0.5em;
+  border-radius: 0.25em;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: 1em;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+button.badge:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+button.badge.active {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+button.badge svg.icon {
+  color: var(--readthedocs-flyout-section-heading-color);
+  height: 1em;
+}
+
+button.badge span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 10em;
+}
+
+button.badge.version {
+  flex: 0 1 auto;
+}
+
+/* Push badges to the right of the logo */
+button.badge:first-of-type {
+  margin-left: auto;
+}
+
+/* ---- Main panel area ---- */
+
+main {
+  padding: 5px;
+  padding-bottom: 15px;
+  margin-top: 5px;
+}
+
+main.closed {
+  display: none;
+}
+
+/* ---- Version/Language panel lists ---- */
+
+.panel h3 {
+  margin: 0 0 0.5em 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--readthedocs-flyout-section-heading-color);
+}
+
+.panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.panel li {
+  padding: 0;
+}
+
+.panel li a {
+  display: block;
+  text-decoration: none;
+  color: var(--readthedocs-flyout-item-link-color);
+  padding: 0.3em 0.5em;
+  border-radius: 0.2em;
+}
+
+.panel li a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.panel li.current a {
+  color: var(--readthedocs-flyout-current-version-color);
+  font-weight: bold;
+}
+
+.panel-empty {
+  color: var(--readthedocs-flyout-section-heading-color);
+  font-size: 0.9em;
+  padding: 0.5em;
+  margin: 0;
+}
+
+/* ---- Default content (Downloads, RTD links, VCS) ---- */
+
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+dl > dt {
+  font-size: var(--readthedocs-flyout-dt-font-size);
+  color: var(--readthedocs-flyout-section-heading-color);
+}
+
+dl > dd {
+  display: inline-block;
+  margin: 0;
+  font-size: var(--readthedocs-flyout-dd-font-size);
+}
+
+dd a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-item-link-color);
+  padding: 6px;
+  display: inline-block;
+}
+
+/* ---- Divider & footer ---- */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  margin: 20px 0;
+  padding: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--readthedocs-flyout-divider-color);
+}
+
+small a {
+  text-decoration: none;
+  color: var(--readthedocs-flyout-link-color);
 }
