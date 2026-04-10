@@ -1,5 +1,38 @@
 /* Search panel styles (inline panel within the flyout) */
 
+@layer defaults {
+  :root {
+    --readthedocs-search-panel-color: var(
+      --readthedocs-flyout-item-link-color,
+      rgb(252, 252, 252)
+    );
+    --readthedocs-search-panel-muted-color: var(
+      --readthedocs-flyout-section-heading-color,
+      rgb(128, 128, 128)
+    );
+    --readthedocs-search-panel-input-background-color: rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
+    --readthedocs-search-panel-divider-color: var(
+      --readthedocs-flyout-divider-color,
+      #413d3d
+    );
+    --readthedocs-search-panel-highlight-color: var(
+      --readthedocs-search-result-highlight-color,
+      #6ea0ec
+    );
+    --readthedocs-search-panel-hover-background-color: rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+  }
+}
+
 :host {
   display: block;
 }
@@ -13,7 +46,7 @@
 form {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--readthedocs-search-panel-input-background-color);
   border-radius: 0.25em;
   padding: 0.35em 0.5em;
   margin: 0;
@@ -27,7 +60,7 @@ form label {
 
 form label svg {
   height: 1em;
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
 }
 
 form input {
@@ -36,14 +69,14 @@ form input {
   background: transparent;
   width: 100%;
   font-size: 1em;
-  color: rgb(252, 252, 252);
+  color: var(--readthedocs-search-panel-color);
   padding: 0.25em;
   font-family: inherit;
   box-shadow: none;
 }
 
 form input::placeholder {
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
 }
 
 .results {
@@ -52,14 +85,14 @@ form input::placeholder {
 }
 
 .placeholder {
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
   font-size: 0.9em;
   padding: 0.5em;
   margin: 0;
 }
 
 .no-results {
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
   font-size: 0.9em;
   padding: 0.5em;
 }
@@ -71,7 +104,7 @@ form input::placeholder {
 /* Search result styling */
 .hit-block {
   padding: 0.35em 0;
-  border-bottom: 1px solid #413d3d;
+  border-bottom: 1px solid var(--readthedocs-search-panel-divider-color);
 }
 
 .hit-block:last-child {
@@ -83,7 +116,7 @@ form input::placeholder {
   align-items: center;
   gap: 0.5em;
   text-decoration: none;
-  color: rgb(252, 252, 252);
+  color: var(--readthedocs-search-panel-color);
 }
 
 .hit-block-heading i {
@@ -93,7 +126,7 @@ form input::placeholder {
 
 .hit-block-heading i svg {
   height: 0.85em;
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
 }
 
 .hit-block-heading h2 {
@@ -107,31 +140,31 @@ a.hit-detail {
   display: block;
   padding: 0.2em 0 0.2em 1.5em;
   text-decoration: none;
-  color: rgb(252, 252, 252);
+  color: var(--readthedocs-search-panel-color);
 }
 
 a.hit-detail:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--readthedocs-search-panel-hover-background-color);
 }
 
 .hit-title {
   font-size: 0.85em;
   font-weight: 500;
   margin: 0;
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
   line-height: 1.25em;
 }
 
 .hit-content {
   font-size: 0.8em;
   margin: 0;
-  color: rgb(128, 128, 128);
+  color: var(--readthedocs-search-panel-muted-color);
   line-height: 1.25em;
 }
 
 /* Highlighted search terms */
 .hit-detail span {
-  color: #6ea0ec;
+  color: var(--readthedocs-search-panel-highlight-color);
   font-style: italic;
   font-weight: bold;
 }

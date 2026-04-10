@@ -52,6 +52,18 @@ export class FlyoutElement extends LitElement {
     this.floating = true;
     this.position = "top-center";
     this.activePanel = null;
+
+    library.add(faCodeBranch);
+    library.add(faDownload);
+    library.add(faLanguage);
+    library.add(faMagnifyingGlass);
+    library.add(faFileLines);
+
+    this.iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
+    this.iconDownload = icon(faDownload, { classes: ["icon"] });
+    this.iconLanguage = icon(faLanguage, { classes: ["icon"] });
+    this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
+    this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
   }
 
   loadConfig(config) {
@@ -105,18 +117,6 @@ export class FlyoutElement extends LitElement {
   };
 
   renderHeader() {
-    library.add(faCodeBranch);
-    library.add(faDownload);
-    library.add(faLanguage);
-    library.add(faMagnifyingGlass);
-    library.add(faFileLines);
-
-    const iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
-    const iconDownload = icon(faDownload, { classes: ["icon"] });
-    const iconLanguage = icon(faLanguage, { classes: ["icon"] });
-    const iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
-    const iconFileLines = icon(faFileLines, { classes: ["icon"] });
-
     // Determine which panel icons to show
     const searchEnabled = objectPath.get(
       this.config,
@@ -145,7 +145,7 @@ export class FlyoutElement extends LitElement {
                 title="Search"
                 aria-label="Toggle search panel"
               >
-                ${iconSearch.node[0]}
+                ${this.iconSearch.node[0]}
               </button>`
             : nothing}
           ${fileTreeDiffEnabled
@@ -157,7 +157,7 @@ export class FlyoutElement extends LitElement {
                 title="Changed files"
                 aria-label="Toggle changed files panel"
               >
-                ${iconFileLines.node[0]}
+                ${this.iconFileLines.node[0]}
               </button>`
             : nothing}
           ${hasDownloads
@@ -169,7 +169,7 @@ export class FlyoutElement extends LitElement {
                 title="Downloads"
                 aria-label="Toggle downloads panel"
               >
-                ${iconDownload.node[0]}
+                ${this.iconDownload.node[0]}
               </button>`
             : nothing}
           ${hasLanguages
@@ -181,7 +181,7 @@ export class FlyoutElement extends LitElement {
                 title="Switch language"
                 aria-label="Toggle languages panel"
               >
-                ${iconLanguage.node[0]}
+                ${this.iconLanguage.node[0]}
                 <span class="label"
                   >${this.config.projects.current.language.code}</span
                 >
@@ -196,7 +196,7 @@ export class FlyoutElement extends LitElement {
                 title="Switch version"
                 aria-label="Toggle versions panel"
               >
-                ${iconCodeBranch.node[0]}
+                ${this.iconCodeBranch.node[0]}
                 <span class="label"
                   >${this.config.versions.current.slug}</span
                 >
