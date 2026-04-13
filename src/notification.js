@@ -1,6 +1,7 @@
 import { ajv } from "./data-validation";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
+  faCircleInfo,
   faCircleXmark,
   faFlask,
   faCodePullRequest,
@@ -10,7 +11,7 @@ import { html, nothing, render, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./notification.css";
-import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
+import { AddonBase, getLinkWithFilename } from "./utils";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -35,7 +36,6 @@ export class NotificationElement extends LitElement {
     this.timerID = null;
     this.config = null;
     this.urls = {
-      build: null,
       external: null,
       stable: null,
     };
@@ -47,6 +47,13 @@ export class NotificationElement extends LitElement {
     this.localStorageKey = null;
     this.dismissedTimestamp = null;
     this.autoDismissed = false;
+    // When ``true``, the auto-dismiss timer is suppressed so the notification
+    // stays visible. Used by the tiny PR-build badge, which doesn't cover any
+    // content and is meant to remain a persistent passive indicator.
+    this.persistent = false;
+    // Tracks whether we have already prefixed ``document.title`` for this
+    // external version, to avoid double-prefixing on re-renders.
+    this.titlePrefixed = false;
 
     // Trigger the auto-dismiss timer at startup
     this.triggerAutoDismissTimer();
@@ -66,6 +73,12 @@ export class NotificationElement extends LitElement {
   }
 
   triggerAutoDismissTimer() {
+    // Persistent notifications (e.g. the small PR-build badge) opt out of
+    // auto-dismissal: they don't cover any content, so there is no reason to
+    // hide them automatically.
+    if (this.persistent) {
+      return;
+    }
     if (!document.hidden && !this.autoDismissed) {
       clearTimeout(this.timerID);
       this.timerID = setTimeout(() => {
@@ -140,14 +153,19 @@ export class NotificationElement extends LitElement {
       this.config.versions.current.type === "external"
     ) {
       this.urls = {
-        // NOTE: point users to the new beta dashboard for now so we promote it more.
-        // We will revert this once we are fully migrated to the new dashboard.
-        build: config.builds.current.urls.build
-          .replace("readthedocs.org", "app.readthedocs.org")
-          .replace("readthedocs.com", "app.readthedocs.com")
-          .replace("app.app.", "app."),
-        external: config.versions.current.urls.vcs,
+        external: objectPath.get(config, "versions.current.urls.vcs", null),
       };
+
+      // The PR-build indicator is a small pill that sits in a corner of the
+      // viewport. It does not cover content, so we disable auto-dismiss and
+      // cancel any timer started by the constructor.
+      this.persistent = true;
+      this.clearAutoDismissTimer();
+
+      // Prefix the document title with the PR number so that the browser tab,
+      // bookmarks and history unambiguously show this is a preview build --
+      // zero visual footprint on the page itself.
+      this.maybePrefixDocumentTitle();
     }
 
     if (
@@ -175,7 +193,56 @@ export class NotificationElement extends LitElement {
   firstUpdated() {
     // Add CSS classes to the element on ``firstUpdated`` because we need the
     // HTML element to exist in the DOM before being able to add tag attributes.
-    this.className = this.className || "raised toast";
+    //
+    // External (pull request) versions get a dedicated ``pr-badge`` class so
+    // they render as a tiny corner pill instead of the large ``toast`` card.
+    if (this.className) {
+      return;
+    }
+    if (
+      this.config !== null &&
+      this.config.versions.current.type === "external"
+    ) {
+      this.className = "raised pr-badge";
+    } else {
+      this.className = "raised toast";
+    }
+  }
+
+  maybePrefixDocumentTitle() {
+    if (this.titlePrefixed) {
+      return;
+    }
+    const slug = objectPath.get(this.config, "versions.current.slug", null);
+    if (!slug) {
+      return;
+    }
+    const prefix = `[PR #${slug}] `;
+    // Guard against double-prefixing if the addon is re-initialized (e.g. on
+    // a client-side navigation) or if the author already added a similar tag.
+    if (document.title && !document.title.startsWith(prefix)) {
+      document.title = prefix + document.title;
+    }
+    this.titlePrefixed = true;
+  }
+
+  shouldSkipExternalBadge() {
+    // If File Tree Diff is active and has diff data for this PR, it already
+    // surfaces a ``#1234`` link and an info icon next to its file selector
+    // (see ``src/filetreediff.js``). Rendering this badge on top of that is
+    // redundant, so we bail out and let the File Tree Diff bar be the single
+    // "this is a pull request preview" affordance.
+    const filetreediffEnabled = objectPath.get(
+      this.config,
+      "addons.filetreediff.enabled",
+      false,
+    );
+    const diffData = objectPath.get(
+      this.config,
+      "addons.filetreediff.diff",
+      null,
+    );
+    return Boolean(filetreediffEnabled && diffData);
   }
 
   render() {
@@ -206,6 +273,9 @@ export class NotificationElement extends LitElement {
           false,
         )
       ) {
+        if (this.shouldSkipExternalBadge()) {
+          return nothing;
+        }
         return this.renderExternalVersionWarning();
       }
     }
@@ -335,30 +405,47 @@ export class NotificationElement extends LitElement {
   }
 
   renderExternalVersionWarning() {
+    // Tiny corner pill used to signal "this is a pull request preview build"
+    // without covering any content. Layout is roughly:
+    //
+    //     [ PR #1234  ⓘ  ✕ ]
+    //
+    // The whole element intentionally stays small: no headline, no body copy,
+    // no build-log link. Users who need more context can click through to the
+    // pull request, open the docs via the info icon, or rely on the File Tree
+    // Diff bar (which already surfaces the same affordances).
     library.add(faCodePullRequest);
+    library.add(faCircleInfo);
+
     const iconPullRequest = icon(faCodePullRequest, {
-      title: "This version is a pull request version",
-      classes: ["header", "icon"],
+      title: "This page was built from a pull request",
+      classes: ["icon"],
+    });
+    const iconInfo = icon(faCircleInfo, {
+      title: "Open Visual Diff documentation",
+      classes: ["icon"],
     });
 
     return html`
       <div>
         ${iconPullRequest.node[0]}
-        <div class="title">
-          This page was created from a pull request build
-          ${this.renderCloseButton()}
-        </div>
-        <div class="content">
-          See the
-          <a href="${addUtmParameters(this.urls.build, "notification")}"
-            >build's detail page</a
-          >
-          or
-          <a href="${this.urls.external}"
-            >pull request #${this.config.versions.current.slug}</a
-          >
-          for more information.
-        </div>
+        <a
+          class="pr-link"
+          href="${this.urls.external}"
+          target="_blank"
+          rel="noopener"
+          title="Go to pull request #${this.config.versions.current.slug}"
+          >PR #${this.config.versions.current.slug}</a
+        >
+        <a
+          class="pr-info"
+          href="https://docs.readthedocs.com/platform/stable/pull-requests.html"
+          target="_blank"
+          rel="noopener"
+          title="Open pull request preview documentation"
+          >${iconInfo.node[0]}</a
+        >
+        ${this.renderCloseButton()}
       </div>
     `;
   }

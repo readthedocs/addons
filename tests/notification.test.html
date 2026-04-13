@@ -232,10 +232,44 @@
             // We need to wait for the element to renders/updates before querying it
             await elementUpdated(element);
 
-            const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
-              "This page was created from a pull request build",
+            // External (pull request) versions render as a tiny corner pill
+            // instead of a large toast card, so it has its own CSS class.
+            expect(element).to.have.attribute("class", "raised pr-badge");
+
+            // The pill contains a link to the pull request labelled "PR #381".
+            const prLink = element.shadowRoot.querySelector("a.pr-link");
+            expect(prLink).to.not.be.null;
+            expect(prLink.innerText.trim()).to.be.equal("PR #381");
+            expect(prLink.getAttribute("href")).to.be.equal(
+              "https://github.com/readthedocs/project/",
             );
+
+            // The big "title" + "content" block used by the old toast layout
+            // must not be present anymore.
+            expect(element.shadowRoot.querySelector("div.title")).to.be.null;
+            expect(element.shadowRoot.querySelector("div.content")).to.be.null;
+          });
+
+          it("on external version does not render when file tree diff has data", async () => {
+            // When the File Tree Diff addon is surfacing a diff for this PR,
+            // it already renders a ``#1234`` link + info icon in its own bar,
+            // so we skip the pill to avoid doubling up on the same affordance.
+            config.versions.current.slug = "381";
+            config.versions.current.type = "external";
+            config.addons.filetreediff = {
+              enabled: true,
+              diff: {
+                added: [],
+                modified: [],
+              },
+            };
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            await elementUpdated(element);
+
+            expect(element).shadowDom.to.equal("");
           });
 
           it("handles null current build", async () => {
@@ -323,11 +357,10 @@
             // We need to wait for the element to renders/updates before querying it
             await elementUpdated(element);
 
-            // The notification should be displayed normally
-            const title = element.shadowRoot.querySelector("div.title");
-            expect(title.innerText).to.be.equal(
-              "This page was created from a pull request build",
-            );
+            // The PR-build badge should be rendered for this different slug.
+            const prLink = element.shadowRoot.querySelector("a.pr-link");
+            expect(prLink).to.not.be.null;
+            expect(prLink.innerText.trim()).to.be.equal("PR #381");
           });
         });
       });

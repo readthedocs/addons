@@ -70,6 +70,88 @@
     0 2px 10px 0 rgba(34, 36, 38, 0.15);
 }
 
+/*
+ * Compact pull-request badge.
+ *
+ * A small corner pill shown on PR preview builds instead of the large toast
+ * card. The goal is to communicate "this is a pull request preview" with the
+ * smallest possible visual footprint and without ever covering documentation
+ * content.
+ */
+:host(.pr-badge) > div {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  top: auto;
+  left: auto;
+  width: auto;
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 9999px;
+  line-height: 1;
+  font-size: var(--readthedocs-notification-font-size);
+  color: var(--readthedocs-notification-color);
+  background-color: var(--readthedocs-notification-background-color);
+  overflow: visible;
+  z-index: 1750;
+}
+
+:host(.pr-badge) > div > svg.icon {
+  height: 0.95em;
+  width: auto;
+  padding: 0;
+  margin: 0;
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--readthedocs-notification-title-color);
+}
+
+:host(.pr-badge) > div > a.pr-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--readthedocs-notification-link-color);
+}
+
+:host(.pr-badge) > div > a.pr-link:hover {
+  text-decoration: underline;
+}
+
+:host(.pr-badge) > div > a.pr-info {
+  display: inline-flex;
+  align-items: center;
+  color: var(--readthedocs-notification-title-color);
+  text-decoration: none;
+}
+
+:host(.pr-badge) > div > a.pr-info:hover {
+  color: var(--readthedocs-notification-link-color);
+}
+
+:host(.pr-badge) > div > a.right {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  color: var(--readthedocs-notification-title-color);
+}
+
+:host(.pr-badge) > div > a.right > svg {
+  height: 0.95em;
+  width: auto;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  :host(.pr-badge) > div {
+    bottom: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
 :host(.titled) > div {
   padding: 0rem;
   text-align: center;
