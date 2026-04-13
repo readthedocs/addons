@@ -245,6 +245,76 @@
               .true;
           });
 
+          it("renders build notifications on PR build", async () => {
+            config.versions.current.slug = "381";
+            config.versions.current.type = "external";
+            config.builds.current.notifications = [
+              {
+                id: "config_file_deprecated",
+                type: "warning",
+                message: {
+                  header: "Deprecated config",
+                  body: "Your <code>.readthedocs.yaml</code> uses a deprecated key.",
+                },
+              },
+              {
+                id: "build_tip",
+                type: "tip",
+                message: {
+                  header: "Tip",
+                  body: "You can pin your dependencies for reproducible builds.",
+                },
+              },
+            ];
+
+            expect(notification.NotificationAddon.isConfigValid(config)).to.be
+              .true;
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            // We need to wait for the element to renders/updates before querying it
+            await elementUpdated(element);
+
+            const buildNotifications = element.shadowRoot.querySelectorAll(
+              ".build-notification",
+            );
+            expect(buildNotifications.length).to.be.equal(2);
+            expect(
+              buildNotifications[0].classList.contains(
+                "build-notification-warning",
+              ),
+            ).to.be.true;
+            expect(
+              buildNotifications[1].classList.contains(
+                "build-notification-tip",
+              ),
+            ).to.be.true;
+            expect(
+              buildNotifications[0].querySelector(".build-notification-header")
+                .innerText,
+            ).to.be.equal("Deprecated config");
+            // Body is rendered as HTML (``unsafeHTML``) so the <code> tag is preserved.
+            expect(
+              buildNotifications[0].querySelector(".build-notification-body")
+                .innerHTML,
+            ).to.contain("<code>.readthedocs.yaml</code>");
+          });
+
+          it("does not render build notifications container when empty", async () => {
+            config.versions.current.slug = "381";
+            config.versions.current.type = "external";
+            config.builds.current.notifications = [];
+
+            const addon = new notification.NotificationAddon(config);
+            const element = document.querySelector("readthedocs-notification");
+
+            await elementUpdated(element);
+
+            expect(element.shadowRoot.querySelector(".build-notifications")).to
+              .be.null;
+          });
+
           it("check default CSS classes", async () => {
             const addon = new notification.NotificationAddon(config);
             const element = document.querySelector("readthedocs-notification");

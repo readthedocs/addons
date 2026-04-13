@@ -84,7 +84,25 @@
       "id": 1,
       "urls": {
         "build": "https://readthedocs.org/dashboard/example/builds/1/"
-      }
+      },
+      "notifications": [
+        {
+          "id": "config-file-deprecated",
+          "type": "warning",
+          "message": {
+            "header": "Deprecated configuration file",
+            "body": "Your <code>.readthedocs.yaml</code> uses a deprecated key."
+          }
+        },
+        {
+          "id": "build-tip",
+          "type": "tip",
+          "message": {
+            "header": "Tip",
+            "body": "You can pin your dependencies for reproducible builds."
+          }
+        }
+      ]
     }
   },
   "domains": {

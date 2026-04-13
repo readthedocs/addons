@@ -7,6 +7,7 @@ import {
   faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, render, LitElement } from "lit";
+import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./notification.css";
@@ -359,6 +360,46 @@ export class NotificationElement extends LitElement {
           >
           for more information.
         </div>
+        ${this.renderBuildNotifications()}
+      </div>
+    `;
+  }
+
+  renderBuildNotifications() {
+    // Render per-build "tip" and "warning" notifications provided by the
+    // Read the Docs backend in ``builds.current.notifications``. This surfaces
+    // build-level messages (the same ones shown on the build's detail page)
+    // on the rendered PR preview so readers become aware of potential issues
+    // on that particular build. See readthedocs/addons#88.
+    const buildNotifications = objectPath.get(
+      this.config,
+      "builds.current.notifications",
+      [],
+    );
+    if (!buildNotifications || !buildNotifications.length) {
+      return nothing;
+    }
+    return html`
+      <div class="build-notifications">
+        ${buildNotifications.map((notification) => {
+          const type = notification.type || "note";
+          const header = objectPath.get(notification, "message.header", null);
+          const body = objectPath.get(notification, "message.body", null);
+          return html`
+            <div class="build-notification build-notification-${type}">
+              ${header
+                ? html`<div class="build-notification-header">
+                    ${unsafeHTML(header)}
+                  </div>`
+                : nothing}
+              ${body
+                ? html`<div class="build-notification-body">
+                    ${unsafeHTML(body)}
+                  </div>`
+                : nothing}
+            </div>
+          `;
+        })}
       </div>
     `;
   }

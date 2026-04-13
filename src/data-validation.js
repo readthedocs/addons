@@ -367,6 +367,29 @@ const addons_notifications = {
                 },
               },
             },
+            // Optional list of build notifications (tips, warnings, errors, ...)
+            // surfaced on the rendered documentation page for PR previews.
+            // See: https://github.com/readthedocs/addons/issues/88
+            notifications: {
+              type: "array",
+              items: {
+                type: "object",
+                required: ["type", "message"],
+                properties: {
+                  id: { type: ["string", "number", "null"] },
+                  type: {
+                    enum: ["error", "warning", "info", "note", "tip"],
+                  },
+                  message: {
+                    type: "object",
+                    properties: {
+                      header: { type: ["string", "null"] },
+                      body: { type: ["string", "null"] },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },

@@ -143,6 +143,51 @@
   background-color: var(--readthedocs-notification-title-background-color);
 }
 
+/* Build notifications (tips/warnings from the build) shown on PR previews.
+ * See https://github.com/readthedocs/addons/issues/88 */
+:host > div > .build-notifications {
+  margin: 0.75rem 1.5rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+:host > div > .build-notifications .build-notification {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border-left: 3px solid rgb(180, 180, 180);
+  background-color: rgba(0, 0, 0, 0.04);
+  line-height: 1.25em;
+}
+
+:host > div > .build-notifications .build-notification-header {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+:host > div > .build-notifications .build-notification-tip,
+:host > div > .build-notifications .build-notification-info {
+  border-left-color: rgb(8, 140, 219);
+  background-color: rgba(8, 140, 219, 0.08);
+}
+
+:host > div > .build-notifications .build-notification-warning {
+  border-left-color: rgb(212, 160, 23);
+  background-color: rgba(212, 160, 23, 0.1);
+}
+
+:host > div > .build-notifications .build-notification-error {
+  border-left-color: rgb(200, 50, 50);
+  background-color: rgba(200, 50, 50, 0.1);
+}
+
+:host > div > .build-notifications .build-notification p:first-child {
+  margin-top: 0;
+}
+:host > div > .build-notifications .build-notification p:last-child {
+  margin-bottom: 0;
+}
+
 :host > div > .title > .right {
   float: right;
 }
