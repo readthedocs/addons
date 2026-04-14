@@ -89,6 +89,23 @@
             await elementUpdated(element);
             await expect(element).shadowDom.to.equalSnapshot();
           });
+
+          it("minimize and restore the flyout", async () => {
+            const addon = new filetreediff.FileTreeDiffAddon(config);
+            const element = document.querySelector("readthedocs-filetreediff");
+            await elementUpdated(element);
+
+            // Click the minimize button
+            element.shadowRoot.querySelector("span.minimize").click();
+            await elementUpdated(element);
+            expect(element.minimized).to.be.true;
+            await expect(element).shadowDom.to.equalSnapshot();
+
+            // Click the restore button
+            element.shadowRoot.querySelector("span.restore").click();
+            await elementUpdated(element);
+            expect(element.minimized).to.be.false;
+          });
         });
       });
     </script>

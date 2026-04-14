@@ -3,6 +3,8 @@ import {
   faArrowUp,
   faArrowDown,
   faCircleInfo,
+  faMinus,
+  faExpand,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
@@ -26,6 +28,7 @@ export class FileTreeDiffElement extends LitElement {
     docDiffEnabled: { state: true },
     chunks: { state: true },
     chunkIndex: { state: true },
+    minimized: { state: true },
   };
 
   static styles = styleSheet;
@@ -37,9 +40,12 @@ export class FileTreeDiffElement extends LitElement {
 
     this.chunkIndex = 1;
     this.chunks = [];
+    this.minimized = false;
 
     library.add(faArrowDown);
     library.add(faArrowUp);
+    library.add(faMinus);
+    library.add(faExpand);
 
     this.iconArrowUp = icon(faArrowUp, {
       classes: ["icon"],
@@ -48,6 +54,12 @@ export class FileTreeDiffElement extends LitElement {
       classes: ["icon"],
     });
     this.iconCircleInfo = icon(faCircleInfo, {
+      classes: ["icon"],
+    });
+    this.iconMinus = icon(faMinus, {
+      classes: ["icon"],
+    });
+    this.iconExpand = icon(faExpand, {
       classes: ["icon"],
     });
   }
@@ -168,10 +180,32 @@ export class FileTreeDiffElement extends LitElement {
     });
   }
 
+  handleMinimize() {
+    this.minimized = true;
+  }
+
+  handleRestore() {
+    this.minimized = false;
+  }
+
   render() {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
     if (!diffData) {
       return nothing;
+    }
+
+    if (this.minimized) {
+      return html`
+        <div class="minimized">
+          <span
+            @click=${this.handleRestore}
+            title="Restore visual diff flyout"
+            class="restore"
+          >
+            ${this.iconExpand.node[0]}
+          </span>
+        </div>
+      `;
     }
 
     const currentUrl = this.getCurrentPageUrl();
@@ -222,6 +256,13 @@ export class FileTreeDiffElement extends LitElement {
             target="_blank"
             >${this.iconCircleInfo.node[0]}</a
           >
+          <span
+            @click=${this.handleMinimize}
+            title="Minimize visual diff flyout"
+            class="minimize"
+          >
+            ${this.iconMinus.node[0]}
+          </span>
         </div>
       </div>
     `;

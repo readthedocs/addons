@@ -41,6 +41,11 @@ snapshots["Filetreediff tests snapshot filetreediff completely"] =
       title="Open documentation"
     >
     </a>
+    <span
+      class="minimize"
+      title="Minimize visual diff flyout"
+    >
+    </span>
   </div>
 </div>
 `;
@@ -94,8 +99,24 @@ snapshots["Filetreediff tests toggle Show diff checkbox"] =
       title="Open documentation"
     >
     </a>
+    <span
+      class="minimize"
+      title="Minimize visual diff flyout"
+    >
+    </span>
   </div>
 </div>
 `;
 /* end snapshot Filetreediff tests toggle Show diff checkbox */
+
+snapshots["Filetreediff tests minimize and restore the flyout"] = 
+`<div class="minimized">
+  <span
+    class="restore"
+    title="Restore visual diff flyout"
+  >
+  </span>
+</div>
+`;
+/* end snapshot Filetreediff tests minimize and restore the flyout */
 
