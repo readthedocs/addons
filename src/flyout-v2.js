@@ -1,4 +1,3 @@
-import { ajv } from "./data-validation";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -10,7 +9,7 @@ import {
   faMagnifyingGlass,
   faFileLines,
 } from "@fortawesome/free-solid-svg-icons";
-import { html, nothing, render, LitElement } from "lit";
+import { html, nothing, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { default as objectPath } from "object-path";
 
@@ -22,9 +21,7 @@ import {
   getLinkWithFilename,
   docTool,
 } from "./utils";
-import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
-  EVENT_READTHEDOCS_SEARCH_SHOW,
   EVENT_READTHEDOCS_FLYOUT_HIDE,
   EVENT_READTHEDOCS_FLYOUT_SHOW,
   EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
@@ -251,19 +248,6 @@ export class FlyoutV2Element extends LitElement {
         </a>
       </footer>
     `;
-  }
-
-  showSearch() {
-    // Dispatch the custom event to hide/collapse the flyout when showing the search modal
-    const flyoutEvent = new CustomEvent(EVENT_READTHEDOCS_FLYOUT_HIDE);
-    document.dispatchEvent(flyoutEvent);
-
-    // Dispatch the custom event the search addon is listening to show the modal
-    const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
-    document.dispatchEvent(searchEvent);
-
-    // Close the flyout after showing the search modal
-    this._close();
   }
 
   renderVersionsPanel() {
