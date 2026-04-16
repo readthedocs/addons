@@ -44,6 +44,16 @@ export class SearchPanelElement extends LitElement {
     this.results = null;
     this.currentQueryRequest = null;
     this.inputIcon = icon(faMagnifyingGlass, { title: "Search docs" });
+
+    this._iconSpinner = icon(faCircleNotch, {
+      title: "Searching",
+      classes: ["fa-spin"],
+    });
+    this._iconMagnifier = icon(faMagnifyingGlass, { title: "Search docs" });
+    this._iconListResult = icon(faBarsStaggered, {
+      title: "Result",
+      classes: ["header", "icon"],
+    });
   }
 
   render() {
@@ -70,9 +80,9 @@ export class SearchPanelElement extends LitElement {
     `;
   }
 
-  updated() {
+  firstUpdated() {
     const input = this.renderRoot.querySelector("input[type=search]");
-    if (input && !input.value) {
+    if (input) {
       input.focus();
     }
   }
@@ -102,10 +112,7 @@ export class SearchPanelElement extends LitElement {
   }
 
   _fetchResults(query) {
-    this.inputIcon = icon(faCircleNotch, {
-      title: "Searching",
-      classes: ["fa-spin"],
-    });
+    this.inputIcon = this._iconSpinner;
 
     const doFetch = () => {
       let url =
@@ -132,12 +139,12 @@ export class SearchPanelElement extends LitElement {
           } else {
             this._renderNoResults();
           }
-          this.inputIcon = icon(faMagnifyingGlass, { title: "Search docs" });
+          this.inputIcon = this._iconMagnifier;
         })
         .catch((error) => {
           console.error(error);
           this.results = null;
-          this.inputIcon = icon(faMagnifyingGlass, { title: "Search docs" });
+          this.inputIcon = this._iconMagnifier;
         });
     };
 
@@ -145,11 +152,6 @@ export class SearchPanelElement extends LitElement {
   }
 
   _renderResults(data) {
-    const listIcon = icon(faBarsStaggered, {
-      title: "Result",
-      classes: ["header", "icon"],
-    });
-
     this.results = html`
       <div class="hit">
         ${data.results.map(
@@ -159,7 +161,7 @@ export class SearchPanelElement extends LitElement {
                 class="hit-block-heading"
                 href="${this._getResultLink(result)}"
               >
-                <i>${listIcon.node[0]}</i>
+                <i>${this._iconListResult.node[0]}</i>
                 <h2>${result.title}</h2>
               </a>
               ${result.blocks.map(

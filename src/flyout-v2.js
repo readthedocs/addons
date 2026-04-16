@@ -70,21 +70,21 @@ export class FlyoutV2Element extends LitElement {
     this.iconLanguage = icon(faLanguage, { classes: ["icon"] });
     this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
     this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
+
+    // Bound panel click handlers (avoids inline arrow functions in template)
+    this._onSearchClick = (e) => this._setPanel("search", e);
+    this._onFileDiffClick = (e) => this._setPanel("filetreediff", e);
+    this._onDownloadsClick = (e) => this._setPanel("downloads", e);
+    this._onLanguagesClick = (e) => this._setPanel("languages", e);
+    this._onVersionsClick = (e) => this._setPanel("versions", e);
   }
 
   loadConfig(config) {
-    // Validate the config object before assigning it to the Addon.
-    // Later, ``render()`` method will check whether this object exists and (not) render
-    // accordingly
     if (!FlyoutV2Addon.isEnabled(config)) {
       return;
     }
     this.config = config;
 
-    // The "position" is a value that can be defined from the dashboard.
-    // There are two main options: "Default" or a specific value.
-    // When "Default" is used, the value will be grabbed from the HTML element (e.g. explicitly set by the theme author).
-    // In case it's not defined, the value defined in the `constructor` will be used ("top-center")
     const dashboardPosition = objectPath.get(
       this.config,
       "addons.flyout.position",
@@ -93,6 +93,23 @@ export class FlyoutV2Element extends LitElement {
     if (dashboardPosition) {
       this.position = dashboardPosition;
     }
+
+    // Cache config-derived flags so renderHeader doesn't recompute them
+    this._searchEnabled = objectPath.get(
+      this.config,
+      "addons.search.enabled",
+      false,
+    );
+    this._fileTreeDiffEnabled =
+      objectPath.get(this.config, "versions.current.type") === "external" &&
+      objectPath.get(this.config, "addons.filetreediff.enabled", false);
+    this._hasDownloads =
+      Object.keys(this.config.versions.current.downloads).length > 0;
+    this._hasVersions =
+      this.config.versions.active.length > 0 &&
+      this.config.projects.current.versioning_scheme !==
+        "single_version_without_translations";
+    this._hasLanguages = this.config.projects.translations.length > 0;
   }
 
   _close() {
@@ -106,7 +123,6 @@ export class FlyoutV2Element extends LitElement {
     }
 
     if (this.activePanel === panelName) {
-      // Same panel clicked again - close entirely
       this._close();
     } else {
       this.activePanel = panelName;
@@ -123,67 +139,49 @@ export class FlyoutV2Element extends LitElement {
   };
 
   renderHeader() {
-    // Determine which panel icons to show
-    const searchEnabled = objectPath.get(
-      this.config,
-      "addons.search.enabled",
-      false,
-    );
-    const fileTreeDiffEnabled =
-      objectPath.get(this.config, "versions.current.type") === "external" &&
-      objectPath.get(this.config, "addons.filetreediff.enabled", false);
-    const hasDownloads =
-      Object.keys(this.config.versions.current.downloads).length > 0;
-
-    const hasVersions =
-      this.config.versions.active.length > 0 &&
-      this.config.projects.current.versioning_scheme !==
-        "single_version_without_translations";
-    const hasLanguages = this.config.projects.translations.length > 0;
-
     return html`
       <header>
         <nav class="panel-icons">
-          ${searchEnabled
+          ${this._searchEnabled
             ? html`<button
                 class=${classMap({ active: this.activePanel === "search" })}
-                @click=${(e) => this._setPanel("search", e)}
+                @click=${this._onSearchClick}
                 title="Search"
                 aria-label="Toggle search panel"
               >
                 ${this.iconSearch.node[0]}
               </button>`
             : nothing}
-          ${fileTreeDiffEnabled
+          ${this._fileTreeDiffEnabled
             ? html`<button
                 class=${classMap({
                   active: this.activePanel === "filetreediff",
                 })}
-                @click=${(e) => this._setPanel("filetreediff", e)}
+                @click=${this._onFileDiffClick}
                 title="Changed files"
                 aria-label="Toggle changed files panel"
               >
                 ${this.iconFileLines.node[0]}
               </button>`
             : nothing}
-          ${hasDownloads
+          ${this._hasDownloads
             ? html`<button
                 class=${classMap({
                   active: this.activePanel === "downloads",
                 })}
-                @click=${(e) => this._setPanel("downloads", e)}
+                @click=${this._onDownloadsClick}
                 title="Downloads"
                 aria-label="Toggle downloads panel"
               >
                 ${this.iconDownload.node[0]}
               </button>`
             : nothing}
-          ${hasLanguages
+          ${this._hasLanguages
             ? html`<button
                 class=${classMap({
                   active: this.activePanel === "languages",
                 })}
-                @click=${(e) => this._setPanel("languages", e)}
+                @click=${this._onLanguagesClick}
                 title="Switch language"
                 aria-label="Toggle languages panel"
               >
@@ -193,12 +191,12 @@ export class FlyoutV2Element extends LitElement {
                 >
               </button>`
             : nothing}
-          ${hasVersions
+          ${this._hasVersions
             ? html`<button
                 class=${classMap({
                   active: this.activePanel === "versions",
                 })}
-                @click=${(e) => this._setPanel("versions", e)}
+                @click=${this._onVersionsClick}
                 title="Switch version"
                 aria-label="Toggle versions panel"
               >
@@ -367,9 +365,7 @@ export class FlyoutV2Element extends LitElement {
   }
 
   render() {
-    // The element doesn't yet have our config, don't render it.
     if (this.config === null) {
-      // nothing is a special Lit response type
       return nothing;
     }
 
