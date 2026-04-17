@@ -62,47 +62,20 @@
   top: 1em;
 }
 
-/* ---- Collapsed state: hamburger toggle button ---- */
-
-.collapsed-toggle {
-  background-color: var(--readthedocs-flyout-v2-background-color);
-  color: var(--readthedocs-flyout-v2-item-link-color);
-  border: none;
-  cursor: pointer;
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition:
-    background-color 0.15s ease,
-    transform 0.15s ease;
-}
-
-.collapsed-toggle:hover {
-  background-color: rgb(55, 55, 52);
-  transform: scale(1.05);
-}
-
-.collapsed-toggle svg {
-  height: 1.1em;
-  width: 1.1em;
-}
-
-/* ---- Expanded state: sidebar + pane shell ---- */
+/* ---- Shell: sidebar + pane ---- */
 
 .shell {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0.5em;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  width: var(--readthedocs-flyout-v2-width);
   max-height: var(--readthedocs-flyout-v2-max-height);
+}
+
+.container.opened .shell {
+  width: var(--readthedocs-flyout-v2-width);
 }
 
 /* ---- Left sidebar with navigation icons ---- */

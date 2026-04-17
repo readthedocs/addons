@@ -157,8 +157,10 @@ export class FlyoutV2Element extends LitElement {
     if (e) {
       e.stopPropagation();
     }
-    this.activePanel = panelName;
-    if (!this.opened) {
+    if (this.opened && this.activePanel === panelName) {
+      this._close();
+    } else {
+      this.activePanel = panelName;
       this._open();
     }
   }
@@ -483,20 +485,6 @@ export class FlyoutV2Element extends LitElement {
     }
   }
 
-  renderCollapsed() {
-    // Hamburger toggle when the flyout is closed
-    return html`
-      <button
-        class="collapsed-toggle"
-        @click=${this._onToggleClick}
-        title="Open Read the Docs menu"
-        aria-label="Open Read the Docs menu"
-      >
-        ${this.iconBars.node[0]}
-      </button>
-    `;
-  }
-
   updateCSSClasses() {
     this.classes = {
       container: true,
@@ -515,14 +503,12 @@ export class FlyoutV2Element extends LitElement {
 
     return html`
       <div class=${classMap(this.classes)}>
-        ${this.opened
-          ? html`
-              <div class="shell">
-                ${this.renderSidebar()}
-                <div class="pane-container">${this.renderPane()}</div>
-              </div>
-            `
-          : this.renderCollapsed()}
+        <div class="shell">
+          ${this.renderSidebar()}
+          ${this.opened
+            ? html`<div class="pane-container">${this.renderPane()}</div>`
+            : nothing}
+        </div>
       </div>
     `;
   }
