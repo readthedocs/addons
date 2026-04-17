@@ -40,10 +40,7 @@ export class FileTreeDiffPanelElement extends LitElement {
 
     return html`
       <div class="filetreediff-panel">
-        <div class="panel-header">
-          <h3>Changed Files</h3>
-          ${this._renderDiffToggle()}
-        </div>
+        ${this._renderDiffToggle()}
         <div class="file-list">
           ${diffData
             ? this._renderFileList(diffData)

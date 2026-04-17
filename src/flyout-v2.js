@@ -1,13 +1,16 @@
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
+import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faArrowUpRightFromSquare,
+  faBars,
   faCodeBranch,
   faDownload,
   faHouse,
   faLanguage,
   faMagnifyingGlass,
   faFileLines,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
@@ -31,6 +34,13 @@ import {
 import "./search-panel.js";
 import "./filetreediff-panel.js";
 
+const PANEL_MENU = "menu";
+const PANEL_SEARCH = "search";
+const PANEL_FILEDIFF = "filetreediff";
+const PANEL_DOWNLOADS = "downloads";
+const PANEL_VERSIONS = "versions";
+const PANEL_LANGUAGES = "languages";
+
 export class FlyoutV2Element extends LitElement {
   static elementName = "readthedocs-flyout-v2";
 
@@ -51,16 +61,20 @@ export class FlyoutV2Element extends LitElement {
     this.opened = false;
     this.floating = true;
     this.position = "top-center";
-    this.activePanel = null;
+    // Default to the menu panel when opened - shows RTD project info.
+    this.activePanel = PANEL_MENU;
 
     library.add(faArrowUpRightFromSquare);
+    library.add(faBars);
     library.add(faCodeBranch);
     library.add(faDownload);
     library.add(faHouse);
     library.add(faLanguage);
     library.add(faMagnifyingGlass);
     library.add(faFileLines);
+    library.add(faXmark);
 
+    this.iconBars = icon(faBars, { classes: ["icon"] });
     this.iconCodeBranch = icon(faCodeBranch, { classes: ["icon"] });
     this.iconDownload = icon(faDownload, { classes: ["icon"] });
     this.iconExternalLink = icon(faArrowUpRightFromSquare, {
@@ -70,13 +84,17 @@ export class FlyoutV2Element extends LitElement {
     this.iconLanguage = icon(faLanguage, { classes: ["icon"] });
     this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
     this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
+    this.iconClose = icon(faXmark, { classes: ["icon"] });
 
-    // Bound panel click handlers (avoids inline arrow functions in template)
-    this._onSearchClick = (e) => this._setPanel("search", e);
-    this._onFileDiffClick = (e) => this._setPanel("filetreediff", e);
-    this._onDownloadsClick = (e) => this._setPanel("downloads", e);
-    this._onLanguagesClick = (e) => this._setPanel("languages", e);
-    this._onVersionsClick = (e) => this._setPanel("versions", e);
+    // Bound handlers - avoids creating new function refs on every render
+    this._onMenuClick = (e) => this._setPanel(PANEL_MENU, e);
+    this._onSearchClick = (e) => this._setPanel(PANEL_SEARCH, e);
+    this._onFileDiffClick = (e) => this._setPanel(PANEL_FILEDIFF, e);
+    this._onDownloadsClick = (e) => this._setPanel(PANEL_DOWNLOADS, e);
+    this._onVersionsClick = (e) => this._setPanel(PANEL_VERSIONS, e);
+    this._onLanguagesClick = (e) => this._setPanel(PANEL_LANGUAGES, e);
+    this._onToggleClick = (e) => this._toggleOpen(e);
+    this._onCloseClick = (e) => this._close(e);
   }
 
   loadConfig(config) {
@@ -94,7 +112,7 @@ export class FlyoutV2Element extends LitElement {
       this.position = dashboardPosition;
     }
 
-    // Cache config-derived flags so renderHeader doesn't recompute them
+    // Cache config-derived flags so render doesn't recompute them
     this._searchEnabled = objectPath.get(
       this.config,
       "addons.search.enabled",
@@ -112,23 +130,36 @@ export class FlyoutV2Element extends LitElement {
     this._hasLanguages = this.config.projects.translations.length > 0;
   }
 
-  _close() {
+  _open() {
+    this.opened = true;
+  }
+
+  _close(e) {
+    if (e) {
+      e.stopPropagation();
+    }
     this.opened = false;
-    this.activePanel = null;
+    this.activePanel = PANEL_MENU;
+  }
+
+  _toggleOpen(e) {
+    if (e) {
+      e.stopPropagation();
+    }
+    if (this.opened) {
+      this._close();
+    } else {
+      this._open();
+    }
   }
 
   _setPanel(panelName, e) {
     if (e) {
       e.stopPropagation();
     }
-
-    if (this.activePanel === panelName) {
-      this._close();
-    } else {
-      this.activePanel = panelName;
-      if (!this.opened) {
-        this.opened = true;
-      }
+    this.activePanel = panelName;
+    if (!this.opened) {
+      this._open();
     }
   }
 
@@ -138,78 +169,102 @@ export class FlyoutV2Element extends LitElement {
     }
   };
 
-  renderHeader() {
+  _renderIconButton({ panel, title, ariaLabel, iconNode, onClick, label }) {
     return html`
-      <header>
-        <nav class="panel-icons">
-          ${this._searchEnabled
-            ? html`<button
-                class=${classMap({ active: this.activePanel === "search" })}
-                @click=${this._onSearchClick}
-                title="Search"
-                aria-label="Toggle search panel"
-              >
-                ${this.iconSearch.node[0]}
-              </button>`
-            : nothing}
-          ${this._fileTreeDiffEnabled
-            ? html`<button
-                class=${classMap({
-                  active: this.activePanel === "filetreediff",
-                })}
-                @click=${this._onFileDiffClick}
-                title="Changed files"
-                aria-label="Toggle changed files panel"
-              >
-                ${this.iconFileLines.node[0]}
-              </button>`
-            : nothing}
-          ${this._hasDownloads
-            ? html`<button
-                class=${classMap({
-                  active: this.activePanel === "downloads",
-                })}
-                @click=${this._onDownloadsClick}
-                title="Downloads"
-                aria-label="Toggle downloads panel"
-              >
-                ${this.iconDownload.node[0]}
-              </button>`
-            : nothing}
-          ${this._hasLanguages
-            ? html`<button
-                class=${classMap({
-                  active: this.activePanel === "languages",
-                })}
-                @click=${this._onLanguagesClick}
-                title="Switch language"
-                aria-label="Toggle languages panel"
-              >
-                ${this.iconLanguage.node[0]}
-                <span class="label"
-                  >${this.config.projects.current.language.code}</span
-                >
-              </button>`
-            : nothing}
-          ${this._hasVersions
-            ? html`<button
-                class=${classMap({
-                  active: this.activePanel === "versions",
-                })}
-                @click=${this._onVersionsClick}
-                title="Switch version"
-                aria-label="Toggle versions panel"
-              >
-                ${this.iconCodeBranch.node[0]}
-                <span class="label">${this.config.versions.current.slug}</span>
-              </button>`
-            : nothing}
-        </nav>
+      <button
+        class=${classMap({
+          "sidebar-icon": true,
+          active: this.activePanel === panel,
+        })}
+        @click=${onClick}
+        title=${title}
+        aria-label=${ariaLabel}
+      >
+        ${iconNode}
+        ${label ? html`<span class="sidebar-label">${label}</span>` : nothing}
+      </button>
+    `;
+  }
+
+  renderSidebar() {
+    // Left vertical icon column - persistent navigation between feature panes
+    return html`
+      <nav class="sidebar">
+        ${this._renderIconButton({
+          panel: PANEL_MENU,
+          title: "Menu",
+          ariaLabel: "Menu",
+          iconNode: this.iconBars.node[0],
+          onClick: this._onMenuClick,
+        })}
+        ${this._searchEnabled
+          ? this._renderIconButton({
+              panel: PANEL_SEARCH,
+              title: "Search",
+              ariaLabel: "Search docs",
+              iconNode: this.iconSearch.node[0],
+              onClick: this._onSearchClick,
+            })
+          : nothing}
+        ${this._fileTreeDiffEnabled
+          ? this._renderIconButton({
+              panel: PANEL_FILEDIFF,
+              title: "Changed files",
+              ariaLabel: "Changed files",
+              iconNode: this.iconFileLines.node[0],
+              onClick: this._onFileDiffClick,
+            })
+          : nothing}
+        ${this._hasDownloads
+          ? this._renderIconButton({
+              panel: PANEL_DOWNLOADS,
+              title: "Downloads",
+              ariaLabel: "Downloads",
+              iconNode: this.iconDownload.node[0],
+              onClick: this._onDownloadsClick,
+            })
+          : nothing}
+        ${this._hasLanguages
+          ? this._renderIconButton({
+              panel: PANEL_LANGUAGES,
+              title: "Switch language",
+              ariaLabel: "Languages",
+              iconNode: this.iconLanguage.node[0],
+              onClick: this._onLanguagesClick,
+              label: this.config.projects.current.language.code,
+            })
+          : nothing}
+        ${this._hasVersions
+          ? this._renderIconButton({
+              panel: PANEL_VERSIONS,
+              title: "Switch version",
+              ariaLabel: "Versions",
+              iconNode: this.iconCodeBranch.node[0],
+              onClick: this._onVersionsClick,
+              label: this.config.versions.current.slug,
+            })
+          : nothing}
+      </nav>
+    `;
+  }
+
+  renderPaneHeader(title) {
+    return html`
+      <header class="pane-header">
+        <h2>${title}</h2>
+        <button
+          class="pane-close"
+          @click=${this._onCloseClick}
+          title="Close"
+          aria-label="Close"
+        >
+          ${this.iconClose.node[0]}
+        </button>
       </header>
     `;
   }
 
-  renderFooter() {
+  renderMenuPane() {
     const projectHomeUrl = addUtmParameters(
       this.config.projects.current.urls.home
         .replace("readthedocs.org", "app.readthedocs.org")
@@ -217,26 +272,188 @@ export class FlyoutV2Element extends LitElement {
         .replace("app.app.", "app."),
       "flyout",
     );
-
     const vcs = this.config.addons.flyout.vcs;
     const hasVCS = vcs && vcs.view_url;
 
     return html`
-      <footer>
-        <span class="footer-links">
-          <a href="${projectHomeUrl}" title="Project home">
-            ${this.iconHouse.node[0]}
-          </a>
-          ${hasVCS
-            ? html`<a
-                href="${vcs.view_url}"
-                title="View source"
-                target="_blank"
-              >
-                ${this.iconExternalLink.node[0]}
-              </a>`
-            : nothing}
-        </span>
+      <div class="pane menu-pane">
+        <header class="pane-header menu-header">
+          <img
+            class="project-logo"
+            src="${READTHEDOCS_LOGO_WORDMARK}"
+            alt="Read the Docs"
+          />
+          <button
+            class="pane-close"
+            @click=${this._onCloseClick}
+            title="Close"
+            aria-label="Close"
+          >
+            ${this.iconClose.node[0]}
+          </button>
+        </header>
+        <div class="pane-body">
+          <dl class="menu-info">
+            <dt>Project</dt>
+            <dd>${this.config.projects.current.slug}</dd>
+            ${this._hasVersions
+              ? html`
+                  <dt>Version</dt>
+                  <dd class="current">${this.config.versions.current.slug}</dd>
+                `
+              : nothing}
+            ${this._hasLanguages
+              ? html`
+                  <dt>Language</dt>
+                  <dd>${this.config.projects.current.language.code}</dd>
+                `
+              : nothing}
+          </dl>
+          <div class="menu-links">
+            <a href="${projectHomeUrl}" class="menu-link">
+              ${this.iconHouse.node[0]}
+              <span>Project home</span>
+            </a>
+            ${hasVCS
+              ? html`
+                  <a href="${vcs.view_url}" class="menu-link" target="_blank">
+                    ${this.iconExternalLink.node[0]}
+                    <span>View source on ${vcs.name || "VCS"}</span>
+                  </a>
+                `
+              : nothing}
+          </div>
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderVersionsPane() {
+    return html`
+      <div class="pane versions-pane">
+        ${this.renderPaneHeader("Versions")}
+        <div class="pane-body">
+          ${!this.config.versions.active.length ||
+          this.config.projects.current.versioning_scheme ===
+            "single_version_without_translations"
+            ? html`<p class="pane-empty">No versions available</p>`
+            : html`
+                <ul class="pane-list">
+                  ${this.config.versions.active.map((version) => {
+                    const url = getLinkWithFilename(
+                      version.urls.documentation,
+                      this.config.readthedocs.resolver.filename,
+                    );
+                    const isCurrent =
+                      this.config.versions.current.slug === version.slug;
+                    return html`
+                      <li class=${classMap({ current: isCurrent })}>
+                        <a href="${url}">${version.slug}</a>
+                      </li>
+                    `;
+                  })}
+                </ul>
+              `}
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderLanguagesPane() {
+    // Add the current project as "translation" and sort by language code
+    const translations = this.config.projects.translations
+      .concat(this.config.projects.current)
+      .sort((a, b) => a.language.code.localeCompare(b.language.code));
+
+    return html`
+      <div class="pane languages-pane">
+        ${this.renderPaneHeader("Languages")}
+        <div class="pane-body">
+          ${!this.config.projects.translations.length
+            ? html`<p class="pane-empty">No translations available</p>`
+            : html`
+                <ul class="pane-list">
+                  ${translations.map((translation) => {
+                    const url = getLinkWithFilename(
+                      translation.urls.documentation,
+                      this.config.readthedocs.resolver.filename,
+                    );
+                    const isCurrent =
+                      this.config.projects.current.slug === translation.slug;
+                    return html`
+                      <li class=${classMap({ current: isCurrent })}>
+                        <a href="${url}">${translation.language.code}</a>
+                      </li>
+                    `;
+                  })}
+                </ul>
+              `}
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderDownloadsPane() {
+    const downloads = this.config.versions.current.downloads;
+    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
+
+    return html`
+      <div class="pane downloads-pane">
+        ${this.renderPaneHeader("Downloads")}
+        <div class="pane-body">
+          ${!Object.keys(downloads).length
+            ? html`<p class="pane-empty">No downloads available</p>`
+            : html`
+                <ul class="pane-list">
+                  ${Object.entries(downloads).map(
+                    ([name, url]) => html`
+                      <li>
+                        <a href="${url}">${nameDisplay[name] || name}</a>
+                      </li>
+                    `,
+                  )}
+                </ul>
+              `}
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderSearchPane() {
+    return html`
+      <div class="pane search-pane">
+        ${this.renderPaneHeader("Search")}
+        <div class="pane-body">
+          <readthedocs-search-panel
+            .config=${this.config}
+          ></readthedocs-search-panel>
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderFileDiffPane() {
+    return html`
+      <div class="pane filediff-pane">
+        ${this.renderPaneHeader("Changed Files")}
+        <div class="pane-body">
+          <readthedocs-filetreediff-panel
+            .config=${this.config}
+          ></readthedocs-filetreediff-panel>
+        </div>
+        ${this.renderFooter()}
+      </div>
+    `;
+  }
+
+  renderFooter() {
+    return html`
+      <footer class="pane-footer">
         <a
           class="footer-branding"
           href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
@@ -248,119 +465,44 @@ export class FlyoutV2Element extends LitElement {
     `;
   }
 
-  renderVersionsPanel() {
-    if (
-      !this.config.versions.active.length ||
-      this.config.projects.current.versioning_scheme ===
-        "single_version_without_translations"
-    ) {
-      return html`<p class="panel-empty">No versions available</p>`;
-    }
-
-    return html`
-      <div class="panel versions-panel">
-        <h3>Versions</h3>
-        <ul>
-          ${this.config.versions.active.map((version) => {
-            const url = getLinkWithFilename(
-              version.urls.documentation,
-              this.config.readthedocs.resolver.filename,
-            );
-            const isCurrent =
-              this.config.versions.current.slug === version.slug;
-            return html`
-              <li class=${classMap({ current: isCurrent })}>
-                <a href="${url}">${version.slug}</a>
-              </li>
-            `;
-          })}
-        </ul>
-      </div>
-    `;
-  }
-
-  renderLanguagesPanel() {
-    if (!this.config.projects.translations.length) {
-      return html`<p class="panel-empty">No translations available</p>`;
-    }
-
-    // Add the current project as "translation" and sort them based on language's code
-    let translations = this.config.projects.translations.concat(
-      this.config.projects.current,
-    );
-    translations = translations.sort((a, b) =>
-      a.language.code.localeCompare(b.language.code),
-    );
-
-    return html`
-      <div class="panel languages-panel">
-        <h3>Languages</h3>
-        <ul>
-          ${translations.map((translation) => {
-            const url = getLinkWithFilename(
-              translation.urls.documentation,
-              this.config.readthedocs.resolver.filename,
-            );
-            const isCurrent =
-              this.config.projects.current.slug === translation.slug;
-            return html`
-              <li class=${classMap({ current: isCurrent })}>
-                <a href="${url}">${translation.language.code}</a>
-              </li>
-            `;
-          })}
-        </ul>
-      </div>
-    `;
-  }
-
-  renderDownloadsPanel() {
-    const downloads = this.config.versions.current.downloads;
-    if (!Object.keys(downloads).length) {
-      return html`<p class="panel-empty">No downloads available</p>`;
-    }
-
-    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
-
-    return html`
-      <div class="panel downloads-panel">
-        <h3>Downloads</h3>
-        <ul>
-          ${Object.entries(downloads).map(
-            ([name, url]) => html`
-              <li>
-                <a href="${url}">${nameDisplay[name] || name}</a>
-              </li>
-            `,
-          )}
-        </ul>
-      </div>
-    `;
-  }
-
-  renderPanelContent() {
+  renderPane() {
     switch (this.activePanel) {
-      case "search":
-        return html`<readthedocs-search-panel
-          .config=${this.config}
-        ></readthedocs-search-panel>`;
-      case "filetreediff":
-        return html`<readthedocs-filetreediff-panel
-          .config=${this.config}
-        ></readthedocs-filetreediff-panel>`;
-      case "versions":
-        return this.renderVersionsPanel();
-      case "languages":
-        return this.renderLanguagesPanel();
-      case "downloads":
-        return this.renderDownloadsPanel();
+      case PANEL_SEARCH:
+        return this.renderSearchPane();
+      case PANEL_FILEDIFF:
+        return this.renderFileDiffPane();
+      case PANEL_VERSIONS:
+        return this.renderVersionsPane();
+      case PANEL_LANGUAGES:
+        return this.renderLanguagesPane();
+      case PANEL_DOWNLOADS:
+        return this.renderDownloadsPane();
+      case PANEL_MENU:
       default:
-        return nothing;
+        return this.renderMenuPane();
     }
+  }
+
+  renderCollapsed() {
+    // Hamburger toggle when the flyout is closed
+    return html`
+      <button
+        class="collapsed-toggle"
+        @click=${this._onToggleClick}
+        title="Open Read the Docs menu"
+        aria-label="Open Read the Docs menu"
+      >
+        ${this.iconBars.node[0]}
+      </button>
+    `;
   }
 
   updateCSSClasses() {
-    this.classes = { floating: this.floating, container: true };
+    this.classes = {
+      container: true,
+      floating: this.floating,
+      opened: this.opened,
+    };
     this.classes[this.position] = true;
   }
 
@@ -373,20 +515,24 @@ export class FlyoutV2Element extends LitElement {
 
     return html`
       <div class=${classMap(this.classes)}>
-        ${this.renderHeader()}
-        <main class=${classMap({ closed: !this.opened || !this.activePanel })}>
-          ${this.renderPanelContent()} ${this.renderFooter()}
-        </main>
+        ${this.opened
+          ? html`
+              <div class="shell">
+                ${this.renderSidebar()}
+                <div class="pane-container">${this.renderPane()}</div>
+              </div>
+            `
+          : this.renderCollapsed()}
       </div>
     `;
   }
 
-  _showFlyout = (e) => {
-    this.opened = true;
+  _showFlyout = () => {
+    this._open();
   };
 
-  _hideFlyout = (e) => {
-    this.opened = false;
+  _hideFlyout = () => {
+    this._close();
   };
 
   _handlePanelSet = (e) => {
@@ -413,7 +559,6 @@ export class FlyoutV2Element extends LitElement {
       EVENT_READTHEDOCS_FLYOUT_SHOW,
       this._showFlyout,
     );
-
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_HIDE,
       this._hideFlyout,
@@ -444,7 +589,6 @@ export class FlyoutV2Addon extends AddonBase {
   static elementClass = FlyoutV2Element;
 
   static isEnabled(config, httpStatus) {
-    // Only enable when ?readthedocs-flyout-v2=true is in the URL
     return (
       getQueryParam("readthedocs-flyout-v2") === "true" &&
       super.isEnabled(config, httpStatus)
@@ -452,13 +596,6 @@ export class FlyoutV2Addon extends AddonBase {
   }
 
   static requiresUrlParam() {
-    // Flyout requires URL param for the feature "keep the same page when
-    // switching version". We need to know the URL path
-    // (``readthedocs.resolver.filename`` from the API or MEATA
-    // ``readthedocs-resolver-filename``) to be able to generate those URLs.
-    //
-    // NOTE: If we ever make this feature configurable and user disables it, we
-    // can adapt this code to return ``false`` in that case.
     return docTool.isSinglePageApplication();
   }
 }
