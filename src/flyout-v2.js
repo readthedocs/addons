@@ -45,7 +45,7 @@ export class FlyoutV2Element extends LitElement {
 
   static properties = {
     config: { state: true },
-    opened: { type: Boolean },
+    expanded: { type: Boolean },
     floating: { type: Boolean },
     position: { type: String },
     activePanel: { state: true },
@@ -57,10 +57,10 @@ export class FlyoutV2Element extends LitElement {
     super();
 
     this.config = null;
-    this.opened = false;
+    this.expanded = false;
     this.floating = true;
     this.position = "top-center";
-    this.activePanel = null;
+    this.activePanel = PANEL_MENU;
 
     library.add(faArrowUpRightFromSquare);
     library.add(faBars);
@@ -84,13 +84,14 @@ export class FlyoutV2Element extends LitElement {
     this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
     this.iconClose = icon(faXmark, { classes: ["icon"] });
 
-    this._onMenuClick = (e) => this._setPanel(PANEL_MENU, e);
-    this._onSearchClick = (e) => this._setPanel(PANEL_SEARCH, e);
-    this._onFileDiffClick = (e) => this._setPanel(PANEL_FILEDIFF, e);
-    this._onDownloadsClick = (e) => this._setPanel(PANEL_DOWNLOADS, e);
-    this._onVersionsClick = (e) => this._setPanel(PANEL_VERSIONS, e);
-    this._onLanguagesClick = (e) => this._setPanel(PANEL_LANGUAGES, e);
-    this._onCloseClick = (e) => this._close(e);
+    this._onBarContentClick = (e) => {
+      e.stopPropagation();
+      this.expanded = !this.expanded;
+    };
+    this._onCloseClick = (e) => {
+      e.stopPropagation();
+      this.expanded = false;
+    };
   }
 
   loadConfig(config) {
@@ -125,137 +126,263 @@ export class FlyoutV2Element extends LitElement {
     this._hasLanguages = this.config.projects.translations.length > 0;
   }
 
-  _open() {
-    this.opened = true;
-  }
-
-  _close(e) {
+  _switchPanel(panelName, e) {
     if (e) {
       e.stopPropagation();
     }
-    this.opened = false;
-    this.activePanel = null;
-  }
-
-  _setPanel(panelName, e) {
-    if (e) {
-      e.stopPropagation();
-    }
-    if (this.opened && this.activePanel === panelName) {
-      this._close();
-    } else {
-      this.activePanel = panelName;
-      this._open();
-    }
+    this.activePanel = panelName;
+    this.expanded = false;
   }
 
   _onOutsideClick = (e) => {
     if (e.target !== this) {
-      this._close();
+      this.expanded = false;
     }
   };
 
-  _renderNavIcon({ panel, title, iconNode, onClick }) {
+  // ---- Hamburger dropdown: hover to see addon icons ----
+
+  renderHamburger() {
     return html`
-      <button
-        class=${classMap({
-          "nav-icon": true,
-          active: this.activePanel === panel,
-        })}
-        @click=${onClick}
-        title=${title}
-        aria-label=${title}
-      >
-        ${iconNode}
-      </button>
+      <div class="hamburger">
+        <button class="hamburger-trigger" aria-label="Switch addon">
+          ${this.iconBars.node[0]}
+        </button>
+        <div class="hamburger-dropdown">
+          <button
+            class=${classMap({ active: this.activePanel === PANEL_MENU })}
+            @click=${(e) => this._switchPanel(PANEL_MENU, e)}
+            title="Menu"
+          >
+            ${this.iconBars.node[0]}
+          </button>
+          ${this._searchEnabled
+            ? html`<button
+                class=${classMap({ active: this.activePanel === PANEL_SEARCH })}
+                @click=${(e) => this._switchPanel(PANEL_SEARCH, e)}
+                title="Search"
+              >
+                ${this.iconSearch.node[0]}
+              </button>`
+            : nothing}
+          ${this._fileTreeDiffEnabled
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === PANEL_FILEDIFF,
+                })}
+                @click=${(e) => this._switchPanel(PANEL_FILEDIFF, e)}
+                title="Changed files"
+              >
+                ${this.iconFileLines.node[0]}
+              </button>`
+            : nothing}
+          ${this._hasDownloads
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === PANEL_DOWNLOADS,
+                })}
+                @click=${(e) => this._switchPanel(PANEL_DOWNLOADS, e)}
+                title="Downloads"
+              >
+                ${this.iconDownload.node[0]}
+              </button>`
+            : nothing}
+          ${this._hasLanguages
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === PANEL_LANGUAGES,
+                })}
+                @click=${(e) => this._switchPanel(PANEL_LANGUAGES, e)}
+                title="Languages"
+              >
+                ${this.iconLanguage.node[0]}
+              </button>`
+            : nothing}
+          ${this._hasVersions
+            ? html`<button
+                class=${classMap({
+                  active: this.activePanel === PANEL_VERSIONS,
+                })}
+                @click=${(e) => this._switchPanel(PANEL_VERSIONS, e)}
+                title="Versions"
+              >
+                ${this.iconCodeBranch.node[0]}
+              </button>`
+            : nothing}
+        </div>
+      </div>
     `;
   }
 
-  renderBar() {
-    return html`
-      <header class="bar">
-        <nav class="bar-icons">
-          ${this._renderNavIcon({
-            panel: PANEL_MENU,
-            title: "Menu",
-            iconNode: this.iconBars.node[0],
-            onClick: this._onMenuClick,
-          })}
-          ${this._searchEnabled
-            ? this._renderNavIcon({
-                panel: PANEL_SEARCH,
-                title: "Search",
-                iconNode: this.iconSearch.node[0],
-                onClick: this._onSearchClick,
-              })
-            : nothing}
-          ${this._fileTreeDiffEnabled
-            ? this._renderNavIcon({
-                panel: PANEL_FILEDIFF,
-                title: "Changed files",
-                iconNode: this.iconFileLines.node[0],
-                onClick: this._onFileDiffClick,
-              })
-            : nothing}
-          ${this._hasDownloads
-            ? this._renderNavIcon({
-                panel: PANEL_DOWNLOADS,
-                title: "Downloads",
-                iconNode: this.iconDownload.node[0],
-                onClick: this._onDownloadsClick,
-              })
-            : nothing}
-        </nav>
-        <span class="bar-context">
+  // ---- Minimized bar content per active addon ----
+
+  renderBarContent() {
+    switch (this.activePanel) {
+      case PANEL_SEARCH:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
+          ${this.iconSearch.node[0]}
+          <span class="bar-text">Search docs</span>
+        </span>`;
+      case PANEL_FILEDIFF:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
+          ${this.iconFileLines.node[0]}
+          <span class="bar-text">Changed files</span>
+        </span>`;
+      case PANEL_DOWNLOADS:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
+          ${this.iconDownload.node[0]}
+          <span class="bar-text">Downloads</span>
+        </span>`;
+      case PANEL_LANGUAGES:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
+          ${this.iconLanguage.node[0]}
+          <span class="bar-text"
+            >${this.config.projects.current.language.code}</span
+          >
+        </span>`;
+      case PANEL_VERSIONS:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
+          ${this.iconCodeBranch.node[0]}
+          <span class="bar-text">${this.config.versions.current.slug}</span>
+        </span>`;
+      case PANEL_MENU:
+      default:
+        return html`<span
+          class="bar-minimized"
+          @click=${this._onBarContentClick}
+        >
           <img
             class="bar-logo"
             src="${READTHEDOCS_LOGO_WORDMARK}"
             alt="Read the Docs"
           />
           ${this._hasLanguages
-            ? html`<button
-                class=${classMap({
-                  "bar-badge": true,
-                  active: this.activePanel === PANEL_LANGUAGES,
-                })}
-                @click=${this._onLanguagesClick}
-                title="Switch language"
-              >
-                ${this.iconLanguage.node[0]}
-                <span>${this.config.projects.current.language.code}</span>
-              </button>`
+            ? html`<span class="bar-badge"
+                >${this.iconLanguage.node[0]}
+                ${this.config.projects.current.language.code}</span
+              >`
             : nothing}
           ${this._hasVersions
-            ? html`<button
-                class=${classMap({
-                  "bar-badge": true,
-                  active: this.activePanel === PANEL_VERSIONS,
-                })}
-                @click=${this._onVersionsClick}
-                title="Switch version"
-              >
-                ${this.iconCodeBranch.node[0]}
-                <span>${this.config.versions.current.slug}</span>
-              </button>`
+            ? html`<span class="bar-badge"
+                >${this.iconCodeBranch.node[0]}
+                ${this.config.versions.current.slug}</span
+              >`
             : nothing}
-        </span>
-      </header>
+        </span>`;
+    }
+  }
+
+  // ---- Expanded pane content ----
+
+  renderExpandedPane() {
+    switch (this.activePanel) {
+      case PANEL_SEARCH:
+        return html`<readthedocs-search-panel
+          .config=${this.config}
+        ></readthedocs-search-panel>`;
+      case PANEL_FILEDIFF:
+        return html`<readthedocs-filetreediff-panel
+          .config=${this.config}
+        ></readthedocs-filetreediff-panel>`;
+      case PANEL_VERSIONS:
+        return this._renderVersionsList();
+      case PANEL_LANGUAGES:
+        return this._renderLanguagesList();
+      case PANEL_DOWNLOADS:
+        return this._renderDownloadsList();
+      case PANEL_MENU:
+      default:
+        return this._renderMenuContent();
+    }
+  }
+
+  _renderMenuContent() {
+    const projectHomeUrl = addUtmParameters(
+      this.config.projects.current.urls.home
+        .replace("readthedocs.org", "app.readthedocs.org")
+        .replace("readthedocs.com", "app.readthedocs.com")
+        .replace("app.app.", "app."),
+      "flyout",
+    );
+    const vcs = this.config.addons.flyout.vcs;
+
+    return html`
+      <div class="pane-links">
+        <a href="${projectHomeUrl}" class="pane-link">
+          ${this.iconHouse.node[0]} <span>Project home</span>
+        </a>
+        ${vcs?.view_url
+          ? html`<a href="${vcs.view_url}" class="pane-link" target="_blank">
+              ${this.iconExternalLink.node[0]}
+              <span>View source on ${vcs.name || "VCS"}</span>
+            </a>`
+          : nothing}
+      </div>
     `;
   }
 
-  renderPaneHeader(title) {
+  _renderVersionsList() {
     return html`
-      <div class="pane-header">
-        <h2>${title}</h2>
-        <button
-          class="pane-close"
-          @click=${this._onCloseClick}
-          title="Close"
-          aria-label="Close"
-        >
-          ${this.iconClose.node[0]}
-        </button>
-      </div>
+      <ul class="pane-list">
+        ${this.config.versions.active.map((version) => {
+          const url = getLinkWithFilename(
+            version.urls.documentation,
+            this.config.readthedocs.resolver.filename,
+          );
+          const isCurrent = this.config.versions.current.slug === version.slug;
+          return html`<li class=${classMap({ current: isCurrent })}>
+            <a href="${url}">${version.slug}</a>
+          </li>`;
+        })}
+      </ul>
+    `;
+  }
+
+  _renderLanguagesList() {
+    const translations = this.config.projects.translations
+      .concat(this.config.projects.current)
+      .sort((a, b) => a.language.code.localeCompare(b.language.code));
+
+    return html`
+      <ul class="pane-list">
+        ${translations.map((t) => {
+          const url = getLinkWithFilename(
+            t.urls.documentation,
+            this.config.readthedocs.resolver.filename,
+          );
+          const isCurrent = this.config.projects.current.slug === t.slug;
+          return html`<li class=${classMap({ current: isCurrent })}>
+            <a href="${url}">${t.language.code}</a>
+          </li>`;
+        })}
+      </ul>
+    `;
+  }
+
+  _renderDownloadsList() {
+    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
+    return html`
+      <ul class="pane-list">
+        ${Object.entries(this.config.versions.current.downloads).map(
+          ([name, url]) =>
+            html`<li><a href="${url}">${nameDisplay[name] || name}</a></li>`,
+        )}
+      </ul>
     `;
   }
 
@@ -273,191 +400,56 @@ export class FlyoutV2Element extends LitElement {
     `;
   }
 
-  renderMenuPane() {
-    const projectHomeUrl = addUtmParameters(
-      this.config.projects.current.urls.home
-        .replace("readthedocs.org", "app.readthedocs.org")
-        .replace("readthedocs.com", "app.readthedocs.com")
-        .replace("app.app.", "app."),
-      "flyout",
-    );
-    const vcs = this.config.addons.flyout.vcs;
-    const hasVCS = vcs && vcs.view_url;
-
-    return html`
-      ${this.renderPaneHeader("Menu")}
-      <div class="pane-body">
-        <div class="menu-links">
-          <a href="${projectHomeUrl}" class="menu-link">
-            ${this.iconHouse.node[0]}
-            <span>Project home</span>
-          </a>
-          ${hasVCS
-            ? html`
-                <a href="${vcs.view_url}" class="menu-link" target="_blank">
-                  ${this.iconExternalLink.node[0]}
-                  <span>View source on ${vcs.name || "VCS"}</span>
-                </a>
-              `
-            : nothing}
-        </div>
-      </div>
-    `;
-  }
-
-  renderVersionsPane() {
-    return html`
-      ${this.renderPaneHeader("Versions")}
-      <div class="pane-body">
-        ${!this.config.versions.active.length
-          ? html`<p class="pane-empty">No versions available</p>`
-          : html`
-              <ul class="pane-list">
-                ${this.config.versions.active.map((version) => {
-                  const url = getLinkWithFilename(
-                    version.urls.documentation,
-                    this.config.readthedocs.resolver.filename,
-                  );
-                  const isCurrent =
-                    this.config.versions.current.slug === version.slug;
-                  return html`
-                    <li class=${classMap({ current: isCurrent })}>
-                      <a href="${url}">${version.slug}</a>
-                    </li>
-                  `;
-                })}
-              </ul>
-            `}
-      </div>
-    `;
-  }
-
-  renderLanguagesPane() {
-    const translations = this.config.projects.translations
-      .concat(this.config.projects.current)
-      .sort((a, b) => a.language.code.localeCompare(b.language.code));
-
-    return html`
-      ${this.renderPaneHeader("Languages")}
-      <div class="pane-body">
-        <ul class="pane-list">
-          ${translations.map((translation) => {
-            const url = getLinkWithFilename(
-              translation.urls.documentation,
-              this.config.readthedocs.resolver.filename,
-            );
-            const isCurrent =
-              this.config.projects.current.slug === translation.slug;
-            return html`
-              <li class=${classMap({ current: isCurrent })}>
-                <a href="${url}">${translation.language.code}</a>
-              </li>
-            `;
-          })}
-        </ul>
-      </div>
-    `;
-  }
-
-  renderDownloadsPane() {
-    const downloads = this.config.versions.current.downloads;
-    const nameDisplay = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
-
-    return html`
-      ${this.renderPaneHeader("Downloads")}
-      <div class="pane-body">
-        <ul class="pane-list">
-          ${Object.entries(downloads).map(
-            ([name, url]) => html`
-              <li><a href="${url}">${nameDisplay[name] || name}</a></li>
-            `,
-          )}
-        </ul>
-      </div>
-    `;
-  }
-
-  renderSearchPane() {
-    return html`
-      ${this.renderPaneHeader("Search")}
-      <div class="pane-body">
-        <readthedocs-search-panel
-          .config=${this.config}
-        ></readthedocs-search-panel>
-      </div>
-    `;
-  }
-
-  renderFileDiffPane() {
-    return html`
-      ${this.renderPaneHeader("Changed Files")}
-      <div class="pane-body">
-        <readthedocs-filetreediff-panel
-          .config=${this.config}
-        ></readthedocs-filetreediff-panel>
-      </div>
-    `;
-  }
-
-  renderPane() {
-    switch (this.activePanel) {
-      case PANEL_SEARCH:
-        return this.renderSearchPane();
-      case PANEL_FILEDIFF:
-        return this.renderFileDiffPane();
-      case PANEL_VERSIONS:
-        return this.renderVersionsPane();
-      case PANEL_LANGUAGES:
-        return this.renderLanguagesPane();
-      case PANEL_DOWNLOADS:
-        return this.renderDownloadsPane();
-      case PANEL_MENU:
-        return this.renderMenuPane();
-      default:
-        return nothing;
-    }
-  }
-
-  updateCSSClasses() {
-    this.classes = {
-      container: true,
-      floating: this.floating,
-      opened: this.opened,
-    };
-    this.classes[this.position] = true;
-  }
-
   render() {
     if (this.config === null) {
       return nothing;
     }
 
-    this.updateCSSClasses();
+    const classes = {
+      container: true,
+      floating: this.floating,
+      expanded: this.expanded,
+    };
+    classes[this.position] = true;
 
     return html`
-      <div class=${classMap(this.classes)}>
-        ${this.renderBar()}
-        ${this.opened
-          ? html`<main class="pane">
-              ${this.renderPane()} ${this.renderFooter()}
-            </main>`
+      <div class=${classMap(classes)}>
+        <header class="bar">
+          ${this.renderHamburger()} ${this.renderBarContent()}
+        </header>
+        ${this.expanded
+          ? html`
+              <main class="pane">
+                <div class="pane-header">
+                  <button
+                    class="pane-close"
+                    @click=${this._onCloseClick}
+                    title="Close"
+                    aria-label="Close"
+                  >
+                    ${this.iconClose.node[0]}
+                  </button>
+                </div>
+                <div class="pane-body">${this.renderExpandedPane()}</div>
+                ${this.renderFooter()}
+              </main>
+            `
           : nothing}
       </div>
     `;
   }
 
   _showFlyout = () => {
-    this._open();
+    this.expanded = true;
   };
-
   _hideFlyout = () => {
-    this._close();
+    this.expanded = false;
   };
-
   _handlePanelSet = (e) => {
-    const panelName = e.detail && e.detail.panel;
+    const panelName = e.detail?.panel;
     if (panelName) {
-      this._setPanel(panelName);
+      this.activePanel = panelName;
+      this.expanded = true;
     }
   };
 
