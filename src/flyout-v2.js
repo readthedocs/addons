@@ -273,14 +273,12 @@ export class FlyoutV2Element extends LitElement {
           />
           ${this._hasLanguages
             ? html`<span class="bar-badge"
-                >${this.iconLanguage.node[0]}
-                ${this.config.projects.current.language.code}</span
+                >${this.config.projects.current.language.code}</span
               >`
             : nothing}
           ${this._hasVersions
             ? html`<span class="bar-badge"
-                >${this.iconCodeBranch.node[0]}
-                ${this.config.versions.current.slug}</span
+                >${this.config.versions.current.slug}</span
               >`
             : nothing}
         </span>`;
