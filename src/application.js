@@ -24,6 +24,7 @@ import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
 import * as filetreediff from "./filetreediff";
+import * as proselint from "./proselint";
 import * as customscript from "./customscript";
 import * as application from "./application";
 import { default as objectPath } from "object-path";
@@ -59,6 +60,7 @@ export class AddonsApplication {
       docdiff.DocDiffAddon,
 
       linkpreviews.LinkPreviewsAddon,
+      proselint.ProselintAddon,
       customscript.CustomScriptAddon,
     ];
 

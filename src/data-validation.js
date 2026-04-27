@@ -531,6 +531,29 @@ const addons_linkpreviews = {
   },
 };
 
+// Validator for Proselint Addon
+const addons_proselint = {
+  $id: "http://v1.schemas.readthedocs.org/addons.proselint.json",
+  type: "object",
+  required: ["addons"],
+  properties: {
+    addons: {
+      type: "object",
+      required: ["proselint"],
+      properties: {
+        proselint: {
+          type: "object",
+          required: ["enabled"],
+          properties: {
+            enabled: { type: "boolean" },
+            url: { type: "string" },
+          },
+        },
+      },
+    },
+  },
+};
+
 // Validator for CustomScript Addon
 const addons_customscript = {
   $id: "http://v1.schemas.readthedocs.org/addons.customscript.json",
@@ -566,6 +589,7 @@ export const ajv = new Ajv({
     addons_search,
     addons_linkpreviews,
     addons_filetreediff,
+    addons_proselint,
     addons_customscript,
   ],
 });

@@ -1,0 +1,36 @@
+/*
+ * Proselint warning highlights.
+ *
+ * These styles live in the global document (not a shadow root) because the
+ * spans they target are injected directly into the rendered documentation
+ * DOM by the proselint addon.
+ */
+
+.proselint-warning {
+  cursor: help;
+  border-radius: 2px;
+  padding: 0 1px;
+  text-decoration: none;
+}
+
+.proselint-warning-warning {
+  background-color: rgba(255, 221, 87, 0.4);
+  border-bottom: 2px wavy #c89400;
+  text-decoration: underline;
+  text-decoration-color: #c89400;
+  text-decoration-style: wavy;
+  text-decoration-skip-ink: none;
+}
+
+.proselint-warning-error {
+  background-color: rgba(255, 129, 130, 0.4);
+  border-bottom: 2px solid #d23f3f;
+  text-decoration: underline;
+  text-decoration-color: #d23f3f;
+  text-decoration-style: wavy;
+  text-decoration-skip-ink: none;
+}
+
+.proselint-warning:hover {
+  filter: brightness(0.95);
+}
