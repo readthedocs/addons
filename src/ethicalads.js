@@ -63,7 +63,8 @@ export class EthicalAdsAddon extends AddonBase {
     if (placement) {
       if (
         placement.getAttribute("data-ea-type") !== "image" &&
-        placement.getAttribute("data-ea-type") !== "text"
+        placement.getAttribute("data-ea-type") !== "text" &&
+        placement.getAttribute("data-ea-type") !== "logo-large-v1"
       ) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
       }
