@@ -35,7 +35,7 @@
     "express-interceptor": "^1.2.0",
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
-    "lit": "^3.3.2",
+    "lit": "^3.3.3",
     "object-path": "^0.11.8",
     "prettier": "^3.8.3",
     "rollup-plugin-lit-css": "^6.0.1",
@@ -46,7 +46,7 @@
     "visual-dom-diff": "^0.7.3",
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.4"
   },
   "babel": {
     "plugins": [
@@ -64,6 +64,6 @@
   "dependencies": {
     "@floating-ui/dom": "^1.7.6",
     "nise": "^6.1.5",
-    "npm-check-updates": "^22.1.1"
+    "npm-check-updates": "^22.2.0"
   }
 }
