@@ -16,9 +16,9 @@
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
-    "@babel/preset-env": "^7.29.5",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-syntax-import-assertions": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@open-wc/testing": "^4.0.0",
@@ -35,7 +35,7 @@
     "express-interceptor": "^1.2.0",
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
-    "lit": "^3.3.2",
+    "lit": "^3.3.3",
     "object-path": "^0.11.8",
     "prettier": "^3.8.3",
     "rollup-plugin-lit-css": "^6.0.1",
@@ -44,9 +44,9 @@
     "tslib": "^2.8.1",
     "unfetch": "^4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3",
+    "webpack-dev-server": "^5.2.4"
   },
   "babel": {
     "plugins": [
@@ -64,6 +64,6 @@
   "dependencies": {
     "@floating-ui/dom": "^1.7.6",
     "nise": "^6.1.5",
-    "npm-check-updates": "^22.1.1"
+    "npm-check-updates": "^22.2.1"
   }
 }
