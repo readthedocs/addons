@@ -382,6 +382,8 @@ export function getLinkWithFilename(url, resolverFilename) {
     }
   }
 
+  // resolverFilename may still be undefined if the metadata tag is missing;
+  // fall back to the base URL without appending a filename.
   if (!resolverFilename) {
     return new URL(url);
   }
