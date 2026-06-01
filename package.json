@@ -14,8 +14,8 @@
     "test:debug": "web-test-runner --manual --open"
   },
   "engines": {
-    "node": ">24.0.0",
-    "npm": ">11.10.0"
+    "node": ">=24.16.0",
+    "npm": ">=11.10.0"
   },
   "author": "Read the Docs, Inc",
   "license": "MIT",
