@@ -362,6 +362,8 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
+  // Some versions/translations may lack a documentation URL (e.g. when
+  // resolverFilename is "/" and the version has no urls.documentation).
   if (!url) {
     return undefined;
   }
