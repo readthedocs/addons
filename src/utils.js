@@ -376,6 +376,10 @@ export function getLinkWithFilename(url, resolverFilename) {
     }
   }
 
+  if (!resolverFilename) {
+    return new URL(url);
+  }
+
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
