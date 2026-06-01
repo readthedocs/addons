@@ -362,6 +362,10 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
+  if (!url) {
+    return undefined;
+  }
+
   if (!resolverFilename) {
     if (docTool.isSinglePageApplication()) {
       // SPA without ``resolverFilename``.
