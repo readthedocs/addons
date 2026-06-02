@@ -362,12 +362,6 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
-  // Some versions/translations may lack a documentation URL (e.g. when
-  // resolverFilename is "/" and the version has no urls.documentation).
-  if (!url) {
-    return undefined;
-  }
-
   if (!resolverFilename) {
     if (docTool.isSinglePageApplication()) {
       // SPA without ``resolverFilename``.
@@ -382,8 +376,9 @@ export function getLinkWithFilename(url, resolverFilename) {
     }
   }
 
-  // resolverFilename may still be undefined if the metadata tag is missing;
-  // fall back to the base URL without appending a filename.
+  // resolverFilename may still be undefined if the Cloudflare-injected meta
+  // tag was removed by React hydration (see issue #278); fall back to the
+  // base URL in that case.
   if (!resolverFilename) {
     return new URL(url);
   }

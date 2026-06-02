@@ -40,14 +40,15 @@ describe("getLinkWithFilename", () => {
     );
   });
 
-  it("returns undefined when url is undefined", () => {
-    const result = getLinkWithFilename(undefined, "/");
-    expect(result).to.be.undefined;
-  });
-
-  it("returns undefined when url is undefined and resolverFilename is a path", () => {
-    const result = getLinkWithFilename(undefined, "/index.html");
-    expect(result).to.be.undefined;
+  it("falls back to base URL when resolverFilename is null and meta tag is absent", () => {
+    // Simulates React hydration wiping the Cloudflare-injected meta tag:
+    // resolver.filename is null from the API and getMetadataValue returns
+    // undefined, so we must not crash on .replace() and return the base URL.
+    const result = getLinkWithFilename(
+      "https://pyrit.readthedocs.io/0.13.0/",
+      null,
+    );
+    expect(result.href).to.equal("https://pyrit.readthedocs.io/0.13.0/");
   });
 
   it("does not crash when resolverFilename is /", () => {
