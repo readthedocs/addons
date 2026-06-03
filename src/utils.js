@@ -376,6 +376,13 @@ export function getLinkWithFilename(url, resolverFilename) {
     }
   }
 
+  // resolverFilename may still be undefined if the Cloudflare-injected meta
+  // tag was removed by React hydration (see issue #278); fall back to the
+  // base URL in that case.
+  if (!resolverFilename) {
+    return new URL(url);
+  }
+
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
