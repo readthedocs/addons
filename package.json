@@ -13,16 +13,21 @@
     "test:dev": "web-test-runner --watch",
     "test:debug": "web-test-runner --manual --open"
   },
+  "engines": {
+    "node": ">=24.16.0",
+    "npm": ">=11.10.0"
+  },
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/plugin-syntax-import-assertions": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-syntax-import-assertions": "^7.28.6",
+    "@babel/preset-env": "^7.29.5",
+    "@floating-ui/dom": "^1.7.6",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@open-wc/testing": "^4.0.0",
-    "@rollup/plugin-commonjs": "^26.0.3",
+    "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-replace": "^6.0.3",
@@ -36,16 +41,18 @@
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.3.3",
+    "nise": "^6.1.5",
+    "npm-check-updates": "22.2.0",
     "object-path": "^0.11.8",
     "prettier": "^3.8.3",
     "rollup-plugin-lit-css": "^6.0.1",
     "sinon": "^22.0.0",
     "tippy.js": "^6.3.7",
     "tslib": "^2.8.1",
-    "unfetch": "^4.2.0",
+    "unfetch": "4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.4"
   },
   "babel": {
@@ -60,10 +67,5 @@
         ]
       }
     }
-  },
-  "dependencies": {
-    "@floating-ui/dom": "^1.7.6",
-    "nise": "^6.1.5",
-    "npm-check-updates": "^22.2.1"
   }
 }
