@@ -19,6 +19,7 @@ export const SPHINX_FURO = "furo";
 export const SPHINX_READTHEDOCS = "readthedocs";
 export const SPHINX_IMMATERIAL = "immaterial";
 export const SPHINX_PYDATA = "pydata";
+export const SPHINX_PICCOLO = "piccolo";
 
 // API URLs
 export const EMBED_API_ENDPOINT = "/_/api/v3/embed/";
