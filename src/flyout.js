@@ -138,6 +138,7 @@ export class FlyoutElement extends LitElement {
             href="${addUtmParameters(
               "https://docs.readthedocs.io/page/addons.html",
               "flyout",
+              this.config.projects.current.slug,
             )}"
             >Addons documentation</a
           ></span
@@ -149,6 +150,7 @@ export class FlyoutElement extends LitElement {
             href="${addUtmParameters(
               "https://about.readthedocs.com/",
               "flyout",
+              this.config.projects.current.slug,
             )}"
             >Read the Docs</a
           ></span
@@ -232,6 +234,7 @@ export class FlyoutElement extends LitElement {
                 .replace("readthedocs.com", "app.readthedocs.com")
                 .replace("app.app.", "app."),
               "flyout",
+              this.config.projects.current.slug,
             )}"
             >Project Home</a
           >
@@ -244,6 +247,7 @@ export class FlyoutElement extends LitElement {
                 .replace("readthedocs.com", "app.readthedocs.com")
                 .replace("app.app.", "app."),
               "flyout",
+              this.config.projects.current.slug,
             )}"
             >Builds</a
           >

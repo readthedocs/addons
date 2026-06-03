@@ -324,11 +324,11 @@ export function getQueryParam(param) {
   return url.searchParams.get(param);
 }
 
-export function addUtmParameters(url, content) {
-  const metaProject = document.querySelector(
-    "meta[name='readthedocs-project-slug']",
-  );
-  const projectSlug = metaProject.content;
+export function addUtmParameters(url, content, projectSlug) {
+  // ``projectSlug`` is passed in from the addons config instead of read from the DOM.
+  // On pages using client-side hydration (e.g. React/Docusaurus) the DOM is rewritten
+  // and the ``readthedocs-project-slug`` meta tag is removed, so querying it at
+  // render time would crash.
   const newUrl = new URL(url);
   newUrl.searchParams.append("utm_source", projectSlug);
   newUrl.searchParams.append("utm_content", content);
