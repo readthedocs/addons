@@ -380,13 +380,14 @@ export function getLinkWithFilename(url, resolverFilename) {
       // Get the resolver's filename returned by the application (as HTTP header)
       // and injected by Cloudflare Worker as a meta HTML tag
       resolverFilename = getMetadataValue("readthedocs-resolver-filename");
-    }
-  }
 
-  // resolverFilename may still be undefined if the metadata tag is missing;
-  // fall back to the base URL without appending a filename.
-  if (!resolverFilename) {
-    return new URL(url);
+      // resolverFilename may still be undefined if the metadata tag is missing
+      // (e.g. due to hydrated sites).
+      // In this case, we fall back to the base URL without appending a filename.
+      if (resolverFilename == undefined) {
+        return new URL(url);
+      }
+    }
   }
 
   // Keep only one trailing slash
