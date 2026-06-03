@@ -12,6 +12,7 @@ import {
   MKDOCS_MATERIAL,
   ZENSICAL,
   DOCUSAURUS,
+  MYSTMD,
   PELICAN,
   ASCIIDOCTOR,
   JEKYLL,
@@ -414,6 +415,7 @@ export class DocumentationTool {
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
     [DOCUSAURUS]: "article div.markdown",
+    [MYSTMD]: "article",
     [ZENSICAL]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
@@ -425,7 +427,13 @@ export class DocumentationTool {
     [FALLBACK_DOCTOOL]: ["p a"],
   };
 
-  static SINGLE_PAGE_APPLICATIONS = [VITEPRESS, MDBOOK, DOCUSAURUS, DOCSIFY];
+  static SINGLE_PAGE_APPLICATIONS = [
+    VITEPRESS,
+    MDBOOK,
+    DOCUSAURUS,
+    DOCSIFY,
+    MYSTMD,
+  ];
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
@@ -604,6 +612,10 @@ export class DocumentationTool {
       return VITEPRESS;
     }
 
+    if (this.isMystmd()) {
+      return MYSTMD;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -689,6 +701,16 @@ export class DocumentationTool {
   isVitePress() {
     if (
       document.querySelectorAll('meta[name="generator"][content^="VitePress"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMystmd() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="mystmd"]')
         .length
     ) {
       return true;
