@@ -13,6 +13,7 @@ import {
   MKDOCS_MATERIAL,
   ZENSICAL,
   DOCUSAURUS,
+  MYSTMD,
   PELICAN,
   ASCIIDOCTOR,
   JEKYLL,
@@ -324,11 +325,11 @@ export function getQueryParam(param) {
   return url.searchParams.get(param);
 }
 
-export function addUtmParameters(url, content) {
-  const metaProject = document.querySelector(
-    "meta[name='readthedocs-project-slug']",
-  );
-  const projectSlug = metaProject.content;
+export function addUtmParameters(url, content, projectSlug) {
+  // ``projectSlug`` is passed in from the addons config instead of read from the DOM.
+  // On pages using client-side hydration (e.g. React/Docusaurus) the DOM is rewritten
+  // and the ``readthedocs-project-slug`` meta tag is removed, so querying it at
+  // render time would crash.
   const newUrl = new URL(url);
   newUrl.searchParams.append("utm_source", projectSlug);
   newUrl.searchParams.append("utm_content", content);
@@ -363,6 +364,12 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
+  // Some versions/translations may lack a documentation URL (e.g. when
+  // resolverFilename is "/" and the version has no urls.documentation).
+  if (!url) {
+    return undefined;
+  }
+
   if (!resolverFilename) {
     if (docTool.isSinglePageApplication()) {
       // SPA without ``resolverFilename``.
@@ -374,6 +381,13 @@ export function getLinkWithFilename(url, resolverFilename) {
       // Get the resolver's filename returned by the application (as HTTP header)
       // and injected by Cloudflare Worker as a meta HTML tag
       resolverFilename = getMetadataValue("readthedocs-resolver-filename");
+
+      // resolverFilename may still be undefined if the metadata tag is missing
+      // (e.g. due to hydrated sites).
+      // In this case, we fall back to the base URL without appending a filename.
+      if (resolverFilename == undefined) {
+        return new URL(url);
+      }
     }
   }
 
@@ -410,6 +424,7 @@ export class DocumentationTool {
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
     [DOCUSAURUS]: "article div.markdown",
+    [MYSTMD]: "article",
     [ZENSICAL]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
@@ -421,7 +436,13 @@ export class DocumentationTool {
     [FALLBACK_DOCTOOL]: ["p a"],
   };
 
-  static SINGLE_PAGE_APPLICATIONS = [VITEPRESS, MDBOOK, DOCUSAURUS, DOCSIFY];
+  static SINGLE_PAGE_APPLICATIONS = [
+    VITEPRESS,
+    MDBOOK,
+    DOCUSAURUS,
+    DOCSIFY,
+    MYSTMD,
+  ];
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
@@ -600,6 +621,10 @@ export class DocumentationTool {
       return VITEPRESS;
     }
 
+    if (this.isMystmd()) {
+      return MYSTMD;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -687,6 +712,16 @@ export class DocumentationTool {
   isVitePress() {
     if (
       document.querySelectorAll('meta[name="generator"][content^="VitePress"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isMystmd() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="mystmd"]')
         .length
     ) {
       return true;

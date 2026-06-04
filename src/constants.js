@@ -4,6 +4,7 @@ export const MKDOCS = "mkdocs";
 export const MKDOCS_MATERIAL = "mkdocs-material";
 export const ZENSICAL = "zensical";
 export const DOCUSAURUS = "docusaurus";
+export const MYSTMD = "mystmd";
 export const PELICAN = "pelican";
 export const ASCIIDOCTOR = "asciidoctor";
 export const JEKYLL = "jekyll";
