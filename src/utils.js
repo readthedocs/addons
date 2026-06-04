@@ -4,6 +4,7 @@ import {
   SPHINX,
   SPHINX_FURO,
   SPHINX_ALABASTER,
+  SPHINX_PICCOLO,
   SPHINX_READTHEDOCS,
   SPHINX_IMMATERIAL,
   SPHINX_PYDATA,
@@ -390,6 +391,13 @@ export function getLinkWithFilename(url, resolverFilename) {
     }
   }
 
+  // resolverFilename may still be undefined if the Cloudflare-injected meta
+  // tag was removed by React hydration (see issue #278); fall back to the
+  // base URL in that case.
+  if (!resolverFilename) {
+    return new URL(url);
+  }
+
   // Keep only one trailing slash
   const base = url.replace(/\/+$/, "/");
 
@@ -626,7 +634,9 @@ export class DocumentationTool {
       this.documentationTool || this.getDocumentationTool();
 
     if (documentationTool === SPHINX) {
-      if (this.isSphinxAlabasterLikeTheme()) {
+      if (this.isSphinxPiccoloTheme()) {
+        return SPHINX_PICCOLO;
+      } else if (this.isSphinxAlabasterLikeTheme()) {
         return SPHINX_ALABASTER;
       } else if (this.isSphinxReadTheDocsLikeTheme()) {
         return SPHINX_READTHEDOCS;
@@ -743,6 +753,7 @@ export class DocumentationTool {
 
   isSphinx() {
     return (
+      this.isSphinxPiccoloTheme() ||
       this.isSphinxAlabasterLikeTheme() ||
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
@@ -802,6 +813,16 @@ export class DocumentationTool {
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
     if (document?.lastChild?.textContent.includes("MkDocs version :")) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxPiccoloTheme() {
+    if (
+      document.querySelectorAll('script[src*="_static/js/petite-vue.js"]')
+        .length === 1
+    ) {
       return true;
     }
     return false;
