@@ -309,7 +309,7 @@ export class EthicalAdsAddon extends AddonBase {
       if (keywords.length) {
         placement.setAttribute("data-ea-keywords", keywords.join("|"));
       }
-      if (campaign_types.length) {
+      if (campaign_types.length && !placement.getAttribute("data-ea-campaign-types")) {
         placement.setAttribute(
           "data-ea-campaign-types",
           campaign_types.join("|"),
