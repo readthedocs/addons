@@ -1,5 +1,3 @@
-import { defineConfig } from "npm-check-updates";
-
-export default defineConfig({
+export default {
   cooldown: "14d",
-});
+};
