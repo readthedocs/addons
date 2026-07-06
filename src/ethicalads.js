@@ -45,6 +45,7 @@ export class EthicalAdsAddon extends AddonBase {
   createAdPlacement() {
     let placement;
     let secondPlacement;
+    let secondSelector;
     let fixedFooterAdSelectors;
 
     const placementIdSuffix = docTool.getDocumentationTool() || "nodoctool";
@@ -78,7 +79,6 @@ export class EthicalAdsAddon extends AddonBase {
       let selector;
       let element;
       let knownPlacementFound = false;
-      let secondSelector = null;
 
       if (docTool.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
@@ -95,7 +95,7 @@ export class EthicalAdsAddon extends AddonBase {
           fixedFooterAdSelectors = ["section", "nav"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
-          secondSelector = "div.footer";
+          secondSelector = docTool.getRootSelector();
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
         // NOTE: The code to handle furo theme shouldn't be required,
@@ -144,7 +144,7 @@ export class EthicalAdsAddon extends AddonBase {
           fixedFooterAdSelectors = ["div.footer"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
-          secondSelector = "div.footer";
+          secondSelector = "section#alabaster-theme";
         }
       } else if (docTool.isMaterialMkDocsTheme()) {
         // Detect the left navbar if it's not hidden or grab the navbar from a post page
@@ -309,7 +309,10 @@ export class EthicalAdsAddon extends AddonBase {
       if (keywords.length) {
         placement.setAttribute("data-ea-keywords", keywords.join("|"));
       }
-      if (campaign_types.length && !placement.getAttribute("data-ea-campaign-types")) {
+      if (
+        campaign_types.length &&
+        !placement.getAttribute("data-ea-campaign-types")
+      ) {
         placement.setAttribute(
           "data-ea-campaign-types",
           campaign_types.join("|"),
@@ -330,14 +333,20 @@ export class EthicalAdsAddon extends AddonBase {
 
       // For now, only show the larger ad format on revshare partners
       if (data.publisher !== "readthedocs" && secondSelector !== null) {
-        secondPlacement = placement.cloneNode();
-        secondPlacement.setAttribute("data-ea-type", "logo-large-v1");
-        secondPlacement.setAttribute("data-ea-style", "");
-        secondPlacement.setAttribute(
-          "id",
-          `readthedocs-ea-logo-large-${placementIdSuffix}`,
-        );
-        document.querySelector(secondSelector).before(secondPlacement);
+        const secondElementToAppend = document.querySelector(secondSelector);
+        if (secondElementToAppend !== null) {
+          if (secondSelector !== null) {
+            secondPlacement = placement.cloneNode();
+            secondPlacement.setAttribute("data-ea-type", "logo-large-v1");
+            secondPlacement.setAttribute("data-ea-style", "");
+            secondPlacement.setAttribute(
+              "id",
+              `readthedocs-ea-logo-large-${placementIdSuffix}`,
+            );
+            secondElementToAppend.after(secondPlacement);
+            return secondPlacement;
+          }
+        }
       }
 
       if (placementStyle == "fixedfooter") {
