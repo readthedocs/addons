@@ -42,7 +42,7 @@
     "lit": "^3.3.3",
     "minimizer-webpack-plugin": "^5.6.1",
     "nise": "^6.1.5",
-    "npm-check-updates": "^23.0.0",
+    "npm-check-updates": "^23.0.2",
     "object-path": "^0.11.8",
     "prettier": "^3.9.6",
     "rollup-plugin-lit-css": "^6.0.1",
