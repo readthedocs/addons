@@ -350,7 +350,12 @@ export class NotificationElement extends LitElement {
         </div>
         <div class="content">
           See the
-          <a href="${addUtmParameters(this.urls.build, "notification")}"
+          <a
+            href="${addUtmParameters(
+              this.urls.build,
+              "notification",
+              this.config.projects.current.slug,
+            )}"
             >build's detail page</a
           >
           or

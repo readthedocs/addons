@@ -1,6 +1,6 @@
 {
   "name": "@readthedocs/addons",
-  "version": "0.49.0",
+  "version": "0.50.0",
   "description": "Read the Docs Addons to embed into documentation pages",
   "main": "dist/readthedocs-addons.js",
   "scripts": {
@@ -13,21 +13,25 @@
     "test:dev": "web-test-runner --watch",
     "test:debug": "web-test-runner --manual --open"
   },
+  "engines": {
+    "node": ">=24.16.0",
+    "npm": ">=11.10.0"
+  },
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/plugin-syntax-import-assertions": "^7.28.6",
-    "@babel/preset-env": "^7.29.2",
-    "@fortawesome/fontawesome-svg-core": "^7.2.0",
-    "@fortawesome/free-solid-svg-icons": "^7.2.0",
-    "@open-wc/testing": "^4.0.0",
-    "@rollup/plugin-commonjs": "^26.0.3",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@floating-ui/dom": "^1.8.0",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@open-wc/testing": "^5.0.0",
+    "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@web/dev-server-import-maps": "^0.2.1",
-    "@web/test-runner": "^0.20.2",
+    "@web/dev-server-import-maps": "^0.3.0",
+    "@web/test-runner": "^1.0.0",
     "ajv": "^8.20.0",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
@@ -35,23 +39,23 @@
     "express-interceptor": "^1.2.0",
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
-    "lit": "^3.3.2",
+    "lit": "^3.3.3",
+    "minimizer-webpack-plugin": "^5.6.1",
+    "nise": "^6.1.5",
+    "npm-check-updates": "^23.0.2",
     "object-path": "^0.11.8",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.6",
     "rollup-plugin-lit-css": "^6.0.1",
-    "sinon": "^21.1.2",
+    "sinon": "^22.1.0",
     "tippy.js": "^6.3.7",
     "tslib": "^2.8.1",
-    "unfetch": "^4.2.0",
+    "unfetch": "4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2",
-    "webpack-dev-server": "^5.2.3"
+    "webpack": "^5.109.2",
+    "webpack-cli": "^7.2.2",
+    "webpack-dev-server": "^6.0.0"
   },
   "babel": {
-    "plugins": [
-      "@babel/plugin-syntax-import-assertions"
-    ],
     "env": {
       "test": {
         "plugins": [
@@ -60,10 +64,5 @@
         ]
       }
     }
-  },
-  "dependencies": {
-    "@floating-ui/dom": "^1.7.6",
-    "nise": "^6.1.5",
-    "npm-check-updates": "^22.0.1"
   }
 }

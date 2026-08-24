@@ -168,6 +168,7 @@ export class SearchElement extends LitElement {
                 href="${addUtmParameters(
                   "https://about.readthedocs.com/",
                   "search",
+                  this.config.projects.current.slug,
                 )}"
               >
                 <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />

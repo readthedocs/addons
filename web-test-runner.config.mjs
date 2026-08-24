@@ -28,6 +28,7 @@ export default {
       esmExternals: true,
       defaultIsModuleExports: true,
       requireReturnsDefault: true,
+      strictRequires: false,
     }),
     // https://modern-web.dev/docs/dev-server/writing-plugins/examples/#environment-variables
     replace({

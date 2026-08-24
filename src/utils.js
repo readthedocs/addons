@@ -4,6 +4,7 @@ import {
   SPHINX,
   SPHINX_FURO,
   SPHINX_ALABASTER,
+  SPHINX_PICCOLO,
   SPHINX_READTHEDOCS,
   SPHINX_IMMATERIAL,
   SPHINX_PYDATA,
@@ -12,6 +13,7 @@ import {
   MKDOCS_MATERIAL,
   ZENSICAL,
   DOCUSAURUS,
+  MYSTMD,
   PELICAN,
   ASCIIDOCTOR,
   JEKYLL,
@@ -28,7 +30,7 @@ import { EVENT_READTHEDOCS_URL_CHANGED } from "./events";
 export const ADDONS_API_VERSION = "1";
 export const ADDONS_API_ENDPOINT = "/_/addons/";
 // This is managed by bumpver automatically
-export const CLIENT_VERSION = "0.49.0";
+export const CLIENT_VERSION = "0.50.0";
 
 // WEBPACK_ variables come from Webpack's DefinePlugin and Web Test Runner's RollupReplace plugin
 export const IS_TESTING =
@@ -323,11 +325,11 @@ export function getQueryParam(param) {
   return url.searchParams.get(param);
 }
 
-export function addUtmParameters(url, content) {
-  const metaProject = document.querySelector(
-    "meta[name='readthedocs-project-slug']",
-  );
-  const projectSlug = metaProject.content;
+export function addUtmParameters(url, content, projectSlug) {
+  // ``projectSlug`` is passed in from the addons config instead of read from the DOM.
+  // On pages using client-side hydration (e.g. React/Docusaurus) the DOM is rewritten
+  // and the ``readthedocs-project-slug`` meta tag is removed, so querying it at
+  // render time would crash.
   const newUrl = new URL(url);
   newUrl.searchParams.append("utm_source", projectSlug);
   newUrl.searchParams.append("utm_content", content);
@@ -362,6 +364,12 @@ export function getMetadataValue(name) {
  *
  */
 export function getLinkWithFilename(url, resolverFilename) {
+  // Some versions/translations may lack a documentation URL (e.g. when
+  // resolverFilename is "/" and the version has no urls.documentation).
+  if (!url) {
+    return undefined;
+  }
+
   if (!resolverFilename) {
     if (docTool.isSinglePageApplication()) {
       // SPA without ``resolverFilename``.
@@ -373,7 +381,21 @@ export function getLinkWithFilename(url, resolverFilename) {
       // Get the resolver's filename returned by the application (as HTTP header)
       // and injected by Cloudflare Worker as a meta HTML tag
       resolverFilename = getMetadataValue("readthedocs-resolver-filename");
+
+      // resolverFilename may still be undefined if the metadata tag is missing
+      // (e.g. due to hydrated sites).
+      // In this case, we fall back to the base URL without appending a filename.
+      if (resolverFilename == undefined) {
+        return new URL(url);
+      }
     }
+  }
+
+  // resolverFilename may still be undefined if the Cloudflare-injected meta
+  // tag was removed by React hydration (see issue #278); fall back to the
+  // base URL in that case.
+  if (!resolverFilename) {
+    return new URL(url);
   }
 
   // Keep only one trailing slash
@@ -402,6 +424,7 @@ export class DocumentationTool {
     [ASCIIDOCTOR]: "div#content",
     [PELICAN]: "article",
     [DOCUSAURUS]: "article div.markdown",
+    [MYSTMD]: "article",
     [ZENSICAL]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
@@ -413,7 +436,13 @@ export class DocumentationTool {
     [FALLBACK_DOCTOOL]: ["p a"],
   };
 
-  static SINGLE_PAGE_APPLICATIONS = [VITEPRESS, MDBOOK, DOCUSAURUS, DOCSIFY];
+  static SINGLE_PAGE_APPLICATIONS = [
+    VITEPRESS,
+    MDBOOK,
+    DOCUSAURUS,
+    DOCSIFY,
+    MYSTMD,
+  ];
 
   constructor() {
     this.documentationTool = this.getDocumentationTool();
@@ -592,6 +621,10 @@ export class DocumentationTool {
       return VITEPRESS;
     }
 
+    if (this.isMystmd()) {
+      return MYSTMD;
+    }
+
     console.debug("We were not able to detect the documentation tool.");
     return null;
   }
@@ -601,7 +634,9 @@ export class DocumentationTool {
       this.documentationTool || this.getDocumentationTool();
 
     if (documentationTool === SPHINX) {
-      if (this.isSphinxAlabasterLikeTheme()) {
+      if (this.isSphinxPiccoloTheme()) {
+        return SPHINX_PICCOLO;
+      } else if (this.isSphinxAlabasterLikeTheme()) {
         return SPHINX_ALABASTER;
       } else if (this.isSphinxReadTheDocsLikeTheme()) {
         return SPHINX_READTHEDOCS;
@@ -684,6 +719,16 @@ export class DocumentationTool {
     return false;
   }
 
+  isMystmd() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="mystmd"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   isMdBook() {
     // <head>
     // <!-- Book generated using mdBook -->
@@ -708,6 +753,7 @@ export class DocumentationTool {
 
   isSphinx() {
     return (
+      this.isSphinxPiccoloTheme() ||
       this.isSphinxAlabasterLikeTheme() ||
       this.isSphinxReadTheDocsLikeTheme() ||
       this.isSphinxFuroLikeTheme() ||
@@ -767,6 +813,16 @@ export class DocumentationTool {
     //     Build Date UTC : 2023-07-11 16:08:07.379780+00:00
     //    -->
     if (document?.lastChild?.textContent.includes("MkDocs version :")) {
+      return true;
+    }
+    return false;
+  }
+
+  isSphinxPiccoloTheme() {
+    if (
+      document.querySelectorAll('script[src*="_static/js/petite-vue.js"]')
+        .length === 1
+    ) {
       return true;
     }
     return false;
