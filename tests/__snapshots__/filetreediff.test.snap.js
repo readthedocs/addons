@@ -57,9 +57,9 @@ snapshots["Filetreediff tests toggle Show diff checkbox"] =
       1 of
         1
     </span>
-    <span>
+    <span title="Previous change">
     </span>
-    <span>
+    <span title="Next change">
     </span>
     <select>
       <option

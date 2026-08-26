@@ -42,6 +42,7 @@
   background-color: var(--readthedocs-filetreediff-background-color);
   border-radius: 0.25em;
   appearance: revert;
+  cursor: pointer;
 }
 
 :host > div > div > label {
@@ -76,12 +77,18 @@
 :host > div > div > a {
   width: var(--readthedocs-filetreediff-icon-width);
   color: var(--readthedocs-filetreediff-color);
+  /* Not all browsers show the pointer over links by default (e.g. Safari) */
+  cursor: pointer;
 }
 
 :host > div > div > a.version {
   width: auto;
   text-decoration: none;
   color: var(--readthedocs-filetreediff-chunks-color, #27ae60);
+}
+
+:host > div > div > a.version:hover {
+  text-decoration: underline;
 }
 
 /* Expand to full width on smaller screens */

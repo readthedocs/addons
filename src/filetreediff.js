@@ -97,8 +97,12 @@ export class FileTreeDiffElement extends LitElement {
         >${this.chunks.length ? this.chunkIndex : 0} of
         ${this.chunks.length || 0}</span
       >
-      <span @click=${this.previousChunk}> ${this.iconArrowUp.node[0]} </span>
-      <span @click=${this.nextChunk}> ${this.iconArrowDown.node[0]} </span>
+      <span @click=${this.previousChunk} title="Previous change">
+        ${this.iconArrowUp.node[0]}
+      </span>
+      <span @click=${this.nextChunk} title="Next change">
+        ${this.iconArrowDown.node[0]}
+      </span>
     `;
   }
 
