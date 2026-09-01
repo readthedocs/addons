@@ -312,6 +312,7 @@ export class EthicalAdsAddon extends AddonBase {
     if (placement !== null) {
       // Allow EA to switch between light/dark mode
       placement.classList.add("adaptive-css");
+      this.syncDarkModeWithPageColorScheme(placement);
 
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
       placement.setAttribute("data-ea-manual", "true");
@@ -389,6 +390,35 @@ export class EthicalAdsAddon extends AddonBase {
     }
 
     return placement;
+  }
+
+  syncDarkModeWithPageColorScheme(placement) {
+    // Material for MkDocs, Zensical, and sphinx-immaterial signal their color
+    // scheme with a `data-md-color-scheme` attribute ("slate" is dark), which
+    // the EthicalAds client doesn't recognize in its `adaptive-css` mode.
+    // Toggle the client's explicit `dark` class to match the page.
+    const element = document.querySelector(
+      "html[data-md-color-scheme], body[data-md-color-scheme]",
+    );
+    if (!element) {
+      return;
+    }
+
+    const updateDarkClass = () => {
+      if (element.getAttribute("data-md-color-scheme") === "slate") {
+        placement.classList.add("dark");
+      } else {
+        placement.classList.remove("dark");
+      }
+    };
+    updateDarkClass();
+
+    // Keep the ad in sync when the user or the OS switches modes.
+    const observer = new MutationObserver(updateDarkClass);
+    observer.observe(element, {
+      attributes: true,
+      attributeFilter: ["data-md-color-scheme"],
+    });
   }
 
   elementAboveTheFold(element) {
