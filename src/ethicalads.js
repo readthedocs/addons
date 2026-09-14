@@ -457,17 +457,11 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("type", "text/javascript");
     library.setAttribute("async", true);
 
-    // TODO: inject the stable version after we have tested this.
     // Inject the Ethical Ad client (beta) only for our own documentation.
     let src;
     if (
       window.location.hostname === "docs.readthedocs.com" ||
-      window.location.hostname.endsWith(".devthedocs.org") ||
-      // Use new beta client on Furo like themes for now.
-      // This allows us to test the dark/light mode.
-      docTool.isSphinxFuroLikeTheme() ||
-      // `data-ea-dark-selector` requires client v2.5.0, only on beta so far.
-      this.usesMaterialColorScheme()
+      window.location.hostname.endsWith(".devthedocs.org")
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
     } else {
