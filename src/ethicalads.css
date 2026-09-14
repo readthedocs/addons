@@ -231,22 +231,32 @@ div.ethical-footer {
   margin-top: 3em;
 }
 
-/* Dark theme */
-.ethical-dark-theme .ethical-sidebar {
+/* Dark theme.
+
+`.ethical-dark-theme` is added by the addon for themes that are always dark.
+`.dark` is the EthicalAds client's own dark mode class, toggled on the
+placement when `data-ea-dark-selector` matches. */
+.ethical-dark-theme .ethical-sidebar,
+[data-ea-publisher].dark .ethical-sidebar {
   background-color: #4e4b4b;
   border: 1px solid #a0a0a0;
   color: #c2c2c2 !important;
 }
 .ethical-dark-theme a,
-.ethical-dark-theme a:visited {
+.ethical-dark-theme a:visited,
+[data-ea-publisher].dark a,
+[data-ea-publisher].dark a:visited {
   color: #e6e6e6 !important;
   border-bottom: 0 !important;
 }
-.ethical-dark-theme .ethical-callout a {
+.ethical-dark-theme .ethical-callout a,
+[data-ea-publisher].dark .ethical-callout a {
   color: #b3b3b3 !important;
 }
 .ethical-dark-theme .ethical-sidebar .ea-cta,
-.ethical-dark-theme .ethical-footer .ea-cta {
+.ethical-dark-theme .ethical-footer .ea-cta,
+[data-ea-publisher].dark .ethical-sidebar .ea-cta,
+[data-ea-publisher].dark .ethical-footer .ea-cta {
   border-color: #a0a0a0;
 }
 
