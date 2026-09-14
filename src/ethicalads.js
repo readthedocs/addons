@@ -413,11 +413,9 @@ export class EthicalAdsAddon extends AddonBase {
   usesMaterialColorScheme() {
     // Whether the page's theme signals its color scheme with the
     // `data-md-color-scheme` attribute (Material for MkDocs, Zensical, sphinx-immaterial).
-    return (
-      document.querySelector(
-        "html[data-md-color-scheme], body[data-md-color-scheme]",
-      ) !== null
-    );
+    // Only `body` is checked because that's where these themes render the
+    // attribute, and it's what MATERIAL_DARK_COLOR_SCHEME_SELECTOR matches.
+    return document.body.hasAttribute("data-md-color-scheme");
   }
 
   elementAboveTheFold(element) {
