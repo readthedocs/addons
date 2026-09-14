@@ -1,4 +1,4 @@
-import { expect, assert, fixture, html, aTimeout } from "@open-wc/testing";
+import { expect, assert, fixture, html } from "@open-wc/testing";
 import { EthicalAdsAddon } from "../src/ethicalads";
 
 describe("EthicalAds addon dark mode", () => {
@@ -26,37 +26,29 @@ describe("EthicalAds addon dark mode", () => {
     document.body.removeAttribute("data-md-color-scheme");
   });
 
-  it("adds the dark class when the page uses Material's slate color scheme", () => {
-    document.body.setAttribute("data-md-color-scheme", "slate");
-
-    new EthicalAdsAddon(config);
-
-    const placement = document.querySelector("[data-ea-publisher]");
-    expect(placement.classList.contains("dark")).to.be.true;
-  });
-
-  it("does not add the dark class when the page has no color scheme attribute", () => {
-    new EthicalAdsAddon(config);
-
-    const placement = document.querySelector("[data-ea-publisher]");
-    expect(placement.classList.contains("dark")).to.be.false;
-  });
-
-  it("toggles the dark class when the page color scheme changes", async () => {
+  it("sets a dark selector when the page uses Material's color scheme attribute", () => {
     document.body.setAttribute("data-md-color-scheme", "default");
 
     new EthicalAdsAddon(config);
 
     const placement = document.querySelector("[data-ea-publisher]");
-    expect(placement.classList.contains("dark")).to.be.false;
+    expect(placement.getAttribute("data-ea-dark-selector")).to.equal(
+      "body[data-md-color-scheme='slate']",
+    );
+    // The dark selector requires the v2.5.0 client, which is only on beta.
+    expect(document.querySelector("#ethicaladsjs").src).to.equal(
+      "https://media.ethicalads.io/media/client/beta/ethicalads.min.js",
+    );
+  });
 
-    document.body.setAttribute("data-md-color-scheme", "slate");
-    await aTimeout(0);
-    expect(placement.classList.contains("dark")).to.be.true;
+  it("does not set a dark selector when the page has no color scheme attribute", () => {
+    new EthicalAdsAddon(config);
 
-    document.body.setAttribute("data-md-color-scheme", "default");
-    await aTimeout(0);
-    expect(placement.classList.contains("dark")).to.be.false;
+    const placement = document.querySelector("[data-ea-publisher]");
+    expect(placement.hasAttribute("data-ea-dark-selector")).to.be.false;
+    expect(document.querySelector("#ethicaladsjs").src).to.equal(
+      "https://media.ethicalads.io/media/client/ethicalads.min.js",
+    );
   });
 });
 

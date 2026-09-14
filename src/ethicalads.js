@@ -15,6 +15,12 @@ const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 300; // pixels
 const AD_SCRIPT_ID = "ethicaladsjs";
 
+// Selector matching Material-family themes (Material for MkDocs, Zensical,
+// sphinx-immaterial) while their dark ("slate") palette is active.
+// Passed to the EthicalAds client as `data-ea-dark-selector`.
+const MATERIAL_DARK_COLOR_SCHEME_SELECTOR =
+  "body[data-md-color-scheme='slate']";
+
 /**
  * EthicalAds addon
  *
@@ -312,7 +318,19 @@ export class EthicalAdsAddon extends AddonBase {
     if (placement !== null) {
       // Allow EA to switch between light/dark mode
       placement.classList.add("adaptive-css");
-      this.syncDarkModeWithPageColorScheme(placement);
+
+      // Material for MkDocs, Zensical, and sphinx-immaterial signal their color
+      // scheme with a `data-md-color-scheme` attribute ("slate" is dark),
+      // which the client's `adaptive-css` mode doesn't recognize. Point the
+      // client at that attribute so it toggles dark mode itself and keeps
+      // following the palette toggle and OS preference switches.
+      // https://ethical-ad-client.readthedocs.io/en/latest/#custom-dark-selector
+      if (this.usesMaterialColorScheme()) {
+        placement.setAttribute(
+          "data-ea-dark-selector",
+          MATERIAL_DARK_COLOR_SCHEME_SELECTOR,
+        );
+      }
 
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
       placement.setAttribute("data-ea-manual", "true");
@@ -392,33 +410,14 @@ export class EthicalAdsAddon extends AddonBase {
     return placement;
   }
 
-  syncDarkModeWithPageColorScheme(placement) {
-    // Material for MkDocs, Zensical, and sphinx-immaterial signal their color
-    // scheme with a `data-md-color-scheme` attribute ("slate" is dark), which
-    // the EthicalAds client doesn't recognize in its `adaptive-css` mode.
-    // Toggle the client's explicit `dark` class to match the page.
-    const element = document.querySelector(
-      "html[data-md-color-scheme], body[data-md-color-scheme]",
+  usesMaterialColorScheme() {
+    // Whether the page's theme signals its color scheme with the
+    // `data-md-color-scheme` attribute (Material for MkDocs, Zensical, sphinx-immaterial).
+    return (
+      document.querySelector(
+        "html[data-md-color-scheme], body[data-md-color-scheme]",
+      ) !== null
     );
-    if (!element) {
-      return;
-    }
-
-    const updateDarkClass = () => {
-      if (element.getAttribute("data-md-color-scheme") === "slate") {
-        placement.classList.add("dark");
-      } else {
-        placement.classList.remove("dark");
-      }
-    };
-    updateDarkClass();
-
-    // Keep the ad in sync when the user or the OS switches modes.
-    const observer = new MutationObserver(updateDarkClass);
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: ["data-md-color-scheme"],
-    });
   }
 
   elementAboveTheFold(element) {
@@ -478,7 +477,9 @@ export class EthicalAdsAddon extends AddonBase {
       window.location.hostname.endsWith(".devthedocs.org") ||
       // Use new beta client on Furo like themes for now.
       // This allows us to test the dark/light mode.
-      docTool.isSphinxFuroLikeTheme()
+      docTool.isSphinxFuroLikeTheme() ||
+      // `data-ea-dark-selector` requires client v2.5.0, which is only on beta so far.
+      this.usesMaterialColorScheme()
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
     } else {
