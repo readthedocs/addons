@@ -19,6 +19,7 @@ import {
   JEKYLL,
   FALLBACK_DOCTOOL,
   VITEPRESS,
+  STARLIGHT,
   ANTORA,
   DOCSIFY,
   THEME_LIGHT_MODE,
@@ -428,7 +429,26 @@ export class DocumentationTool {
     [ZENSICAL]: "article",
     [ANTORA]: "article",
     [JEKYLL]: "article",
+    [STARLIGHT]: "div.main-pane main",
     [FALLBACK_DOCTOOL]: ["article", "main", "div.body", "div.document", "body"],
+  };
+
+  // Right column ("On this page" TOC) container per tool.
+  static DEFAULT_SECONDARY_SIDEBAR_SELECTOR = {
+    [SPHINX]: {
+      [SPHINX_FURO]: "aside.toc-drawer:not(.no-toc) div.toc-scroll",
+      [SPHINX_PYDATA]: "div.bd-sidebar-secondary",
+      [SPHINX_IMMATERIAL]:
+        ".md-sidebar--secondary:not([hidden]) > .md-sidebar__scrollwrap",
+    },
+    [MKDOCS_MATERIAL]:
+      ".md-sidebar--secondary:not([hidden]) > .md-sidebar__scrollwrap",
+    [ZENSICAL]:
+      ".md-sidebar--secondary:not([hidden]) > .md-sidebar__scrollwrap",
+    [DOCUSAURUS]: ".theme-doc-toc-desktop",
+    [VITEPRESS]: ".VPDocAside .VPDocAsideOutline",
+    [ANTORA]: "aside.toc.sidebar",
+    [STARLIGHT]: "div.right-sidebar div.right-sidebar-panel",
   };
 
   static DEFAULT_LINK_SELECTOR = {
@@ -567,6 +587,31 @@ export class DocumentationTool {
   }
 
   /**
+   * Return the CSS selector for the right column (secondary sidebar) of the
+   * current tool/theme, or `null` when the layout has no such column.
+   */
+  getSecondarySidebarSelector() {
+    if (!this.documentationTool) {
+      return null;
+    }
+
+    let selector = objectPath.get(
+      this.constructor.DEFAULT_SECONDARY_SIDEBAR_SELECTOR,
+      this.documentationTool,
+      null,
+    );
+
+    // Sphinx selectors depend on the theme
+    if (selector && typeof selector === "object") {
+      selector = this.documentationTheme
+        ? objectPath.get(selector, this.documentationTheme, null)
+        : null;
+    }
+
+    return selector;
+  }
+
+  /**
    * Return the documentation tool auto-detected.
    *
    * Check for all the known documentation tools and return the name of it if found.
@@ -619,6 +664,10 @@ export class DocumentationTool {
 
     if (this.isVitePress()) {
       return VITEPRESS;
+    }
+
+    if (this.isStarlight()) {
+      return STARLIGHT;
     }
 
     if (this.isMystmd()) {
@@ -722,6 +771,16 @@ export class DocumentationTool {
   isMystmd() {
     if (
       document.querySelectorAll('meta[name="generator"][content^="mystmd"]')
+        .length
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isStarlight() {
+    if (
+      document.querySelectorAll('meta[name="generator"][content^="Starlight"]')
         .length
     ) {
       return true;

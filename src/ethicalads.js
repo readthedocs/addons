@@ -272,6 +272,54 @@ export class EthicalAdsAddon extends AddonBase {
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
         }
+      } else if (docTool.isStarlight()) {
+        selector = "nav.sidebar div.sidebar-content";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.classList.add("ethical-light-theme");
+
+          placement.setAttribute("data-ea-type", "image");
+          knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = [
+            "div.main-pane",
+            "nav.sidebar div.sidebar-content",
+          ];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
+        }
+      }
+
+      // The left sidebar was not above the fold. Before falling back to the
+      // fixed footer, try the right column (TOC) on 3-column layouts.
+      if (
+        !knownPlacementFound ||
+        placement.getAttribute("data-ea-style") === "fixedfooter"
+      ) {
+        const secondarySelector = docTool.getSecondarySidebarSelector();
+        const secondaryElement = secondarySelector
+          ? document.querySelector(secondarySelector)
+          : null;
+
+        if (
+          // true
+          this.isSecondarySidebarVisible(secondaryElement) &&
+          this.elementAboveTheFold(secondaryElement)
+        ) {
+          selector = secondarySelector;
+          fixedFooterAdSelectors = undefined;
+          secondSelector = undefined;
+          knownPlacementFound = true;
+
+          placement.removeAttribute("data-ea-style");
+          placement.setAttribute("data-ea-type", "image");
+          placement.classList.add("ethical-light-theme");
+          placement.setAttribute(
+            "id",
+            `readthedocs-ea-image-secondary-sidebar-${placementIdSuffix}`,
+          );
+        }
       }
 
       const placementStyle =
@@ -417,6 +465,32 @@ export class EthicalAdsAddon extends AddonBase {
     return true;
   }
 
+  isSecondarySidebarVisible(element) {
+    // The element has to be rendered, on screen, and laid out as a column to
+    // the right of the main content (not a mobile/integrated TOC).
+    if (!element) {
+      return false;
+    }
+
+    const rect = element.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) {
+      return false;
+    }
+    if (rect.left < 0 || rect.right > window.innerWidth) {
+      return false;
+    }
+
+    const rootSelector = docTool.getRootSelector();
+    const rootElement = rootSelector
+      ? document.querySelector(rootSelector)
+      : null;
+    if (rootElement && rect.left < rootElement.getBoundingClientRect().right) {
+      return false;
+    }
+
+    return true;
+  }
+
   setFixedFooterAdProperties(placement) {
     placement.setAttribute("data-ea-type", "text");
     placement.setAttribute("data-ea-style", "fixedfooter");
@@ -465,25 +539,10 @@ export class EthicalAdsAddon extends AddonBase {
     });
   }
 
-  addWidthListener() {
-    // Hide ad when the window is smaller than the stickybox width
-    const placement = document.querySelector("#readthedocs-ea");
-    if (placement && placement.dataset.eaStyle === "stickybox") {
-      window.addEventListener("resize", function () {
-        if (window.innerWidth <= 1300) {
-          placement.style.display = "none";
-        } else {
-          placement.style.display = "";
-        }
-      });
-    }
-  }
-
   injectEthicalAds() {
     // Create the placement first and after that load the EthicalAd library.
     // This will automatically "load_placement" and render the ad properly.
     this.createAdPlacement();
-    this.addWidthListener();
     this.loadEthicalAdLibrary();
   }
 

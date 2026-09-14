@@ -12,6 +12,7 @@ export const DOCSIFY = "docsify";
 export const ANTORA = "antora";
 export const MDBOOK = "mdbook";
 export const VITEPRESS = "vitepress";
+export const STARLIGHT = "starlight";
 export const FALLBACK_DOCTOOL = "fallback";
 
 // Known documentation tools themes
