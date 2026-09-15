@@ -303,7 +303,6 @@ export class EthicalAdsAddon extends AddonBase {
           : null;
 
         if (
-          // true
           this.isSecondarySidebarVisible(secondaryElement) &&
           this.elementAboveTheFold(secondaryElement)
         ) {
@@ -421,12 +420,16 @@ export class EthicalAdsAddon extends AddonBase {
                 mutation.target,
               ).height;
               console.debug("fixedFooterAdHeight", fixedFooterAdHeight);
-              for (const selector of fixedFooterAdSelectors) {
+              for (const selector of fixedFooterAdSelectors || []) {
+                // Not every page of a theme renders every element (e.g.
+                // Starlight's splash pages have no left sidebar).
                 const element = document.querySelector(selector);
-                element.style.setProperty(
-                  "padding-bottom",
-                  fixedFooterAdHeight,
-                );
+                if (element) {
+                  element.style.setProperty(
+                    "padding-bottom",
+                    fixedFooterAdHeight,
+                  );
+                }
               }
             }
           }
@@ -476,15 +479,26 @@ export class EthicalAdsAddon extends AddonBase {
     if (rect.width === 0 || rect.height === 0) {
       return false;
     }
-    if (rect.left < 0 || rect.right > window.innerWidth) {
+    // Only check the left edge. Some themes (e.g. Starlight) render the
+    // column as ``position: fixed; width: 100%``, so ``rect.right`` always
+    // extends past the viewport even though the column is fully visible.
+    if (rect.left < 0 || rect.left >= window.innerWidth) {
       return false;
     }
 
+    // The column has to sit to the right of the main content. Skip this
+    // check when the column is *inside* the root element (e.g. pydata's
+    // ``.bd-sidebar-secondary`` lives inside ``[role=main]``), since then
+    // it can never be to the right of its own container.
     const rootSelector = docTool.getRootSelector();
     const rootElement = rootSelector
       ? document.querySelector(rootSelector)
       : null;
-    if (rootElement && rect.left < rootElement.getBoundingClientRect().right) {
+    if (
+      rootElement &&
+      !rootElement.contains(element) &&
+      rect.left < rootElement.getBoundingClientRect().right
+    ) {
       return false;
     }
 
