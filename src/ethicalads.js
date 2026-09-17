@@ -15,6 +15,9 @@ const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 300; // pixels
 const AD_SCRIPT_ID = "ethicaladsjs";
 
+const MATERIAL_DARK_COLOR_SCHEME_SELECTOR =
+  "body[data-md-color-scheme='slate']";
+
 /**
  * EthicalAds addon
  *
@@ -313,6 +316,16 @@ export class EthicalAdsAddon extends AddonBase {
       // Allow EA to switch between light/dark mode
       placement.classList.add("adaptive-css");
 
+      // Material-like themes (Material for MkDocs, Zensical, sphinx-immaterial)
+      // use `data-md-color-scheme` instead of a class the client understands.
+      // https://ethical-ad-client.readthedocs.io/en/latest/#custom-dark-selector
+      if (this.usesMaterialColorScheme()) {
+        placement.setAttribute(
+          "data-ea-dark-selector",
+          MATERIAL_DARK_COLOR_SCHEME_SELECTOR,
+        );
+      }
+
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
       placement.setAttribute("data-ea-manual", "true");
 
@@ -391,6 +404,10 @@ export class EthicalAdsAddon extends AddonBase {
     return placement;
   }
 
+  usesMaterialColorScheme() {
+    return document.body.hasAttribute("data-md-color-scheme");
+  }
+
   elementAboveTheFold(element) {
     // Return false if element doesn't exist
     if (!element) {
@@ -440,15 +457,11 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("type", "text/javascript");
     library.setAttribute("async", true);
 
-    // TODO: inject the stable version after we have tested this.
     // Inject the Ethical Ad client (beta) only for our own documentation.
     let src;
     if (
       window.location.hostname === "docs.readthedocs.com" ||
-      window.location.hostname.endsWith(".devthedocs.org") ||
-      // Use new beta client on Furo like themes for now.
-      // This allows us to test the dark/light mode.
-      docTool.isSphinxFuroLikeTheme()
+      window.location.hostname.endsWith(".devthedocs.org")
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
     } else {
