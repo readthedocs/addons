@@ -39,9 +39,8 @@ describe("EthicalAds addon dark mode", () => {
     expect(placement.getAttribute("data-ea-dark-selector")).to.equal(
       "body[data-md-color-scheme='slate']",
     );
-    // The dark selector requires the v2.5.0 client, which is only on beta.
     expect(document.querySelector("#ethicaladsjs").src).to.equal(
-      "https://media.ethicalads.io/media/client/beta/ethicalads.min.js",
+      "https://media.ethicalads.io/media/client/ethicalads.min.js",
     );
   });
 
