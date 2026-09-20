@@ -40,7 +40,7 @@
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.3.3",
-    "minimizer-webpack-plugin": "^5.8.0",
+    "minimizer-webpack-plugin": "^5.9.0",
     "nise": "^6.1.5",
     "npm-check-updates": "^23.1.0",
     "object-path": "^0.11.8",
@@ -51,7 +51,7 @@
     "tslib": "^2.8.1",
     "unfetch": "4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.110.1",
+    "webpack": "^5.110.3",
     "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^6.0.0"
   },
