@@ -163,6 +163,13 @@
   hyphens: auto;
 }
 
+:host > div .results .fuzzy-notice {
+  font-size: small;
+  text-align: center;
+  margin: 0 0 0.5em 0;
+  color: var(--readthedocs-search-color);
+}
+
 div.hit-block {
   padding-top: 3px;
   border-top: 1px solid var(--readthedocs-search-result-border-color);
