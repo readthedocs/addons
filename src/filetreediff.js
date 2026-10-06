@@ -8,6 +8,7 @@ import { html, nothing, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 import styleSheet from "./filetreediff.css";
 import { DOCDIFF_URL_PARAM, DOCDIFF_CHUNK_URL_PARAM } from "./docdiff.js";
+import { DOCDIFF_CHUNK_CLASS } from "./docdiff.diff.js";
 import {
   EVENT_READTHEDOCS_ROOT_DOM_CHANGED,
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -236,63 +237,9 @@ export class FileTreeDiffElement extends LitElement {
   };
 
   getChunks() {
-    const chunks = document.querySelectorAll(
-      ".doc-diff-added, .doc-diff-removed",
-    );
-    // These are the nodes we consider a "section for a chunk". The classes
-    // `.doc-diff-*` are added to the _word_ that changed, but we want to
-    // highlight the parent element of it, being a more important section of the
-    // page (i.e `sectionNodes`)
-    //
-    // Examples:
-    //
-    //   - If the class is added to a `span/ins/del` (word/sentence
-    //     deleted/added inside a paragraph), we will return its parent `p`.
-    //   - If the class is added to a `section`, we will return the same
-    //     `section` element.
-    //   - If the class is added to a `li`, we will return the same `ul`/`ol`
-    //     element.
-    const sectionNodes = [
-      "section",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-      "p",
-      "dl",
-      "ul",
-      "ol",
-      "table",
-      "pre",
-    ];
-
-    // Create a set to de-duplicate the nodes
-    const chunkParents = new Set();
-
-    // Find the first parent we consider a section node
-    for (const chunk of chunks) {
-      let parent = chunk.parentElement;
-      // Find the parent up to 10 levels maximum
-      for (let i = 0; i < 10; i++) {
-        // If we don't have a parent, we stop iterating for this chunk
-        if (!parent) {
-          break;
-        }
-
-        if (sectionNodes.includes(parent.tagName.toLowerCase())) {
-          chunkParents.add(parent);
-          break;
-        }
-
-        // Continue checking with the parent of the parent
-        parent = parent.parentElement;
-      }
-    }
-
-    // Convert the de-duplicated Set into an Array
-    return Array.from(chunkParents);
+    // The DocDiff addon tags each block containing a change with this class
+    // when it renders the diff. See `diffDocuments` in `docdiff.diff.js`.
+    return Array.from(document.querySelectorAll(`.${DOCDIFF_CHUNK_CLASS}`));
   }
 
   _handleRootDOMChanged = (event) => {

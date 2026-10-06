@@ -3,23 +3,23 @@ export const snapshots = {};
 
 snapshots["DocDiff tests initial trigger by event and DOM check"] = 
 `<main>
-  <section class="doc-diff-removed">
-    <h1>
-      Old title
+  <section>
+    <h1 class="doc-diff-chunk">
+      <del class="doc-diff-removed">
+        Old
+      </del>
+      <ins class="doc-diff-added">
+        New
+      </ins>
+      title
+      <ins class="doc-diff-added">
+        (changed)
+      </ins>
     </h1>
-  </section>
-  <ins class="doc-diff-added">
-  </ins>
-  <section class="doc-diff-added">
-    <h1>
-      New title (changed)
-    </h1>
-    <p>
+    <p class="doc-diff-added doc-diff-chunk">
       This paragraph was added.
     </p>
   </section>
-  <ins class="doc-diff-added">
-  </ins>
 </main>
 `;
 /* end snapshot DocDiff tests initial trigger by event and DOM check */
