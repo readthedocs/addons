@@ -1,16 +1,7 @@
 import { default as fetch } from "unfetch";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
-
-// Note that it took as a while to make it work on production and also on tests.
-// We have to import it as:
-//   import * as  visualDomDiff from "visual-dom-diff";
-//
-// We have to use it as:
-//   visualDomDiff.visualDomDiff();
-//
-// See https://github.com/readthedocs/addons/pull/234
-import * as visualDomDiff from "visual-dom-diff";
+import { diffDocuments } from "./docdiff.diff";
 
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -24,24 +15,11 @@ import {
   getQueryParam,
   docTool,
   IS_LOCALHOST_DEVELOPMENT,
-  IS_TESTING,
 } from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 export const DOCDIFF_CHUNK_URL_PARAM = "readthedocs-diff-chunk";
-
-/**
- * visual-dom-diff options
- *
- * See https://github.com/Teamwork/visual-dom-diff#options
- */
-const VISUAL_DIFF_OPTIONS = {
-  addedClass: "doc-diff-added",
-  modifiedClass: "doc-diff-modified",
-  removedClass: "doc-diff-removed",
-  skipModified: true,
-};
 
 export class DocDiffElement extends LitElement {
   static elementName = "readthedocs-docdiff";
@@ -146,6 +124,34 @@ export class DocDiffElement extends LitElement {
     return EMBED_API_ENDPOINT + "?" + new URLSearchParams(params).toString();
   }
 
+  getCurrentPageURL() {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "";
+    return url.href;
+  }
+
+  // Download the main content of a page from the Embed API, as served by the
+  // server. We diff the base and the current page this way, instead of using
+  // the live DOM, so that the result doesn't depend on what JavaScript did to
+  // the page (rendered math, copy buttons, injected ads, etc.).
+  fetchContent(url) {
+    if (IS_LOCALHOST_DEVELOPMENT && url === this.getCurrentPageURL()) {
+      // The Embed API is mocked with a static file in development
+      return Promise.resolve(
+        document.querySelector(this.rootSelector).outerHTML,
+      );
+    }
+    return fetch(this.getEmbedURL(url))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error downloading requested URL: ${url}`);
+        }
+        return response.json();
+      })
+      .then((data) => data.content);
+  }
+
   compare() {
     // First check the root selector is in the current body
     if (document.querySelector(this.rootSelector) === null) {
@@ -158,19 +164,16 @@ export class DocDiffElement extends LitElement {
       promiseData = Promise.resolve(this.cachedRemoteResponse);
     } else {
       const baseURL = this.config.addons.doc_diff.base_url;
-      const url = this.getEmbedURL(baseURL);
-      promiseData = fetch(url).then((response) => {
-        if (!response.ok) {
-          throw new Error("Error downloading requested base URL.");
-        }
-        return response.json();
-      });
+      promiseData = Promise.all([
+        this.fetchContent(baseURL),
+        this.fetchContent(this.getCurrentPageURL()),
+      ]);
     }
 
     promiseData
       .then((data) => {
         this.cachedRemoteResponse = data;
-        this.performDiff(this.cachedRemoteResponse.content);
+        this.performDiff(...this.cachedRemoteResponse);
       })
       .finally(() => {
         const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
@@ -181,13 +184,12 @@ export class DocDiffElement extends LitElement {
       });
   }
 
-  // After finding the root element, and diffing it, replace it in the DOM
-  // with the resulting visual diff elements instead.
-  performDiff(remoteContent) {
+  // Return the root element from the HTML content returned by the Embed API.
+  parseContent(content) {
     const parser = new DOMParser();
-    const htmlDocument = parser.parseFromString(remoteContent, "text/html");
+    const htmlDocument = parser.parseFromString(content, "text/html");
 
-    // We first try to get the `rootSelector` from the `remoteContent`.
+    // We first try to get the `rootSelector` from the content.
     // However, depending on how the selector is constructed, it may not exist
     // even if the response is valid.
     //
@@ -197,28 +199,23 @@ export class DocDiffElement extends LitElement {
     // content is already parsed to return only the `?maincontent=` selector.
     //
     // In those cases, we always pick the `firstElementChild` of the body.
-    const oldBody =
+    return (
       htmlDocument.documentElement.querySelector(this.rootSelector) ||
-      htmlDocument.documentElement.querySelector("body").firstElementChild;
-
-    const newBody = document.querySelector(this.rootSelector);
-
-    if (oldBody === null) {
-      throw new Error("Element not found in base document.");
-    }
-
-    // Depending on the context, visualDomDiff function is found under a different path.
-    // When running tests we use a different path for it.
-    let visualDomDiffFunction = visualDomDiff.visualDomDiff;
-    if (!visualDomDiffFunction && IS_TESTING) {
-      visualDomDiffFunction = visualDomDiff.default.visualDomDiff;
-    }
-    const diffNode = visualDomDiffFunction(
-      oldBody,
-      newBody,
-      VISUAL_DIFF_OPTIONS,
+      htmlDocument.documentElement.querySelector("body").firstElementChild
     );
-    newBody.replaceWith(diffNode.firstElementChild);
+  }
+
+  // Diff the base and current content, and replace the root element in the
+  // DOM with the resulting visual diff elements instead.
+  performDiff(baseContent, currentContent) {
+    const oldBody = this.parseContent(baseContent);
+    const newBody = this.parseContent(currentContent);
+    if (oldBody === null || newBody === null) {
+      throw new Error("Element not found in base or current document.");
+    }
+
+    const { node } = diffDocuments(oldBody, newBody);
+    document.querySelector(this.rootSelector).replaceWith(node);
   }
 
   enableDocDiff() {
