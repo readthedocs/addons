@@ -323,6 +323,15 @@ export function getQueryParam(param) {
   return url.searchParams.get(param);
 }
 
+/**
+ * Whether the reader opted into the flyout v2 UI via `?readthedocs-flyout-v2=true`.
+ *
+ * Addons whose UI is folded into the v2 bar use this to step aside.
+ */
+export function isFlyoutV2Enabled() {
+  return getQueryParam("readthedocs-flyout-v2") === "true";
+}
+
 export function addUtmParameters(url, content) {
   const metaProject = document.querySelector(
     "meta[name='readthedocs-project-slug']",

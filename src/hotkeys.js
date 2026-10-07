@@ -47,6 +47,7 @@ export class HotKeysElement extends LitElement {
       element.tagName === "INPUT" ||
       element.tagName === "TEXTAREA" ||
       element.tagName === "READTHEDOCS-SEARCH" ||
+      element.tagName === "READTHEDOCS-FLYOUT-V2" ||
       element.contentEditable === "true"
     );
   }

@@ -72,19 +72,19 @@ export class SearchPanelElement extends LitElement {
             @input=${this._onInput}
           />
         </form>
-        <div class="results">
-          ${this.results ||
-          html`<p class="placeholder">Search this project's documentation</p>`}
-        </div>
+        ${this.results
+          ? html`<div class="results">${this.results}</div>`
+          : nothing}
       </div>
     `;
   }
 
   firstUpdated() {
-    const input = this.renderRoot.querySelector("input[type=search]");
-    if (input) {
-      input.focus();
-    }
+    this.focusInput();
+  }
+
+  focusInput() {
+    this.renderRoot.querySelector("input[type=search]")?.focus();
   }
 
   _onSubmit(e) {

@@ -15,9 +15,9 @@ import styleSheet from "./flyout.css";
 import {
   AddonBase,
   addUtmParameters,
-  getQueryParam,
   getLinkWithFilename,
   docTool,
+  isFlyoutV2Enabled,
 } from "./utils";
 import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
@@ -414,11 +414,7 @@ export class FlyoutAddon extends AddonBase {
   static elementClass = FlyoutElement;
 
   static isEnabled(config, httpStatus) {
-    // Disable original flyout when v2 is active
-    if (getQueryParam("readthedocs-flyout-v2") === "true") {
-      return false;
-    }
-    return super.isEnabled(config, httpStatus);
+    return !isFlyoutV2Enabled() && super.isEnabled(config, httpStatus);
   }
 
   static requiresUrlParam() {

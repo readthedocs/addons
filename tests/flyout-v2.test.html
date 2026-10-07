@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-resolver-filename" content="/" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as flyoutV2 from "../src/flyout-v2";
+
+      let config;
+
+      // Flyout v2 only activates with this query param.
+      const url = new URL(window.location.href);
+      url.searchParams.set("readthedocs-flyout-v2", "true");
+      window.history.replaceState({}, "", url);
+
+      const render = async (cfg) => {
+        new flyoutV2.FlyoutV2Addon(cfg);
+        const element = document.querySelector("readthedocs-flyout-v2");
+        await elementUpdated(element);
+        return element;
+      };
+
+      runTests(async () => {
+        beforeEach(() => {
+          window.localStorage.clear();
+
+          config = {
+            addons: {
+              search: { enabled: true },
+              flyout: {
+                enabled: true,
+                vcs: { name: "GitHub", view_url: "https://github.com/o/r" },
+              },
+            },
+            readthedocs: { resolver: { filename: "/" } },
+            projects: {
+              current: {
+                slug: "project",
+                versioning_scheme: "multiple_versions_with_translations",
+                language: { code: "en" },
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/latest/",
+                  home: "https://readthedocs.org/projects/project/",
+                  builds: "https://readthedocs.org/projects/project/builds/",
+                  downloads:
+                    "https://readthedocs.org/projects/project/downloads/",
+                },
+              },
+              translations: [
+                {
+                  slug: "project-es",
+                  versioning_scheme: "multiple_versions_with_translations",
+                  language: { code: "es" },
+                  urls: {
+                    documentation: "https://project.readthedocs.io/es/latest/",
+                    home: "https://readthedocs.org/projects/project/",
+                    builds: "https://readthedocs.org/projects/project/builds/",
+                    downloads:
+                      "https://readthedocs.org/projects/project/downloads/",
+                  },
+                },
+              ],
+            },
+            versions: {
+              active: [
+                {
+                  slug: "stable",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/stable/",
+                  },
+                },
+                {
+                  slug: "latest",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/latest/",
+                  },
+                },
+              ],
+              current: {
+                slug: "latest",
+                type: "branch",
+                downloads: {
+                  pdf: "https://project.readthedocs.io/_/downloads/en/latest/pdf/",
+                },
+              },
+            },
+          };
+        });
+
+        describe("Flyout v2", () => {
+          it("renders the menu bar with language, version and download selects", async () => {
+            const element = await render(config);
+            const selects = element.shadowRoot.querySelectorAll(
+              ".bar-content select",
+            );
+            expect(selects.length).to.equal(3);
+
+            const [language, version, download] = selects;
+            expect(language.value).to.equal(
+              "https://project.readthedocs.io/en/latest/",
+            );
+            expect(language.selectedOptions[0].textContent.trim()).to.equal(
+              "en",
+            );
+            expect(version.selectedOptions[0].textContent.trim()).to.equal(
+              "latest",
+            );
+            expect(download.options.length).to.equal(2);
+          });
+
+          it("lists addons in the hamburger and hides unavailable ones", async () => {
+            const element = await render(config);
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ].map((b) => b.getAttribute("aria-label"));
+            expect(labels).to.deep.equal(["Menu", "Search", "Settings"]);
+          });
+
+          it("shows changed files only on external versions", async () => {
+            config.versions.current.type = "external";
+            config.addons.filetreediff = {
+              enabled: true,
+              diff: { added: [], modified: [] },
+            };
+            const element = await render(config);
+            const button = element.shadowRoot.querySelector(
+              '.hamburger-dropdown button[aria-label="Changed files"]',
+            );
+            expect(button).to.exist;
+          });
+
+          it("switches the bar to search and remembers it", async () => {
+            const element = await render(config);
+            element.shadowRoot
+              .querySelector('.hamburger-dropdown button[aria-label="Search"]')
+              .click();
+            await elementUpdated(element);
+
+            expect(element.shadowRoot.querySelector("readthedocs-search-panel"))
+              .to.exist;
+            expect(
+              flyoutV2.FlyoutV2Addon.getLocalStorage().activePanel,
+            ).to.equal(flyoutV2.PANEL_SEARCH);
+          });
+
+          it("persists the position chosen in settings", async () => {
+            const element = await render(config);
+            element.shadowRoot
+              .querySelector(
+                '.hamburger-dropdown button[aria-label="Settings"]',
+              )
+              .click();
+            await elementUpdated(element);
+
+            const select = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Bar position"]',
+            );
+            select.value = "bottom-right";
+            select.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            expect(element.shadowRoot.querySelector(".container.bottom-right"))
+              .to.exist;
+            expect(flyoutV2.FlyoutV2Addon.getLocalStorage().position).to.equal(
+              "bottom-right",
+            );
+          });
+
+          it("falls back to the menu when a remembered addon is unavailable", async () => {
+            flyoutV2.FlyoutV2Addon.setLocalStorage({
+              activePanel: flyoutV2.PANEL_FILEDIFF,
+            });
+            const element = await render(config);
+            expect(element.shadowRoot.querySelector(".bar-logo")).to.exist;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

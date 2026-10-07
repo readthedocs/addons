@@ -2,12 +2,13 @@ import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
+  faArrowUpRightFromSquare,
   faBars,
-  faCodeBranch,
-  faGear,
-  faLanguage,
-  faMagnifyingGlass,
   faFileLines,
+  faGear,
+  faHammer,
+  faHouse,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
@@ -16,32 +17,59 @@ import { default as objectPath } from "object-path";
 import styleSheet from "./flyout-v2.css";
 import {
   AddonBase,
-  getQueryParam,
-  getLinkWithFilename,
+  addUtmParameters,
   docTool,
+  getLinkWithFilename,
+  isFlyoutV2Enabled,
 } from "./utils";
 import {
   EVENT_READTHEDOCS_FLYOUT_HIDE,
-  EVENT_READTHEDOCS_FLYOUT_SHOW,
   EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
+  EVENT_READTHEDOCS_FLYOUT_SHOW,
+  EVENT_READTHEDOCS_SEARCH_SHOW,
 } from "./events";
 
 import "./search-panel.js";
 import "./filetreediff-panel.js";
 
-const PANEL_MENU = "menu";
-const PANEL_SEARCH = "search";
-const PANEL_FILEDIFF = "filetreediff";
-const PANEL_CONFIG = "config";
+export const PANEL_MENU = "menu";
+export const PANEL_SEARCH = "search";
+export const PANEL_FILEDIFF = "filetreediff";
+export const PANEL_SETTINGS = "settings";
 
+const POSITIONS = [
+  "top-center",
+  "top-left",
+  "top-right",
+  "bottom-left",
+  "bottom-right",
+];
+const DEFAULT_POSITION = "top-center";
+
+const DOWNLOAD_NAMES = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
+
+// Dashboard URLs come back on the legacy domain; point at the app.
+function toAppUrl(url) {
+  return url
+    .replace("readthedocs.org", "app.readthedocs.org")
+    .replace("readthedocs.com", "app.readthedocs.com")
+    .replace("app.app.", "app.");
+}
+
+/**
+ * Flyout v2: a single bar that hosts the active addon's UI inline.
+ *
+ * The hamburger switches which addon is shown. There is no expanded
+ * state: each addon renders a compact, bar-sized version of itself.
+ */
 export class FlyoutV2Element extends LitElement {
   static elementName = "readthedocs-flyout-v2";
 
   static properties = {
     config: { state: true },
-    floating: { type: Boolean },
     position: { type: String },
     activePanel: { state: true },
+    hamburgerOpen: { state: true },
   };
 
   static styles = styleSheet;
@@ -50,26 +78,32 @@ export class FlyoutV2Element extends LitElement {
     super();
 
     this.config = null;
-    this.floating = true;
-    this.position = "top-center";
+    this.position = DEFAULT_POSITION;
     this.activePanel = PANEL_MENU;
+    this.hamburgerOpen = false;
 
+    library.add(faArrowUpRightFromSquare);
     library.add(faBars);
-    library.add(faCodeBranch);
-    library.add(faGear);
-    library.add(faLanguage);
-    library.add(faMagnifyingGlass);
     library.add(faFileLines);
+    library.add(faGear);
+    library.add(faHammer);
+    library.add(faHouse);
+    library.add(faMagnifyingGlass);
 
     this.iconBars = icon(faBars, { classes: ["icon"] });
-    this.iconGear = icon(faGear, { classes: ["icon"] });
-    this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
+    this.iconExternalLink = icon(faArrowUpRightFromSquare, {
+      classes: ["icon"],
+    });
     this.iconFileLines = icon(faFileLines, { classes: ["icon"] });
+    this.iconGear = icon(faGear, { classes: ["icon"] });
+    this.iconHammer = icon(faHammer, { classes: ["icon"] });
+    this.iconHouse = icon(faHouse, { classes: ["icon"] });
+    this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
 
     this._onMenuClick = (e) => this._switchPanel(PANEL_MENU, e);
     this._onSearchClick = (e) => this._switchPanel(PANEL_SEARCH, e);
     this._onFileDiffClick = (e) => this._switchPanel(PANEL_FILEDIFF, e);
-    this._onConfigClick = (e) => this._switchPanel(PANEL_CONFIG, e);
+    this._onSettingsClick = (e) => this._switchPanel(PANEL_SETTINGS, e);
   }
 
   loadConfig(config) {
@@ -77,15 +111,6 @@ export class FlyoutV2Element extends LitElement {
       return;
     }
     this.config = config;
-
-    const dashboardPosition = objectPath.get(
-      this.config,
-      "addons.flyout.position",
-      null,
-    );
-    if (dashboardPosition) {
-      this.position = dashboardPosition;
-    }
 
     this._searchEnabled = objectPath.get(
       this.config,
@@ -100,272 +125,392 @@ export class FlyoutV2Element extends LitElement {
       this.config.projects.current.versioning_scheme !==
         "single_version_without_translations";
     this._hasLanguages = this.config.projects.translations.length > 0;
+    this._hasDownloads =
+      Object.keys(this.config.versions.current.downloads).length > 0;
+
+    const stored = FlyoutV2Addon.getLocalStorage();
+    const dashboardPosition = objectPath.get(
+      this.config,
+      "addons.flyout.position",
+      null,
+    );
+    this.position = POSITIONS.includes(stored.position)
+      ? stored.position
+      : dashboardPosition || DEFAULT_POSITION;
+
+    // Remember the last selected addon across page loads.
+    this.activePanel = this._isPanelAvailable(stored.activePanel)
+      ? stored.activePanel
+      : PANEL_MENU;
   }
 
-  _switchPanel(panelName, e) {
+  _isPanelAvailable(panel) {
+    switch (panel) {
+      case PANEL_MENU:
+      case PANEL_SETTINGS:
+        return true;
+      case PANEL_SEARCH:
+        return this._searchEnabled;
+      case PANEL_FILEDIFF:
+        return this._fileTreeDiffEnabled;
+      default:
+        return false;
+    }
+  }
+
+  _switchPanel(panel, e) {
     if (e) {
       e.stopPropagation();
     }
-    this.activePanel = panelName;
+    if (!this._isPanelAvailable(panel)) {
+      panel = PANEL_MENU;
+    }
+    this.activePanel = panel;
+    this.hamburgerOpen = false;
+    FlyoutV2Addon.setLocalStorage({ activePanel: panel });
   }
 
-  _onOutsideClick = (e) => {
-    if (e.target !== this) {
-      this.activePanel = PANEL_MENU;
+  _onHamburgerToggle = (e) => {
+    e.stopPropagation();
+    this.hamburgerOpen = !this.hamburgerOpen;
+  };
+
+  // Clicks inside the shadow root are retargeted to the host, so any
+  // click that reaches the window came from outside the bar.
+  _onWindowClick = () => {
+    this.hamburgerOpen = false;
+  };
+
+  _onKeydown = (e) => {
+    if (e.key !== "Escape") {
+      return;
+    }
+    this.hamburgerOpen = false;
+    if (this.activePanel !== PANEL_MENU) {
+      this._switchPanel(PANEL_MENU);
     }
   };
 
-  _onVersionChange(e) {
-    const url = e.target.value;
-    if (url) {
-      window.location.href = url;
+  _onSelectNavigate(e) {
+    if (e.target.value) {
+      window.location.href = e.target.value;
     }
   }
 
-  _onLanguageChange(e) {
-    const url = e.target.value;
-    if (url) {
-      window.location.href = url;
-    }
+  _onPositionChange = (e) => {
+    this.position = e.target.value;
+    FlyoutV2Addon.setLocalStorage({ position: this.position });
+  };
+
+  _focusSearch() {
+    this.updateComplete.then(() => {
+      this.renderRoot.querySelector("readthedocs-search-panel")?.focusInput();
+    });
   }
 
-  // ---- Hamburger dropdown ----
+  // ---- Hamburger ----
+
+  _renderHamburgerItem(panel, label, iconNode, onClick) {
+    return html`
+      <button
+        class=${classMap({ active: this.activePanel === panel })}
+        @click=${onClick}
+        title=${label}
+        aria-label=${label}
+        role="menuitem"
+      >
+        ${iconNode}
+      </button>
+    `;
+  }
 
   renderHamburger() {
     return html`
-      <div class="hamburger">
-        <button class="hamburger-trigger" aria-label="Switch addon">
+      <div class=${classMap({ hamburger: true, open: this.hamburgerOpen })}>
+        <button
+          class="hamburger-trigger"
+          @click=${this._onHamburgerToggle}
+          aria-label="Read the Docs addons"
+          aria-haspopup="menu"
+          aria-expanded=${this.hamburgerOpen}
+        >
           ${this.iconBars.node[0]}
         </button>
-        <div class="hamburger-dropdown">
-          <button
-            class=${classMap({ active: this.activePanel === PANEL_MENU })}
-            @click=${this._onMenuClick}
-            title="Menu"
-          >
-            ${this.iconBars.node[0]}
-          </button>
+        <div class="hamburger-dropdown" role="menu">
+          ${this._renderHamburgerItem(
+            PANEL_MENU,
+            "Menu",
+            this.iconBars.node[0],
+            this._onMenuClick,
+          )}
           ${this._searchEnabled
-            ? html`<button
-                class=${classMap({ active: this.activePanel === PANEL_SEARCH })}
-                @click=${this._onSearchClick}
-                title="Search"
-              >
-                ${this.iconSearch.node[0]}
-              </button>`
+            ? this._renderHamburgerItem(
+                PANEL_SEARCH,
+                "Search",
+                this.iconSearch.node[0],
+                this._onSearchClick,
+              )
             : nothing}
           ${this._fileTreeDiffEnabled
-            ? html`<button
-                class=${classMap({
-                  active: this.activePanel === PANEL_FILEDIFF,
-                })}
-                @click=${this._onFileDiffClick}
-                title="Changed files"
-              >
-                ${this.iconFileLines.node[0]}
-              </button>`
+            ? this._renderHamburgerItem(
+                PANEL_FILEDIFF,
+                "Changed files",
+                this.iconFileLines.node[0],
+                this._onFileDiffClick,
+              )
             : nothing}
-          <button
-            class=${classMap({ active: this.activePanel === PANEL_CONFIG })}
-            @click=${this._onConfigClick}
-            title="Settings"
-          >
-            ${this.iconGear.node[0]}
-          </button>
+          ${this._renderHamburgerItem(
+            PANEL_SETTINGS,
+            "Settings",
+            this.iconGear.node[0],
+            this._onSettingsClick,
+          )}
         </div>
       </div>
     `;
   }
 
-  // ---- Bar content per active addon ----
+  // ---- Bar content per addon ----
 
   renderBarContent() {
     switch (this.activePanel) {
       case PANEL_SEARCH:
-        return this._renderSearchBar();
+        return html`<readthedocs-search-panel
+          .config=${this.config}
+        ></readthedocs-search-panel>`;
       case PANEL_FILEDIFF:
-        return this._renderFileDiffBar();
-      case PANEL_CONFIG:
-        return this._renderConfigBar();
+        return html`<readthedocs-filetreediff-panel
+          .config=${this.config}
+        ></readthedocs-filetreediff-panel>`;
+      case PANEL_SETTINGS:
+        return this.renderSettings();
       case PANEL_MENU:
       default:
-        return this._renderMenuBar();
+        return this.renderMenu();
     }
   }
 
-  _renderMenuBar() {
-    const currentVersionSlug = this.config.versions.current.slug;
-    const currentLangCode = this.config.projects.current.language.code;
+  renderMenu() {
+    const { current, translations } = this.config.projects;
+    const filename = this.config.readthedocs.resolver.filename;
 
     return html`
-      <div class="bar-content">
-        <img
-          class="bar-logo"
-          src="${READTHEDOCS_LOGO_WORDMARK}"
-          alt="Read the Docs"
-        />
-        ${this._hasLanguages
-          ? html`<select
-              class="bar-select"
-              @change=${this._onLanguageChange}
-              title="Switch language"
-            >
-              ${this.config.projects.translations
-                .concat(this.config.projects.current)
-                .sort((a, b) => a.language.code.localeCompare(b.language.code))
-                .map((t) => {
-                  const url = getLinkWithFilename(
-                    t.urls.documentation,
-                    this.config.readthedocs.resolver.filename,
-                  );
-                  return html`<option
-                    value="${url}"
-                    ?selected=${t.slug === this.config.projects.current.slug}
+      <img
+        class="bar-logo"
+        src="${READTHEDOCS_LOGO_WORDMARK}"
+        alt="Read the Docs"
+      />
+      ${this._hasLanguages
+        ? html`<select
+            class="bar-select"
+            @change=${this._onSelectNavigate}
+            aria-label="Language"
+            title="Switch language"
+          >
+            ${translations
+              .concat(current)
+              .sort((a, b) => a.language.code.localeCompare(b.language.code))
+              .map(
+                (t) =>
+                  html`<option
+                    value="${getLinkWithFilename(
+                      t.urls.documentation,
+                      filename,
+                    )}"
+                    ?selected=${t.slug === current.slug}
                   >
                     ${t.language.code}
-                  </option>`;
-                })}
-            </select>`
-          : nothing}
-        ${this._hasVersions
-          ? html`<select
-              class="bar-select"
-              @change=${this._onVersionChange}
-              title="Switch version"
-            >
-              ${this.config.versions.active.map((v) => {
-                const url = getLinkWithFilename(
-                  v.urls.documentation,
-                  this.config.readthedocs.resolver.filename,
-                );
-                return html`<option
-                  value="${url}"
-                  ?selected=${v.slug === currentVersionSlug}
+                  </option>`,
+              )}
+          </select>`
+        : nothing}
+      ${this._hasVersions
+        ? html`<select
+            class="bar-select"
+            @change=${this._onSelectNavigate}
+            aria-label="Version"
+            title="Switch version"
+          >
+            ${this.config.versions.active.map(
+              (v) =>
+                html`<option
+                  value="${getLinkWithFilename(v.urls.documentation, filename)}"
+                  ?selected=${v.slug === this.config.versions.current.slug}
                 >
                   ${v.slug}
-                </option>`;
-              })}
-            </select>`
-          : nothing}
+                </option>`,
+            )}
+          </select>`
+        : nothing}
+      ${this._hasDownloads
+        ? html`<select
+            class="bar-select"
+            @change=${this._onSelectNavigate}
+            aria-label="Download"
+            title="Download"
+          >
+            <option value="" selected disabled>Download</option>
+            ${Object.entries(this.config.versions.current.downloads).map(
+              ([name, url]) =>
+                html`<option value="${url}">
+                  ${DOWNLOAD_NAMES[name] || name}
+                </option>`,
+            )}
+          </select>`
+        : nothing}
+      <a
+        class="bar-branding"
+        href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
+        title="Hosted by Read the Docs"
+      >
+        <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+      </a>
+    `;
+  }
+
+  renderSettings() {
+    const { urls } = this.config.projects.current;
+    const vcs = this.config.addons.flyout.vcs;
+
+    return html`
+      <label class="bar-field">
+        Position
+        <select
+          class="bar-select"
+          @change=${this._onPositionChange}
+          aria-label="Bar position"
+        >
+          ${POSITIONS.map(
+            (p) =>
+              html`<option value="${p}" ?selected=${p === this.position}>
+                ${p.replace("-", " ")}
+              </option>`,
+          )}
+        </select>
+      </label>
+      <span class="bar-links">
         <a
-          class="bar-branding"
-          href="https://about.readthedocs.com/"
-          title="Hosted by Read the Docs"
+          href="${addUtmParameters(toAppUrl(urls.home), "flyout")}"
+          title="Project home"
         >
-          <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
+          ${this.iconHouse.node[0]}
         </a>
-      </div>
-    `;
-  }
-
-  _renderSearchBar() {
-    return html`
-      <div class="bar-content">
-        <readthedocs-search-panel
-          .config=${this.config}
-        ></readthedocs-search-panel>
-      </div>
-    `;
-  }
-
-  _renderFileDiffBar() {
-    return html`
-      <div class="bar-content">
-        <readthedocs-filetreediff-panel
-          .config=${this.config}
-        ></readthedocs-filetreediff-panel>
-      </div>
-    `;
-  }
-
-  _renderConfigBar() {
-    return html`
-      <div class="bar-content">
-        <span class="bar-label">${this.iconGear.node[0]} Settings</span>
-        <span class="config-placeholder"
-          >Configuration options coming soon</span
+        <a
+          href="${addUtmParameters(toAppUrl(urls.builds), "flyout")}"
+          title="Builds"
         >
-      </div>
+          ${this.iconHammer.node[0]}
+        </a>
+        ${vcs?.view_url
+          ? html`<a
+              href="${vcs.view_url}"
+              target="_blank"
+              title="View source on ${vcs.name}"
+            >
+              ${this.iconExternalLink.node[0]}
+            </a>`
+          : nothing}
+      </span>
     `;
   }
-
-  // ---- Render ----
 
   render() {
     if (this.config === null) {
       return nothing;
     }
 
-    const classes = {
-      container: true,
-      floating: this.floating,
-    };
-    classes[this.position] = true;
+    const classes = { container: true, [this.position]: true };
 
     return html`
-      <div class=${classMap(classes)}>
-        ${this.renderHamburger()} ${this.renderBarContent()}
+      <div class=${classMap(classes)} @keydown=${this._onKeydown}>
+        ${this.renderHamburger()}
+        <div class="bar-content">${this.renderBarContent()}</div>
       </div>
     `;
   }
 
-  _showFlyout = () => {
-    /* no-op for v2 — bar is always visible */
+  _onFlyoutShow = () => {
+    this._switchPanel(PANEL_MENU);
   };
-  _hideFlyout = () => {
-    this.activePanel = PANEL_MENU;
+
+  _onSearchShow = () => {
+    if (this._searchEnabled) {
+      this._switchPanel(PANEL_SEARCH);
+      this._focusSearch();
+    }
   };
-  _handlePanelSet = (e) => {
-    const panelName = e.detail?.panel;
-    if (panelName) {
-      this.activePanel = panelName;
+
+  _onPanelSet = (e) => {
+    if (e.detail?.panel) {
+      this._switchPanel(e.detail.panel);
     }
   };
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_SHOW, this._showFlyout);
-    document.addEventListener(EVENT_READTHEDOCS_FLYOUT_HIDE, this._hideFlyout);
+    document.addEventListener(
+      EVENT_READTHEDOCS_FLYOUT_SHOW,
+      this._onFlyoutShow,
+    );
+    document.addEventListener(
+      EVENT_READTHEDOCS_FLYOUT_HIDE,
+      this._onFlyoutShow,
+    );
+    document.addEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._onSearchShow,
+    );
     document.addEventListener(
       EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
-      this._handlePanelSet,
+      this._onPanelSet,
     );
-    window.addEventListener("click", this._onOutsideClick);
+    window.addEventListener("click", this._onWindowClick);
   }
 
   disconnectedCallback() {
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_SHOW,
-      this._showFlyout,
+      this._onFlyoutShow,
     );
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_HIDE,
-      this._hideFlyout,
+      this._onFlyoutShow,
+    );
+    document.removeEventListener(
+      EVENT_READTHEDOCS_SEARCH_SHOW,
+      this._onSearchShow,
     );
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_PANEL_SET,
-      this._handlePanelSet,
+      this._onPanelSet,
     );
-    window.removeEventListener("click", this._onOutsideClick);
+    window.removeEventListener("click", this._onWindowClick);
     super.disconnectedCallback();
   }
 }
 
+/**
+ * Flyout v2 addon.
+ *
+ * Runs alongside the original flyout for testing. Enable it with
+ * `?readthedocs-flyout-v2=true`; the original flyout, search modal and
+ * standalone file tree diff bar step aside when it is active.
+ */
 export class FlyoutV2Addon extends AddonBase {
   static jsonValidationURI =
     "http://v1.schemas.readthedocs.org/addons.flyout.json";
   static addonEnabledPath = "addons.flyout.enabled";
   static addonName = "FlyoutV2";
+  static addonLocalStorageKey = "readthedocs-flyout-v2-storage-key";
   static elementClass = FlyoutV2Element;
 
   static isEnabled(config, httpStatus) {
-    return (
-      getQueryParam("readthedocs-flyout-v2") === "true" &&
-      super.isEnabled(config, httpStatus)
-    );
+    return isFlyoutV2Enabled() && super.isEnabled(config, httpStatus);
   }
 
   static requiresUrlParam() {
+    // Same reason as the original flyout: version/language links need the
+    // resolved filename to keep the reader on the same page.
     return docTool.isSinglePageApplication();
   }
 }

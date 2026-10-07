@@ -1,4 +1,4 @@
-/* Flyout V2 - Horizontal bar with integrated addon UIs */
+/* Flyout v2: a single bar hosting the active addon's UI */
 
 @layer defaults {
   :root {
@@ -7,6 +7,7 @@
       var(--readthedocs-font-size) * 0.85
     );
     --readthedocs-flyout-v2-line-height: 1.4em;
+    --readthedocs-flyout-v2-row-height: 2.4em;
 
     --readthedocs-flyout-v2-color: rgb(220, 220, 220);
     --readthedocs-flyout-v2-muted-color: rgb(150, 150, 150);
@@ -18,10 +19,16 @@
   }
 }
 
-/* ---- Container: the bar itself ---- */
+/* ---- Bar ---- */
 
 .container {
   position: fixed;
+  z-index: 3000;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.25em;
+  padding-right: 0.5em;
+  max-width: calc(100vw - 2em);
   font-family: var(--readthedocs-flyout-v2-font-family);
   font-size: var(--readthedocs-flyout-v2-font-size);
   line-height: var(--readthedocs-flyout-v2-line-height);
@@ -29,29 +36,12 @@
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0 0 0.5em 0.5em;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  z-index: 3000;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 0.5em 0 0;
-  gap: 0.25em;
 }
 
 .container.top-center {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.container.bottom-right {
-  bottom: 1em;
-  right: 1em;
-  border-radius: 0.5em;
-}
-
-.container.bottom-left {
-  bottom: 1em;
-  left: 1em;
-  border-radius: 0.5em;
 }
 
 .container.top-left {
@@ -61,6 +51,20 @@
 
 .container.top-right {
   top: 0;
+  right: 1em;
+}
+
+.container.bottom-left,
+.container.bottom-right {
+  bottom: 1em;
+  border-radius: 0.5em;
+}
+
+.container.bottom-left {
+  left: 1em;
+}
+
+.container.bottom-right {
   right: 1em;
 }
 
@@ -75,13 +79,15 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5em;
+  height: var(--readthedocs-flyout-v2-row-height);
+  padding: 0 0.6em;
   color: var(--readthedocs-flyout-v2-muted-color);
   display: flex;
   align-items: center;
 }
 
-.hamburger-trigger:hover {
+.hamburger-trigger:hover,
+.hamburger.open .hamburger-trigger {
   color: var(--readthedocs-flyout-v2-item-link-color);
 }
 
@@ -95,16 +101,17 @@
   position: absolute;
   top: 100%;
   left: 0;
+  flex-direction: column;
+  gap: 0.1em;
+  padding: 0.25em;
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0 0 0.4em 0.4em;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  padding: 0.25em;
-  z-index: 10;
-  flex-direction: column;
-  gap: 0.1em;
+  z-index: 1;
 }
 
-.hamburger:hover .hamburger-dropdown {
+.hamburger:hover .hamburger-dropdown,
+.hamburger.open .hamburger-dropdown {
   display: flex;
 }
 
@@ -134,32 +141,31 @@
   width: 1em;
 }
 
-/* ---- Bar content (inline addon UI) ---- */
+/* ---- Bar content ---- */
 
 .bar-content {
   display: flex;
   align-items: center;
   gap: 0.4em;
-  flex: 1;
+  min-height: var(--readthedocs-flyout-v2-row-height);
   min-width: 0;
 }
 
 .bar-logo {
   height: 1.3em;
   width: auto;
-  padding: 0.4em 0;
 }
 
 .bar-select {
+  appearance: revert;
   background-color: transparent;
   color: var(--readthedocs-flyout-v2-active-color);
   border: none;
+  border-radius: 0.25em;
+  padding: 0.2em 0.3em;
   font-size: inherit;
   font-family: inherit;
   cursor: pointer;
-  padding: 0.2em 0.3em;
-  border-radius: 0.25em;
-  appearance: revert;
 }
 
 .bar-select:hover {
@@ -173,8 +179,7 @@
 
 .bar-branding {
   display: flex;
-  margin-left: auto;
-  text-decoration: none;
+  margin-left: 0.25em;
   opacity: 0.4;
 }
 
@@ -187,19 +192,37 @@
   width: auto;
 }
 
-.bar-label {
+/* ---- Settings ---- */
+
+.bar-field {
   display: flex;
   align-items: center;
-  gap: 0.3em;
+  gap: 0.4em;
+  color: var(--readthedocs-flyout-v2-muted-color);
+  white-space: nowrap;
+}
+
+.bar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  padding-left: 0.5em;
+  border-left: 1px solid var(--readthedocs-flyout-v2-divider-color);
+}
+
+.bar-links a {
+  display: flex;
+  padding: 0.4em;
+  border-radius: 0.25em;
   color: var(--readthedocs-flyout-v2-muted-color);
 }
 
-.bar-label svg {
+.bar-links a:hover {
+  background-color: var(--readthedocs-flyout-v2-hover-background-color);
+  color: var(--readthedocs-flyout-v2-item-link-color);
+}
+
+.bar-links svg {
   height: 0.9em;
-}
-
-.config-placeholder {
-  color: var(--readthedocs-flyout-v2-muted-color);
-  font-size: 0.9em;
-  font-style: italic;
+  width: 0.9em;
 }
