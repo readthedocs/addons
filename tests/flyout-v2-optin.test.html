@@ -20,15 +20,47 @@
         window.history.replaceState({}, "", url);
       };
 
+      // Test files run concurrently in pages that share this origin's
+      // localStorage. A real opt-in written here would switch the v1 addons
+      // off in whichever file happens to run at the same time, so swap in an
+      // in-memory store for the duration of this file.
+      const realStorage = Object.getOwnPropertyDescriptor(
+        window,
+        "localStorage",
+      );
+      let store;
+      const fakeStorage = {
+        getItem: (key) => (key in store ? store[key] : null),
+        setItem: (key, value) => {
+          store[key] = String(value);
+        },
+        removeItem: (key) => {
+          delete store[key];
+        },
+      };
+
       runTests(() => {
-        // Test files share one origin, so a leftover opt-in would switch
-        // v1 addons off in whichever file runs next.
-        const reset = () => {
-          window.localStorage.removeItem(FLYOUT_V2_STORAGE_KEY);
+        before(() => {
+          Object.defineProperty(window, "localStorage", {
+            configurable: true,
+            value: fakeStorage,
+          });
+        });
+
+        after(() => {
+          if (realStorage) {
+            Object.defineProperty(window, "localStorage", realStorage);
+          } else {
+            delete window.localStorage;
+          }
+        });
+
+        beforeEach(() => {
+          store = {};
           setParam(null);
-        };
-        beforeEach(reset);
-        afterEach(reset);
+        });
+
+        afterEach(() => setParam(null));
 
         describe("Flyout v2 opt-in", () => {
           it("is off by default", () => {
@@ -45,7 +77,7 @@
           });
 
           it("turns off with the query param and forgets the opt-in", () => {
-            window.localStorage.setItem(FLYOUT_V2_STORAGE_KEY, "true");
+            store[FLYOUT_V2_STORAGE_KEY] = "true";
             setParam("false");
             expect(isFlyoutV2Enabled()).to.be.false;
 
@@ -55,12 +87,10 @@
           });
 
           it("ignores other values without touching storage", () => {
-            window.localStorage.setItem(FLYOUT_V2_STORAGE_KEY, "true");
+            store[FLYOUT_V2_STORAGE_KEY] = "true";
             setParam("maybe");
             persistFlyoutV2OptIn();
-            expect(window.localStorage.getItem(FLYOUT_V2_STORAGE_KEY)).to.equal(
-              "true",
-            );
+            expect(store[FLYOUT_V2_STORAGE_KEY]).to.equal("true");
           });
         });
       });

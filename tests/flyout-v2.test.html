@@ -27,7 +27,11 @@
 
       runTests(async () => {
         beforeEach(() => {
-          window.localStorage.clear();
+          // Only touch this addon's key: test files run concurrently and
+          // share the origin's localStorage.
+          window.localStorage.removeItem(
+            flyoutV2.FlyoutV2Addon.getAddonLocalStorageKey(),
+          );
 
           config = {
             addons: {
