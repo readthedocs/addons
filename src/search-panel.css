@@ -1,0 +1,295 @@
+/* Search UI inside the flyout v2 bar */
+
+/* Derived on the host so they follow the bar's theme. */
+:host {
+  display: block;
+  min-width: 22em;
+  --readthedocs-search-panel-color: var(
+    --readthedocs-flyout-v2-item-link-color,
+    rgb(252, 252, 252)
+  );
+  --readthedocs-search-panel-muted-color: var(
+    --readthedocs-flyout-v2-muted-color,
+    rgb(150, 150, 150)
+  );
+  --readthedocs-search-panel-input-background-color: var(
+    --readthedocs-flyout-v2-field-background-color,
+    rgba(255, 255, 255, 0.1)
+  );
+  --readthedocs-search-panel-divider-color: var(
+    --readthedocs-flyout-v2-divider-color,
+    #413d3d
+  );
+  --readthedocs-search-panel-highlight-color: var(
+    --readthedocs-search-result-highlight-color,
+    #6ea0ec
+  );
+  --readthedocs-search-panel-hover-background-color: var(
+    --readthedocs-flyout-v2-hover-background-color,
+    rgba(255, 255, 255, 0.08)
+  );
+}
+
+.search-panel {
+  position: relative;
+}
+
+/* When the bar sits at the bottom, results open above the input and the
+ * filters stay next to it. */
+:host([direction="up"]) .results {
+  top: auto;
+  bottom: calc(100% + 0.35em);
+  border-radius: 0.4em 0.4em 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:host([direction="up"]) .filters {
+  order: 1;
+  top: auto;
+  bottom: 0;
+  padding: 0.4em 0.25em 0.5em;
+  border-bottom: none;
+  border-top: 1px solid var(--readthedocs-search-panel-divider-color);
+}
+
+:host([direction="up"]) .hits {
+  padding: 0.5em 0 0.35em;
+}
+
+/* When the bar is anchored to the right, results line up with its right
+ * edge and grow to the left. */
+:host([anchor="right"]) .results {
+  left: auto;
+  right: 0;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.3em 0.5em;
+  border-radius: 0.25em;
+  background-color: var(--readthedocs-search-panel-input-background-color);
+}
+
+form label {
+  display: flex;
+  align-items: center;
+  padding-right: 0.5em;
+}
+
+form label svg {
+  height: 1em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+form input {
+  width: 100%;
+  padding: 0.2em;
+  border: 0;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  font-size: 1em;
+  font-family: inherit;
+  color: var(--readthedocs-search-panel-color);
+}
+
+form input::placeholder {
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+/* Pinned to the edge nearest the input while the hits scroll. */
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em 1em;
+  padding: 0.5em 0.25em 0.4em;
+  border-bottom: 1px solid var(--readthedocs-search-panel-divider-color);
+  background-color: var(
+    --readthedocs-flyout-v2-background-color,
+    rgb(39, 39, 37)
+  );
+  font-size: 0.85em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.filters label {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filters input {
+  margin: 0;
+}
+
+/* Results overlay the page instead of growing the bar. */
+.results {
+  position: absolute;
+  top: calc(100% + 0.35em);
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(36em, calc(100vw - 3em));
+  max-height: 20em;
+  overflow-y: auto;
+  padding: 0 0.5em;
+  border: 1px solid var(--readthedocs-search-panel-divider-color);
+  border-radius: 0 0 0.4em 0.4em;
+  background-color: var(
+    --readthedocs-flyout-v2-background-color,
+    rgb(39, 39, 37)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hits {
+  min-height: 0;
+  padding: 0.35em 0 0.5em;
+}
+
+.results-title {
+  margin: 0 0 0.25em;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.no-results {
+  margin: 0;
+  padding: 0.25em 0.5em;
+  font-size: 0.9em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.no-results p {
+  margin: 0 0 0.25em;
+}
+
+.no-results .hint {
+  font-size: 0.9em;
+}
+
+.no-results code {
+  font-size: 0.95em;
+}
+
+.no-results a {
+  color: var(--readthedocs-search-panel-color);
+}
+
+.hit-block {
+  padding: 0.35em 0;
+  border-bottom: 1px solid var(--readthedocs-search-panel-divider-color);
+}
+
+.hit-block:last-child {
+  border-bottom: none;
+}
+
+.hit-block-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.hit-block-row button.remove {
+  display: flex;
+  flex-shrink: 0;
+  padding: 0.2em;
+  border: none;
+  border-radius: 0.25em;
+  background: none;
+  cursor: pointer;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.hit-block-row button.remove:hover {
+  background-color: var(--readthedocs-search-panel-hover-background-color);
+  color: var(--readthedocs-search-panel-color);
+}
+
+.hit-block-row button.remove svg {
+  height: 0.9em;
+}
+
+.hit-block-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+  text-decoration: none;
+  color: var(--readthedocs-search-panel-color);
+}
+
+.project-badge {
+  flex-shrink: 0;
+  padding: 0 0.5em;
+  border-radius: 999px;
+  background-color: var(--readthedocs-search-panel-hover-background-color);
+  font-size: 0.75em;
+  line-height: 1.6em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.hit-block-heading i {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.hit-block-heading i svg {
+  height: 0.85em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.hit-block-heading h2 {
+  margin: 0;
+  font-size: 0.95em;
+  font-weight: 600;
+  line-height: 1.25em;
+}
+
+a.hit-detail {
+  display: block;
+  padding: 0.2em 0 0.2em 1.5em;
+  text-decoration: none;
+  color: var(--readthedocs-search-panel-color);
+}
+
+a.hit-detail:hover,
+a.hit-detail.active {
+  background-color: var(--readthedocs-search-panel-hover-background-color);
+}
+
+.hit-title,
+.hit-content {
+  margin: 0;
+  line-height: 1.25em;
+  color: var(--readthedocs-search-panel-muted-color);
+}
+
+.hit-title {
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.hit-content {
+  font-size: 0.8em;
+}
+
+.hit-detail span {
+  color: var(--readthedocs-search-panel-highlight-color);
+  font-style: italic;
+  font-weight: bold;
+}

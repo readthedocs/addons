@@ -1,0 +1,427 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+    <meta name="readthedocs-resolver-filename" content="/" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import * as flyoutV2 from "../src/flyout-v2";
+      import { NotificationAddon } from "../src/notification";
+
+      let config;
+
+      // Flyout v2 only activates with this query param.
+      const url = new URL(window.location.href);
+      url.searchParams.set("readthedocs-flyout-v2", "true");
+      window.history.replaceState({}, "", url);
+
+      const render = async (cfg) => {
+        new flyoutV2.FlyoutV2Addon(cfg);
+        const element = document.querySelector("readthedocs-flyout-v2");
+        await elementUpdated(element);
+        return element;
+      };
+
+      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      runTests(async () => {
+        beforeEach(() => {
+          // Only touch this addon's key: test files run concurrently and
+          // share the origin's localStorage.
+          window.localStorage.removeItem(
+            flyoutV2.FlyoutV2Addon.getAddonLocalStorageKey(),
+          );
+          window.localStorage.removeItem(
+            NotificationAddon.getAddonLocalStorageKey(),
+          );
+
+          config = {
+            addons: {
+              search: { enabled: true },
+              flyout: {
+                enabled: true,
+                vcs: { name: "GitHub", view_url: "https://github.com/o/r" },
+              },
+            },
+            readthedocs: { resolver: { filename: "/" } },
+            projects: {
+              current: {
+                slug: "project",
+                versioning_scheme: "multiple_versions_with_translations",
+                language: { code: "en" },
+                urls: {
+                  documentation: "https://project.readthedocs.io/en/latest/",
+                  home: "https://readthedocs.org/projects/project/",
+                  builds: "https://readthedocs.org/projects/project/builds/",
+                  downloads:
+                    "https://readthedocs.org/projects/project/downloads/",
+                },
+              },
+              translations: [
+                {
+                  slug: "project-es",
+                  versioning_scheme: "multiple_versions_with_translations",
+                  language: { code: "es" },
+                  urls: {
+                    documentation: "https://project.readthedocs.io/es/latest/",
+                    home: "https://readthedocs.org/projects/project/",
+                    builds: "https://readthedocs.org/projects/project/builds/",
+                    downloads:
+                      "https://readthedocs.org/projects/project/downloads/",
+                  },
+                },
+              ],
+            },
+            versions: {
+              active: [
+                {
+                  slug: "stable",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/stable/",
+                  },
+                },
+                {
+                  slug: "latest",
+                  urls: {
+                    documentation: "https://project.readthedocs.io/en/latest/",
+                  },
+                },
+              ],
+              current: {
+                slug: "latest",
+                type: "branch",
+                downloads: {
+                  pdf: "https://project.readthedocs.io/_/downloads/en/latest/pdf/",
+                },
+              },
+            },
+          };
+        });
+
+        describe("Flyout v2", () => {
+          it("renders the menu bar with language, version and download selects", async () => {
+            const element = await render(config);
+            const selects = element.shadowRoot.querySelectorAll(
+              ".bar-content select",
+            );
+            expect(selects.length).to.equal(3);
+
+            const [language, version, download] = selects;
+            expect(language.value).to.equal(
+              "https://project.readthedocs.io/en/latest/",
+            );
+            expect(language.selectedOptions[0].textContent.trim()).to.equal(
+              "en",
+            );
+            expect(version.selectedOptions[0].textContent.trim()).to.equal(
+              "latest",
+            );
+            expect(download.options.length).to.equal(2);
+          });
+
+          it("resets the download select after picking a format", async () => {
+            const element = await render(config);
+            const navigated = [];
+            element._navigate = (url) => navigated.push(url);
+
+            const download = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Download"]',
+            );
+            download.value =
+              "https://project.readthedocs.io/_/downloads/en/latest/pdf/";
+            download.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            expect(navigated).to.deep.equal([
+              "https://project.readthedocs.io/_/downloads/en/latest/pdf/",
+            ]);
+            expect(download.value).to.equal("");
+          });
+
+          it("marks the project's default version in the version select", async () => {
+            config.projects.current.default_version = "stable";
+            const element = await render(config);
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                '.bar-content select[aria-label="Version"] option',
+              ),
+            ].map((o) => o.textContent.trim());
+            expect(labels).to.deep.equal(["Version", "★ stable", "latest"]);
+          });
+
+          it("stacks the notification under the bar with a bell to bring it back", async () => {
+            config.addons.notifications = {
+              enabled: true,
+              show_on_latest: false,
+              show_on_non_stable: false,
+              show_on_external: true,
+            };
+            config.builds = {
+              current: {
+                urls: { build: "https://readthedocs.org/projects/p/builds/1/" },
+              },
+            };
+            config.versions.current.type = "external";
+            config.versions.current.urls = {
+              vcs: "https://github.com/o/r/pull/1",
+            };
+            const element = await render(config);
+            const panel = element.shadowRoot.querySelector(
+              "readthedocs-notification-panel",
+            );
+            await elementUpdated(panel);
+            await elementUpdated(element);
+            const wrap = () => element.shadowRoot.querySelector(".bell-wrap");
+
+            // Announced once on load: the dropdown opens by itself.
+            expect(panel.shadowRoot.textContent).to.contain(
+              "pull request build",
+            );
+            expect(wrap().hidden).to.be.false;
+            expect(wrap().classList.contains("open")).to.be.true;
+
+            // The bell folds it away and brings it back.
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.false;
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.true;
+
+            // Opening the addon list folds it away: one dropdown at a time.
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.false;
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.true;
+
+            // Hovering the list does the same, and the list paints on top.
+            element.shadowRoot
+              .querySelector(".hamburger")
+              .dispatchEvent(new Event("mouseenter"));
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.false;
+            expect(
+              parseInt(
+                getComputedStyle(
+                  element.shadowRoot.querySelector(".hamburger-dropdown"),
+                ).zIndex,
+              ),
+            ).to.be.above(
+              parseInt(
+                getComputedStyle(
+                  element.shadowRoot.querySelector(".bell-dropdown"),
+                ).zIndex,
+              ),
+            );
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+
+            // Closing it for good removes the bell too.
+            panel.shadowRoot.querySelector(".title a.right").click();
+            await elementUpdated(panel);
+            await elementUpdated(element);
+            expect(wrap().hidden).to.be.true;
+          });
+
+          it("grows in one direction and animates the width change", async () => {
+            const element = await render(config);
+            const container = element.shadowRoot.querySelector(".container");
+            const trigger =
+              element.shadowRoot.querySelector(".hamburger-trigger");
+            const triggerBefore = trigger.getBoundingClientRect().left;
+            const widthBefore = container.getBoundingClientRect().width;
+
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
+              .click();
+            await elementUpdated(element);
+
+            // The hamburger stays put while the other edge moves.
+            expect(trigger.getBoundingClientRect().left).to.equal(
+              triggerBefore,
+            );
+            expect(container.getBoundingClientRect().width).to.not.equal(
+              widthBefore,
+            );
+            expect(container.getAnimations().length).to.equal(1);
+          });
+
+          it("lists addons in the hamburger and hides unavailable ones", async () => {
+            const element = await render(config);
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ].map((b) => b.textContent.trim());
+            expect(labels).to.deep.equal([
+              "Build details",
+              "Search",
+              "Settings",
+            ]);
+          });
+
+          it("shows changed files only on external versions", async () => {
+            config.versions.current.type = "external";
+            config.addons.filetreediff = {
+              enabled: true,
+              diff: { added: [], modified: [] },
+            };
+            const element = await render(config);
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ].map((b) => b.textContent.trim());
+            expect(labels).to.include("Changed files");
+          });
+
+          it("switches the bar to search and remembers it", async () => {
+            const element = await render(config);
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Search")
+              .click();
+            await elementUpdated(element);
+
+            expect(element.shadowRoot.querySelector("readthedocs-search-panel"))
+              .to.exist;
+            expect(
+              flyoutV2.FlyoutV2Addon.getLocalStorage().activePanel,
+            ).to.equal(flyoutV2.PANEL_SEARCH);
+
+            // Picking an addon closes the list even while it is hovered or
+            // focused.
+            expect(element.shadowRoot.querySelector(".hamburger.dismissed")).to
+              .exist;
+            expect(
+              getComputedStyle(
+                element.shadowRoot.querySelector(".hamburger-dropdown"),
+              ).display,
+            ).to.equal("none");
+          });
+
+          it("persists the position chosen in settings", async () => {
+            const element = await render(config);
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
+              .click();
+            await elementUpdated(element);
+
+            const select = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Bar position"]',
+            );
+            select.value = "bottom-right";
+            select.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            expect(element.shadowRoot.querySelector(".container.bottom-right"))
+              .to.exist;
+            expect(flyoutV2.FlyoutV2Addon.getLocalStorage().position).to.equal(
+              "bottom-right",
+            );
+
+            // The hamburger list opens upward at the bottom of the screen.
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            await elementUpdated(element);
+            const dropdown = element.shadowRoot.querySelector(
+              ".hamburger-dropdown",
+            );
+            const trigger =
+              element.shadowRoot.querySelector(".hamburger-trigger");
+            expect(dropdown.getBoundingClientRect().bottom).to.be.at.most(
+              trigger.getBoundingClientRect().top + 1,
+            );
+
+            // ... and growing panels open upward too.
+            [...dropdown.querySelectorAll("button")]
+              .find((b) => b.textContent.trim() === "Search")
+              .click();
+            await elementUpdated(element);
+            expect(
+              element.shadowRoot
+                .querySelector("readthedocs-search-panel")
+                .getAttribute("direction"),
+            ).to.equal("up");
+          });
+
+          it("persists the theme chosen in settings", async () => {
+            const element = await render(config);
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
+              .click();
+            await elementUpdated(element);
+
+            const select = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Bar theme"]',
+            );
+            select.value = "light";
+            select.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            const container = element.shadowRoot.querySelector(".container");
+            expect(container.classList.contains("theme-light")).to.be.true;
+            expect(
+              getComputedStyle(container).getPropertyValue(
+                "--readthedocs-flyout-v2-background-color",
+              ),
+            ).to.contain("252");
+            expect(flyoutV2.FlyoutV2Addon.getLocalStorage().theme).to.equal(
+              "light",
+            );
+          });
+
+          it("falls back to the menu when a remembered addon is unavailable", async () => {
+            flyoutV2.FlyoutV2Addon.setLocalStorage({
+              activePanel: flyoutV2.PANEL_FILEDIFF,
+            });
+            const element = await render(config);
+            expect(
+              element.shadowRoot.querySelector('select[aria-label="Version"]'),
+            ).to.exist;
+          });
+
+          it("auto-hides after the idle delay", async () => {
+            const element = await render(config);
+            element.autoHideDelay = 10;
+            const container = element.shadowRoot.querySelector(".container");
+            container.dispatchEvent(new Event("mouseleave"));
+            await sleep(40);
+            await elementUpdated(element);
+            expect(container.classList.contains("collapsed")).to.be.true;
+          });
+
+          it("does not auto-hide when the setting is off", async () => {
+            flyoutV2.FlyoutV2Addon.setLocalStorage({ autoHide: false });
+            const element = await render(config);
+            element.autoHideDelay = 10;
+            const container = element.shadowRoot.querySelector(".container");
+            container.dispatchEvent(new Event("mouseleave"));
+            await sleep(40);
+            await elementUpdated(element);
+            expect(container.classList.contains("collapsed")).to.be.false;
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

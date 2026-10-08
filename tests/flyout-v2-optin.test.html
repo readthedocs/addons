@@ -1,0 +1,99 @@
+<html>
+  <body>
+    <script type="module">
+      import { expect } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import {
+        FLYOUT_V2_QUERY_PARAM,
+        FLYOUT_V2_STORAGE_KEY,
+        isFlyoutV2Enabled,
+        persistFlyoutV2OptIn,
+      } from "../src/utils";
+
+      const setParam = (value) => {
+        const url = new URL(window.location.href);
+        if (value === null) {
+          url.searchParams.delete(FLYOUT_V2_QUERY_PARAM);
+        } else {
+          url.searchParams.set(FLYOUT_V2_QUERY_PARAM, value);
+        }
+        window.history.replaceState({}, "", url);
+      };
+
+      // Test files run concurrently in pages that share this origin's
+      // localStorage. A real opt-in written here would switch the v1 addons
+      // off in whichever file happens to run at the same time, so swap in an
+      // in-memory store for the duration of this file.
+      const realStorage = Object.getOwnPropertyDescriptor(
+        window,
+        "localStorage",
+      );
+      let store;
+      const fakeStorage = {
+        getItem: (key) => (key in store ? store[key] : null),
+        setItem: (key, value) => {
+          store[key] = String(value);
+        },
+        removeItem: (key) => {
+          delete store[key];
+        },
+      };
+
+      runTests(() => {
+        before(() => {
+          Object.defineProperty(window, "localStorage", {
+            configurable: true,
+            value: fakeStorage,
+          });
+        });
+
+        after(() => {
+          if (realStorage) {
+            Object.defineProperty(window, "localStorage", realStorage);
+          } else {
+            delete window.localStorage;
+          }
+        });
+
+        beforeEach(() => {
+          store = {};
+          setParam(null);
+        });
+
+        afterEach(() => setParam(null));
+
+        describe("Flyout v2 opt-in", () => {
+          it("is off by default", () => {
+            expect(isFlyoutV2Enabled()).to.be.false;
+          });
+
+          it("turns on with the query param and sticks across navigation", () => {
+            setParam("true");
+            expect(isFlyoutV2Enabled()).to.be.true;
+
+            persistFlyoutV2OptIn();
+            setParam(null);
+            expect(isFlyoutV2Enabled()).to.be.true;
+          });
+
+          it("turns off with the query param and forgets the opt-in", () => {
+            store[FLYOUT_V2_STORAGE_KEY] = "true";
+            setParam("false");
+            expect(isFlyoutV2Enabled()).to.be.false;
+
+            persistFlyoutV2OptIn();
+            setParam(null);
+            expect(isFlyoutV2Enabled()).to.be.false;
+          });
+
+          it("ignores other values without touching storage", () => {
+            store[FLYOUT_V2_STORAGE_KEY] = "true";
+            setParam("maybe");
+            persistFlyoutV2OptIn();
+            expect(store[FLYOUT_V2_STORAGE_KEY]).to.equal("true");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

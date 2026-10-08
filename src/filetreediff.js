@@ -13,8 +13,7 @@ import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
   EVENT_READTHEDOCS_DOCDIFF_HIDE,
 } from "./events";
-import { getQueryParam } from "./utils";
-import { AddonBase } from "./utils";
+import { AddonBase, getQueryParam, isFlyoutV2Enabled } from "./utils";
 
 const SCROLL_OFFSET_Y = 0.1;
 
@@ -364,6 +363,8 @@ export class FileTreeDiffAddon extends AddonBase {
 
   static isEnabled(config, httpStatus) {
     return (
+      // Flyout v2 hosts this UI inside its bar instead of a standalone element.
+      !isFlyoutV2Enabled() &&
       // The order is important since we don't even want to run the data
       // validation if the version is not external.
       // We have to use `objectPath` here becase we haven't validated the data yet.

@@ -19,6 +19,7 @@ import {
   AddonBase,
   debounce,
   addUtmParameters,
+  isFlyoutV2Enabled,
 } from "./utils";
 import {
   EVENT_READTHEDOCS_SEARCH_SHOW,
@@ -724,6 +725,11 @@ export class SearchAddon extends AddonBase {
   static addonName = "Search";
   static enabledOnHttpStatus = [200, 404];
   static elementClass = SearchElement;
+
+  static isEnabled(config, httpStatus) {
+    // Flyout v2 renders search inline in its bar instead of this modal.
+    return !isFlyoutV2Enabled() && super.isEnabled(config, httpStatus);
+  }
 }
 
 customElements.define(SearchElement.elementName, SearchElement);

@@ -10,7 +10,12 @@ import { html, nothing, render, LitElement } from "lit";
 import { default as objectPath } from "object-path";
 
 import styleSheet from "./notification.css";
-import { AddonBase, addUtmParameters, getLinkWithFilename } from "./utils";
+import {
+  AddonBase,
+  addUtmParameters,
+  getLinkWithFilename,
+  isFlyoutV2Enabled,
+} from "./utils";
 
 export class NotificationElement extends LitElement {
   /** @static @property {string} - registered HTML element tag name */
@@ -132,7 +137,10 @@ export class NotificationElement extends LitElement {
     if (!NotificationAddon.isEnabled(config)) {
       return;
     }
+    this.applyConfig(config);
+  }
 
+  applyConfig(config) {
     this.config = config;
 
     if (
@@ -194,8 +202,17 @@ export class NotificationElement extends LitElement {
       return nothing;
     }
 
+    return this.renderNotification();
+  }
+
+  /**
+   * Which notification applies to the current page, if any.
+   *
+   * @returns {"external"|"latest"|"stable"|null}
+   */
+  getNotificationType() {
     if (!this.config.addons.notifications.enabled) {
-      return nothing;
+      return null;
     }
 
     if (this.config.versions.current.type === "external") {
@@ -206,7 +223,7 @@ export class NotificationElement extends LitElement {
           false,
         )
       ) {
-        return this.renderExternalVersionWarning();
+        return "external";
       }
     }
 
@@ -217,7 +234,7 @@ export class NotificationElement extends LitElement {
         this.config.projects.current.default_version &&
       objectPath.get(this.config, "addons.notifications.show_on_latest", false)
     ) {
-      return this.renderLatestVersionWarning();
+      return "latest";
     }
 
     if (
@@ -231,10 +248,23 @@ export class NotificationElement extends LitElement {
         false,
       )
     ) {
-      return this.renderStableVersionWarning();
+      return "stable";
     }
 
-    return nothing;
+    return null;
+  }
+
+  renderNotification() {
+    switch (this.getNotificationType()) {
+      case "external":
+        return this.renderExternalVersionWarning();
+      case "latest":
+        return this.renderLatestVersionWarning();
+      case "stable":
+        return this.renderStableVersionWarning();
+      default:
+        return nothing;
+    }
   }
 
   calculateStableLatestVersionWarning() {
@@ -419,6 +449,11 @@ export class NotificationAddon extends AddonBase {
   static addonEnabledPath = "addons.notifications.enabled";
   static addonName = "Notification";
   static elementClass = NotificationElement;
+
+  static isEnabled(config, httpStatus) {
+    // Flyout v2 stacks notifications under its bar instead of this toast.
+    return !isFlyoutV2Enabled() && super.isEnabled(config, httpStatus);
+  }
 }
 
 customElements.define(NotificationElement.elementName, NotificationElement);

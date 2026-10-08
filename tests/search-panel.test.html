@@ -1,0 +1,219 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import { default as nise } from "nise";
+      import { SearchAddon } from "../src/search";
+      import "../src/search-panel";
+
+      const config = {
+        addons: {
+          search: {
+            enabled: true,
+            default_filter: "project:project/latest",
+            filters: [
+              ["Search subprojects", "subprojects:project/latest"],
+              ["Only this project", "project:project/latest", true],
+            ],
+          },
+        },
+        projects: { current: { slug: "project", language: { code: "en" } } },
+        versions: { current: { slug: "latest" } },
+      };
+
+      const hits = {
+        results: [
+          {
+            title: "Installation",
+            path: "/en/latest/install.html",
+            domain: "",
+            project: { slug: "project" },
+            blocks: [
+              {
+                id: "pip",
+                title: "Install with pip",
+                content: "Run pip install project.",
+                highlights: {
+                  title: [],
+                  content: ["Run <span>pip</span> install project."],
+                },
+              },
+              {
+                id: "conda",
+                title: "Install with conda",
+                content: "Run conda install project.",
+                highlights: { title: [], content: [] },
+              },
+            ],
+          },
+          {
+            title: "Theme guide",
+            path: "/en/latest/theme.html",
+            domain: "https://theme.readthedocs.io",
+            project: { slug: "theme", alias: "theme" },
+            blocks: [
+              {
+                id: "setup",
+                title: "Setup",
+                content: "Set up the theme.",
+                highlights: { title: [], content: [] },
+              },
+            ],
+          },
+        ],
+      };
+
+      let server;
+      let payload;
+      let followed;
+
+      const render = async () => {
+        const element = document.createElement("readthedocs-search-panel");
+        element.config = config;
+        // Record followed hits instead of leaving the test page.
+        element.addEventListener("click", (e) => {
+          const link = e.composedPath().find((n) => n.tagName === "A");
+          if (link) {
+            e.preventDefault();
+            followed.push(link.getAttribute("href"));
+          }
+        });
+        document.body.appendChild(element);
+        await elementUpdated(element);
+        return element;
+      };
+
+      const type = async (element, text) => {
+        const input = element.shadowRoot.querySelector("input");
+        input.value = text;
+        input.dispatchEvent(new Event("input"));
+        // The request is debounced and answered asynchronously.
+        for (let i = 0; i < 20; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 10));
+          await elementUpdated(element);
+          if (element.shadowRoot.querySelector(".results")) {
+            break;
+          }
+        }
+      };
+
+      const key = (element, name) =>
+        element.shadowRoot
+          .querySelector("input")
+          .dispatchEvent(new KeyboardEvent("keydown", { key: name }));
+
+      runTests(async () => {
+        before(() => {
+          server = nise.fakeServer.create({ respondImmediately: true });
+          server.respondWith((xhr) =>
+            xhr.respond(
+              200,
+              { "Content-Type": "application/json" },
+              JSON.stringify(payload),
+            ),
+          );
+        });
+
+        after(() => server.restore());
+
+        beforeEach(() => {
+          payload = hits;
+          followed = [];
+          window.localStorage.removeItem(SearchAddon.getAddonLocalStorageKey());
+          document
+            .querySelectorAll("readthedocs-search-panel")
+            .forEach((el) => el.remove());
+        });
+
+        describe("Search panel", () => {
+          it("sends the checked filters with the query and lists them with the hits", async () => {
+            const element = await render();
+            await type(element, "pip");
+            const query = decodeURIComponent(
+              server.requests[0].url.replace(/\+/g, " "),
+            );
+            expect(query).to.contain("q=project:project/latest pip");
+
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(".results .filters label"),
+            ].map((l) => l.textContent.trim());
+            expect(labels).to.deep.equal([
+              "Search subprojects",
+              "Only this project",
+            ]);
+          });
+
+          it("shows hits with a badge for results from other projects", async () => {
+            const element = await render();
+            await type(element, "pip");
+            expect(
+              element.shadowRoot.querySelectorAll("a.hit-detail").length,
+            ).to.equal(3);
+            const badges = [
+              ...element.shadowRoot.querySelectorAll(".project-badge"),
+            ].map((b) => b.textContent.trim());
+            expect(badges).to.deep.equal(["theme"]);
+          });
+
+          it("moves through hits with the arrow keys and follows the active one", async () => {
+            const element = await render();
+            await type(element, "pip");
+            key(element, "ArrowDown");
+            key(element, "ArrowDown");
+            const active = () =>
+              element.shadowRoot.querySelector("a.hit-detail.active");
+            expect(active().getAttribute("href")).to.equal(
+              "/en/latest/install.html#conda",
+            );
+            key(element, "ArrowUp");
+            expect(active().getAttribute("href")).to.equal(
+              "/en/latest/install.html#pip",
+            );
+
+            element.shadowRoot.querySelector("form").requestSubmit();
+            expect(followed).to.deep.equal(["/en/latest/install.html#pip"]);
+          });
+
+          it("remembers followed hits and lists them while the input is empty", async () => {
+            const element = await render();
+            await type(element, "pip");
+            element.shadowRoot.querySelector("a.hit-detail").click();
+            expect(
+              SearchAddon.getLocalStorage()["project-en-latest-recent-searches"]
+                .length,
+            ).to.equal(1);
+
+            await type(element, "");
+            expect(
+              element.shadowRoot
+                .querySelector(".results-title")
+                .textContent.trim(),
+            ).to.equal("Recent");
+            expect(
+              element.shadowRoot
+                .querySelector("a.hit-detail")
+                .getAttribute("href"),
+            ).to.equal("/en/latest/install.html#pip");
+
+            element.shadowRoot.querySelector("button.remove").click();
+            await elementUpdated(element);
+            expect(element.shadowRoot.querySelector(".results")).to.not.exist;
+          });
+
+          it("offers the query syntax help when nothing matches", async () => {
+            payload = { results: [] };
+            const element = await render();
+            await type(element, "nothing");
+            expect(
+              element.shadowRoot.querySelector(".no-results a").href,
+            ).to.contain("server-side-search/syntax");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

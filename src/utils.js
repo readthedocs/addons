@@ -325,6 +325,51 @@ export function getQueryParam(param) {
   return url.searchParams.get(param);
 }
 
+export const FLYOUT_V2_QUERY_PARAM = "readthedocs-flyout-v2";
+export const FLYOUT_V2_STORAGE_KEY = "readthedocs-flyout-v2";
+
+/**
+ * Whether the reader opted into the flyout v2 UI.
+ *
+ * `?readthedocs-flyout-v2=true` turns it on and `=false` turns it off for the
+ * current page. `persistFlyoutV2OptIn()` makes that choice stick while the
+ * reader follows links, so a whole site can be tested from one URL. Addons
+ * whose UI is folded into the v2 bar use this to step aside.
+ */
+export function isFlyoutV2Enabled() {
+  const param = getQueryParam(FLYOUT_V2_QUERY_PARAM);
+  if (param === "true" || param === "false") {
+    return param === "true";
+  }
+  try {
+    return window.localStorage.getItem(FLYOUT_V2_STORAGE_KEY) === "true";
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Remember an explicit `?readthedocs-flyout-v2=true|false` choice.
+ *
+ * Call once at startup. Storage can be unavailable (private mode, disabled
+ * by the user); the query param still applies to the current page then.
+ */
+export function persistFlyoutV2OptIn() {
+  const param = getQueryParam(FLYOUT_V2_QUERY_PARAM);
+  if (param !== "true" && param !== "false") {
+    return;
+  }
+  try {
+    if (param === "true") {
+      window.localStorage.setItem(FLYOUT_V2_STORAGE_KEY, "true");
+    } else {
+      window.localStorage.removeItem(FLYOUT_V2_STORAGE_KEY);
+    }
+  } catch (error) {
+    console.debug("Could not persist the flyout v2 opt-in", error);
+  }
+}
+
 export function addUtmParameters(url, content, projectSlug) {
   // ``projectSlug`` is passed in from the addons config instead of read from the DOM.
   // On pages using client-side hydration (e.g. React/Docusaurus) the DOM is rewritten

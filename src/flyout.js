@@ -17,6 +17,7 @@ import {
   addUtmParameters,
   getLinkWithFilename,
   docTool,
+  isFlyoutV2Enabled,
 } from "./utils";
 import { SPHINX, MKDOCS_MATERIAL } from "./constants";
 import {
@@ -415,6 +416,10 @@ export class FlyoutAddon extends AddonBase {
   static addonEnabledPath = "addons.flyout.enabled";
   static addonName = "Flyout";
   static elementClass = FlyoutElement;
+
+  static isEnabled(config, httpStatus) {
+    return !isFlyoutV2Enabled() && super.isEnabled(config, httpStatus);
+  }
 
   static requiresUrlParam() {
     // Flyout requires URL param for the feature "keep the same page when

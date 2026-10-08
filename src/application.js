@@ -8,6 +8,7 @@ import {
   setupLogging,
   setupHistoryEvents,
   getMetadataValue,
+  persistFlyoutV2OptIn,
 } from "./utils";
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import {
@@ -20,6 +21,7 @@ import * as analytics from "./analytics";
 import * as search from "./search";
 import * as docdiff from "./docdiff";
 import * as flyout from "./flyout";
+import * as flyoutV2 from "./flyout-v2";
 import * as ethicalads from "./ethicalads";
 import * as hotkeys from "./hotkeys";
 import * as linkpreviews from "./linkpreviews";
@@ -34,6 +36,7 @@ export class AddonsApplication {
   constructor() {
     setupLogging();
     setupHistoryEvents();
+    persistFlyoutV2OptIn();
 
     this.addonsInstances = [];
     this.config = null;
@@ -45,6 +48,7 @@ export class AddonsApplication {
 
     this.addons = [
       flyout.FlyoutAddon,
+      flyoutV2.FlyoutV2Addon,
       notification.NotificationAddon,
       analytics.AnalyticsAddon,
       ethicalads.EthicalAdsAddon,

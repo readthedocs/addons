@@ -14,6 +14,7 @@
         "code": "words"
       },
       "versioning_scheme": "multiple_versions_with_translations",
+      "default_version": "stable",
       "urls": {
         "documentation": "http://localhost:8000/en/v1.0/",
         "home": "https://devthedocs.org/projects/example/",
@@ -139,9 +140,9 @@
       "diff": {
         "added": [
             {
-                "filename": "added.html",
+                "filename": "flyout-v2.html",
                 "urls": {
-                    "current": "",
+                    "current": "http://localhost:8000/flyout-v2.html",
                     "base": ""
                 }
             }
@@ -157,10 +158,10 @@
         ],
         "modified": [
             {
-                "filename": "modified.html",
+                "filename": "docdiff.html",
                 "urls": {
-                    "current": "",
-                    "base": ""
+                    "current": "http://localhost:8000/docdiff.html",
+                    "base": "http://localhost:8000/docdiff.changed.html"
                 }
             }
         ]
