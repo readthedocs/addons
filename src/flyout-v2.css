@@ -305,3 +305,18 @@
   height: 0.9em;
   width: 0.9em;
 }
+
+.bar-opt-out {
+  margin-left: 0.25em;
+  padding: 0.3em 0.5em;
+  border-radius: 0.25em;
+  color: var(--readthedocs-flyout-v2-muted-color);
+  font-size: 0.9em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bar-opt-out:hover {
+  background-color: var(--readthedocs-flyout-v2-hover-background-color);
+  color: var(--readthedocs-flyout-v2-item-link-color);
+}

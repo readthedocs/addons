@@ -19,6 +19,7 @@ import {
   AddonBase,
   addUtmParameters,
   docTool,
+  FLYOUT_V2_QUERY_PARAM,
   getLinkWithFilename,
   isFlyoutV2Enabled,
 } from "./utils";
@@ -430,6 +431,9 @@ export class FlyoutV2Element extends LitElement {
   renderSettings() {
     const { urls } = this.config.projects.current;
     const vcs = this.config.addons.flyout.vcs;
+    // Reloading with the param set to false clears the remembered opt-in.
+    const classicUrl = new URL(window.location.href);
+    classicUrl.searchParams.set(FLYOUT_V2_QUERY_PARAM, "false");
 
     return html`
       <label class="bar-field">
@@ -478,6 +482,12 @@ export class FlyoutV2Element extends LitElement {
             </a>`
           : nothing}
       </span>
+      <a
+        class="bar-opt-out"
+        href="${classicUrl.href}"
+        title="Switch back to the classic flyout"
+        >Classic flyout</a
+      >
     `;
   }
 

@@ -63,6 +63,16 @@ We maintain a list of examples to check our JavaScript client is working correct
 * `Zensical <https://test-builds.readthedocs.io/en/zensical/>`_
 
 
+Flyout v2 preview
+-----------------
+
+A redesigned flyout that hosts the other addons in a single bar is shipped
+behind a flag while it is being developed (see `#574
+<https://github.com/readthedocs/addons/issues/574>`_). Append
+``?readthedocs-flyout-v2=true`` to any page to try it. The choice is remembered
+while you browse that site; ``?readthedocs-flyout-v2=false``, or *Settings →
+Classic flyout* in the bar, switches back.
+
 Contents
 --------
 

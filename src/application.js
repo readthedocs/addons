@@ -8,6 +8,7 @@ import {
   setupLogging,
   setupHistoryEvents,
   getMetadataValue,
+  persistFlyoutV2OptIn,
 } from "./utils";
 import { getReadTheDocsConfig } from "./readthedocs-config";
 import {
@@ -35,6 +36,7 @@ export class AddonsApplication {
   constructor() {
     setupLogging();
     setupHistoryEvents();
+    persistFlyoutV2OptIn();
 
     this.addonsInstances = [];
     this.config = null;
