@@ -117,6 +117,25 @@
             expect(download.options.length).to.equal(2);
           });
 
+          it("resets the download select after picking a format", async () => {
+            const element = await render(config);
+            const navigated = [];
+            element._navigate = (url) => navigated.push(url);
+
+            const download = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Download"]',
+            );
+            download.value =
+              "https://project.readthedocs.io/_/downloads/en/latest/pdf/";
+            download.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            expect(navigated).to.deep.equal([
+              "https://project.readthedocs.io/_/downloads/en/latest/pdf/",
+            ]);
+            expect(download.value).to.equal("");
+          });
+
           it("marks the project's default version in the version select", async () => {
             config.projects.current.default_version = "stable";
             const element = await render(config);

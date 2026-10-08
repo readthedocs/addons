@@ -247,11 +247,21 @@ export class FlyoutV2Element extends LitElement {
     }
   };
 
-  _onSelectNavigate(e) {
-    if (e.target.value) {
-      window.location.href = e.target.value;
-    }
+  _navigate(url) {
+    window.location.href = url;
   }
+
+  _onSelectNavigate = (e) => {
+    if (e.target.value) {
+      this._navigate(e.target.value);
+    }
+  };
+
+  // Downloads open in place, so put the select back on its placeholder.
+  _onDownloadSelect = (e) => {
+    this._onSelectNavigate(e);
+    e.target.value = "";
+  };
 
   _onPositionChange = (e) => {
     this.position = e.target.value;
@@ -444,7 +454,7 @@ export class FlyoutV2Element extends LitElement {
         this._hasDownloads
           ? html`<select
               class="bar-select"
-              @change=${this._onSelectNavigate}
+              @change=${this._onDownloadSelect}
               aria-label="Download"
               title="Download"
             >
