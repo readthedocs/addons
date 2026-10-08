@@ -603,36 +603,34 @@ export class FlyoutV2Element extends LitElement {
     classicUrl.searchParams.set(FLYOUT_V2_QUERY_PARAM, "false");
 
     return html`
-      <label class="bar-field">
-        Position
-        <select
-          class="bar-select"
-          @change=${this._onPositionChange}
-          aria-label="Bar position"
-        >
-          ${POSITIONS.map(
-            (p) =>
-              html`<option value="${p}" ?selected=${p === this.position}>
-                ${p.replace("-", " ")}
-              </option>`,
-          )}
-        </select>
-      </label>
-      <label class="bar-field">
-        Theme
-        <select
-          class="bar-select"
-          @change=${this._onThemeChange}
-          aria-label="Bar theme"
-        >
-          ${THEMES.map(
-            (t) =>
-              html`<option value="${t}" ?selected=${t === this.theme}>
-                ${t}
-              </option>`,
-          )}
-        </select>
-      </label>
+      <select
+        class="bar-select"
+        @change=${this._onPositionChange}
+        aria-label="Bar position"
+        title="Bar position"
+      >
+        <option disabled>Position</option>
+        ${POSITIONS.map(
+          (p) =>
+            html`<option value="${p}" ?selected=${p === this.position}>
+              ${p.replace("-", " ")}
+            </option>`,
+        )}
+      </select>
+      <select
+        class="bar-select"
+        @change=${this._onThemeChange}
+        aria-label="Bar theme"
+        title="Bar theme"
+      >
+        <option disabled>Theme</option>
+        ${THEMES.map(
+          (t) =>
+            html`<option value="${t}" ?selected=${t === this.theme}>
+              ${t} theme
+            </option>`,
+        )}
+      </select>
       <label class="bar-field">
         <input
           type="checkbox"
