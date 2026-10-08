@@ -26,10 +26,8 @@
 .container {
   position: fixed;
   z-index: 3000;
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.25em;
-  padding-right: 0.5em;
+  display: flex;
+  flex-direction: column;
   max-width: calc(100vw - 2em);
   font-family: var(--readthedocs-flyout-v2-font-family);
   font-size: var(--readthedocs-flyout-v2-font-size);
@@ -136,6 +134,40 @@
   .container {
     transition: none;
   }
+}
+
+/* ---- Bar row: hamburger, active addon, bell ---- */
+
+.bar-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25em;
+  padding-right: 0.5em;
+}
+
+.bell {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: var(--readthedocs-flyout-v2-row-height);
+  padding: 0 0.3em;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--readthedocs-flyout-v2-muted-color);
+}
+
+.bell:hover {
+  color: var(--readthedocs-flyout-v2-item-link-color);
+}
+
+.bell.open {
+  color: var(--readthedocs-flyout-v2-active-color);
+}
+
+.bell svg {
+  height: 1em;
+  width: 1em;
 }
 
 /* ---- Hamburger ---- */
@@ -301,7 +333,7 @@
   width: 0.9em;
 }
 
-.bar-opt-out {
+.bar-link {
   margin-left: 0.25em;
   padding: 0.3em 0.5em;
   border-radius: 0.25em;
@@ -311,7 +343,7 @@
   white-space: nowrap;
 }
 
-.bar-opt-out:hover {
+.bar-link:hover {
   background-color: var(--readthedocs-flyout-v2-hover-background-color);
   color: var(--readthedocs-flyout-v2-item-link-color);
 }

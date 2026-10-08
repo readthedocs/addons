@@ -8,6 +8,7 @@
       import { expect, elementUpdated } from "@open-wc/testing";
       import { runTests } from "@web/test-runner-mocha";
       import * as flyoutV2 from "../src/flyout-v2";
+      import { NotificationAddon } from "../src/notification";
 
       let config;
 
@@ -31,6 +32,9 @@
           // share the origin's localStorage.
           window.localStorage.removeItem(
             flyoutV2.FlyoutV2Addon.getAddonLocalStorageKey(),
+          );
+          window.localStorage.removeItem(
+            NotificationAddon.getAddonLocalStorageKey(),
           );
 
           config = {
@@ -145,6 +149,66 @@
               ),
             ].map((o) => o.textContent.trim());
             expect(labels).to.deep.equal(["★ stable", "latest"]);
+          });
+
+          it("stacks the notification under the bar with a bell to bring it back", async () => {
+            config.addons.notifications = {
+              enabled: true,
+              show_on_latest: false,
+              show_on_non_stable: false,
+              show_on_external: true,
+            };
+            config.builds = {
+              current: {
+                urls: { build: "https://readthedocs.org/projects/p/builds/1/" },
+              },
+            };
+            config.versions.current.type = "external";
+            config.versions.current.urls = {
+              vcs: "https://github.com/o/r/pull/1",
+            };
+            const element = await render(config);
+            const panel = element.shadowRoot.querySelector(
+              "readthedocs-notification-panel",
+            );
+            await elementUpdated(panel);
+            await elementUpdated(element);
+            expect(panel.shadowRoot.textContent).to.contain(
+              "pull request build",
+            );
+            expect(element.shadowRoot.querySelector(".bell")).to.exist;
+
+            // Auto-dismissed: the bell brings it back.
+            panel.autoDismissed = true;
+            await elementUpdated(panel);
+            expect(panel.shadowRoot.querySelector(".title")).to.not.exist;
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+            await elementUpdated(panel);
+            expect(panel.shadowRoot.querySelector(".title")).to.exist;
+
+            // Closing it for good removes the bell too.
+            panel.shadowRoot.querySelector(".title a.right").click();
+            await elementUpdated(panel);
+            await elementUpdated(element);
+            expect(element.shadowRoot.querySelector(".bell")).to.not.exist;
+          });
+
+          it("links to the addons documentation from settings", async () => {
+            const element = await render(config);
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
+              .click();
+            await elementUpdated(element);
+            expect(
+              element.shadowRoot.querySelector(
+                '.bar-content a[href*="page/addons.html"]',
+              ),
+            ).to.exist;
           });
 
           it("lists addons in the hamburger and hides unavailable ones", async () => {

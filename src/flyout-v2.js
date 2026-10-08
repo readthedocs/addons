@@ -3,6 +3,7 @@ import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faArrowUpRightFromSquare,
   faBars,
+  faBell,
   faCircleInfo,
   faFileLines,
   faGear,
@@ -32,6 +33,7 @@ import {
 
 import "./search-panel.js";
 import "./filetreediff-panel.js";
+import "./notification-panel.js";
 
 export const PANEL_MENU = "menu";
 export const PANEL_SEARCH = "search";
@@ -76,6 +78,8 @@ export class FlyoutV2Element extends LitElement {
     position: { type: String },
     activePanel: { state: true },
     hamburgerOpen: { state: true },
+    hasNotification: { state: true },
+    notificationsOpen: { state: true },
     collapsed: { state: true },
     autoHide: { state: true },
     autoHideDelay: { type: Number, attribute: "auto-hide-delay" },
@@ -90,6 +94,8 @@ export class FlyoutV2Element extends LitElement {
     this.position = DEFAULT_POSITION;
     this.activePanel = PANEL_MENU;
     this.hamburgerOpen = false;
+    this.hasNotification = false;
+    this.notificationsOpen = false;
     this.collapsed = false;
     this.autoHide = true;
     this.autoHideDelay = AUTO_HIDE_DELAY;
@@ -97,6 +103,7 @@ export class FlyoutV2Element extends LitElement {
 
     library.add(faArrowUpRightFromSquare);
     library.add(faBars);
+    library.add(faBell);
     library.add(faCircleInfo);
     library.add(faFileLines);
     library.add(faGear);
@@ -105,6 +112,7 @@ export class FlyoutV2Element extends LitElement {
     library.add(faMagnifyingGlass);
 
     this.iconBars = icon(faBars, { classes: ["icon"] });
+    this.iconBell = icon(faBell, { classes: ["icon"] });
     this.iconCircleInfo = icon(faCircleInfo, { classes: ["icon"] });
     this.iconExternalLink = icon(faArrowUpRightFromSquare, {
       classes: ["icon"],
@@ -142,6 +150,11 @@ export class FlyoutV2Element extends LitElement {
     this._hasLanguages = this.config.projects.translations.length > 0;
     this._hasDownloads =
       Object.keys(this.config.versions.current.downloads).length > 0;
+    this._notificationsEnabled = objectPath.get(
+      this.config,
+      "addons.notifications.enabled",
+      false,
+    );
     this._defaultVersion = objectPath.get(
       this.config,
       "projects.current.default_version",
@@ -229,6 +242,20 @@ export class FlyoutV2Element extends LitElement {
   _onHamburgerToggle = (e) => {
     e.stopPropagation();
     this.hamburgerOpen = !this.hamburgerOpen;
+  };
+
+  // ---- Notifications ----
+
+  _onNotificationChange = (e) => {
+    this.hasNotification = e.detail.hasNotification;
+    if (!this.hasNotification) {
+      this.notificationsOpen = false;
+    }
+  };
+
+  _onBellClick = (e) => {
+    e.stopPropagation();
+    this.notificationsOpen = !this.notificationsOpen;
   };
 
   // Clicks inside the shadow root are retargeted to the host, so any
@@ -513,12 +540,51 @@ export class FlyoutV2Element extends LitElement {
         Auto-hide
       </label>
       <a
-        class="bar-opt-out"
+        class="bar-link"
         href="${classicUrl.href}"
         title="Switch back to the classic flyout"
         >Classic flyout</a
       >
+      <a
+        class="bar-link"
+        href="${addUtmParameters(
+          "https://docs.readthedocs.io/page/addons.html",
+          "flyout",
+          this.config.projects.current.slug,
+        )}"
+        target="_blank"
+        title="Read the Docs Addons documentation"
+        >Addons docs</a
+      >
     `;
+  }
+
+  renderBell() {
+    if (!this.hasNotification) {
+      return nothing;
+    }
+    return html`
+      <button
+        class=${classMap({ bell: true, open: this.notificationsOpen })}
+        @click=${this._onBellClick}
+        title="Notifications"
+        aria-label="Notifications"
+        aria-expanded=${this.notificationsOpen}
+      >
+        ${this.iconBell.node[0]}
+      </button>
+    `;
+  }
+
+  renderNotifications() {
+    if (!this._notificationsEnabled) {
+      return nothing;
+    }
+    return html`<readthedocs-notification-panel
+      .config=${this.config}
+      .expanded=${this.notificationsOpen}
+      @readthedocs-notification-panel-change=${this._onNotificationChange}
+    ></readthedocs-notification-panel>`;
   }
 
   render() {
@@ -541,8 +607,12 @@ export class FlyoutV2Element extends LitElement {
         @focusin=${this._cancelCollapse}
         @focusout=${this._scheduleCollapse}
       >
-        ${this.renderHamburger()}
-        <div class="bar-content">${this.renderBarContent()}</div>
+        <div class="bar-row">
+          ${this.renderHamburger()}
+          <div class="bar-content">${this.renderBarContent()}</div>
+          ${this.renderBell()}
+        </div>
+        ${this.renderNotifications()}
       </div>
     `;
   }

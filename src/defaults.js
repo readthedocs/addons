@@ -4,6 +4,7 @@ import styleSheetFlyoutV2 from "./flyout-v2.css";
 import styleSheetFiletreediff from "./filetreediff.css";
 import styleSheetFiletreediffPanel from "./filetreediff-panel.css";
 import styleSheetNotification from "./notification.css";
+import styleSheetNotificationPanel from "./notification-panel.css";
 import styleSheetSearch from "./search.css";
 import styleSheetSearchPanel from "./search-panel.css";
 
@@ -19,6 +20,7 @@ const styleSheets = [
   styleSheetFiletreediff,
   styleSheetFiletreediffPanel,
   styleSheetNotification,
+  styleSheetNotificationPanel,
   styleSheetSearch,
   styleSheetSearchPanel,
 ];

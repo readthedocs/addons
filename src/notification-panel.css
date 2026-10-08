@@ -1,0 +1,90 @@
+/* Notification stacked under the flyout v2 bar */
+
+@layer defaults {
+  :root {
+    --readthedocs-notification-panel-color: var(
+      --readthedocs-flyout-v2-color,
+      rgb(220, 220, 220)
+    );
+    --readthedocs-notification-panel-title-color: var(
+      --readthedocs-flyout-v2-item-link-color,
+      rgb(252, 252, 252)
+    );
+    --readthedocs-notification-panel-muted-color: var(
+      --readthedocs-flyout-v2-muted-color,
+      rgb(150, 150, 150)
+    );
+    --readthedocs-notification-panel-link-color: var(
+      --readthedocs-flyout-v2-active-color,
+      #27ae60
+    );
+    --readthedocs-notification-panel-divider-color: var(
+      --readthedocs-flyout-v2-divider-color,
+      #413d3d
+    );
+  }
+}
+
+:host {
+  display: block;
+  max-width: 40em;
+}
+
+:host > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.75em;
+  padding: 0.5em 0.75em 0.6em 0.6em;
+  border-top: 1px solid var(--readthedocs-notification-panel-divider-color);
+  font-size: 0.95em;
+  line-height: 1.35em;
+  color: var(--readthedocs-notification-panel-color);
+}
+
+:host > div > svg.header.icon {
+  grid-row: 1 / span 2;
+  align-self: start;
+  height: 1.4em;
+  margin-top: 0.15em;
+  color: var(--readthedocs-notification-panel-muted-color);
+}
+
+:host > div > .title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  font-weight: 600;
+  color: var(--readthedocs-notification-panel-title-color);
+}
+
+:host > div > .title span,
+:host > div > .title em {
+  font-style: normal;
+}
+
+:host > div > .title > .right {
+  display: flex;
+  margin-left: auto;
+  color: var(--readthedocs-notification-panel-muted-color);
+}
+
+:host > div > .title > .right:hover {
+  color: var(--readthedocs-notification-panel-title-color);
+}
+
+:host > div > .title > .right > svg {
+  height: 1em;
+}
+
+:host > div > div.content {
+  color: var(--readthedocs-notification-panel-muted-color);
+}
+
+:host > div a {
+  color: var(--readthedocs-notification-panel-link-color);
+  text-decoration: none;
+}
+
+:host > div a:hover {
+  text-decoration: underline;
+}
