@@ -1,5 +1,5 @@
 const path = require("path");
-const TerserPlugin = require("terser-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 const interceptor = require("express-interceptor");
 const webpack = require("webpack");
 
@@ -45,10 +45,10 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: is_production,
       minimizer: [
-        new TerserPlugin({
+        new MinimizerPlugin({
           // Avoids creating a `.LICENSE.txt` file
           extractComments: false,
-          terserOptions: {
+          minimizerOptions: {
             sourceMap: true,
           },
         }),

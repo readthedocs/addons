@@ -15,6 +15,9 @@ const AD_PLACEMENT_BOTTOM = "90px";
 const AD_SIZE = 300; // pixels
 const AD_SCRIPT_ID = "ethicaladsjs";
 
+const MATERIAL_DARK_COLOR_SCHEME_SELECTOR =
+  "body[data-md-color-scheme='slate']";
+
 /**
  * EthicalAds addon
  *
@@ -44,6 +47,8 @@ export class EthicalAdsAddon extends AddonBase {
 
   createAdPlacement() {
     let placement;
+    let secondPlacement;
+    let secondSelector;
     let fixedFooterAdSelectors;
 
     const placementIdSuffix = docTool.getDocumentationTool() || "nodoctool";
@@ -61,10 +66,8 @@ export class EthicalAdsAddon extends AddonBase {
     }
 
     if (placement) {
-      if (
-        placement.getAttribute("data-ea-type") !== "image" &&
-        placement.getAttribute("data-ea-type") !== "text"
-      ) {
+      const allowedTypes = ["image", "text", "logo-large-v1"];
+      if (!allowedTypes.includes(placement.getAttribute("data-ea-type"))) {
         placement.setAttribute("data-ea-type", "readthedocs-sidebar");
       }
     } else {
@@ -77,7 +80,23 @@ export class EthicalAdsAddon extends AddonBase {
       let element;
       let knownPlacementFound = false;
 
-      if (docTool.isSphinxReadTheDocsLikeTheme()) {
+      // Piccolo check has to be before SphinxReadTheDocs check because
+      // Piccolo theme also includes the "theme.js" script.
+      if (docTool.isSphinxPiccoloTheme()) {
+        // ".sphinxsidebarwrapper > ul > li:last-child"
+        selector = ".sphinxsidebarwrapper";
+        element = document.querySelector(selector);
+
+        if (this.elementAboveTheFold(element)) {
+          placement.setAttribute("data-ea-type", "readthedocs-sidebar");
+          placement.classList.add("ethical-rtd");
+          knownPlacementFound = true;
+        } else {
+          fixedFooterAdSelectors = ["div.footer"];
+          this.setFixedFooterAdProperties(placement);
+          knownPlacementFound = true;
+        }
+      } else if (docTool.isSphinxReadTheDocsLikeTheme()) {
         selector = "nav.wy-nav-side > div.wy-side-scroll";
         element = document.querySelector(selector);
 
@@ -92,6 +111,7 @@ export class EthicalAdsAddon extends AddonBase {
           fixedFooterAdSelectors = ["section", "nav"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
+          secondSelector = docTool.getRootSelector();
         }
       } else if (docTool.isSphinxFuroLikeTheme()) {
         // NOTE: The code to handle furo theme shouldn't be required,
@@ -140,6 +160,7 @@ export class EthicalAdsAddon extends AddonBase {
           fixedFooterAdSelectors = ["div.footer"];
           this.setFixedFooterAdProperties(placement);
           knownPlacementFound = true;
+          secondSelector = "section#alabaster-theme";
         }
       } else if (docTool.isMaterialMkDocsTheme()) {
         // Detect the left navbar if it's not hidden or grab the navbar from a post page
@@ -295,6 +316,16 @@ export class EthicalAdsAddon extends AddonBase {
       // Allow EA to switch between light/dark mode
       placement.classList.add("adaptive-css");
 
+      // Material-like themes (Material for MkDocs, Zensical, sphinx-immaterial)
+      // use `data-md-color-scheme` instead of a class the client understands.
+      // https://ethical-ad-client.readthedocs.io/en/latest/#custom-dark-selector
+      if (this.usesMaterialColorScheme()) {
+        placement.setAttribute(
+          "data-ea-dark-selector",
+          MATERIAL_DARK_COLOR_SCHEME_SELECTOR,
+        );
+      }
+
       // This ensure us that all the `data-ea-*` attributes are already set in the HTML tag.
       placement.setAttribute("data-ea-manual", "true");
 
@@ -304,7 +335,10 @@ export class EthicalAdsAddon extends AddonBase {
       if (keywords.length) {
         placement.setAttribute("data-ea-keywords", keywords.join("|"));
       }
-      if (campaign_types.length) {
+      if (
+        campaign_types.length &&
+        !placement.getAttribute("data-ea-campaign-types")
+      ) {
         placement.setAttribute(
           "data-ea-campaign-types",
           campaign_types.join("|"),
@@ -321,6 +355,24 @@ export class EthicalAdsAddon extends AddonBase {
           "id",
           `readthedocs-ea-${placementIdPrefix}-${placementIdSuffix}`,
         );
+      }
+
+      // For now, only show the larger ad format on revshare partners
+      if (data.publisher !== "readthedocs" && secondSelector !== null) {
+        const secondElementToAppend = document.querySelector(secondSelector);
+        if (secondElementToAppend !== null) {
+          if (secondSelector !== null) {
+            secondPlacement = placement.cloneNode();
+            secondPlacement.setAttribute("data-ea-type", "logo-large-v1");
+            secondPlacement.setAttribute("data-ea-style", "");
+            secondPlacement.setAttribute(
+              "id",
+              `readthedocs-ea-logo-large-${placementIdSuffix}`,
+            );
+            secondElementToAppend.after(secondPlacement);
+            return secondPlacement;
+          }
+        }
       }
 
       if (placementStyle == "fixedfooter") {
@@ -350,6 +402,10 @@ export class EthicalAdsAddon extends AddonBase {
     }
 
     return placement;
+  }
+
+  usesMaterialColorScheme() {
+    return document.body.hasAttribute("data-md-color-scheme");
   }
 
   elementAboveTheFold(element) {
@@ -401,15 +457,11 @@ export class EthicalAdsAddon extends AddonBase {
     library.setAttribute("type", "text/javascript");
     library.setAttribute("async", true);
 
-    // TODO: inject the stable version after we have tested this.
     // Inject the Ethical Ad client (beta) only for our own documentation.
     let src;
     if (
       window.location.hostname === "docs.readthedocs.com" ||
-      window.location.hostname.endsWith(".devthedocs.org") ||
-      // Use new beta client on Furo like themes for now.
-      // This allows us to test the dark/light mode.
-      docTool.isSphinxFuroLikeTheme()
+      window.location.hostname.endsWith(".devthedocs.org")
     ) {
       src = "https://media.ethicalads.io/media/client/beta/ethicalads.min.js";
     } else {

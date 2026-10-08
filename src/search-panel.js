@@ -72,9 +72,11 @@ export class SearchPanelElement extends LitElement {
             @input=${this._onInput}
           />
         </form>
-        ${this.results
-          ? html`<div class="results">${this.results}</div>`
-          : nothing}
+        ${
+          this.results
+            ? html`<div class="results">${this.results}</div>`
+            : nothing
+        }
       </div>
     `;
   }
@@ -173,19 +175,23 @@ export class SearchPanelElement extends LitElement {
                     href="${this._getResultLink(result)}#${block.id}"
                   >
                     <p class="hit-title">
-                      ${block.highlights?.title?.length
-                        ? unsafeHTML(block.highlights.title[0])
-                        : block.title}
+                      ${
+                        block.highlights?.title?.length
+                          ? unsafeHTML(block.highlights.title[0])
+                          : block.title
+                      }
                     </p>
                     <p class="hit-content">
-                      ${block.highlights?.content?.length
-                        ? unsafeHTML(
-                            block.highlights.content[0].substring(
-                              0,
-                              MAX_SUBSTRING_LIMIT,
-                            ),
-                          )
-                        : block.content.substring(0, MAX_SUBSTRING_LIMIT)}
+                      ${
+                        block.highlights?.content?.length
+                          ? unsafeHTML(
+                              block.highlights.content[0].substring(
+                                0,
+                                MAX_SUBSTRING_LIMIT,
+                              ),
+                            )
+                          : block.content.substring(0, MAX_SUBSTRING_LIMIT)
+                      }
                     </p>
                   </a>
                 `,

@@ -305,22 +305,26 @@ export class FlyoutV2Element extends LitElement {
             this.iconCircleInfo.node[0],
             this._onMenuClick,
           )}
-          ${this._searchEnabled
-            ? this._renderHamburgerItem(
-                PANEL_SEARCH,
-                "Search",
-                this.iconSearch.node[0],
-                this._onSearchClick,
-              )
-            : nothing}
-          ${this._fileTreeDiffEnabled
-            ? this._renderHamburgerItem(
-                PANEL_FILEDIFF,
-                "Changed files",
-                this.iconFileLines.node[0],
-                this._onFileDiffClick,
-              )
-            : nothing}
+          ${
+            this._searchEnabled
+              ? this._renderHamburgerItem(
+                  PANEL_SEARCH,
+                  "Search",
+                  this.iconSearch.node[0],
+                  this._onSearchClick,
+                )
+              : nothing
+          }
+          ${
+            this._fileTreeDiffEnabled
+              ? this._renderHamburgerItem(
+                  PANEL_FILEDIFF,
+                  "Changed files",
+                  this.iconFileLines.node[0],
+                  this._onFileDiffClick,
+                )
+              : nothing
+          }
           ${this._renderHamburgerItem(
             PANEL_SETTINGS,
             "Settings",
@@ -353,32 +357,34 @@ export class FlyoutV2Element extends LitElement {
   }
 
   renderProjectLinks() {
-    const { urls } = this.config.projects.current;
+    const { slug, urls } = this.config.projects.current;
     const vcs = this.config.addons.flyout.vcs;
 
     return html`
       <span class="bar-links">
         <a
-          href="${addUtmParameters(toAppUrl(urls.home), "flyout")}"
+          href="${addUtmParameters(toAppUrl(urls.home), "flyout", slug)}"
           title="Project home"
         >
           ${this.iconHouse.node[0]}
         </a>
         <a
-          href="${addUtmParameters(toAppUrl(urls.builds), "flyout")}"
+          href="${addUtmParameters(toAppUrl(urls.builds), "flyout", slug)}"
           title="Builds"
         >
           ${this.iconHammer.node[0]}
         </a>
-        ${vcs?.view_url
-          ? html`<a
-              href="${vcs.view_url}"
-              target="_blank"
-              title="View source on ${vcs.name}"
-            >
-              ${this.iconExternalLink.node[0]}
-            </a>`
-          : nothing}
+        ${
+          vcs?.view_url
+            ? html`<a
+                href="${vcs.view_url}"
+                target="_blank"
+                title="View source on ${vcs.name}"
+              >
+                ${this.iconExternalLink.node[0]}
+              </a>`
+            : nothing
+        }
       </span>
     `;
   }
@@ -388,68 +394,78 @@ export class FlyoutV2Element extends LitElement {
     const filename = this.config.readthedocs.resolver.filename;
 
     return html`
-      ${this._hasLanguages
-        ? html`<select
-            class="bar-select"
-            @change=${this._onSelectNavigate}
-            aria-label="Language"
-            title="Switch language"
-          >
-            ${translations
-              .concat(current)
-              .sort((a, b) => a.language.code.localeCompare(b.language.code))
-              .map(
-                (t) =>
+      ${
+        this._hasLanguages
+          ? html`<select
+              class="bar-select"
+              @change=${this._onSelectNavigate}
+              aria-label="Language"
+              title="Switch language"
+            >
+              ${translations
+                .concat(current)
+                .sort((a, b) => a.language.code.localeCompare(b.language.code))
+                .map(
+                  (t) =>
+                    html`<option
+                      value="${getLinkWithFilename(
+                        t.urls.documentation,
+                        filename,
+                      )}"
+                      ?selected=${t.slug === current.slug}
+                    >
+                      ${t.language.code}
+                    </option>`,
+                )}
+            </select>`
+          : nothing
+      }
+      ${
+        this._hasVersions
+          ? html`<select
+              class="bar-select"
+              @change=${this._onSelectNavigate}
+              aria-label="Version"
+              title="Switch version (★ marks the default)"
+            >
+              ${this.config.versions.active.map(
+                (v) =>
                   html`<option
-                    value="${getLinkWithFilename(
-                      t.urls.documentation,
-                      filename,
-                    )}"
-                    ?selected=${t.slug === current.slug}
+                    value="${getLinkWithFilename(v.urls.documentation, filename)}"
+                    ?selected=${v.slug === this.config.versions.current.slug}
                   >
-                    ${t.language.code}
+                    ${v.slug === this._defaultVersion ? `★ ${v.slug}` : v.slug}
                   </option>`,
               )}
-          </select>`
-        : nothing}
-      ${this._hasVersions
-        ? html`<select
-            class="bar-select"
-            @change=${this._onSelectNavigate}
-            aria-label="Version"
-            title="Switch version (★ marks the default)"
-          >
-            ${this.config.versions.active.map(
-              (v) =>
-                html`<option
-                  value="${getLinkWithFilename(v.urls.documentation, filename)}"
-                  ?selected=${v.slug === this.config.versions.current.slug}
-                >
-                  ${v.slug === this._defaultVersion ? `★ ${v.slug}` : v.slug}
-                </option>`,
-            )}
-          </select>`
-        : nothing}
-      ${this._hasDownloads
-        ? html`<select
-            class="bar-select"
-            @change=${this._onSelectNavigate}
-            aria-label="Download"
-            title="Download"
-          >
-            <option value="" selected disabled>Download</option>
-            ${Object.entries(this.config.versions.current.downloads).map(
-              ([name, url]) =>
-                html`<option value="${url}">
-                  ${DOWNLOAD_NAMES[name] || name}
-                </option>`,
-            )}
-          </select>`
-        : nothing}
+            </select>`
+          : nothing
+      }
+      ${
+        this._hasDownloads
+          ? html`<select
+              class="bar-select"
+              @change=${this._onSelectNavigate}
+              aria-label="Download"
+              title="Download"
+            >
+              <option value="" selected disabled>Download</option>
+              ${Object.entries(this.config.versions.current.downloads).map(
+                ([name, url]) =>
+                  html`<option value="${url}">
+                    ${DOWNLOAD_NAMES[name] || name}
+                  </option>`,
+              )}
+            </select>`
+          : nothing
+      }
       ${this.renderProjectLinks()}
       <a
         class="bar-branding"
-        href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
+        href="${addUtmParameters(
+          "https://about.readthedocs.com/",
+          "flyout",
+          current.slug,
+        )}"
         title="Hosted by Read the Docs"
       >
         <img src="${READTHEDOCS_LOGO}" alt="Read the Docs" />
