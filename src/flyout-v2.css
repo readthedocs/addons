@@ -404,8 +404,11 @@
 }
 
 .bar-branding {
+  flex-shrink: 0;
   display: flex;
-  margin-left: 0.25em;
+  align-items: center;
+  height: var(--readthedocs-flyout-v2-row-height);
+  padding: 0 0.3em;
   opacity: 0.4;
 }
 

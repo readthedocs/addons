@@ -595,12 +595,18 @@ export class FlyoutV2Element extends LitElement {
           : nothing
       }
       ${this.renderProjectLinks()}
+    `;
+  }
+
+  // Always the last thing in the bar, whichever addon is showing.
+  renderBranding() {
+    return html`
       <a
         class="bar-branding"
         href="${addUtmParameters(
           "https://about.readthedocs.com/",
           "flyout",
-          current.slug,
+          this.config.projects.current.slug,
         )}"
         title="Hosted by Read the Docs"
       >
@@ -753,7 +759,7 @@ export class FlyoutV2Element extends LitElement {
       >
         ${this.renderHamburger()}
         <div class="bar-content">${this.renderBarContent()}</div>
-        ${this.renderNotifications()}
+        ${this.renderNotifications()} ${this.renderBranding()}
       </div>
     `;
   }
