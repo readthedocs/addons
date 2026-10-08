@@ -23,6 +23,8 @@
         return element;
       };
 
+      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
       runTests(async () => {
         beforeEach(() => {
           window.localStorage.clear();
@@ -111,13 +113,24 @@
             expect(download.options.length).to.equal(2);
           });
 
+          it("marks the project's default version in the version select", async () => {
+            config.projects.current.default_version = "stable";
+            const element = await render(config);
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                '.bar-content select[aria-label="Version"] option',
+              ),
+            ].map((o) => o.textContent.trim());
+            expect(labels).to.deep.equal(["★ stable", "latest"]);
+          });
+
           it("lists addons in the hamburger and hides unavailable ones", async () => {
             const element = await render(config);
             const labels = [
               ...element.shadowRoot.querySelectorAll(
                 ".hamburger-dropdown button",
               ),
-            ].map((b) => b.getAttribute("aria-label"));
+            ].map((b) => b.textContent.trim());
             expect(labels).to.deep.equal(["Menu", "Search", "Settings"]);
           });
 
@@ -128,16 +141,22 @@
               diff: { added: [], modified: [] },
             };
             const element = await render(config);
-            const button = element.shadowRoot.querySelector(
-              '.hamburger-dropdown button[aria-label="Changed files"]',
-            );
-            expect(button).to.exist;
+            const labels = [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ].map((b) => b.textContent.trim());
+            expect(labels).to.include("Changed files");
           });
 
           it("switches the bar to search and remembers it", async () => {
             const element = await render(config);
-            element.shadowRoot
-              .querySelector('.hamburger-dropdown button[aria-label="Search"]')
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Search")
               .click();
             await elementUpdated(element);
 
@@ -150,10 +169,12 @@
 
           it("persists the position chosen in settings", async () => {
             const element = await render(config);
-            element.shadowRoot
-              .querySelector(
-                '.hamburger-dropdown button[aria-label="Settings"]',
-              )
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
               .click();
             await elementUpdated(element);
 
@@ -177,6 +198,27 @@
             });
             const element = await render(config);
             expect(element.shadowRoot.querySelector(".bar-logo")).to.exist;
+          });
+
+          it("auto-hides after the idle delay", async () => {
+            const element = await render(config);
+            element.autoHideDelay = 10;
+            const container = element.shadowRoot.querySelector(".container");
+            container.dispatchEvent(new Event("mouseleave"));
+            await sleep(40);
+            await elementUpdated(element);
+            expect(container.classList.contains("collapsed")).to.be.true;
+          });
+
+          it("does not auto-hide when the setting is off", async () => {
+            flyoutV2.FlyoutV2Addon.setLocalStorage({ autoHide: false });
+            const element = await render(config);
+            element.autoHideDelay = 10;
+            const container = element.shadowRoot.querySelector(".container");
+            container.dispatchEvent(new Event("mouseleave"));
+            await sleep(40);
+            await elementUpdated(element);
+            expect(container.classList.contains("collapsed")).to.be.false;
           });
         });
       });

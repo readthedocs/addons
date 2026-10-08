@@ -8,6 +8,8 @@
     );
     --readthedocs-flyout-v2-line-height: 1.4em;
     --readthedocs-flyout-v2-row-height: 2.4em;
+    /* How much of the bar stays visible as a handle when it auto-hides. */
+    --readthedocs-flyout-v2-handle-size: 0.6em;
 
     --readthedocs-flyout-v2-color: rgb(220, 220, 220);
     --readthedocs-flyout-v2-muted-color: rgb(150, 150, 150);
@@ -36,12 +38,19 @@
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0 0 0.5em 0.5em;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --readthedocs-flyout-v2-tx: 0;
+  --readthedocs-flyout-v2-ty: 0;
+  transform: translate(
+    var(--readthedocs-flyout-v2-tx),
+    var(--readthedocs-flyout-v2-ty)
+  );
+  transition: transform 0.25s ease;
 }
 
 .container.top-center {
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  --readthedocs-flyout-v2-tx: -50%;
 }
 
 .container.top-left {
@@ -66,6 +75,67 @@
 
 .container.bottom-right {
   right: 1em;
+}
+
+/* ---- Auto-hide ----
+ * The bar slides out of view leaving a handle; hovering or focusing the
+ * handle slides it back. The collapse is delayed slightly so the bar does
+ * not vanish the instant the pointer leaves it. */
+
+.container.collapsed {
+  --readthedocs-flyout-v2-ty: calc(
+    -100% + var(--readthedocs-flyout-v2-handle-size)
+  );
+  transition-delay: 0.5s;
+}
+
+.container.collapsed.bottom-left,
+.container.collapsed.bottom-right {
+  --readthedocs-flyout-v2-ty: calc(
+    100% - var(--readthedocs-flyout-v2-handle-size)
+  );
+}
+
+.container.collapsed:hover,
+.container.collapsed:focus-within {
+  --readthedocs-flyout-v2-ty: 0;
+  transition-delay: 0s;
+}
+
+/* Grip mark on the handle edge so the collapsed bar reads as pullable. */
+.container::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 2em;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--readthedocs-flyout-v2-muted-color);
+  opacity: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.container.collapsed::after {
+  opacity: 0.6;
+}
+
+.container.top-center::after,
+.container.top-left::after,
+.container.top-right::after {
+  bottom: 2px;
+}
+
+.container.bottom-left::after,
+.container.bottom-right::after {
+  top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    transition: none;
+  }
 }
 
 /* ---- Hamburger ---- */
@@ -111,6 +181,7 @@
 }
 
 .hamburger:hover .hamburger-dropdown,
+.hamburger:focus-within .hamburger-dropdown,
 .hamburger.open .hamburger-dropdown {
   display: flex;
 }
@@ -119,12 +190,15 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.4em;
-  border-radius: 0.25em;
-  color: var(--readthedocs-flyout-v2-muted-color);
   display: flex;
   align-items: center;
+  gap: 0.5em;
+  padding: 0.4em 0.6em 0.4em 0.4em;
+  border-radius: 0.25em;
+  color: var(--readthedocs-flyout-v2-muted-color);
   font-size: inherit;
+  font-family: inherit;
+  white-space: nowrap;
 }
 
 .hamburger-dropdown button:hover {
@@ -200,6 +274,11 @@
   gap: 0.4em;
   color: var(--readthedocs-flyout-v2-muted-color);
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.bar-field input {
+  margin: 0;
 }
 
 .bar-links {

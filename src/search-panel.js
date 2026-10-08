@@ -89,6 +89,8 @@ export class SearchPanelElement extends LitElement {
 
   _onSubmit(e) {
     e.preventDefault();
+    // Enter follows the first hit so a query can be answered without the mouse.
+    this.renderRoot.querySelector("a.hit-detail")?.click();
   }
 
   _getUserQuery() {

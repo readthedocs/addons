@@ -46,6 +46,9 @@ const POSITIONS = [
 ];
 const DEFAULT_POSITION = "top-center";
 
+// Idle time before the bar slides away, leaving a handle to hover.
+const AUTO_HIDE_DELAY = 4000;
+
 const DOWNLOAD_NAMES = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
 
 // Dashboard URLs come back on the legacy domain; point at the app.
@@ -61,6 +64,8 @@ function toAppUrl(url) {
  *
  * The hamburger switches which addon is shown. There is no expanded
  * state: each addon renders a compact, bar-sized version of itself.
+ * When idle the bar slides away and hovering the remaining handle
+ * brings it back.
  */
 export class FlyoutV2Element extends LitElement {
   static elementName = "readthedocs-flyout-v2";
@@ -70,6 +75,9 @@ export class FlyoutV2Element extends LitElement {
     position: { type: String },
     activePanel: { state: true },
     hamburgerOpen: { state: true },
+    collapsed: { state: true },
+    autoHide: { state: true },
+    autoHideDelay: { type: Number, attribute: "auto-hide-delay" },
   };
 
   static styles = styleSheet;
@@ -81,6 +89,10 @@ export class FlyoutV2Element extends LitElement {
     this.position = DEFAULT_POSITION;
     this.activePanel = PANEL_MENU;
     this.hamburgerOpen = false;
+    this.collapsed = false;
+    this.autoHide = true;
+    this.autoHideDelay = AUTO_HIDE_DELAY;
+    this._hideTimer = null;
 
     library.add(faArrowUpRightFromSquare);
     library.add(faBars);
@@ -127,6 +139,11 @@ export class FlyoutV2Element extends LitElement {
     this._hasLanguages = this.config.projects.translations.length > 0;
     this._hasDownloads =
       Object.keys(this.config.versions.current.downloads).length > 0;
+    this._defaultVersion = objectPath.get(
+      this.config,
+      "projects.current.default_version",
+      null,
+    );
 
     const stored = FlyoutV2Addon.getLocalStorage();
     const dashboardPosition = objectPath.get(
@@ -137,11 +154,15 @@ export class FlyoutV2Element extends LitElement {
     this.position = POSITIONS.includes(stored.position)
       ? stored.position
       : dashboardPosition || DEFAULT_POSITION;
+    this.autoHide = stored.autoHide !== false;
 
     // Remember the last selected addon across page loads.
     this.activePanel = this._isPanelAvailable(stored.activePanel)
       ? stored.activePanel
       : PANEL_MENU;
+
+    this._cancelCollapse();
+    this._scheduleCollapse();
   }
 
   _isPanelAvailable(panel) {
@@ -169,6 +190,38 @@ export class FlyoutV2Element extends LitElement {
     this.hamburgerOpen = false;
     FlyoutV2Addon.setLocalStorage({ activePanel: panel });
   }
+
+  // ---- Auto-hide ----
+
+  _isBusy() {
+    // Keep the bar while it is hovered, holds focus (typing in search,
+    // tabbing through it) or the hamburger is open.
+    return (
+      this.hamburgerOpen ||
+      this.matches(":hover") ||
+      this.shadowRoot?.activeElement !== null
+    );
+  }
+
+  _scheduleCollapse = () => {
+    clearTimeout(this._hideTimer);
+    if (!this.autoHide) {
+      return;
+    }
+    this._hideTimer = setTimeout(() => {
+      if (this._isBusy()) {
+        this._scheduleCollapse();
+        return;
+      }
+      this.collapsed = true;
+    }, this.autoHideDelay);
+  };
+
+  _cancelCollapse = () => {
+    clearTimeout(this._hideTimer);
+    this._hideTimer = null;
+    this.collapsed = false;
+  };
 
   _onHamburgerToggle = (e) => {
     e.stopPropagation();
@@ -202,6 +255,13 @@ export class FlyoutV2Element extends LitElement {
     FlyoutV2Addon.setLocalStorage({ position: this.position });
   };
 
+  _onAutoHideChange = (e) => {
+    this.autoHide = e.target.checked;
+    FlyoutV2Addon.setLocalStorage({ autoHide: this.autoHide });
+    this._cancelCollapse();
+    this._scheduleCollapse();
+  };
+
   _focusSearch() {
     this.updateComplete.then(() => {
       this.renderRoot.querySelector("readthedocs-search-panel")?.focusInput();
@@ -215,11 +275,10 @@ export class FlyoutV2Element extends LitElement {
       <button
         class=${classMap({ active: this.activePanel === panel })}
         @click=${onClick}
-        title=${label}
-        aria-label=${label}
         role="menuitem"
       >
         ${iconNode}
+        <span>${label}</span>
       </button>
     `;
   }
@@ -329,7 +388,7 @@ export class FlyoutV2Element extends LitElement {
             class="bar-select"
             @change=${this._onSelectNavigate}
             aria-label="Version"
-            title="Switch version"
+            title="Switch version (★ marks the default)"
           >
             ${this.config.versions.active.map(
               (v) =>
@@ -337,7 +396,7 @@ export class FlyoutV2Element extends LitElement {
                   value="${getLinkWithFilename(v.urls.documentation, filename)}"
                   ?selected=${v.slug === this.config.versions.current.slug}
                 >
-                  ${v.slug}
+                  ${v.slug === this._defaultVersion ? `★ ${v.slug}` : v.slug}
                 </option>`,
             )}
           </select>`
@@ -388,6 +447,14 @@ export class FlyoutV2Element extends LitElement {
           )}
         </select>
       </label>
+      <label class="bar-field">
+        <input
+          type="checkbox"
+          .checked=${this.autoHide}
+          @change=${this._onAutoHideChange}
+        />
+        Auto-hide
+      </label>
       <span class="bar-links">
         <a
           href="${addUtmParameters(toAppUrl(urls.home), "flyout")}"
@@ -419,10 +486,21 @@ export class FlyoutV2Element extends LitElement {
       return nothing;
     }
 
-    const classes = { container: true, [this.position]: true };
+    const classes = {
+      container: true,
+      collapsed: this.collapsed,
+      [this.position]: true,
+    };
 
     return html`
-      <div class=${classMap(classes)} @keydown=${this._onKeydown}>
+      <div
+        class=${classMap(classes)}
+        @keydown=${this._onKeydown}
+        @mouseenter=${this._cancelCollapse}
+        @mouseleave=${this._scheduleCollapse}
+        @focusin=${this._cancelCollapse}
+        @focusout=${this._scheduleCollapse}
+      >
         ${this.renderHamburger()}
         <div class="bar-content">${this.renderBarContent()}</div>
       </div>
@@ -431,11 +509,14 @@ export class FlyoutV2Element extends LitElement {
 
   _onFlyoutShow = () => {
     this._switchPanel(PANEL_MENU);
+    this._cancelCollapse();
+    this._scheduleCollapse();
   };
 
   _onSearchShow = () => {
     if (this._searchEnabled) {
       this._switchPanel(PANEL_SEARCH);
+      this._cancelCollapse();
       this._focusSearch();
     }
   };
@@ -443,6 +524,8 @@ export class FlyoutV2Element extends LitElement {
   _onPanelSet = (e) => {
     if (e.detail?.panel) {
       this._switchPanel(e.detail.panel);
+      this._cancelCollapse();
+      this._scheduleCollapse();
     }
   };
 
@@ -468,6 +551,7 @@ export class FlyoutV2Element extends LitElement {
   }
 
   disconnectedCallback() {
+    clearTimeout(this._hideTimer);
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_SHOW,
       this._onFlyoutShow,

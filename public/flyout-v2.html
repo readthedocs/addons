@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flyout v2 demo - Read the Docs Addons</title>
+    <meta name="readthedocs-addons-api-version" content="1" />
+    <meta name="readthedocs-project-slug" content="example" />
+    <meta name="readthedocs-version-slug" content="v1.0" />
+    <meta name="readthedocs-resolver-filename" content="/flyout-v2.html" />
+    <style>
+      :root {
+        --ink: #1f2328;
+        --muted: #59636e;
+        --line: #d9dee3;
+        --accent: #2a80b9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: var(--ink);
+        background: #fff;
+        line-height: 1.6;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 16rem minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      nav.sidebar {
+        border-right: 1px solid var(--line);
+        padding: 1.5rem 1.25rem;
+        background: #f6f8fa;
+      }
+      nav.sidebar .brand {
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      nav.sidebar a {
+        display: block;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 0.2rem 0;
+      }
+      nav.sidebar a.current {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      main {
+        padding: 2rem 3rem 4rem;
+        max-width: 52rem;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      h2 {
+        margin-top: 2.5rem;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 0.25rem;
+      }
+      pre {
+        background: #f6f8fa;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+      }
+      kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.85em;
+        padding: 0.1em 0.4em;
+        border: 1px solid var(--line);
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        background: #fff;
+      }
+      .demo {
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--accent);
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        background: #f6f8fa;
+      }
+      .demo h2 {
+        margin-top: 0;
+        border: 0;
+        font-size: 1rem;
+      }
+      .demo ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.25rem;
+      }
+      .demo .switch a {
+        margin-right: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar">
+        <div class="brand">example docs</div>
+        <a href="flyout-v2.html?readthedocs-flyout-v2=true" class="current"
+          >Getting started</a
+        >
+        <a href="#install">Installation</a>
+        <a href="#usage">Usage</a>
+        <a href="#config">Configuration</a>
+        <a href="docdiff.html?readthedocs-flyout-v2=true">Diff page</a>
+      </nav>
+
+      <main role="main">
+        <h1 id="getting-started">Getting started</h1>
+        <p>
+          This page is a stand-in for a real documentation site. The dev
+          server serves it with the mock Addons API from
+          <code>public/_/readthedocs-addons.json</code>, which describes a
+          pull request build, so every addon that has a bar UI is available.
+        </p>
+
+        <section class="demo">
+          <h2>Flyout v2 demo</h2>
+          <p class="switch">
+            <a href="flyout-v2.html?readthedocs-flyout-v2=true">Flyout v2</a>
+            <a href="flyout-v2.html">Original flyout</a>
+          </p>
+          <ul>
+            <li>
+              The bar at the top shows the active addon. Hover or click the
+              <strong>☰</strong> to switch between Menu, Search, Changed
+              files and Settings.
+            </li>
+            <li>
+              Press <kbd>/</kbd> to jump to search, type to see results
+              inline, <kbd>Enter</kbd> opens the first hit,
+              <kbd>Esc</kbd> returns to the menu.
+            </li>
+            <li>
+              Leave the bar alone for a few seconds and it slides away.
+              Hover the handle at the top to bring it back. Turn this off
+              under Settings.
+            </li>
+            <li>
+              Changed files is the existing file tree diff UI. Press
+              <kbd>d</kbd> or tick <em>Show diff</em> to toggle the visual
+              diff on <a href="docdiff.html?readthedocs-flyout-v2=true"
+                >the diff page</a
+              >.
+            </li>
+            <li>
+              Your last addon and the position/auto-hide settings are
+              remembered in <code>localStorage</code>.
+            </li>
+          </ul>
+        </section>
+
+        <h2 id="install">Installation</h2>
+        <p>Install the package with pip:</p>
+        <pre><code>pip install example</code></pre>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+          nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
+          Nulla quis sem at nibh elementum imperdiet.
+        </p>
+
+        <h2 id="usage">Usage</h2>
+        <p>
+          Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue
+          semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
+          Class aptent taciti sociosqu ad litora torquent per conubia nostra,
+          per inceptos himenaeos.
+        </p>
+        <pre><code>from example import run
+
+run("docs")</code></pre>
+
+        <h2 id="config">Configuration</h2>
+        <p>
+          Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
+          Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque
+          sem at dolor. Maecenas mattis. Sed convallis tristique sem.
+        </p>
+        <p>
+          Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus,
+          iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis
+          quis ligula lacinia aliquet. Mauris ipsum.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
