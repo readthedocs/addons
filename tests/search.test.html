@@ -114,6 +114,40 @@
             });
           });
 
+          it("show the modal and perform a query with fuzzy fallback", async () => {
+            const matchMockedUrl = new RegExp(`.+`, "g");
+            server.respondWith("GET", matchMockedUrl, [
+              200,
+              {},
+              '{"count":1,"next":null,"previous":null,"projects":[{"slug":"project","versions":[{"slug":"version"}]}],"query":"serch","fuzzy_fallback":true,"results":[{"blocks":[{"content":"This is the content","highlights":{"content":["This is the <span>search</span> content"],"title":[]},"id":"id-search","title":"Search","type":"section"}],"domain":"http://localhost:8000","highlights":{"title":[]},"path":"/en/version/index.html","project":{"alias":null,"slug":"project"},"title":"Title","type":"page","version":{"slug":"version"}}]}',
+            ]);
+
+            const addon = new search.SearchAddon(config);
+            const element = document.querySelector("readthedocs-search");
+
+            const searchEvent = new CustomEvent(EVENT_READTHEDOCS_SEARCH_SHOW);
+            document.dispatchEvent(searchEvent);
+            const inputForm = element.shadowRoot.querySelector("input");
+            inputForm.value = "serch";
+            element.queryInput();
+
+            await elementUpdated(element);
+
+            await waitUntil(
+              () =>
+                element.shadowRoot.querySelector(
+                  "div.results > p.fuzzy-notice",
+                ),
+              "Fuzzy notice was not rendered",
+            );
+            expect(
+              element.shadowRoot.querySelector("div.results > p.fuzzy-notice")
+                .textContent,
+            ).to.contain('No exact matches for "serch"');
+            expect(element.shadowRoot.querySelector("div.results > div.hit")).to
+              .exist;
+          });
+
           it("show the modal and perform a query", async () => {
             const matchMockedUrl = new RegExp(`.+`, "g");
             server.respondWith("GET", matchMockedUrl, [
