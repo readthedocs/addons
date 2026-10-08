@@ -43,6 +43,146 @@ const VISUAL_DIFF_OPTIONS = {
   skipModified: true,
 };
 
+// Rendering the base version inside a hidden iframe
+const RENDER_QUIET_MS = 500;
+const RENDER_TIMEOUT_MS = 10000;
+const ADDONS_ASSETS_SELECTOR =
+  'script[src*="readthedocs-addons"], link[href*="readthedocs-addons"]';
+
+/**
+ * Find the root element in the parsed embed API response.
+ *
+ * The API applies `maincontent` on the backend and returns the outer HTML of
+ * the matched node only, without its ancestors. A selector with combinators
+ * (eg. "main > div > div.md-content") can't match that again, so the first
+ * element of the body is the requested node by construction. Trying the
+ * selector first covers the `body` fallback selector.
+ */
+export function findBaseRoot(htmlDocument, rootSelector) {
+  return (
+    htmlDocument.documentElement.querySelector(rootSelector) ||
+    htmlDocument.body.firstElementChild
+  );
+}
+
+/**
+ * Build the HTML of the current page with its root element replaced by the
+ * base version's one, so the page's own scripts run over the base content.
+ */
+export function buildBaseDocument(pageHtml, baseContent, rootSelector) {
+  const parser = new DOMParser();
+  const pageDocument = parser.parseFromString(pageHtml, "text/html");
+  const pageRoot = pageDocument.querySelector(rootSelector);
+  if (pageRoot === null) {
+    throw new Error("Element not found in current page source.");
+  }
+
+  const baseRoot = findBaseRoot(
+    parser.parseFromString(baseContent, "text/html"),
+    rootSelector,
+  );
+  if (baseRoot === null) {
+    throw new Error("Element not found in base document.");
+  }
+  pageRoot.replaceWith(pageDocument.adoptNode(baseRoot));
+
+  // Don't load addons inside the iframe
+  for (const element of pageDocument.querySelectorAll(ADDONS_ASSETS_SELECTOR)) {
+    element.remove();
+  }
+
+  const doctype = pageDocument.doctype
+    ? new XMLSerializer().serializeToString(pageDocument.doctype)
+    : "";
+  return doctype + pageDocument.documentElement.outerHTML;
+}
+
+/** Resolve once the window fired `load`. */
+export function waitForLoad(win) {
+  if (win.document.readyState === "complete") {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) =>
+    win.addEventListener("load", resolve, { once: true }),
+  );
+}
+
+/** Resolve after `quiet` ms without mutations under `node`, or after `timeout` ms. */
+export function waitForDomToSettle(
+  node,
+  quiet = RENDER_QUIET_MS,
+  timeout = RENDER_TIMEOUT_MS,
+) {
+  return new Promise((resolve) => {
+    let quietTimer;
+    let hardTimer;
+    const observer = new MutationObserver(() => {
+      clearTimeout(quietTimer);
+      quietTimer = setTimeout(finish, quiet);
+    });
+
+    function finish() {
+      observer.disconnect();
+      clearTimeout(quietTimer);
+      clearTimeout(hardTimer);
+      resolve();
+    }
+
+    observer.observe(node, {
+      attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+    quietTimer = setTimeout(finish, quiet);
+    hardTimer = setTimeout(finish, timeout);
+  });
+}
+
+/**
+ * Render `html` in a hidden iframe, wait for its scripts to settle and return
+ * a copy of the root element.
+ */
+export function renderDocument(html, rootSelector) {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.inert = true;
+  iframe.tabIndex = -1;
+  // Keep it laid out at viewport size so scripts behave like on the visible page
+  iframe.style.cssText =
+    "position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; " +
+    "border: 0; opacity: 0; pointer-events: none; z-index: -1;";
+
+  const loaded = new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error("Timeout rendering base document.")),
+      RENDER_TIMEOUT_MS,
+    );
+    iframe.addEventListener(
+      "load",
+      () => {
+        clearTimeout(timer);
+        resolve();
+      },
+      { once: true },
+    );
+  });
+  iframe.srcdoc = html;
+  document.body.appendChild(iframe);
+
+  return loaded
+    .then(() => waitForDomToSettle(iframe.contentDocument.documentElement))
+    .then(() => {
+      const root = iframe.contentDocument.querySelector(rootSelector);
+      if (root === null) {
+        throw new Error("Element not found in rendered base document.");
+      }
+      return document.importNode(root, true);
+    })
+    .finally(() => iframe.remove());
+}
+
 export class DocDiffElement extends LitElement {
   static elementName = "readthedocs-docdiff";
 
@@ -93,6 +233,7 @@ export class DocDiffElement extends LitElement {
 
     this.originalBody = null;
     this.cachedRemoteResponse = null;
+    this.cachedBaseRoot = null;
   }
 
   loadConfig(config) {
@@ -146,31 +287,92 @@ export class DocDiffElement extends LitElement {
     return EMBED_API_ENDPOINT + "?" + new URLSearchParams(params).toString();
   }
 
-  compare() {
-    // First check the root selector is in the current body
-    if (document.querySelector(this.rootSelector) === null) {
-      console.error("Element not found in current document.");
-      return;
+  fetchBaseContent() {
+    if (this.cachedRemoteResponse !== null) {
+      return Promise.resolve(this.cachedRemoteResponse.content);
     }
 
-    let promiseData;
-    if (this.cachedRemoteResponse !== null) {
-      promiseData = Promise.resolve(this.cachedRemoteResponse);
-    } else {
-      const baseURL = this.config.addons.doc_diff.base_url;
-      const url = this.getEmbedURL(baseURL);
-      promiseData = fetch(url).then((response) => {
+    const baseURL = this.config.addons.doc_diff.base_url;
+    const url = this.getEmbedURL(baseURL);
+    return fetch(url)
+      .then((response) => {
         if (!response.ok) {
           throw new Error("Error downloading requested base URL.");
         }
         return response.json();
-      });
-    }
-
-    promiseData
+      })
       .then((data) => {
         this.cachedRemoteResponse = data;
-        this.performDiff(this.cachedRemoteResponse.content);
+        return data.content;
+      });
+  }
+
+  fetchPageSource() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete(DOCDIFF_URL_PARAM);
+    url.searchParams.delete(DOCDIFF_CHUNK_URL_PARAM);
+    url.hash = "";
+    return fetch(url.href).then((response) => {
+      if (!response.ok) {
+        throw new Error("Error downloading current page source.");
+      }
+      return response.text();
+    });
+  }
+
+  // Render the base content with the current page's scripts, so elements
+  // generated by JavaScript (copy buttons, MathJax, etc) exist on both sides
+  // of the diff. Fall back to the raw base content if rendering fails.
+  loadBaseRoot() {
+    if (this.cachedBaseRoot !== null) {
+      return Promise.resolve(this.cachedBaseRoot);
+    }
+
+    return Promise.all([this.fetchBaseContent(), this.fetchPageSource()])
+      .then(([baseContent, pageHtml]) =>
+        renderDocument(
+          buildBaseDocument(pageHtml, baseContent, this.rootSelector),
+          this.rootSelector,
+        ),
+      )
+      .catch((error) => {
+        console.warn("Unable to render base version. Using raw HTML.", error);
+        return this.fetchBaseContent().then((baseContent) => {
+          const parser = new DOMParser();
+          const root = findBaseRoot(
+            parser.parseFromString(baseContent, "text/html"),
+            this.rootSelector,
+          );
+          if (root === null) {
+            throw new Error("Element not found in base document.");
+          }
+          return root;
+        });
+      })
+      .then((root) => {
+        this.cachedBaseRoot = root;
+        return root;
+      });
+  }
+
+  compare() {
+    // First check the root selector is in the current body
+    if (document.querySelector(this.rootSelector) === null) {
+      console.error("Element not found in current document.");
+      return Promise.resolve();
+    }
+
+    // Wait for the current page's scripts too (eg. when enabled via URL param)
+    const pageSettled = waitForLoad(window).then(() =>
+      waitForDomToSettle(document.querySelector(this.rootSelector)),
+    );
+
+    return Promise.all([this.loadBaseRoot(), pageSettled])
+      .then(([baseRoot]) => {
+        // It may have been disabled while rendering
+        if (this.enabled) {
+          this.performDiff(baseRoot.cloneNode(true));
+        }
       })
       .finally(() => {
         const event = new CustomEvent(EVENT_READTHEDOCS_ROOT_DOM_CHANGED);
@@ -181,31 +383,10 @@ export class DocDiffElement extends LitElement {
       });
   }
 
-  // After finding the root element, and diffing it, replace it in the DOM
-  // with the resulting visual diff elements instead.
-  performDiff(remoteContent) {
-    const parser = new DOMParser();
-    const htmlDocument = parser.parseFromString(remoteContent, "text/html");
-
-    // We first try to get the `rootSelector` from the `remoteContent`.
-    // However, depending on how the selector is constructed, it may not exist
-    // even if the response is valid.
-    //
-    // This happens when we send `?maincontent=` to the API backend with a
-    // complex selector (eg. "main > div > div.md-content") since in the
-    // response the first elements (e.g. "main > div") won't exist because the
-    // content is already parsed to return only the `?maincontent=` selector.
-    //
-    // In those cases, we always pick the `firstElementChild` of the body.
-    const oldBody =
-      htmlDocument.documentElement.querySelector(this.rootSelector) ||
-      htmlDocument.documentElement.querySelector("body").firstElementChild;
-
+  // Diff the root element against `oldBody` and replace it in the DOM with
+  // the resulting visual diff elements.
+  performDiff(oldBody) {
     const newBody = document.querySelector(this.rootSelector);
-
-    if (oldBody === null) {
-      throw new Error("Element not found in base document.");
-    }
 
     // Depending on the context, visualDomDiff function is found under a different path.
     // When running tests we use a different path for it.

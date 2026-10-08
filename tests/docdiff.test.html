@@ -43,11 +43,16 @@
 
         describe("DocDiff tests", () => {
           it("initial trigger by event and DOM check", async () => {
-            const matchMockedUrl = new RegExp(`.+`, "g");
-            server.respondWith("GET", matchMockedUrl, [
+            server.respondWith("GET", /embed/, [
               200,
               {},
               '{"url":"http://project.readthedocs.io/en/latest/index.html","fragment":null,"content":"<main><section><h1>Old title</h1></section></main>","external":false}',
+            ]);
+            // Source of the current page, used to render the base version
+            server.respondWith("GET", /docdiff\.test\.html/, [
+              200,
+              { "Content-Type": "text/html" },
+              "<html><body><main></main></body></html>",
             ]);
 
             const addon = new docdiff.DocDiffAddon(config);
@@ -59,7 +64,8 @@
             document.dispatchEvent(event);
 
             await elementUpdated(element);
-            expect(server.requests).to.have.length(1);
+            // Embed API + current page source
+            expect(server.requests).to.have.length(2);
 
             await waitUntil(
               () => document.querySelector(".doc-diff-added"),
