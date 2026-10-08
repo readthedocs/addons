@@ -50,11 +50,13 @@ const ADDONS_ASSETS_SELECTOR =
   'script[src*="readthedocs-addons"], link[href*="readthedocs-addons"]';
 
 /**
- * Find the root element in a parsed base document.
+ * Find the root element in the parsed embed API response.
  *
- * The embed API returns only the `maincontent` node, so a complex selector
- * (eg. "main > div > div.md-content") won't match it. In that case, fall back
- * to the first element of the body.
+ * The API applies `maincontent` on the backend and returns the outer HTML of
+ * the matched node only, without its ancestors. A selector with combinators
+ * (eg. "main > div > div.md-content") can't match that again, so the first
+ * element of the body is the requested node by construction. Trying the
+ * selector first covers the `body` fallback selector.
  */
 export function findBaseRoot(htmlDocument, rootSelector) {
   return (
