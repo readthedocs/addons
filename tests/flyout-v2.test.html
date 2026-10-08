@@ -207,7 +207,18 @@
 
           it("keeps the bar at the widest content seen", async () => {
             const element = await render(config);
-            await new Promise((resolve) => requestAnimationFrame(resolve));
+            // The width is recorded by a ResizeObserver and applied from a
+            // later task.
+            for (let i = 0; i < 50; i++) {
+              if (
+                element.style.getPropertyValue(
+                  "--readthedocs-flyout-v2-content-min-width",
+                )
+              ) {
+                break;
+              }
+              await sleep(10);
+            }
             const before = element.shadowRoot
               .querySelector(".bar-content")
               .getBoundingClientRect().width;

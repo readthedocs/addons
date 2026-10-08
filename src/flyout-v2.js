@@ -681,9 +681,10 @@ export class FlyoutV2Element extends LitElement {
       const width = Math.ceil(entry.contentRect.width);
       if (width > (this._widestContent || 0)) {
         this._widestContent = width;
-        // Applied on the next frame: changing the layout from inside the
-        // observer callback is reported as an observer loop.
-        requestAnimationFrame(() => {
+        // Applied from a later task: changing the layout from inside the
+        // observer callback is reported as an observer loop. A timeout
+        // rather than a frame so it also runs in background tabs.
+        setTimeout(() => {
           this.style.setProperty(
             "--readthedocs-flyout-v2-content-min-width",
             `${width}px`,
