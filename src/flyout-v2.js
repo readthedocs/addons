@@ -1,9 +1,9 @@
-import READTHEDOCS_LOGO_WORDMARK from "./images/logo-wordmark-light.svg";
 import READTHEDOCS_LOGO from "./images/logo-light.svg";
 import { library, icon } from "@fortawesome/fontawesome-svg-core";
 import {
   faArrowUpRightFromSquare,
   faBars,
+  faCircleInfo,
   faFileLines,
   faGear,
   faHammer,
@@ -97,6 +97,7 @@ export class FlyoutV2Element extends LitElement {
 
     library.add(faArrowUpRightFromSquare);
     library.add(faBars);
+    library.add(faCircleInfo);
     library.add(faFileLines);
     library.add(faGear);
     library.add(faHammer);
@@ -104,6 +105,7 @@ export class FlyoutV2Element extends LitElement {
     library.add(faMagnifyingGlass);
 
     this.iconBars = icon(faBars, { classes: ["icon"] });
+    this.iconCircleInfo = icon(faCircleInfo, { classes: ["icon"] });
     this.iconExternalLink = icon(faArrowUpRightFromSquare, {
       classes: ["icon"],
     });
@@ -299,8 +301,8 @@ export class FlyoutV2Element extends LitElement {
         <div class="hamburger-dropdown" role="menu">
           ${this._renderHamburgerItem(
             PANEL_MENU,
-            "Menu",
-            this.iconBars.node[0],
+            "Build details",
+            this.iconCircleInfo.node[0],
             this._onMenuClick,
           )}
           ${this._searchEnabled
@@ -350,16 +352,42 @@ export class FlyoutV2Element extends LitElement {
     }
   }
 
+  renderProjectLinks() {
+    const { urls } = this.config.projects.current;
+    const vcs = this.config.addons.flyout.vcs;
+
+    return html`
+      <span class="bar-links">
+        <a
+          href="${addUtmParameters(toAppUrl(urls.home), "flyout")}"
+          title="Project home"
+        >
+          ${this.iconHouse.node[0]}
+        </a>
+        <a
+          href="${addUtmParameters(toAppUrl(urls.builds), "flyout")}"
+          title="Builds"
+        >
+          ${this.iconHammer.node[0]}
+        </a>
+        ${vcs?.view_url
+          ? html`<a
+              href="${vcs.view_url}"
+              target="_blank"
+              title="View source on ${vcs.name}"
+            >
+              ${this.iconExternalLink.node[0]}
+            </a>`
+          : nothing}
+      </span>
+    `;
+  }
+
   renderMenu() {
     const { current, translations } = this.config.projects;
     const filename = this.config.readthedocs.resolver.filename;
 
     return html`
-      <img
-        class="bar-logo"
-        src="${READTHEDOCS_LOGO_WORDMARK}"
-        alt="Read the Docs"
-      />
       ${this._hasLanguages
         ? html`<select
             class="bar-select"
@@ -418,6 +446,7 @@ export class FlyoutV2Element extends LitElement {
             )}
           </select>`
         : nothing}
+      ${this.renderProjectLinks()}
       <a
         class="bar-branding"
         href="${addUtmParameters("https://about.readthedocs.com/", "flyout")}"
@@ -429,8 +458,6 @@ export class FlyoutV2Element extends LitElement {
   }
 
   renderSettings() {
-    const { urls } = this.config.projects.current;
-    const vcs = this.config.addons.flyout.vcs;
     // Reloading with the param set to false clears the remembered opt-in.
     const classicUrl = new URL(window.location.href);
     classicUrl.searchParams.set(FLYOUT_V2_QUERY_PARAM, "false");
@@ -459,29 +486,6 @@ export class FlyoutV2Element extends LitElement {
         />
         Auto-hide
       </label>
-      <span class="bar-links">
-        <a
-          href="${addUtmParameters(toAppUrl(urls.home), "flyout")}"
-          title="Project home"
-        >
-          ${this.iconHouse.node[0]}
-        </a>
-        <a
-          href="${addUtmParameters(toAppUrl(urls.builds), "flyout")}"
-          title="Builds"
-        >
-          ${this.iconHammer.node[0]}
-        </a>
-        ${vcs?.view_url
-          ? html`<a
-              href="${vcs.view_url}"
-              target="_blank"
-              title="View source on ${vcs.name}"
-            >
-              ${this.iconExternalLink.node[0]}
-            </a>`
-          : nothing}
-      </span>
       <a
         class="bar-opt-out"
         href="${classicUrl.href}"

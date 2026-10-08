@@ -225,11 +225,6 @@
   min-width: 0;
 }
 
-.bar-logo {
-  height: 1.3em;
-  width: auto;
-}
-
 .bar-select {
   appearance: revert;
   background-color: transparent;

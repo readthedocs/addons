@@ -135,7 +135,11 @@
                 ".hamburger-dropdown button",
               ),
             ].map((b) => b.textContent.trim());
-            expect(labels).to.deep.equal(["Menu", "Search", "Settings"]);
+            expect(labels).to.deep.equal([
+              "Build details",
+              "Search",
+              "Settings",
+            ]);
           });
 
           it("shows changed files only on external versions", async () => {
@@ -201,7 +205,9 @@
               activePanel: flyoutV2.PANEL_FILEDIFF,
             });
             const element = await render(config);
-            expect(element.shadowRoot.querySelector(".bar-logo")).to.exist;
+            expect(
+              element.shadowRoot.querySelector('select[aria-label="Version"]'),
+            ).to.exist;
           });
 
           it("auto-hides after the idle delay", async () => {
