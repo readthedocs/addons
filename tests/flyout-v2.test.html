@@ -197,6 +197,29 @@
             element.shadowRoot.querySelector(".hamburger-trigger").click();
             element.shadowRoot.querySelector(".bell").click();
             await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.true;
+
+            // Hovering the list does the same, and the list paints on top.
+            element.shadowRoot
+              .querySelector(".hamburger")
+              .dispatchEvent(new Event("mouseenter"));
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.false;
+            expect(
+              parseInt(
+                getComputedStyle(
+                  element.shadowRoot.querySelector(".hamburger-dropdown"),
+                ).zIndex,
+              ),
+            ).to.be.above(
+              parseInt(
+                getComputedStyle(
+                  element.shadowRoot.querySelector(".bell-dropdown"),
+                ).zIndex,
+              ),
+            );
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
 
             // Closing it for good removes the bell too.
             panel.shadowRoot.querySelector(".title a.right").click();

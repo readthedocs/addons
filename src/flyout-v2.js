@@ -269,6 +269,11 @@ export class FlyoutV2Element extends LitElement {
     }
   };
 
+  // The list also opens on hover, so fold the notification away then too.
+  _onHamburgerEnter = () => {
+    this._closeNotifications();
+  };
+
   _onHamburgerLeave = () => {
     this.hamburgerDismissed = false;
   };
@@ -398,6 +403,7 @@ export class FlyoutV2Element extends LitElement {
           open: this.hamburgerOpen,
           dismissed: this.hamburgerDismissed,
         })}
+        @mouseenter=${this._onHamburgerEnter}
         @mouseleave=${this._onHamburgerLeave}
       >
         <button

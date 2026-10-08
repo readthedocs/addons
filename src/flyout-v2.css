@@ -294,7 +294,8 @@
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0 0 0.4em 0.4em;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  /* Above the notification and search overlays. */
+  z-index: 2;
 }
 
 /* At the bottom of the screen the list opens upward instead. */
