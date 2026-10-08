@@ -10,6 +10,7 @@ import {
   faHammer,
   faHouse,
   faMagnifyingGlass,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { html, nothing, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
@@ -119,6 +120,7 @@ export class FlyoutV2Element extends LitElement {
     library.add(faHammer);
     library.add(faHouse);
     library.add(faMagnifyingGlass);
+    library.add(faXmark);
 
     this.iconBars = icon(faBars, { classes: ["icon"] });
     this.iconBell = icon(faBell, { classes: ["icon"] });
@@ -131,6 +133,7 @@ export class FlyoutV2Element extends LitElement {
     this.iconHammer = icon(faHammer, { classes: ["icon"] });
     this.iconHouse = icon(faHouse, { classes: ["icon"] });
     this.iconSearch = icon(faMagnifyingGlass, { classes: ["icon"] });
+    this.iconXmark = icon(faXmark, { classes: ["icon"] });
 
     this._onMenuClick = (e) => this._switchPanel(PANEL_MENU, e);
     this._onSearchClick = (e) => this._switchPanel(PANEL_SEARCH, e);
@@ -461,12 +464,19 @@ export class FlyoutV2Element extends LitElement {
     return this.position.startsWith("bottom") ? "up" : "down";
   }
 
+  // Not called "align": that is a legacy HTML attribute browsers still map
+  // to text-align.
+  _growAnchor() {
+    return this.position.endsWith("right") ? "right" : "left";
+  }
+
   renderBarContent() {
     switch (this.activePanel) {
       case PANEL_SEARCH:
         return html`<readthedocs-search-panel
           .config=${this.config}
           direction=${this._growDirection()}
+          anchor=${this._growAnchor()}
         ></readthedocs-search-panel>`;
       case PANEL_FILEDIFF:
         return html`<readthedocs-filetreediff-panel
@@ -526,6 +536,7 @@ export class FlyoutV2Element extends LitElement {
               aria-label="Language"
               title="Switch language"
             >
+              <option disabled>Language</option>
               ${translations
                 .concat(current)
                 .sort((a, b) => a.language.code.localeCompare(b.language.code))
@@ -552,6 +563,7 @@ export class FlyoutV2Element extends LitElement {
               aria-label="Version"
               title="Switch version (★ marks the default)"
             >
+              <option disabled>Version</option>
               ${this.config.versions.active.map(
                 (v) =>
                   html`<option
@@ -643,8 +655,10 @@ export class FlyoutV2Element extends LitElement {
         class="bar-link"
         href="${classicUrl.href}"
         title="Switch back to the classic flyout"
-        >Classic flyout</a
+        aria-label="Switch back to the classic flyout"
       >
+        ${this.iconXmark.node[0]}
+      </a>
     `;
   }
 
@@ -678,25 +692,42 @@ export class FlyoutV2Element extends LitElement {
     `;
   }
 
-  firstUpdated() {
-    // Switching addons must not make the bar jump around: never shrink
-    // below the widest content seen on this page.
-    this._resizeObserver = new ResizeObserver(([entry]) => {
-      const width = Math.ceil(entry.contentRect.width);
-      if (width > (this._widestContent || 0)) {
-        this._widestContent = width;
-        // Applied from a later task: changing the layout from inside the
-        // observer callback is reported as an observer loop. A timeout
-        // rather than a frame so it also runs in background tabs.
-        setTimeout(() => {
-          this.style.setProperty(
-            "--readthedocs-flyout-v2-content-min-width",
-            `${width}px`,
-          );
-        });
-      }
-    });
-    this._resizeObserver.observe(this.renderRoot.querySelector(".bar-content"));
+  // ---- Width changes ----
+  // The bar is sized by its content. Switching addons animates from the
+  // old width to the new one instead of jumping.
+
+  willUpdate(changedProperties) {
+    if (changedProperties.has("activePanel") && this.hasUpdated) {
+      this._widthBefore = this._container()?.getBoundingClientRect().width;
+    }
+  }
+
+  updated(changedProperties) {
+    if (!changedProperties.has("activePanel") || !this._widthBefore) {
+      return;
+    }
+    const before = this._widthBefore;
+    this._widthBefore = null;
+
+    const container = this._container();
+    const after = container.getBoundingClientRect().width;
+    if (
+      before === after ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+    container.classList.add("resizing");
+    const animation = container.animate(
+      [{ width: `${before}px` }, { width: `${after}px` }],
+      { duration: 200, easing: "ease" },
+    );
+    animation.onfinish = animation.oncancel = () =>
+      container.classList.remove("resizing");
+  }
+
+  _container() {
+    return this.renderRoot.querySelector(".container");
   }
 
   render() {
@@ -771,7 +802,6 @@ export class FlyoutV2Element extends LitElement {
   }
 
   disconnectedCallback() {
-    this._resizeObserver?.disconnect();
     clearTimeout(this._notificationTimer);
     clearTimeout(this._hideTimer);
     document.removeEventListener(

@@ -10,6 +10,10 @@
     --readthedocs-flyout-v2-row-height: 2.4em;
     /* How much of the bar stays visible as a handle when it auto-hides. */
     --readthedocs-flyout-v2-handle-size: 0.6em;
+    /* Top-center anchors its left edge this far left of the middle and
+     * grows to the right, so the hamburger never moves. Half the width of
+     * the default addon centres it. */
+    --readthedocs-flyout-v2-center-offset: 14em;
 
     --readthedocs-flyout-v2-color: rgb(220, 220, 220);
     --readthedocs-flyout-v2-muted-color: rgb(150, 150, 150);
@@ -91,8 +95,8 @@
 
 .container.top-center {
   top: 0;
-  left: 50%;
-  --readthedocs-flyout-v2-tx: -50%;
+  left: calc(50% - var(--readthedocs-flyout-v2-center-offset));
+  max-width: calc(50vw + var(--readthedocs-flyout-v2-center-offset) - 1em);
 }
 
 .container.top-left {
@@ -103,6 +107,27 @@
 .container.top-right {
   top: 0;
   right: 1em;
+}
+
+/* Anchored to the right: the hamburger sits at the fixed edge and the
+ * content grows to the left, so its placement never changes either. */
+.container.top-right,
+.container.bottom-right {
+  flex-direction: row-reverse;
+  padding-right: 0;
+  padding-left: 0.5em;
+}
+
+.container.top-right .hamburger-dropdown,
+.container.bottom-right .hamburger-dropdown {
+  left: auto;
+  right: 0;
+}
+
+.container.top-right .bell-dropdown,
+.container.bottom-right .bell-dropdown {
+  right: auto;
+  left: -0.5em;
 }
 
 .container.bottom-left,
@@ -349,9 +374,12 @@
   align-items: center;
   gap: 0.4em;
   min-height: var(--readthedocs-flyout-v2-row-height);
-  /* Set by the element to the widest content seen, so the bar never
-   * shrinks when switching addons. */
-  min-width: var(--readthedocs-flyout-v2-content-min-width, 0);
+  min-width: 0;
+}
+
+/* While the width animates between two addons. */
+.container.resizing {
+  overflow: hidden;
 }
 
 .bar-select {
@@ -430,17 +458,21 @@
   width: 0.9em;
 }
 
+/* Icon link, e.g. the × that switches back to the classic flyout. */
 .bar-link {
+  display: flex;
   margin-left: 0.25em;
-  padding: 0.3em 0.5em;
+  padding: 0.4em;
   border-radius: 0.25em;
   color: var(--readthedocs-flyout-v2-muted-color);
-  font-size: 0.9em;
-  text-decoration: none;
-  white-space: nowrap;
 }
 
 .bar-link:hover {
   background-color: var(--readthedocs-flyout-v2-hover-background-color);
   color: var(--readthedocs-flyout-v2-item-link-color);
+}
+
+.bar-link svg {
+  height: 0.9em;
+  width: 0.9em;
 }

@@ -148,7 +148,7 @@
                 '.bar-content select[aria-label="Version"] option',
               ),
             ].map((o) => o.textContent.trim());
-            expect(labels).to.deep.equal(["★ stable", "latest"]);
+            expect(labels).to.deep.equal(["Version", "★ stable", "latest"]);
           });
 
           it("stacks the notification under the bar with a bell to bring it back", async () => {
@@ -228,23 +228,14 @@
             expect(wrap().hidden).to.be.true;
           });
 
-          it("keeps the bar at the widest content seen", async () => {
+          it("grows in one direction and animates the width change", async () => {
             const element = await render(config);
-            // The width is recorded by a ResizeObserver and applied from a
-            // later task.
-            for (let i = 0; i < 50; i++) {
-              if (
-                element.style.getPropertyValue(
-                  "--readthedocs-flyout-v2-content-min-width",
-                )
-              ) {
-                break;
-              }
-              await sleep(10);
-            }
-            const before = element.shadowRoot
-              .querySelector(".bar-content")
-              .getBoundingClientRect().width;
+            const container = element.shadowRoot.querySelector(".container");
+            const trigger =
+              element.shadowRoot.querySelector(".hamburger-trigger");
+            const triggerBefore = trigger.getBoundingClientRect().left;
+            const widthBefore = container.getBoundingClientRect().width;
+
             [
               ...element.shadowRoot.querySelectorAll(
                 ".hamburger-dropdown button",
@@ -253,10 +244,15 @@
               .find((b) => b.textContent.trim() === "Settings")
               .click();
             await elementUpdated(element);
-            const after = element.shadowRoot
-              .querySelector(".bar-content")
-              .getBoundingClientRect().width;
-            expect(after).to.be.at.least(before);
+
+            // The hamburger stays put while the other edge moves.
+            expect(trigger.getBoundingClientRect().left).to.equal(
+              triggerBefore,
+            );
+            expect(container.getBoundingClientRect().width).to.not.equal(
+              widthBefore,
+            );
+            expect(container.getAnimations().length).to.equal(1);
           });
 
           it("lists addons in the hamburger and hides unavailable ones", async () => {

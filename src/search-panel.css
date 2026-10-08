@@ -56,11 +56,11 @@
   padding: 0.5em 0 0.35em;
 }
 
-:host([direction="up"]) .filters {
-  margin: 0.25em 0 0;
-  padding: 0.4em 0.25em 0;
-  border-bottom: none;
-  border-top: 1px solid var(--readthedocs-search-panel-divider-color);
+/* When the bar is anchored to the right, results line up with its right
+ * edge and grow to the left. */
+:host([anchor="right"]) .results {
+  left: auto;
+  right: 0;
 }
 
 form {
