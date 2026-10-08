@@ -1,25 +1,21 @@
 /* File tree diff UI inside the flyout v2 bar (no fixed positioning) */
 
-@layer defaults {
-  :root {
-    --readthedocs-filetreediff-panel-color: var(
-      --readthedocs-flyout-v2-item-link-color,
-      rgb(252, 252, 252)
-    );
-    --readthedocs-filetreediff-panel-background-color: var(
-      --readthedocs-flyout-v2-background-color,
-      rgb(39, 39, 37)
-    );
-    --readthedocs-filetreediff-panel-chunks-color: var(
-      --readthedocs-flyout-v2-active-color,
-      #27ae60
-    );
-    --readthedocs-filetreediff-panel-icon-width: 0.8rem;
-  }
-}
-
+/* Derived on the host so they follow the bar's theme. */
 :host {
   display: block;
+  --readthedocs-filetreediff-panel-color: var(
+    --readthedocs-flyout-v2-item-link-color,
+    rgb(252, 252, 252)
+  );
+  --readthedocs-filetreediff-panel-background-color: var(
+    --readthedocs-flyout-v2-background-color,
+    rgb(39, 39, 37)
+  );
+  --readthedocs-filetreediff-panel-chunks-color: var(
+    --readthedocs-flyout-v2-active-color,
+    #27ae60
+  );
+  --readthedocs-filetreediff-panel-icon-width: 0.8rem;
   color: var(--readthedocs-filetreediff-panel-color);
 }
 

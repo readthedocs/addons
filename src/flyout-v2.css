@@ -16,8 +16,48 @@
     --readthedocs-flyout-v2-background-color: rgb(39, 39, 37);
     --readthedocs-flyout-v2-active-color: #27ae60;
     --readthedocs-flyout-v2-hover-background-color: rgba(255, 255, 255, 0.08);
+    --readthedocs-flyout-v2-field-background-color: rgba(255, 255, 255, 0.1);
     --readthedocs-flyout-v2-item-link-color: rgb(252, 252, 252);
     --readthedocs-flyout-v2-divider-color: #413d3d;
+  }
+}
+
+/* ---- Themes ----
+ * The variables above are the dark theme and the default. The light values
+ * live twice: once for an explicit choice and once for "system". */
+
+.container.theme-light {
+  --readthedocs-flyout-v2-color: rgb(64, 64, 64);
+  --readthedocs-flyout-v2-muted-color: rgb(110, 110, 110);
+  --readthedocs-flyout-v2-background-color: rgb(252, 252, 252);
+  --readthedocs-flyout-v2-active-color: #1f8f4f;
+  --readthedocs-flyout-v2-hover-background-color: rgba(0, 0, 0, 0.06);
+  --readthedocs-flyout-v2-field-background-color: rgba(0, 0, 0, 0.06);
+  --readthedocs-flyout-v2-item-link-color: rgb(24, 24, 24);
+  --readthedocs-flyout-v2-divider-color: rgb(224, 224, 224);
+}
+
+@media (prefers-color-scheme: light) {
+  .container.theme-system {
+    --readthedocs-flyout-v2-color: rgb(64, 64, 64);
+    --readthedocs-flyout-v2-muted-color: rgb(110, 110, 110);
+    --readthedocs-flyout-v2-background-color: rgb(252, 252, 252);
+    --readthedocs-flyout-v2-active-color: #1f8f4f;
+    --readthedocs-flyout-v2-hover-background-color: rgba(0, 0, 0, 0.06);
+    --readthedocs-flyout-v2-field-background-color: rgba(0, 0, 0, 0.06);
+    --readthedocs-flyout-v2-item-link-color: rgb(24, 24, 24);
+    --readthedocs-flyout-v2-divider-color: rgb(224, 224, 224);
+  }
+}
+
+/* The logo mark is white; flip it on light backgrounds. */
+.container.theme-light .bar-branding img {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: light) {
+  .container.theme-system .bar-branding img {
+    filter: invert(1);
   }
 }
 
@@ -27,7 +67,9 @@
   position: fixed;
   z-index: 3000;
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25em;
+  padding-right: 0.5em;
   max-width: calc(100vw - 2em);
   font-family: var(--readthedocs-flyout-v2-font-family);
   font-size: var(--readthedocs-flyout-v2-font-size);
@@ -36,6 +78,8 @@
   background-color: var(--readthedocs-flyout-v2-background-color);
   border-radius: 0 0 0.5em 0.5em;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--readthedocs-flyout-v2-divider-color);
+  border-top: none;
   --readthedocs-flyout-v2-tx: 0;
   --readthedocs-flyout-v2-ty: 0;
   transform: translate(
@@ -65,6 +109,7 @@
 .container.bottom-right {
   bottom: 1em;
   border-radius: 0.5em;
+  border-top: 1px solid var(--readthedocs-flyout-v2-divider-color);
 }
 
 .container.bottom-left {
@@ -136,17 +181,19 @@
   }
 }
 
-/* ---- Bar row: hamburger, active addon, bell ---- */
+/* ---- Notifications bell ---- */
 
-.bar-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.25em;
-  padding-right: 0.5em;
+.bell-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.bell-wrap[hidden] {
+  display: none;
 }
 
 .bell {
-  flex-shrink: 0;
+  position: relative;
   display: flex;
   align-items: center;
   height: var(--readthedocs-flyout-v2-row-height);
@@ -157,17 +204,55 @@
   color: var(--readthedocs-flyout-v2-muted-color);
 }
 
-.bell:hover {
+.bell:hover,
+.bell-wrap.open .bell {
   color: var(--readthedocs-flyout-v2-item-link-color);
-}
-
-.bell.open {
-  color: var(--readthedocs-flyout-v2-active-color);
 }
 
 .bell svg {
   height: 1em;
   width: 1em;
+}
+
+/* Unread dot while the dropdown is folded away. */
+.bell-wrap:not(.open) .bell::after {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  right: 0.1em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background-color: var(--readthedocs-flyout-v2-active-color);
+}
+
+.bell-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: -0.5em;
+  z-index: 1;
+  width: max-content;
+  max-width: min(40em, calc(100vw - 2em));
+  background-color: var(--readthedocs-flyout-v2-background-color);
+  border: 1px solid var(--readthedocs-flyout-v2-divider-color);
+  border-top: none;
+  border-radius: 0 0 0.4em 0.4em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bell-wrap.open .bell-dropdown {
+  display: block;
+}
+
+.container.bottom-left .bell-dropdown,
+.container.bottom-right .bell-dropdown {
+  top: auto;
+  bottom: 100%;
+  border-top: 1px solid var(--readthedocs-flyout-v2-divider-color);
+  border-bottom: none;
+  border-radius: 0.4em 0.4em 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* ---- Hamburger ---- */
@@ -212,9 +297,18 @@
   z-index: 1;
 }
 
-.hamburger:hover .hamburger-dropdown,
-.hamburger:focus-within .hamburger-dropdown,
-.hamburger.open .hamburger-dropdown {
+/* At the bottom of the screen the list opens upward instead. */
+.container.bottom-left .hamburger-dropdown,
+.container.bottom-right .hamburger-dropdown {
+  top: auto;
+  bottom: 100%;
+  border-radius: 0.4em 0.4em 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hamburger.open .hamburger-dropdown,
+.hamburger:not(.dismissed):hover .hamburger-dropdown,
+.hamburger:not(.dismissed):focus-within .hamburger-dropdown {
   display: flex;
 }
 
@@ -254,7 +348,9 @@
   align-items: center;
   gap: 0.4em;
   min-height: var(--readthedocs-flyout-v2-row-height);
-  min-width: 0;
+  /* Set by the element to the widest content seen, so the bar never
+   * shrinks when switching addons. */
+  min-width: var(--readthedocs-flyout-v2-content-min-width, 0);
 }
 
 .bar-select {

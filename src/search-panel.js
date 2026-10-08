@@ -109,7 +109,8 @@ export class SearchPanelElement extends LitElement {
           content === nothing
             ? nothing
             : html`<div class="results">
-                ${this.renderFilters()} ${content}
+                ${this.renderFilters()}
+                <div class="hits">${content}</div>
               </div>`
         }
       </div>

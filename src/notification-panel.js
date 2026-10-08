@@ -4,30 +4,28 @@ import styleSheet from "./notification-panel.css";
 import { NotificationElement } from "./notification";
 
 /**
- * Notification stacked under the flyout v2 bar.
+ * Notification shown under the flyout v2 bell.
  *
- * Reuses the toast's logic (which warning to show, auto-dismiss, remembering
- * a dismissal) and only swaps the positioning. The bar keeps a bell to bring
- * an auto-dismissed notification back, which is what ``expanded`` does.
+ * Reuses the toast's logic (which warning applies, remembering a dismissal)
+ * and only swaps the styling. Showing and hiding is the bar's job, so the
+ * toast's own auto-dismiss timer is switched off.
  */
 export class NotificationPanelElement extends NotificationElement {
   static elementName = "readthedocs-notification-panel";
-
-  static properties = {
-    expanded: { type: Boolean },
-  };
 
   static styles = styleSheet;
 
   constructor() {
     super();
-    this.expanded = false;
     this._lastHasNotification = null;
   }
 
   // The toast tags itself with layout classes; this element is laid out by
   // the bar instead.
   firstUpdated() {}
+
+  // The bar times the dropdown, not the element.
+  triggerAutoDismissTimer() {}
 
   willUpdate(changedProperties) {
     if (changedProperties.has("config") && this.config) {
@@ -46,9 +44,6 @@ export class NotificationPanelElement extends NotificationElement {
 
   render() {
     if (this.config === null || this.dismissedTimestamp) {
-      return nothing;
-    }
-    if (this.autoDismissed && !this.expanded) {
       return nothing;
     }
     return this.renderNotification();

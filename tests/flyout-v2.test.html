@@ -173,29 +173,44 @@
             );
             await elementUpdated(panel);
             await elementUpdated(element);
+            const wrap = () => element.shadowRoot.querySelector(".bell-wrap");
+
+            // Announced once on load: the dropdown opens by itself.
             expect(panel.shadowRoot.textContent).to.contain(
               "pull request build",
             );
-            expect(element.shadowRoot.querySelector(".bell")).to.exist;
+            expect(wrap().hidden).to.be.false;
+            expect(wrap().classList.contains("open")).to.be.true;
 
-            // Auto-dismissed: the bell brings it back.
-            panel.autoDismissed = true;
-            await elementUpdated(panel);
-            expect(panel.shadowRoot.querySelector(".title")).to.not.exist;
+            // The bell folds it away and brings it back.
             element.shadowRoot.querySelector(".bell").click();
             await elementUpdated(element);
-            await elementUpdated(panel);
-            expect(panel.shadowRoot.querySelector(".title")).to.exist;
+            expect(wrap().classList.contains("open")).to.be.false;
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.true;
+
+            // Opening the addon list folds it away: one dropdown at a time.
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            await elementUpdated(element);
+            expect(wrap().classList.contains("open")).to.be.false;
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            element.shadowRoot.querySelector(".bell").click();
+            await elementUpdated(element);
 
             // Closing it for good removes the bell too.
             panel.shadowRoot.querySelector(".title a.right").click();
             await elementUpdated(panel);
             await elementUpdated(element);
-            expect(element.shadowRoot.querySelector(".bell")).to.not.exist;
+            expect(wrap().hidden).to.be.true;
           });
 
-          it("links to the addons documentation from settings", async () => {
+          it("keeps the bar at the widest content seen", async () => {
             const element = await render(config);
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            const before = element.shadowRoot
+              .querySelector(".bar-content")
+              .getBoundingClientRect().width;
             [
               ...element.shadowRoot.querySelectorAll(
                 ".hamburger-dropdown button",
@@ -204,11 +219,10 @@
               .find((b) => b.textContent.trim() === "Settings")
               .click();
             await elementUpdated(element);
-            expect(
-              element.shadowRoot.querySelector(
-                '.bar-content a[href*="page/addons.html"]',
-              ),
-            ).to.exist;
+            const after = element.shadowRoot
+              .querySelector(".bar-content")
+              .getBoundingClientRect().width;
+            expect(after).to.be.at.least(before);
           });
 
           it("lists addons in the hamburger and hides unavailable ones", async () => {
@@ -256,6 +270,16 @@
             expect(
               flyoutV2.FlyoutV2Addon.getLocalStorage().activePanel,
             ).to.equal(flyoutV2.PANEL_SEARCH);
+
+            // Picking an addon closes the list even while it is hovered or
+            // focused.
+            expect(element.shadowRoot.querySelector(".hamburger.dismissed")).to
+              .exist;
+            expect(
+              getComputedStyle(
+                element.shadowRoot.querySelector(".hamburger-dropdown"),
+              ).display,
+            ).to.equal("none");
           });
 
           it("persists the position chosen in settings", async () => {
@@ -280,6 +304,59 @@
               .to.exist;
             expect(flyoutV2.FlyoutV2Addon.getLocalStorage().position).to.equal(
               "bottom-right",
+            );
+
+            // The hamburger list opens upward at the bottom of the screen.
+            element.shadowRoot.querySelector(".hamburger-trigger").click();
+            await elementUpdated(element);
+            const dropdown = element.shadowRoot.querySelector(
+              ".hamburger-dropdown",
+            );
+            const trigger =
+              element.shadowRoot.querySelector(".hamburger-trigger");
+            expect(dropdown.getBoundingClientRect().bottom).to.be.at.most(
+              trigger.getBoundingClientRect().top + 1,
+            );
+
+            // ... and growing panels open upward too.
+            [...dropdown.querySelectorAll("button")]
+              .find((b) => b.textContent.trim() === "Search")
+              .click();
+            await elementUpdated(element);
+            expect(
+              element.shadowRoot
+                .querySelector("readthedocs-search-panel")
+                .getAttribute("direction"),
+            ).to.equal("up");
+          });
+
+          it("persists the theme chosen in settings", async () => {
+            const element = await render(config);
+            [
+              ...element.shadowRoot.querySelectorAll(
+                ".hamburger-dropdown button",
+              ),
+            ]
+              .find((b) => b.textContent.trim() === "Settings")
+              .click();
+            await elementUpdated(element);
+
+            const select = element.shadowRoot.querySelector(
+              '.bar-content select[aria-label="Bar theme"]',
+            );
+            select.value = "light";
+            select.dispatchEvent(new Event("change"));
+            await elementUpdated(element);
+
+            const container = element.shadowRoot.querySelector(".container");
+            expect(container.classList.contains("theme-light")).to.be.true;
+            expect(
+              getComputedStyle(container).getPropertyValue(
+                "--readthedocs-flyout-v2-background-color",
+              ),
+            ).to.contain("252");
+            expect(flyoutV2.FlyoutV2Addon.getLocalStorage().theme).to.equal(
+              "light",
             );
           });
 

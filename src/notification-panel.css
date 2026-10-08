@@ -1,33 +1,29 @@
 /* Notification stacked under the flyout v2 bar */
 
-@layer defaults {
-  :root {
-    --readthedocs-notification-panel-color: var(
-      --readthedocs-flyout-v2-color,
-      rgb(220, 220, 220)
-    );
-    --readthedocs-notification-panel-title-color: var(
-      --readthedocs-flyout-v2-item-link-color,
-      rgb(252, 252, 252)
-    );
-    --readthedocs-notification-panel-muted-color: var(
-      --readthedocs-flyout-v2-muted-color,
-      rgb(150, 150, 150)
-    );
-    --readthedocs-notification-panel-link-color: var(
-      --readthedocs-flyout-v2-active-color,
-      #27ae60
-    );
-    --readthedocs-notification-panel-divider-color: var(
-      --readthedocs-flyout-v2-divider-color,
-      #413d3d
-    );
-  }
-}
-
+/* Derived on the host so they follow the bar's theme. */
 :host {
   display: block;
   max-width: 40em;
+  --readthedocs-notification-panel-color: var(
+    --readthedocs-flyout-v2-color,
+    rgb(220, 220, 220)
+  );
+  --readthedocs-notification-panel-title-color: var(
+    --readthedocs-flyout-v2-item-link-color,
+    rgb(252, 252, 252)
+  );
+  --readthedocs-notification-panel-muted-color: var(
+    --readthedocs-flyout-v2-muted-color,
+    rgb(150, 150, 150)
+  );
+  --readthedocs-notification-panel-link-color: var(
+    --readthedocs-flyout-v2-active-color,
+    #27ae60
+  );
+  --readthedocs-notification-panel-divider-color: var(
+    --readthedocs-flyout-v2-divider-color,
+    #413d3d
+  );
 }
 
 :host > div {
@@ -35,7 +31,6 @@
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: 0.75em;
   padding: 0.5em 0.75em 0.6em 0.6em;
-  border-top: 1px solid var(--readthedocs-notification-panel-divider-color);
   font-size: 0.95em;
   line-height: 1.35em;
   color: var(--readthedocs-notification-panel-color);

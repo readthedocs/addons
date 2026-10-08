@@ -1,34 +1,66 @@
 /* Search UI inside the flyout v2 bar */
 
-@layer defaults {
-  :root {
-    --readthedocs-search-panel-color: var(
-      --readthedocs-flyout-v2-item-link-color,
-      rgb(252, 252, 252)
-    );
-    --readthedocs-search-panel-muted-color: var(
-      --readthedocs-flyout-v2-muted-color,
-      rgb(150, 150, 150)
-    );
-    --readthedocs-search-panel-input-background-color: rgba(255, 255, 255, 0.1);
-    --readthedocs-search-panel-divider-color: var(
-      --readthedocs-flyout-v2-divider-color,
-      #413d3d
-    );
-    --readthedocs-search-panel-highlight-color: var(
-      --readthedocs-search-result-highlight-color,
-      #6ea0ec
-    );
-    --readthedocs-search-panel-hover-background-color: var(
-      --readthedocs-flyout-v2-hover-background-color,
-      rgba(255, 255, 255, 0.08)
-    );
-  }
-}
-
+/* Derived on the host so they follow the bar's theme. */
 :host {
   display: block;
-  min-width: 18em;
+  min-width: 22em;
+  --readthedocs-search-panel-color: var(
+    --readthedocs-flyout-v2-item-link-color,
+    rgb(252, 252, 252)
+  );
+  --readthedocs-search-panel-muted-color: var(
+    --readthedocs-flyout-v2-muted-color,
+    rgb(150, 150, 150)
+  );
+  --readthedocs-search-panel-input-background-color: var(
+    --readthedocs-flyout-v2-field-background-color,
+    rgba(255, 255, 255, 0.1)
+  );
+  --readthedocs-search-panel-divider-color: var(
+    --readthedocs-flyout-v2-divider-color,
+    #413d3d
+  );
+  --readthedocs-search-panel-highlight-color: var(
+    --readthedocs-search-result-highlight-color,
+    #6ea0ec
+  );
+  --readthedocs-search-panel-hover-background-color: var(
+    --readthedocs-flyout-v2-hover-background-color,
+    rgba(255, 255, 255, 0.08)
+  );
+}
+
+.search-panel {
+  position: relative;
+}
+
+/* When the bar sits at the bottom, results open above the input and the
+ * filters stay next to it. */
+:host([direction="up"]) .results {
+  top: auto;
+  bottom: calc(100% + 0.35em);
+  border-radius: 0.4em 0.4em 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:host([direction="up"]) .filters {
+  order: 1;
+  top: auto;
+  bottom: 0;
+  padding: 0.4em 0.25em 0.5em;
+  border-bottom: none;
+  border-top: 1px solid var(--readthedocs-search-panel-divider-color);
+}
+
+:host([direction="up"]) .hits {
+  padding: 0.5em 0 0.35em;
+}
+
+:host([direction="up"]) .filters {
+  margin: 0.25em 0 0;
+  padding: 0.4em 0.25em 0;
+  border-bottom: none;
+  border-top: 1px solid var(--readthedocs-search-panel-divider-color);
 }
 
 form {
@@ -67,13 +99,20 @@ form input::placeholder {
   color: var(--readthedocs-search-panel-muted-color);
 }
 
+/* Pinned to the edge nearest the input while the hits scroll. */
 .filters {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em 1em;
-  padding: 0 0.25em 0.4em;
-  margin-bottom: 0.25em;
+  padding: 0.5em 0.25em 0.4em;
   border-bottom: 1px solid var(--readthedocs-search-panel-divider-color);
+  background-color: var(
+    --readthedocs-flyout-v2-background-color,
+    rgb(39, 39, 37)
+  );
   font-size: 0.85em;
   color: var(--readthedocs-search-panel-muted-color);
 }
@@ -90,11 +129,32 @@ form input::placeholder {
   margin: 0;
 }
 
+/* Results overlay the page instead of growing the bar. */
 .results {
+  position: absolute;
+  top: calc(100% + 0.35em);
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(36em, calc(100vw - 3em));
   max-height: 20em;
   overflow-y: auto;
-  margin-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding: 0 0.5em;
+  border: 1px solid var(--readthedocs-search-panel-divider-color);
+  border-radius: 0 0 0.4em 0.4em;
+  background-color: var(
+    --readthedocs-flyout-v2-background-color,
+    rgb(39, 39, 37)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hits {
+  min-height: 0;
+  padding: 0.35em 0 0.5em;
 }
 
 .results-title {

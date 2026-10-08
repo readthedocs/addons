@@ -49,8 +49,13 @@ const POSITIONS = [
 ];
 const DEFAULT_POSITION = "top-center";
 
+const THEMES = ["dark", "light", "system"];
+const DEFAULT_THEME = "dark";
+
 // Idle time before the bar slides away, leaving a handle to hover.
 const AUTO_HIDE_DELAY = 4000;
+// How long a notification stays open under the bell before folding away.
+const NOTIFICATION_SHOW_DELAY = 5000;
 
 const DOWNLOAD_NAMES = { pdf: "PDF", epub: "EPUB", htmlzip: "HTML" };
 
@@ -76,8 +81,10 @@ export class FlyoutV2Element extends LitElement {
   static properties = {
     config: { state: true },
     position: { type: String },
+    theme: { type: String },
     activePanel: { state: true },
     hamburgerOpen: { state: true },
+    hamburgerDismissed: { state: true },
     hasNotification: { state: true },
     notificationsOpen: { state: true },
     collapsed: { state: true },
@@ -92,8 +99,10 @@ export class FlyoutV2Element extends LitElement {
 
     this.config = null;
     this.position = DEFAULT_POSITION;
+    this.theme = DEFAULT_THEME;
     this.activePanel = PANEL_MENU;
     this.hamburgerOpen = false;
+    this.hamburgerDismissed = false;
     this.hasNotification = false;
     this.notificationsOpen = false;
     this.collapsed = false;
@@ -170,6 +179,7 @@ export class FlyoutV2Element extends LitElement {
     this.position = POSITIONS.includes(stored.position)
       ? stored.position
       : dashboardPosition || DEFAULT_POSITION;
+    this.theme = THEMES.includes(stored.theme) ? stored.theme : DEFAULT_THEME;
     this.autoHide = stored.autoHide !== false;
 
     // Remember the last selected addon across page loads.
@@ -203,8 +213,18 @@ export class FlyoutV2Element extends LitElement {
       panel = PANEL_MENU;
     }
     this.activePanel = panel;
-    this.hamburgerOpen = false;
     FlyoutV2Addon.setLocalStorage({ activePanel: panel });
+    this._dismissHamburger();
+    // One dropdown at a time.
+    this._closeNotifications();
+  }
+
+  // The list also opens on hover and focus, so after a pick drop focus and
+  // keep it closed until the pointer leaves.
+  _dismissHamburger() {
+    this.hamburgerOpen = false;
+    this.hamburgerDismissed = true;
+    this.shadowRoot?.activeElement?.blur();
   }
 
   // ---- Auto-hide ----
@@ -214,6 +234,7 @@ export class FlyoutV2Element extends LitElement {
     // tabbing through it) or the hamburger is open.
     return (
       this.hamburgerOpen ||
+      this.notificationsOpen ||
       this.matches(":hover") ||
       this.shadowRoot?.activeElement !== null
     );
@@ -242,26 +263,66 @@ export class FlyoutV2Element extends LitElement {
   _onHamburgerToggle = (e) => {
     e.stopPropagation();
     this.hamburgerOpen = !this.hamburgerOpen;
+    this.hamburgerDismissed = false;
+    if (this.hamburgerOpen) {
+      this._closeNotifications();
+    }
+  };
+
+  _onHamburgerLeave = () => {
+    this.hamburgerDismissed = false;
   };
 
   // ---- Notifications ----
+  // The notification lives in a dropdown under the bell. It opens by itself
+  // once per page load and folds away after a few seconds; the bell brings
+  // it back until the reader dismisses it for good.
 
   _onNotificationChange = (e) => {
     this.hasNotification = e.detail.hasNotification;
     if (!this.hasNotification) {
-      this.notificationsOpen = false;
+      this._closeNotifications();
+    } else if (!this._notificationAnnounced) {
+      this._notificationAnnounced = true;
+      this.notificationsOpen = true;
+      this._scheduleNotificationsClose();
     }
   };
 
+  _scheduleNotificationsClose() {
+    clearTimeout(this._notificationTimer);
+    this._notificationTimer = setTimeout(() => {
+      // Like the toast, stay while the reader is on it.
+      if (this.renderRoot.querySelector(".bell-wrap")?.matches(":hover")) {
+        this._scheduleNotificationsClose();
+        return;
+      }
+      this._closeNotifications();
+    }, NOTIFICATION_SHOW_DELAY);
+  }
+
+  _closeNotifications() {
+    clearTimeout(this._notificationTimer);
+    this._notificationTimer = null;
+    this.notificationsOpen = false;
+  }
+
   _onBellClick = (e) => {
     e.stopPropagation();
-    this.notificationsOpen = !this.notificationsOpen;
+    if (this.notificationsOpen) {
+      this._closeNotifications();
+    } else {
+      // Opened on purpose: stays until closed.
+      clearTimeout(this._notificationTimer);
+      this.notificationsOpen = true;
+    }
   };
 
   // Clicks inside the shadow root are retargeted to the host, so any
   // click that reaches the window came from outside the bar.
   _onWindowClick = () => {
     this.hamburgerOpen = false;
+    this._closeNotifications();
   };
 
   _onKeydown = (e) => {
@@ -269,6 +330,7 @@ export class FlyoutV2Element extends LitElement {
       return;
     }
     this.hamburgerOpen = false;
+    this._closeNotifications();
     if (this.activePanel !== PANEL_MENU) {
       this._switchPanel(PANEL_MENU);
     }
@@ -293,6 +355,11 @@ export class FlyoutV2Element extends LitElement {
   _onPositionChange = (e) => {
     this.position = e.target.value;
     FlyoutV2Addon.setLocalStorage({ position: this.position });
+  };
+
+  _onThemeChange = (e) => {
+    this.theme = e.target.value;
+    FlyoutV2Addon.setLocalStorage({ theme: this.theme });
   };
 
   _onAutoHideChange = (e) => {
@@ -325,7 +392,14 @@ export class FlyoutV2Element extends LitElement {
 
   renderHamburger() {
     return html`
-      <div class=${classMap({ hamburger: true, open: this.hamburgerOpen })}>
+      <div
+        class=${classMap({
+          hamburger: true,
+          open: this.hamburgerOpen,
+          dismissed: this.hamburgerDismissed,
+        })}
+        @mouseleave=${this._onHamburgerLeave}
+      >
         <button
           class="hamburger-trigger"
           @click=${this._onHamburgerToggle}
@@ -375,11 +449,18 @@ export class FlyoutV2Element extends LitElement {
 
   // ---- Bar content per addon ----
 
+  // Panels that grow (search results, notifications) open away from the
+  // screen edge the bar is anchored to.
+  _growDirection() {
+    return this.position.startsWith("bottom") ? "up" : "down";
+  }
+
   renderBarContent() {
     switch (this.activePanel) {
       case PANEL_SEARCH:
         return html`<readthedocs-search-panel
           .config=${this.config}
+          direction=${this._growDirection()}
         ></readthedocs-search-panel>`;
       case PANEL_FILEDIFF:
         return html`<readthedocs-filetreediff-panel
@@ -532,6 +613,21 @@ export class FlyoutV2Element extends LitElement {
         </select>
       </label>
       <label class="bar-field">
+        Theme
+        <select
+          class="bar-select"
+          @change=${this._onThemeChange}
+          aria-label="Bar theme"
+        >
+          ${THEMES.map(
+            (t) =>
+              html`<option value="${t}" ?selected=${t === this.theme}>
+                ${t}
+              </option>`,
+          )}
+        </select>
+      </label>
+      <label class="bar-field">
         <input
           type="checkbox"
           .checked=${this.autoHide}
@@ -545,34 +641,6 @@ export class FlyoutV2Element extends LitElement {
         title="Switch back to the classic flyout"
         >Classic flyout</a
       >
-      <a
-        class="bar-link"
-        href="${addUtmParameters(
-          "https://docs.readthedocs.io/page/addons.html",
-          "flyout",
-          this.config.projects.current.slug,
-        )}"
-        target="_blank"
-        title="Read the Docs Addons documentation"
-        >Addons docs</a
-      >
-    `;
-  }
-
-  renderBell() {
-    if (!this.hasNotification) {
-      return nothing;
-    }
-    return html`
-      <button
-        class=${classMap({ bell: true, open: this.notificationsOpen })}
-        @click=${this._onBellClick}
-        title="Notifications"
-        aria-label="Notifications"
-        aria-expanded=${this.notificationsOpen}
-      >
-        ${this.iconBell.node[0]}
-      </button>
     `;
   }
 
@@ -580,11 +648,50 @@ export class FlyoutV2Element extends LitElement {
     if (!this._notificationsEnabled) {
       return nothing;
     }
-    return html`<readthedocs-notification-panel
-      .config=${this.config}
-      .expanded=${this.notificationsOpen}
-      @readthedocs-notification-panel-change=${this._onNotificationChange}
-    ></readthedocs-notification-panel>`;
+    // The panel is always mounted so it can report whether there is
+    // anything to show; the bell only appears when there is.
+    return html`
+      <div
+        class=${classMap({ "bell-wrap": true, open: this.notificationsOpen })}
+        ?hidden=${!this.hasNotification}
+      >
+        <button
+          class="bell"
+          @click=${this._onBellClick}
+          title="Notifications"
+          aria-label="Notifications"
+          aria-expanded=${this.notificationsOpen}
+        >
+          ${this.iconBell.node[0]}
+        </button>
+        <div class="bell-dropdown">
+          <readthedocs-notification-panel
+            .config=${this.config}
+            @readthedocs-notification-panel-change=${this._onNotificationChange}
+          ></readthedocs-notification-panel>
+        </div>
+      </div>
+    `;
+  }
+
+  firstUpdated() {
+    // Switching addons must not make the bar jump around: never shrink
+    // below the widest content seen on this page.
+    this._resizeObserver = new ResizeObserver(([entry]) => {
+      const width = Math.ceil(entry.contentRect.width);
+      if (width > (this._widestContent || 0)) {
+        this._widestContent = width;
+        // Applied on the next frame: changing the layout from inside the
+        // observer callback is reported as an observer loop.
+        requestAnimationFrame(() => {
+          this.style.setProperty(
+            "--readthedocs-flyout-v2-content-min-width",
+            `${width}px`,
+          );
+        });
+      }
+    });
+    this._resizeObserver.observe(this.renderRoot.querySelector(".bar-content"));
   }
 
   render() {
@@ -596,6 +703,7 @@ export class FlyoutV2Element extends LitElement {
       container: true,
       collapsed: this.collapsed,
       [this.position]: true,
+      [`theme-${this.theme}`]: true,
     };
 
     return html`
@@ -607,11 +715,8 @@ export class FlyoutV2Element extends LitElement {
         @focusin=${this._cancelCollapse}
         @focusout=${this._scheduleCollapse}
       >
-        <div class="bar-row">
-          ${this.renderHamburger()}
-          <div class="bar-content">${this.renderBarContent()}</div>
-          ${this.renderBell()}
-        </div>
+        ${this.renderHamburger()}
+        <div class="bar-content">${this.renderBarContent()}</div>
         ${this.renderNotifications()}
       </div>
     `;
@@ -661,6 +766,8 @@ export class FlyoutV2Element extends LitElement {
   }
 
   disconnectedCallback() {
+    this._resizeObserver?.disconnect();
+    clearTimeout(this._notificationTimer);
     clearTimeout(this._hideTimer);
     document.removeEventListener(
       EVENT_READTHEDOCS_FLYOUT_SHOW,
