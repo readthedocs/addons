@@ -35,7 +35,7 @@
     "ajv": "^8.20.0",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.5",
-    "diff-match-patch": "1.0.5",
+    "diff": "8.0.4",
     "express-interceptor": "^1.2.0",
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
@@ -50,7 +50,6 @@
     "tippy.js": "^6.3.7",
     "tslib": "^2.8.1",
     "unfetch": "4.2.0",
-    "visual-dom-diff": "^0.7.3",
     "webpack": "^5.111.1",
     "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^6.0.0"
