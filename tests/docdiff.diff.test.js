@@ -110,6 +110,20 @@ describe("Doc diff algorithm", () => {
     expect(marks(node).map((mark) => mark.closest("p"))).to.not.include(null);
   });
 
+  it("pairs a changed section even when whitespace surrounds it on one side", () => {
+    // The live page keeps the whitespace between elements, the Embed API
+    // response may not
+    const node = diffDocuments(
+      parse("<main><section><h1>Old title</h1></section></main>"),
+      parse(
+        "<main>\n  <section>\n    <h1>New title</h1>\n  </section>\n</main>",
+      ),
+    );
+    expect(node.querySelectorAll("section")).to.have.length(1);
+    expect(node.querySelector("del").textContent).to.equal("Old");
+    expect(node.querySelector("ins").textContent).to.equal("New");
+  });
+
   it("marks an added paragraph as a whole", () => {
     const node = diff(
       page([ALPHA, BETA]),
@@ -142,14 +156,17 @@ describe("Doc diff algorithm", () => {
     expect(marks(node)).to.have.length(0);
   });
 
-  it("marks a swapped image as removed and added", () => {
+  it("shows a swapped image as removed and added", () => {
     const image = (src) =>
       page([`<section><p><img src="${src}"></p></section>`]);
     const node = diff(image("../_images/old.png"), image("../_images/new.png"));
-    expect(marks(node).map((mark) => mark.tagName)).to.deep.equal([
-      "IMG",
-      "IMG",
-    ]);
+    const images = Array.from(node.querySelectorAll("img"));
+    expect(
+      images.map((image) => image.closest(".doc-diff-removed") !== null),
+    ).to.deep.equal([true, false]);
+    expect(
+      images.map((image) => image.closest(".doc-diff-added") !== null),
+    ).to.deep.equal([false, true]);
   });
 
   it("does not modify the nodes it's given", () => {

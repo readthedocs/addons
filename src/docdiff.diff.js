@@ -23,6 +23,10 @@ function isWhitespace(node) {
   return node.nodeType === Node.TEXT_NODE && node.data.trim() === "";
 }
 
+function hasText(node) {
+  return node.textContent.trim() !== "";
+}
+
 // A node whose children can be aligned one by one: it only holds elements
 // (and whitespace between them), no text of its own.
 function isContainer(node) {
@@ -54,11 +58,22 @@ function sameHTML(oldNode, newNode) {
   return comparableHTML(oldNode) === comparableHTML(newNode);
 }
 
-function mark(node, className) {
-  if (isElement(node)) {
-    node.classList.add(className);
+// Whether a removed block and an added one are the same block, changed, so
+// that it's worth diffing inside it. An image has no words to diff and is
+// shown as removed and added instead.
+function isChangedBlock(oldNode, newNode) {
+  return oldNode.nodeName === newNode.nodeName && hasText(newNode);
+}
+
+// Append nodes to the output, marked as added or removed when a class is
+// given. Text nodes (the whitespace between blocks) can't be marked.
+function appendAll(output, nodes, className = null) {
+  for (const node of nodes) {
+    if (className !== null && isElement(node)) {
+      node.classList.add(className);
+    }
+    output.appendChild(node);
   }
-  return node;
 }
 
 /**
@@ -71,21 +86,16 @@ function diffNode(oldNode, newNode) {
   if (isContainer(oldNode) && isContainer(newNode)) {
     return diffChildren(oldNode, newNode);
   }
-  if (oldNode.textContent.trim() === "" && newNode.textContent.trim() === "") {
-    // Nothing to diff word by word (an image, a rule): show both versions
-    const fragment = newNode.ownerDocument.createDocumentFragment();
-    fragment.append(mark(oldNode, REMOVED_CLASS), mark(newNode, ADDED_CLASS));
-    return fragment;
-  }
   return diffText(oldNode, newNode);
 }
 
 /**
  * Align the children of two containers and diff them.
  *
- * Equal children are kept as they are, children on one side only are
- * marked as added or removed as a whole, and an added child of the same
- * kind as a removed one is diffed against it as a changed block.
+ * Equal children are kept as they are and children on one side only are
+ * marked as added or removed as a whole. When a run of children was
+ * replaced by another, an added child of the same kind as a removed one is
+ * the same block, changed, and is diffed in turn.
  */
 function diffChildren(oldNode, newNode) {
   const output = newNode.cloneNode(false);
@@ -99,38 +109,35 @@ function diffChildren(oldNode, newNode) {
   let removed = [];
   for (const part of parts) {
     if (part.removed) {
-      removed = part.value;
-      continue;
-    }
-    // Pair each added child with a removed one of the same kind, if any
-    const changed = new Map();
-    if (part.added) {
+      removed = Array.from(part.value);
+    } else if (part.added) {
+      // Each added child takes the first removed one it's a changed version
+      // of, if any. Whitespace never pairs, so it's looked past.
+      const changed = new Map();
       for (const node of part.value) {
-        const index = removed.findIndex(
-          (candidate) => candidate.nodeName === node.nodeName,
+        const index = removed.findIndex((candidate) =>
+          isChangedBlock(candidate, node),
         );
         if (index !== -1) {
           changed.set(node, removed.splice(index, 1)[0]);
         }
       }
-    }
-    for (const node of removed) {
-      output.appendChild(mark(node, REMOVED_CLASS));
-    }
-    removed = [];
-    for (const node of part.value) {
-      if (changed.has(node)) {
-        output.appendChild(diffNode(changed.get(node), node));
-      } else if (part.added) {
-        output.appendChild(mark(node, ADDED_CLASS));
-      } else {
-        output.appendChild(node);
+      appendAll(output, removed, REMOVED_CLASS);
+      for (const node of part.value) {
+        if (changed.has(node)) {
+          output.appendChild(diffNode(changed.get(node), node));
+        } else {
+          appendAll(output, [node], ADDED_CLASS);
+        }
       }
+      removed = [];
+    } else {
+      appendAll(output, removed, REMOVED_CLASS);
+      appendAll(output, part.value);
+      removed = [];
     }
   }
-  for (const node of removed) {
-    output.appendChild(mark(node, REMOVED_CLASS));
-  }
+  appendAll(output, removed, REMOVED_CLASS);
   return output;
 }
 
@@ -140,22 +147,18 @@ function diffChildren(oldNode, newNode) {
  * The result keeps the block's own element but not the markup inside it.
  */
 function diffText(oldNode, newNode) {
-  const document = newNode.ownerDocument;
   const output = newNode.cloneNode(false);
   for (const part of diffWords(oldNode.textContent, newNode.textContent)) {
-    if (part.added) {
-      const ins = document.createElement("ins");
-      ins.classList.add(ADDED_CLASS);
-      ins.textContent = part.value;
-      output.appendChild(ins);
-    } else if (part.removed) {
-      const del = document.createElement("del");
-      del.classList.add(REMOVED_CLASS);
-      del.textContent = part.value;
-      output.appendChild(del);
-    } else {
-      output.appendChild(document.createTextNode(part.value));
+    if (!part.added && !part.removed) {
+      output.append(part.value);
+      continue;
     }
+    const element = newNode.ownerDocument.createElement(
+      part.added ? "ins" : "del",
+    );
+    element.className = part.added ? ADDED_CLASS : REMOVED_CLASS;
+    element.textContent = part.value;
+    output.append(element);
   }
   return output;
 }
