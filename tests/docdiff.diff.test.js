@@ -1,10 +1,8 @@
 import { expect } from "@open-wc/testing";
-import { diffDocuments, relativeURL } from "../src/docdiff.diff";
+import { diffDocuments } from "../src/docdiff.diff";
 
-// The base version and the pull request preview live under different URLs
+// The base version lives under another URL than the pull request preview
 const OLD_URL = "https://project.readthedocs.io/en/latest/guide/page.html";
-const NEW_URL =
-  "https://project--123.org.readthedocs.build/en/123/guide/page.html";
 
 function section(id, title, paragraphs) {
   return `
@@ -47,10 +45,7 @@ function parse(html) {
 }
 
 function diff(oldHtml, newHtml) {
-  return diffDocuments(parse(absolutized(oldHtml)), parse(newHtml), {
-    oldURL: OLD_URL,
-    newURL: NEW_URL,
-  });
+  return diffDocuments(parse(absolutized(oldHtml)), parse(newHtml));
 }
 
 function marks(node) {
@@ -162,32 +157,8 @@ describe("Doc diff algorithm", () => {
     const newRoot = parse(page([ALPHA, NEW]));
     const oldHtml = oldRoot.outerHTML;
     const newHtml = newRoot.outerHTML;
-    diffDocuments(oldRoot, newRoot, { oldURL: OLD_URL, newURL: NEW_URL });
+    diffDocuments(oldRoot, newRoot);
     expect(oldRoot.outerHTML).to.equal(oldHtml);
     expect(newRoot.outerHTML).to.equal(newHtml);
-  });
-});
-
-describe("Doc diff relative URLs", () => {
-  it("gives the same value for the same target on both versions", () => {
-    expect(relativeURL(`${OLD_URL}#alpha`, OLD_URL)).to.equal(
-      relativeURL("#alpha", NEW_URL),
-    );
-    expect(
-      relativeURL(
-        "https://project.readthedocs.io/en/latest/_images/x.png",
-        OLD_URL,
-      ),
-    ).to.equal(relativeURL("../_images/x.png", NEW_URL));
-  });
-
-  it("keeps links to other sites absolute", () => {
-    expect(relativeURL("https://example.com/a.png", OLD_URL)).to.equal(
-      "https://example.com/a.png",
-    );
-  });
-
-  it("leaves invalid URLs alone", () => {
-    expect(relativeURL("a.png", "not a url")).to.equal("a.png");
   });
 });

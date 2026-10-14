@@ -33,11 +33,25 @@ function isContainer(node) {
   );
 }
 
-function sameHTML(oldNode, newNode) {
-  if (isElement(oldNode) && isElement(newNode)) {
-    return oldNode.outerHTML === newNode.outerHTML;
+/**
+ * The HTML of a node as compared between the two versions.
+ *
+ * Link targets are left out, and only the file name of an image is kept:
+ * the two versions live under different URLs, and the Embed API rewrites
+ * the links of the base version to absolute ones, so the same link or image
+ * is written differently on each side.
+ */
+function comparableHTML(node) {
+  if (!isElement(node)) {
+    return node.data;
   }
-  return oldNode.nodeType === newNode.nodeType && oldNode.data === newNode.data;
+  return node.outerHTML
+    .replace(/ href="[^"]*"/g, "")
+    .replace(/ src="[^"]*\//g, ' src="');
+}
+
+function sameHTML(oldNode, newNode) {
+  return comparableHTML(oldNode) === comparableHTML(newNode);
 }
 
 function mark(node, className) {
@@ -45,59 +59,6 @@ function mark(node, className) {
     node.classList.add(className);
   }
   return node;
-}
-
-/**
- * Rewrite ``url`` relative to the page it was found in.
- *
- * The two versions of a page live under different URLs (another host for
- * pull request previews, another version path otherwise) and the Embed API
- * rewrites the links of the base version to absolute URLs. Making links
- * relative to their own page gives the same value on both sides for the same
- * target, so a page full of links still compares equal.
- */
-export function relativeURL(url, pageURL) {
-  let target;
-  let page;
-  try {
-    target = new URL(url, pageURL);
-    page = new URL(pageURL);
-  } catch (error) {
-    return url;
-  }
-  if (target.origin !== page.origin) {
-    return target.href;
-  }
-
-  // Drop the directories the page and the target have in common, then go up
-  // from the page's remaining directories and down into the target's
-  const pageDirectories = page.pathname.split("/").slice(1, -1);
-  const targetParts = target.pathname.split("/").slice(1);
-  while (
-    pageDirectories.length &&
-    targetParts.length &&
-    pageDirectories[0] === targetParts[0]
-  ) {
-    pageDirectories.shift();
-    targetParts.shift();
-  }
-  const up = "../".repeat(pageDirectories.length);
-  return up + targetParts.join("/") + target.search + target.hash;
-}
-
-function relativizeURLs(root, pageURL) {
-  for (const link of root.querySelectorAll("a[href]")) {
-    // Skip SVG links, which don't resolve the same way
-    if (link instanceof HTMLAnchorElement) {
-      link.setAttribute(
-        "href",
-        relativeURL(link.getAttribute("href"), pageURL),
-      );
-    }
-  }
-  for (const image of root.querySelectorAll("img[src]")) {
-    image.setAttribute("src", relativeURL(image.getAttribute("src"), pageURL));
-  }
 }
 
 /**
@@ -202,14 +163,9 @@ function diffText(oldNode, newNode) {
 /**
  * Diff two versions of the main content of a page.
  *
- * ``oldURL`` and ``newURL`` are the URLs the two versions were served from.
  * The nodes passed are not modified. Returns the element to show instead of
  * the current content, with the changes marked up.
  */
-export function diffDocuments(oldRoot, newRoot, { oldURL, newURL }) {
-  oldRoot = oldRoot.cloneNode(true);
-  newRoot = newRoot.cloneNode(true);
-  relativizeURLs(oldRoot, oldURL);
-  relativizeURLs(newRoot, newURL);
-  return diffNode(oldRoot, newRoot);
+export function diffDocuments(oldRoot, newRoot) {
+  return diffNode(oldRoot.cloneNode(true), newRoot.cloneNode(true));
 }

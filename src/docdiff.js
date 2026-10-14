@@ -185,12 +185,7 @@ export class DocDiffElement extends LitElement {
       throw new Error("Element not found in base document.");
     }
 
-    newBody.replaceWith(
-      diffDocuments(oldBody, newBody, {
-        oldURL: this.config.addons.doc_diff.base_url,
-        newURL: window.location.href,
-      }),
-    );
+    newBody.replaceWith(diffDocuments(oldBody, newBody));
   }
 
   enableDocDiff() {
