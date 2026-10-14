@@ -1,16 +1,7 @@
 import { default as fetch } from "unfetch";
 import styleSheet from "./docdiff.css";
 import docdiffGeneralStyleSheet from "./docdiff.document.css";
-
-// Note that it took as a while to make it work on production and also on tests.
-// We have to import it as:
-//   import * as  visualDomDiff from "visual-dom-diff";
-//
-// We have to use it as:
-//   visualDomDiff.visualDomDiff();
-//
-// See https://github.com/readthedocs/addons/pull/234
-import * as visualDomDiff from "visual-dom-diff";
+import { diffDocuments } from "./docdiff.diff";
 
 import {
   EVENT_READTHEDOCS_DOCDIFF_ADDED_REMOVED_SHOW,
@@ -24,24 +15,11 @@ import {
   getQueryParam,
   docTool,
   IS_LOCALHOST_DEVELOPMENT,
-  IS_TESTING,
 } from "./utils";
 import { EMBED_API_ENDPOINT } from "./constants";
 
 export const DOCDIFF_URL_PARAM = "readthedocs-diff";
 export const DOCDIFF_CHUNK_URL_PARAM = "readthedocs-diff-chunk";
-
-/**
- * visual-dom-diff options
- *
- * See https://github.com/Teamwork/visual-dom-diff#options
- */
-const VISUAL_DIFF_OPTIONS = {
-  addedClass: "doc-diff-added",
-  modifiedClass: "doc-diff-modified",
-  removedClass: "doc-diff-removed",
-  skipModified: true,
-};
 
 export class DocDiffElement extends LitElement {
   static elementName = "readthedocs-docdiff";
@@ -207,18 +185,7 @@ export class DocDiffElement extends LitElement {
       throw new Error("Element not found in base document.");
     }
 
-    // Depending on the context, visualDomDiff function is found under a different path.
-    // When running tests we use a different path for it.
-    let visualDomDiffFunction = visualDomDiff.visualDomDiff;
-    if (!visualDomDiffFunction && IS_TESTING) {
-      visualDomDiffFunction = visualDomDiff.default.visualDomDiff;
-    }
-    const diffNode = visualDomDiffFunction(
-      oldBody,
-      newBody,
-      VISUAL_DIFF_OPTIONS,
-    );
-    newBody.replaceWith(diffNode.firstElementChild);
+    newBody.replaceWith(diffDocuments(oldBody, newBody));
   }
 
   enableDocDiff() {
