@@ -163,6 +163,76 @@
                     "current": "http://localhost:8000/docdiff.html",
                     "base": "http://localhost:8000/docdiff.changed.html"
                 }
+            },
+            {
+                "filename": "guides/install.html",
+                "urls": {
+                    "current": "http://localhost:8000/guides/install.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "guides/configuration.html",
+                "urls": {
+                    "current": "http://localhost:8000/guides/configuration.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "guides/deploy.html",
+                "urls": {
+                    "current": "http://localhost:8000/guides/deploy.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "guides/testing.html",
+                "urls": {
+                    "current": "http://localhost:8000/guides/testing.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "api/client.html",
+                "urls": {
+                    "current": "http://localhost:8000/api/client.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "api/server.html",
+                "urls": {
+                    "current": "http://localhost:8000/api/server.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "api/errors.html",
+                "urls": {
+                    "current": "http://localhost:8000/api/errors.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "reference/cli.html",
+                "urls": {
+                    "current": "http://localhost:8000/reference/cli.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "reference/settings.html",
+                "urls": {
+                    "current": "http://localhost:8000/reference/settings.html",
+                    "base": ""
+                }
+            },
+            {
+                "filename": "changelog.html",
+                "urls": {
+                    "current": "http://localhost:8000/changelog.html",
+                    "base": ""
+                }
             }
         ]
       }

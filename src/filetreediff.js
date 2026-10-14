@@ -167,12 +167,24 @@ export class FileTreeDiffElement extends LitElement {
     });
   }
 
+  /** Files listed in the selector. Subclasses can narrow them. */
+  getDiffFiles() {
+    const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
+    return { added: diffData.added, modified: diffData.modified };
+  }
+
+  /** Hook for a control that narrows the list, rendered before it. */
+  renderFileFilter() {
+    return nothing;
+  }
+
   render() {
     const diffData = objectPath.get(this.config, "addons.filetreediff.diff");
     if (!diffData) {
       return nothing;
     }
 
+    const files = this.getDiffFiles();
     const currentUrl = this.getCurrentPageUrl();
     const renderSection = (files, label) => {
       if (!files.length) return nothing;
@@ -200,13 +212,13 @@ export class FileTreeDiffElement extends LitElement {
     return html`
       <div>
         <div>
-          ${this.renderDocDiff()}
+          ${this.renderDocDiff()} ${this.renderFileFilter()}
           <select @change=${this.handleFileChange}>
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
             </option>
-            ${renderSection(diffData.added, "Added")}
-            ${renderSection(diffData.modified, "Changed")}
+            ${renderSection(files.added, "Added")}
+            ${renderSection(files.modified, "Changed")}
           </select>
           <a
             href="${this.config.versions.current.urls.vcs}"

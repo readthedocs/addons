@@ -38,6 +38,25 @@
   cursor: pointer;
 }
 
+:host > div > div > input.file-filter {
+  width: 9em;
+  padding: 0.25em 0.5em;
+  border: 0;
+  border-radius: 0.25em;
+  outline: none;
+  background-color: var(
+    --readthedocs-flyout-v2-field-background-color,
+    rgba(255, 255, 255, 0.1)
+  );
+  color: var(--readthedocs-filetreediff-panel-color);
+  font-size: inherit;
+  font-family: inherit;
+}
+
+:host > div > div > input.file-filter::placeholder {
+  color: var(--readthedocs-flyout-v2-muted-color, rgb(150, 150, 150));
+}
+
 :host > div > div > label {
   display: flex;
   align-items: center;

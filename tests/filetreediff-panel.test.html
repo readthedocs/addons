@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <meta name="readthedocs-project-slug" content="project" />
+  </head>
+  <body>
+    <script type="module">
+      import { expect, elementUpdated } from "@open-wc/testing";
+      import { runTests } from "@web/test-runner-mocha";
+      import "../src/filetreediff-panel";
+
+      const file = (name) => ({
+        filename: name,
+        urls: { current: `https://project.readthedocs.io/en/1/${name}` },
+      });
+
+      const configWith = (modified) => ({
+        addons: {
+          doc_diff: { enabled: false },
+          filetreediff: {
+            enabled: true,
+            diff: { added: [file("new.html")], modified },
+          },
+        },
+        versions: {
+          current: {
+            slug: "1",
+            urls: { vcs: "https://github.com/o/r/pull/1" },
+          },
+        },
+      });
+
+      const render = async (config) => {
+        const element = document.createElement(
+          "readthedocs-filetreediff-panel",
+        );
+        element.config = config;
+        document.body.appendChild(element);
+        await elementUpdated(element);
+        return element;
+      };
+
+      const options = (element) =>
+        [...element.shadowRoot.querySelectorAll("optgroup option")].map((o) =>
+          o.textContent.trim(),
+        );
+
+      runTests(() => {
+        beforeEach(() => {
+          document
+            .querySelectorAll("readthedocs-filetreediff-panel")
+            .forEach((el) => el.remove());
+        });
+
+        describe("File tree diff panel", () => {
+          it("lists a short set of files without a filter", async () => {
+            const element = await render(
+              configWith([file("guide.html"), file("api.html")]),
+            );
+            expect(element.shadowRoot.querySelector("input.file-filter")).to.not
+              .exist;
+            expect(options(element).length).to.equal(3);
+          });
+
+          it("narrows a long list with the filter box", async () => {
+            const many = Array.from({ length: 12 }, (_, i) =>
+              file(i < 4 ? `guides/page-${i}.html` : `api/page-${i}.html`),
+            );
+            const element = await render(configWith(many));
+            const filter =
+              element.shadowRoot.querySelector("input.file-filter");
+            expect(filter).to.exist;
+            expect(options(element).length).to.equal(13);
+
+            filter.value = "guides";
+            filter.dispatchEvent(new Event("input"));
+            await elementUpdated(element);
+            expect(options(element)).to.deep.equal([
+              "± guides/page-0.html",
+              "± guides/page-1.html",
+              "± guides/page-2.html",
+              "± guides/page-3.html",
+            ]);
+
+            filter.value = "";
+            filter.dispatchEvent(new Event("input"));
+            await elementUpdated(element);
+            expect(options(element).length).to.equal(13);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
