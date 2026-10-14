@@ -1,5 +1,10 @@
 import { expect } from "@open-wc/testing";
-import { diffDocuments } from "../src/docdiff.diff";
+import { diffDocuments, relativeURL } from "../src/docdiff.diff";
+
+// The base version and the pull request preview live under different URLs
+const OLD_URL = "https://project.readthedocs.io/en/latest/guide/page.html";
+const NEW_URL =
+  "https://project--123.org.readthedocs.build/en/123/guide/page.html";
 
 function section(id, title, paragraphs) {
   return `
@@ -16,6 +21,11 @@ function page(sections) {
 ${sections.join("\n")}
 </section>
 </div>`;
+}
+
+// What the Embed API returns for the base version: links made absolute
+function absolutized(html) {
+  return html.replace(/href="#/g, `href="${OLD_URL}#`);
 }
 
 const ALPHA = section("alpha", "Alpha", ["Alpha body one.", "Alpha body two."]);
@@ -37,7 +47,10 @@ function parse(html) {
 }
 
 function diff(oldHtml, newHtml) {
-  return diffDocuments(parse(oldHtml), parse(newHtml));
+  return diffDocuments(parse(absolutized(oldHtml)), parse(newHtml), {
+    oldURL: OLD_URL,
+    newURL: NEW_URL,
+  });
 }
 
 function marks(node) {
@@ -105,6 +118,18 @@ describe("Doc diff algorithm", () => {
     expect(mark.textContent).to.equal("Beta three.");
   });
 
+  it("pairs a changed paragraph with the right one when another was removed", () => {
+    const paragraphs = (texts) => page([section("s", "Title", texts)]);
+    const node = diff(
+      paragraphs(["First.", "Second.", "Third paragraph."]),
+      paragraphs(["First.", "Third paragraph, edited."]),
+    );
+    const removed = node.querySelectorAll("p.doc-diff-removed");
+    expect(removed).to.have.length(1);
+    expect(removed[0].textContent).to.equal("Second.");
+    expect(node.querySelector("ins").textContent).to.equal(", edited");
+  });
+
   it("marks nothing for an unchanged table with a colgroup", () => {
     const node = diff(TABLE, TABLE);
     expect(marks(node)).to.have.length(0);
@@ -116,14 +141,23 @@ describe("Doc diff algorithm", () => {
     expect(node.querySelectorAll("table")).to.have.length(1);
   });
 
-  it("marks nothing for the same image with a relative and an absolute URL", () => {
+  it("marks nothing for the same image served from the two versions", () => {
     const image = (src) =>
       page([`<section><p><img src="${src}"></p></section>`]);
     const node = diff(
-      image(new URL("_images/x.png", document.baseURI).href),
-      image("_images/x.png"),
+      image("https://project.readthedocs.io/en/latest/_images/x.png"),
+      image("../_images/x.png"),
     );
     expect(marks(node)).to.have.length(0);
+  });
+
+  it("keeps the whitespace between inline elements", () => {
+    const badges = (text) =>
+      page([
+        `<section><div class="badges"><span>Stable</span> <span>${text}</span></div><p>Body.</p></section>`,
+      ]);
+    const node = diff(badges("v1"), badges("v2"));
+    expect(node.querySelector(".badges").textContent).to.equal("Stable v12");
   });
 
   it("does not modify the nodes it's given", () => {
@@ -131,8 +165,32 @@ describe("Doc diff algorithm", () => {
     const newRoot = parse(page([ALPHA, NEW]));
     const oldHtml = oldRoot.outerHTML;
     const newHtml = newRoot.outerHTML;
-    diffDocuments(oldRoot, newRoot);
+    diffDocuments(oldRoot, newRoot, { oldURL: OLD_URL, newURL: NEW_URL });
     expect(oldRoot.outerHTML).to.equal(oldHtml);
     expect(newRoot.outerHTML).to.equal(newHtml);
+  });
+});
+
+describe("Doc diff relative URLs", () => {
+  it("gives the same value for the same target on both versions", () => {
+    expect(relativeURL(`${OLD_URL}#alpha`, OLD_URL)).to.equal(
+      relativeURL("#alpha", NEW_URL),
+    );
+    expect(
+      relativeURL(
+        "https://project.readthedocs.io/en/latest/_images/x.png",
+        OLD_URL,
+      ),
+    ).to.equal(relativeURL("../_images/x.png", NEW_URL));
+  });
+
+  it("keeps links to other sites absolute", () => {
+    expect(relativeURL("https://example.com/a.png", OLD_URL)).to.equal(
+      "https://example.com/a.png",
+    );
+  });
+
+  it("leaves invalid URLs alone", () => {
+    expect(relativeURL("a.png", "not a url")).to.equal("a.png");
   });
 });
