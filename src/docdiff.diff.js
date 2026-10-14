@@ -1,3 +1,25 @@
+/**
+ * Visual diff between two versions of the main content of a page.
+ *
+ * ``visual-dom-diff`` flattens the whole page into one string and diffs that,
+ * which misaligns repeated structure: an inserted section gets matched against
+ * the next one, and unchanged tables with a ``<colgroup>`` are duplicated.
+ *
+ * This module aligns the page block by block first, and only uses
+ * ``visual-dom-diff`` to mark the changed words inside pairs of changed leaf
+ * blocks (a paragraph, a heading, a table cell).
+ *
+ * The steps, top to bottom:
+ *
+ * 1. ``diffDocuments``: copy both versions and make their links comparable.
+ * 2. ``diffNode``: for a container, align its children; for anything else,
+ *    diff the words.
+ * 3. ``alignChildren``: decide which children are equal, removed, added or
+ *    changed (a removed one replaced by an added one of the same kind).
+ * 4. ``renderOperations``: build the result from that list of operations,
+ *    recursing into the changed pairs.
+ */
+
 import { default as DiffMatchPatch } from "diff-match-patch";
 
 // Note that it took as a while to make it work on production and also on tests.
@@ -10,7 +32,8 @@ import { default as DiffMatchPatch } from "diff-match-patch";
 // See https://github.com/readthedocs/addons/pull/234
 import * as visualDomDiff from "visual-dom-diff";
 
-const { diff_match_patch, DIFF_EQUAL, DIFF_DELETE } = DiffMatchPatch;
+const { diff_match_patch, DIFF_EQUAL, DIFF_INSERT, DIFF_DELETE } =
+  DiffMatchPatch;
 
 // Depending on the context, visualDomDiff function is found under a different path.
 // When running tests we use a different path for it.
@@ -34,8 +57,8 @@ const VISUAL_DIFF_OPTIONS = {
   skipModified: true,
 };
 
-// Elements that lay out as blocks. A node containing them is aligned child by
-// child before diffing, instead of diffing the whole page as one piece of text.
+// Elements that lay out as blocks. A node containing them is a container
+// whose children are aligned one by one.
 const BLOCK_ELEMENTS = new Set([
   "ARTICLE",
   "ASIDE",
@@ -76,32 +99,43 @@ const BLOCK_ELEMENTS = new Set([
   "UL",
 ]);
 
-// Each child is mapped to one UTF-16 character for the alignment
+// Each child is given one UTF-16 character for the alignment, see `alignChildren`
 const MAX_CHILDREN = 65535;
 
-const isElement = (node) => node.nodeType === Node.ELEMENT_NODE;
-const isBlock = (node) => isElement(node) && BLOCK_ELEMENTS.has(node.nodeName);
-const isWhitespace = (node) =>
-  node.nodeType === Node.TEXT_NODE && node.data.trim() === "";
+// The operations `alignChildren` produces
+const EQUAL = "equal";
+const REMOVED = "removed";
+const ADDED = "added";
+const CHANGED = "changed";
 
-// Children of a node, ignoring whitespace between them (it isn't rendered).
-function getChildren(node) {
-  return Array.from(node.childNodes).filter(
-    (child) =>
-      isElement(child) ||
-      (child.nodeType === Node.TEXT_NODE && !isWhitespace(child)),
-  );
+function isElement(node) {
+  return node.nodeType === Node.ELEMENT_NODE;
 }
 
-// A container holds blocks (and maybe other elements, like the empty `span`
-// anchors Sphinx adds), but no text of its own. Its children can be aligned
-// one by one; anything else, like a paragraph, is diffed word by word.
+function isBlock(node) {
+  return isElement(node) && BLOCK_ELEMENTS.has(node.nodeName);
+}
+
+function isWhitespace(node) {
+  return node.nodeType === Node.TEXT_NODE && node.data.trim() === "";
+}
+
+/**
+ * Whether the children of a node can be aligned one by one.
+ *
+ * That's the case when the node holds blocks, possibly with other elements
+ * in between (like the empty ``span`` anchors Sphinx adds) and whitespace,
+ * but no text of its own. A paragraph or a heading isn't a container, and is
+ * diffed word by word instead.
+ */
 function isContainer(children) {
-  return (
-    children.length <= MAX_CHILDREN &&
-    children.some(isBlock) &&
-    children.every(isElement)
-  );
+  if (children.length === 0 || children.length > MAX_CHILDREN) {
+    return false;
+  }
+  if (!children.some(isBlock)) {
+    return false;
+  }
+  return children.every((child) => isElement(child) || isWhitespace(child));
 }
 
 /**
@@ -126,17 +160,26 @@ export function relativeURL(url, pageURL) {
   if (target.origin !== page.origin) {
     return target.href;
   }
-  const from = page.pathname.split("/").slice(1, -1);
-  const to = target.pathname.split("/").slice(1);
-  while (from.length && to.length && from[0] === to[0]) {
-    from.shift();
-    to.shift();
+
+  // Drop the directories the page and the target have in common, then go up
+  // from the page's remaining directories and down into the target's
+  const pageDirectories = page.pathname.split("/").slice(1, -1);
+  const targetParts = target.pathname.split("/").slice(1);
+  while (
+    pageDirectories.length &&
+    targetParts.length &&
+    pageDirectories[0] === targetParts[0]
+  ) {
+    pageDirectories.shift();
+    targetParts.shift();
   }
-  return "../".repeat(from.length) + to.join("/") + target.search + target.hash;
+  const up = "../".repeat(pageDirectories.length);
+  return up + targetParts.join("/") + target.search + target.hash;
 }
 
 function relativizeURLs(root, pageURL) {
   for (const link of root.querySelectorAll("a[href]")) {
+    // Skip SVG links, which don't resolve the same way
     if (link instanceof HTMLAnchorElement) {
       link.setAttribute(
         "href",
@@ -149,145 +192,190 @@ function relativizeURLs(root, pageURL) {
   }
 }
 
-function markNode(node, className) {
-  node.classList.add(className);
-  return node;
+/**
+ * How different the text of two nodes is.
+ *
+ * Used to pick which removed block an added one replaces. Only the start of
+ * long texts is compared, that's enough to tell blocks apart.
+ */
+function textDistance(oldNode, newNode) {
+  const oldText = oldNode.textContent.slice(0, 1000);
+  const newText = newNode.textContent.slice(0, 1000);
+  return dmp.diff_levenshtein(dmp.diff_main(oldText, newText));
 }
 
-// The whitespace text nodes that follow `node`
-function trailingWhitespace(node) {
-  const whitespace = [];
-  for (
-    let next = node.nextSibling;
-    next && isWhitespace(next);
-    next = next.nextSibling
-  ) {
-    whitespace.push(next);
-  }
-  return whitespace;
-}
-
-// Move `node` into `output`, with the whitespace that followed it
-function move(output, node) {
-  output.append(node, ...trailingWhitespace(node));
-}
-
-// How different the text of two nodes is, to pick which removed block an
-// added one replaces
-function distance(oldNode, newNode) {
-  const diffs = dmp.diff_main(
-    oldNode.textContent.slice(0, 1000),
-    newNode.textContent.slice(0, 1000),
-  );
-  return dmp.diff_levenshtein(diffs);
-}
-
-function diffNodes(oldNode, newNode) {
-  const oldChildren = getChildren(oldNode);
-  const newChildren = getChildren(newNode);
+/**
+ * Diff two versions of the same node.
+ *
+ * Returns a new node (or a fragment, for the word diff) with the changes
+ * marked. The children of the nodes passed are moved into the result.
+ */
+function diffNode(oldNode, newNode) {
+  const oldChildren = Array.from(oldNode.childNodes);
+  const newChildren = Array.from(newNode.childNodes);
   if (isContainer(oldChildren) && isContainer(newChildren)) {
-    return diffChildren(oldNode, newNode, oldChildren, newChildren);
+    const operations = alignChildren(oldChildren, newChildren);
+    return renderOperations(newNode.cloneNode(false), operations);
   }
   return visualDomDiffFunction(oldNode, newNode, VISUAL_DIFF_OPTIONS);
 }
 
 /**
- * Align the children of two containers one by one.
+ * Decide what happened to each child between the two versions.
  *
- * Children are compared by their serialized HTML. Equal children are kept as
- * they are, children present on only one side are marked as added or removed
- * as a whole, and an added child that replaces a removed one of the same kind
- * is diffed recursively as a changed block.
+ * Returns a list of operations, in document order:
  *
- * The children are moved into the result, not copied.
+ * - ``{type: EQUAL, node}``: the child is identical on both sides.
+ * - ``{type: REMOVED, node}``: the child only exists in the old version.
+ * - ``{type: ADDED, node}``: the child only exists in the new version.
+ * - ``{type: CHANGED, oldNode, newNode}``: a removed child replaced by an
+ *   added one of the same kind; the pair is diffed further.
+ *
+ * Children are compared by their HTML. ``diff-match-patch`` compares
+ * strings, so each distinct child is given a one-character code and the two
+ * sequences of codes are diffed, as if each child were a line of text.
  */
-function diffChildren(oldNode, newNode, oldChildren, newChildren) {
-  const output = newNode.cloneNode(false);
-  // Whitespace before the first child
-  for (const child of Array.from(newNode.childNodes)) {
-    if (!isWhitespace(child)) {
-      break;
+function alignChildren(oldChildren, newChildren) {
+  const codes = new Map();
+  function codeFor(node) {
+    const html = isElement(node) ? node.outerHTML : node.data;
+    if (!codes.has(html)) {
+      codes.set(html, String.fromCharCode(codes.size + 1));
     }
-    output.appendChild(child);
+    return codes.get(html);
   }
+  const oldText = oldChildren.map(codeFor).join("");
+  const newText = newChildren.map(codeFor).join("");
 
-  // Give each distinct child a character, so the children can be aligned
-  // with a text diff. The same HTML on both sides gets the same character.
-  const chars = new Map();
-  const toChars = (nodes) =>
-    nodes
-      .map((node) => {
-        const html = node.outerHTML;
-        if (!chars.has(html)) {
-          chars.set(html, String.fromCharCode(chars.size + 1));
-        }
-        return chars.get(html);
-      })
-      .join("");
-  const diffs = dmp.diff_main(
-    toChars(oldChildren),
-    toChars(newChildren),
-    false,
-  );
-
+  // One operation per child, reading the diff in order
+  const operations = [];
   let oldIndex = 0;
   let newIndex = 0;
-  let removed = [];
-  const flushRemoved = (count = removed.length) => {
-    for (const node of removed.splice(0, count)) {
-      move(output, markNode(node, REMOVED_CLASS));
-    }
-  };
-
-  for (const [operation, text] of diffs) {
-    // Each character of the diff text stands for one child.
+  for (const [kind, text] of dmp.diff_main(oldText, newText, false)) {
     for (let i = 0; i < text.length; i++) {
-      if (operation === DIFF_EQUAL) {
-        flushRemoved();
-        move(output, newChildren[newIndex++]);
+      if (kind === DIFF_EQUAL) {
+        operations.push({ type: EQUAL, node: newChildren[newIndex] });
         oldIndex++;
-      } else if (operation === DIFF_DELETE) {
-        removed.push(oldChildren[oldIndex++]);
-      } else {
-        const newNode = newChildren[newIndex++];
-        // The removed block this one replaces: the closest in text among
-        // those of the same kind, if any
-        let pair = -1;
-        let best = Infinity;
-        removed.forEach((oldNode, index) => {
-          if (oldNode.nodeName !== newNode.nodeName) {
-            return;
-          }
-          const value = distance(oldNode, newNode);
-          if (value < best) {
-            pair = index;
-            best = value;
-          }
-        });
-        if (pair === -1) {
-          flushRemoved();
-          move(output, markNode(newNode, ADDED_CLASS));
-        } else {
-          flushRemoved(pair);
-          const whitespace = trailingWhitespace(newNode);
-          output.append(diffNodes(removed.shift(), newNode), ...whitespace);
-        }
+        newIndex++;
+      } else if (kind === DIFF_DELETE) {
+        operations.push({ type: REMOVED, node: oldChildren[oldIndex] });
+        oldIndex++;
+      } else if (kind === DIFF_INSERT) {
+        operations.push({ type: ADDED, node: newChildren[newIndex] });
+        newIndex++;
       }
     }
   }
-  flushRemoved();
 
+  return pairChanges(operations);
+}
+
+/**
+ * Turn a removed block followed by an added one of the same kind into a
+ * single CHANGED operation.
+ *
+ * The diff reports an edited block as removed plus added. Pairing them lets
+ * us diff inside the block and show only the words that changed. When
+ * several blocks were removed in a row, each added one is paired with the
+ * removed one whose text is the closest.
+ */
+function pairChanges(operations) {
+  const result = [];
+  let index = 0;
+  while (index < operations.length) {
+    // Collect a run of removed children followed by a run of added ones
+    const removed = [];
+    const added = [];
+    while (index < operations.length && operations[index].type === REMOVED) {
+      removed.push(operations[index].node);
+      index++;
+    }
+    while (index < operations.length && operations[index].type === ADDED) {
+      added.push(operations[index].node);
+      index++;
+    }
+    if (removed.length === 0 && added.length === 0) {
+      result.push(operations[index]);
+      index++;
+      continue;
+    }
+
+    for (const newNode of added) {
+      const pairIndex = closestRemoved(removed, newNode);
+      if (pairIndex === -1) {
+        result.push({ type: ADDED, node: newNode });
+        continue;
+      }
+      // The removed children before the pair stay removed, in their order
+      for (const oldNode of removed.splice(0, pairIndex)) {
+        result.push({ type: REMOVED, node: oldNode });
+      }
+      const oldNode = removed.shift();
+      result.push({ type: CHANGED, oldNode, newNode });
+    }
+    for (const oldNode of removed) {
+      result.push({ type: REMOVED, node: oldNode });
+    }
+  }
+  return result;
+}
+
+/**
+ * Index of the removed element that ``newNode`` most likely replaces, or -1.
+ *
+ * Only elements of the same kind qualify (a paragraph replaces a paragraph).
+ */
+function closestRemoved(removed, newNode) {
+  if (!isElement(newNode)) {
+    return -1;
+  }
+  let bestIndex = -1;
+  let bestDistance = Infinity;
+  for (let index = 0; index < removed.length; index++) {
+    const oldNode = removed[index];
+    if (oldNode.nodeName !== newNode.nodeName) {
+      continue;
+    }
+    const distance = textDistance(oldNode, newNode);
+    if (distance < bestDistance) {
+      bestIndex = index;
+      bestDistance = distance;
+    }
+  }
+  return bestIndex;
+}
+
+/**
+ * Build the result of a container from the list of operations.
+ *
+ * Equal children are kept as they are, removed and added ones are marked
+ * with a class, and changed pairs are diffed recursively. Whitespace text
+ * nodes have nothing to mark and are just kept, so the layout doesn't change.
+ */
+function renderOperations(output, operations) {
+  for (const operation of operations) {
+    if (operation.type === EQUAL) {
+      output.appendChild(operation.node);
+    } else if (operation.type === REMOVED) {
+      output.appendChild(markNode(operation.node, REMOVED_CLASS));
+    } else if (operation.type === ADDED) {
+      output.appendChild(markNode(operation.node, ADDED_CLASS));
+    } else if (operation.type === CHANGED) {
+      output.appendChild(diffNode(operation.oldNode, operation.newNode));
+    }
+  }
   return output;
+}
+
+function markNode(node, className) {
+  if (isElement(node)) {
+    node.classList.add(className);
+  }
+  return node;
 }
 
 /**
  * Diff two versions of the main content of a page.
- *
- * ``visual-dom-diff`` flattens the whole page into one string and diffs that,
- * which misaligns repeated structure: an inserted section gets matched against
- * the next one, and unchanged tables with a ``<colgroup>`` are duplicated.
- * Here, blocks are aligned first and only pairs of changed leaf blocks
- * (paragraphs, headings, cells) are diffed word by word.
  *
  * ``oldURL`` and ``newURL`` are the URLs the two versions were served from.
  * The nodes passed are not modified. Returns the element to show instead of
@@ -299,10 +387,10 @@ export function diffDocuments(oldRoot, newRoot, { oldURL, newURL }) {
   relativizeURLs(oldRoot, oldURL);
   relativizeURLs(newRoot, newURL);
 
-  const node = diffNodes(oldRoot, newRoot);
+  const result = diffNode(oldRoot, newRoot);
   // visual-dom-diff returns a fragment with the root element inside
-  if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-    return node.firstElementChild;
+  if (result.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+    return result.firstElementChild;
   }
-  return node;
+  return result;
 }
