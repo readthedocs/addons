@@ -271,9 +271,14 @@ export class FileTreeDiffElement extends LitElement {
     // Create a set to de-duplicate the nodes
     const chunkParents = new Set();
 
-    // Find the first parent we consider a section node
     for (const chunk of chunks) {
-      let parent = chunk.parentElement;
+      // Whitespace between elements gets marked as well, but it isn't visible
+      if (chunk.textContent.trim() === "" && !chunk.querySelector("img")) {
+        continue;
+      }
+
+      // Find the first section node, starting from the marked node itself
+      let parent = chunk;
       // Find the parent up to 10 levels maximum
       for (let i = 0; i < 10; i++) {
         // If we don't have a parent, we stop iterating for this chunk
@@ -291,8 +296,14 @@ export class FileTreeDiffElement extends LitElement {
       }
     }
 
-    // Convert the de-duplicated Set into an Array
-    return Array.from(chunkParents);
+    // Drop the chunks that are inside another chunk (e.g. a paragraph inside
+    // a whole added section), so each change is listed only once
+    return Array.from(chunkParents).filter(
+      (chunk) =>
+        !Array.from(chunkParents).some(
+          (other) => other !== chunk && other.contains(chunk),
+        ),
+    );
   }
 
   _handleRootDOMChanged = (event) => {
