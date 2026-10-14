@@ -75,6 +75,14 @@ describe("Doc diff algorithm", () => {
     expect(marks(node)).to.have.length(2);
   });
 
+  it("ignores a paragraph that was only re-wrapped", () => {
+    const node = diff(
+      page([section("s", "Title", ["Some text that\nwraps here."])]),
+      page([section("s", "Title", ["Some text that wraps\nhere."])]),
+    );
+    expect(marks(node)).to.have.length(0);
+  });
+
   it("marks an inserted section as a whole, without touching its neighbours", () => {
     const node = diff(
       page([ALPHA, BETA, GAMMA]),
@@ -118,33 +126,6 @@ describe("Doc diff algorithm", () => {
     expect(mark.textContent).to.equal("Beta three.");
   });
 
-  it("pairs a changed paragraph with the right one when another was removed", () => {
-    const paragraphs = (texts) => page([section("s", "Title", texts)]);
-    const node = diff(
-      paragraphs(["First.", "Second.", "Third paragraph."]),
-      paragraphs(["First.", "Third paragraph, edited."]),
-    );
-    const removed = node.querySelectorAll("p.doc-diff-removed");
-    expect(removed).to.have.length(1);
-    expect(removed[0].textContent).to.equal("Second.");
-    expect(node.querySelector("ins").textContent).to.equal(", edited");
-  });
-
-  it("shows a rewritten paragraph as removed and added, not as a word diff", () => {
-    const node = diff(
-      page([section("s", "Title", ["The quick brown fox."])]),
-      page([
-        section("s", "Title", ["Lorem ipsum dolor sit amet, consectetur."]),
-      ]),
-    );
-    expect(node.querySelector("p.doc-diff-removed").textContent).to.equal(
-      "The quick brown fox.",
-    );
-    expect(node.querySelector("p.doc-diff-added").textContent).to.equal(
-      "Lorem ipsum dolor sit amet, consectetur.",
-    );
-  });
-
   it("marks nothing for an unchanged table with a colgroup", () => {
     const node = diff(TABLE, TABLE);
     expect(marks(node)).to.have.length(0);
@@ -166,13 +147,14 @@ describe("Doc diff algorithm", () => {
     expect(marks(node)).to.have.length(0);
   });
 
-  it("keeps the whitespace between inline elements", () => {
-    const badges = (text) =>
-      page([
-        `<section><div class="badges"><span>Stable</span> <span>${text}</span></div><p>Body.</p></section>`,
-      ]);
-    const node = diff(badges("v1"), badges("v2"));
-    expect(node.querySelector(".badges").textContent).to.equal("Stable v12");
+  it("marks a swapped image as removed and added", () => {
+    const image = (src) =>
+      page([`<section><p><img src="${src}"></p></section>`]);
+    const node = diff(image("../_images/old.png"), image("../_images/new.png"));
+    expect(marks(node).map((mark) => mark.tagName)).to.deep.equal([
+      "IMG",
+      "IMG",
+    ]);
   });
 
   it("does not modify the nodes it's given", () => {

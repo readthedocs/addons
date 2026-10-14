@@ -4,11 +4,17 @@ export const snapshots = {};
 snapshots["DocDiff tests initial trigger by event and DOM check"] = 
 `<main>
   <section>
-    <h1 class="doc-diff-removed">
-      Old title
-    </h1>
-    <h1 class="doc-diff-added">
-      New title (changed)
+    <h1>
+      <del class="doc-diff-removed">
+        Old
+      </del>
+      <ins class="doc-diff-added">
+        New
+      </ins>
+      title
+      <ins class="doc-diff-added">
+        (changed)
+      </ins>
     </h1>
     <p class="doc-diff-added">
       This paragraph was added.
