@@ -57,48 +57,6 @@ const VISUAL_DIFF_OPTIONS = {
   skipModified: true,
 };
 
-// Elements that lay out as blocks. A node containing them is a container
-// whose children are aligned one by one.
-const BLOCK_ELEMENTS = new Set([
-  "ARTICLE",
-  "ASIDE",
-  "BLOCKQUOTE",
-  "CAPTION",
-  "COLGROUP",
-  "DD",
-  "DETAILS",
-  "DIV",
-  "DL",
-  "DT",
-  "FIGCAPTION",
-  "FIGURE",
-  "FOOTER",
-  "H1",
-  "H2",
-  "H3",
-  "H4",
-  "H5",
-  "H6",
-  "HEADER",
-  "HR",
-  "LI",
-  "MAIN",
-  "NAV",
-  "OL",
-  "P",
-  "PRE",
-  "SECTION",
-  "SUMMARY",
-  "TABLE",
-  "TBODY",
-  "TD",
-  "TFOOT",
-  "TH",
-  "THEAD",
-  "TR",
-  "UL",
-]);
-
 // Each child is given one UTF-16 character for the alignment, see `alignChildren`
 const MAX_CHILDREN = 65535;
 
@@ -112,10 +70,6 @@ function isElement(node) {
   return node.nodeType === Node.ELEMENT_NODE;
 }
 
-function isBlock(node) {
-  return isElement(node) && BLOCK_ELEMENTS.has(node.nodeName);
-}
-
 function isWhitespace(node) {
   return node.nodeType === Node.TEXT_NODE && node.data.trim() === "";
 }
@@ -123,16 +77,12 @@ function isWhitespace(node) {
 /**
  * Whether the children of a node can be aligned one by one.
  *
- * That's the case when the node holds blocks, possibly with other elements
- * in between (like the empty ``span`` anchors Sphinx adds) and whitespace,
- * but no text of its own. A paragraph or a heading isn't a container, and is
- * diffed word by word instead.
+ * That's the case when the node only holds other elements (and whitespace
+ * between them): a section, a list, a table, a row. A node with text of its
+ * own, like a paragraph or a heading, is diffed word by word instead.
  */
 function isContainer(children) {
   if (children.length === 0 || children.length > MAX_CHILDREN) {
-    return false;
-  }
-  if (!children.some(isBlock)) {
     return false;
   }
   return children.every((child) => isElement(child) || isWhitespace(child));
@@ -192,16 +142,26 @@ function relativizeURLs(root, pageURL) {
   }
 }
 
+// A removed block and an added one are shown as the same block that changed
+// only if they still share this much of their text. Below that, showing one
+// as removed and the other as added is easier to read than a diff mixing
+// both. The same threshold MediaWiki's visual diff uses.
+const SIMILARITY_THRESHOLD = 0.5;
+
 /**
- * How different the text of two nodes is.
+ * How much of the text two nodes have in common, from 0 to 1.
  *
- * Used to pick which removed block an added one replaces. Only the start of
- * long texts is compared, that's enough to tell blocks apart.
+ * Only the start of long texts is compared, that's enough to tell blocks apart.
  */
-function textDistance(oldNode, newNode) {
+function similarity(oldNode, newNode) {
   const oldText = oldNode.textContent.slice(0, 1000);
   const newText = newNode.textContent.slice(0, 1000);
-  return dmp.diff_levenshtein(dmp.diff_main(oldText, newText));
+  const longest = Math.max(oldText.length, newText.length);
+  if (longest === 0) {
+    return 1;
+  }
+  const distance = dmp.diff_levenshtein(dmp.diff_main(oldText, newText));
+  return 1 - distance / longest;
 }
 
 /**
@@ -275,9 +235,9 @@ function alignChildren(oldChildren, newChildren) {
  * single CHANGED operation.
  *
  * The diff reports an edited block as removed plus added. Pairing them lets
- * us diff inside the block and show only the words that changed. When
- * several blocks were removed in a row, each added one is paired with the
- * removed one whose text is the closest.
+ * us diff inside the block and show only the words that changed. An added
+ * block is paired with the first removed block of the same kind that is
+ * similar enough to it.
  */
 function pairChanges(operations) {
   const result = [];
@@ -300,49 +260,53 @@ function pairChanges(operations) {
       continue;
     }
 
+    // Pair each added child with a removed one it replaces, if any
+    const pairs = new Map();
     for (const newNode of added) {
-      const pairIndex = closestRemoved(removed, newNode);
-      if (pairIndex === -1) {
-        result.push({ type: ADDED, node: newNode });
-        continue;
+      const pairIndex = removed.findIndex((oldNode) =>
+        isReplacement(oldNode, newNode),
+      );
+      if (pairIndex !== -1) {
+        pairs.set(newNode, removed.splice(pairIndex, 1)[0]);
       }
-      // The removed children before the pair stay removed, in their order
-      for (const oldNode of removed.splice(0, pairIndex)) {
-        result.push({ type: REMOVED, node: oldNode });
-      }
-      const oldNode = removed.shift();
-      result.push({ type: CHANGED, oldNode, newNode });
     }
+
+    // Removed children first, then the added and changed ones in their order
     for (const oldNode of removed) {
       result.push({ type: REMOVED, node: oldNode });
+    }
+    for (const newNode of added) {
+      if (pairs.has(newNode)) {
+        result.push({ type: CHANGED, oldNode: pairs.get(newNode), newNode });
+      } else {
+        result.push({ type: ADDED, node: newNode });
+      }
     }
   }
   return result;
 }
 
 /**
- * Index of the removed element that ``newNode`` most likely replaces, or -1.
+ * Whether ``newNode`` is a changed version of ``oldNode``.
  *
- * Only elements of the same kind qualify (a paragraph replaces a paragraph).
+ * Containers of the same kind always are: their children get aligned in
+ * turn. Blocks with text are only paired when the text is similar enough,
+ * otherwise a rewritten paragraph would show as a diff mixing both texts.
  */
-function closestRemoved(removed, newNode) {
-  if (!isElement(newNode)) {
-    return -1;
+function isReplacement(oldNode, newNode) {
+  if (!isElement(oldNode) || !isElement(newNode)) {
+    return false;
   }
-  let bestIndex = -1;
-  let bestDistance = Infinity;
-  for (let index = 0; index < removed.length; index++) {
-    const oldNode = removed[index];
-    if (oldNode.nodeName !== newNode.nodeName) {
-      continue;
-    }
-    const distance = textDistance(oldNode, newNode);
-    if (distance < bestDistance) {
-      bestIndex = index;
-      bestDistance = distance;
-    }
+  if (oldNode.nodeName !== newNode.nodeName) {
+    return false;
   }
-  return bestIndex;
+  if (
+    isContainer(Array.from(oldNode.childNodes)) &&
+    isContainer(Array.from(newNode.childNodes))
+  ) {
+    return true;
+  }
+  return similarity(oldNode, newNode) >= SIMILARITY_THRESHOLD;
 }
 
 /**

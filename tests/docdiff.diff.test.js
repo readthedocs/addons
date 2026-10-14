@@ -130,6 +130,21 @@ describe("Doc diff algorithm", () => {
     expect(node.querySelector("ins").textContent).to.equal(", edited");
   });
 
+  it("shows a rewritten paragraph as removed and added, not as a word diff", () => {
+    const node = diff(
+      page([section("s", "Title", ["The quick brown fox."])]),
+      page([
+        section("s", "Title", ["Lorem ipsum dolor sit amet, consectetur."]),
+      ]),
+    );
+    expect(node.querySelector("p.doc-diff-removed").textContent).to.equal(
+      "The quick brown fox.",
+    );
+    expect(node.querySelector("p.doc-diff-added").textContent).to.equal(
+      "Lorem ipsum dolor sit amet, consectetur.",
+    );
+  });
+
   it("marks nothing for an unchanged table with a colgroup", () => {
     const node = diff(TABLE, TABLE);
     expect(marks(node)).to.have.length(0);
