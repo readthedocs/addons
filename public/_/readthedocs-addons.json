@@ -164,6 +164,11 @@
                 }
             }
         ]
+      },
+      "totals": {
+        "added": 1,
+        "deleted": 1,
+        "modified": 1
       }
     },
     "flyout": {

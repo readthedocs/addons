@@ -175,9 +175,13 @@ export class FileTreeDiffElement extends LitElement {
     }
 
     const currentUrl = this.getCurrentPageUrl();
-    const renderSection = (files, label) => {
+    const totals = objectPath.get(this.config, "addons.filetreediff.totals");
+    const renderSection = (files, label, total = files.length) => {
       if (!files.length) return nothing;
       const emoji = label === "Added" ? "+ " : "± ";
+      // The API caps the number of files returned for each section,
+      // so we show how many were left out (like the pull request comment).
+      const remaining = total - files.length;
       return html`
         <optgroup label="${label}">
           ${files.map(
@@ -190,6 +194,11 @@ export class FileTreeDiffElement extends LitElement {
               </option>
             `,
           )}
+          ${
+            remaining > 0
+              ? html`<option disabled>and ${remaining} more...</option>`
+              : nothing
+          }
         </optgroup>
       `;
     };
@@ -206,8 +215,8 @@ export class FileTreeDiffElement extends LitElement {
             <option value="" ?selected=${!hasCurrentFile} disabled>
               Files changed
             </option>
-            ${renderSection(diffData.added, "Added")}
-            ${renderSection(diffData.modified, "Changed")}
+            ${renderSection(diffData.added, "Added", totals?.added)}
+            ${renderSection(diffData.modified, "Changed", totals?.modified)}
           </select>
           <a
             href="${this.config.versions.current.urls.vcs}"

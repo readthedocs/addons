@@ -266,6 +266,14 @@ const addons_filetreediff = {
                 modified: { type: "array" },
               },
             },
+            totals: {
+              type: "object",
+              properties: {
+                added: { type: "integer" },
+                deleted: { type: "integer" },
+                modified: { type: "integer" },
+              },
+            },
           },
         },
       },

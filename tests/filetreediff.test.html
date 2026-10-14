@@ -89,6 +89,25 @@
             await elementUpdated(element);
             await expect(element).shadowDom.to.equalSnapshot();
           });
+
+          it("shows how many files were left out of each section", async () => {
+            config.addons.filetreediff.totals = {
+              added: 51,
+              modified: 1,
+              deleted: 1,
+            };
+            const addon = new filetreediff.FileTreeDiffAddon(config);
+            const element = document.querySelector("readthedocs-filetreediff");
+            await elementUpdated(element);
+
+            const [added, modified] =
+              element.shadowRoot.querySelectorAll("optgroup");
+            expect(added.lastElementChild.textContent.trim()).to.equal(
+              "and 50 more...",
+            );
+            expect(added.lastElementChild.disabled).to.be.true;
+            expect(modified.querySelectorAll("option").length).to.equal(1);
+          });
         });
       });
     </script>
