@@ -269,40 +269,31 @@ export class FileTreeDiffElement extends LitElement {
     ];
 
     // Create a set to de-duplicate the nodes
-    const chunkParents = new Set();
+    const sections = new Set();
 
     for (const chunk of chunks) {
-      // Whitespace between elements gets marked as well, but it isn't visible
-      if (chunk.textContent.trim() === "" && !chunk.querySelector("img")) {
+      // visual-dom-diff wraps changed text in `ins`/`del`, including the
+      // whitespace between elements, which isn't visible
+      if (
+        (chunk.tagName === "INS" || chunk.tagName === "DEL") &&
+        chunk.textContent.trim() === ""
+      ) {
         continue;
       }
 
-      // Find the first section node, starting from the marked node itself
-      let parent = chunk;
-      // Find the parent up to 10 levels maximum
-      for (let i = 0; i < 10; i++) {
-        // If we don't have a parent, we stop iterating for this chunk
-        if (!parent) {
-          break;
-        }
-
-        if (sectionNodes.includes(parent.tagName.toLowerCase())) {
-          chunkParents.add(parent);
-          break;
-        }
-
-        // Continue checking with the parent of the parent
-        parent = parent.parentElement;
+      // Find the closest section node, starting from the marked node itself
+      const section = chunk.closest(sectionNodes.join(","));
+      if (section) {
+        sections.add(section);
       }
     }
 
-    // Drop the chunks that are inside another chunk (e.g. a paragraph inside
+    // Drop the sections that are inside another one (e.g. a paragraph inside
     // a whole added section), so each change is listed only once
-    return Array.from(chunkParents).filter(
-      (chunk) =>
-        !Array.from(chunkParents).some(
-          (other) => other !== chunk && other.contains(chunk),
-        ),
+    const result = Array.from(sections);
+    return result.filter(
+      (section) =>
+        !result.some((other) => other !== section && other.contains(section)),
     );
   }
 
