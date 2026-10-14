@@ -79,6 +79,21 @@ describe("Doc diff algorithm", () => {
       .to.be.true;
   });
 
+  it("keeps aligning inside a section that starts with an empty anchor span", () => {
+    // Sphinx emits `<span id="label"></span>` for explicit targets. The
+    // section must still be aligned block by block, or the unchanged table
+    // inside it would be duplicated.
+    const anchored = (text) =>
+      page([
+        `<section id="anchored"><span id="target"></span><h2>Title</h2>
+<table><colgroup><col></colgroup><tbody><tr><td><p>cell</p></td></tr></tbody></table>
+<p>${text}</p></section>`,
+      ]);
+    const node = diff(anchored("Old text."), anchored("New text."));
+    expect(node.querySelectorAll("table")).to.have.length(1);
+    expect(marks(node).map((mark) => mark.closest("p"))).to.not.include(null);
+  });
+
   it("marks an added paragraph as a whole", () => {
     const node = diff(
       page([ALPHA, BETA]),

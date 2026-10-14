@@ -10,9 +10,14 @@ import { default as DiffMatchPatch } from "diff-match-patch";
 // See https://github.com/readthedocs/addons/pull/234
 import * as visualDomDiff from "visual-dom-diff";
 
-import { IS_TESTING } from "./utils";
-
 const { diff_match_patch, DIFF_EQUAL, DIFF_DELETE } = DiffMatchPatch;
+
+// Depending on the context, visualDomDiff function is found under a different path.
+// When running tests we use a different path for it.
+const visualDomDiffFunction =
+  visualDomDiff.visualDomDiff || visualDomDiff.default.visualDomDiff;
+
+const dmp = new diff_match_patch();
 
 const ADDED_CLASS = "doc-diff-added";
 const REMOVED_CLASS = "doc-diff-removed";
@@ -29,8 +34,8 @@ const VISUAL_DIFF_OPTIONS = {
   skipModified: true,
 };
 
-// Elements that lay out as blocks. Their children are aligned one by one
-// before diffing, instead of diffing the whole page as one piece of text.
+// Elements that lay out as blocks. A node containing them is aligned child by
+// child before diffing, instead of diffing the whole page as one piece of text.
 const BLOCK_ELEMENTS = new Set([
   "ARTICLE",
   "ASIDE",
@@ -71,36 +76,23 @@ const BLOCK_ELEMENTS = new Set([
   "UL",
 ]);
 
-function isBlock(node) {
-  return (
-    node.nodeType === Node.ELEMENT_NODE && BLOCK_ELEMENTS.has(node.nodeName)
-  );
-}
+const isElement = (node) => node.nodeType === Node.ELEMENT_NODE;
+const isBlock = (node) => isElement(node) && BLOCK_ELEMENTS.has(node.nodeName);
 
 // Children of a node, ignoring whitespace between them (it isn't rendered).
 function getChildren(node) {
   return Array.from(node.childNodes).filter(
     (child) =>
-      child.nodeType === Node.ELEMENT_NODE ||
+      isElement(child) ||
       (child.nodeType === Node.TEXT_NODE && child.data.trim() !== ""),
   );
 }
 
-// A container only has block children, so we can keep aligning its children
-// instead of diffing it word by word.
-function isContainer(node) {
-  const children = getChildren(node);
-  return children.length > 0 && children.every(isBlock);
-}
-
-function getVisualDomDiff() {
-  // Depending on the context, visualDomDiff function is found under a different path.
-  // When running tests we use a different path for it.
-  let visualDomDiffFunction = visualDomDiff.visualDomDiff;
-  if (!visualDomDiffFunction && IS_TESTING) {
-    visualDomDiffFunction = visualDomDiff.default.visualDomDiff;
-  }
-  return visualDomDiffFunction;
+// A container holds blocks (and maybe other elements, like the empty `span`
+// anchors Sphinx adds), but no text of its own. Its children can be aligned
+// one by one; anything else, like a paragraph, is diffed word by word.
+function isContainer(children) {
+  return children.some(isBlock) && children.every(isElement);
 }
 
 /**
@@ -111,49 +103,56 @@ function getVisualDomDiff() {
  * by their attributes, so the same image would otherwise show as changed.
  */
 function resolveURLs(root) {
-  for (const [selector, attribute] of [
-    ["a[href]", "href"],
-    ["img[src]", "src"],
-  ]) {
-    for (const element of root.querySelectorAll(selector)) {
-      try {
-        const url = new URL(element.getAttribute(attribute), document.baseURI);
-        element.setAttribute(attribute, url.href);
-      } catch (error) {
-        // Leave invalid URLs as they are
-      }
-    }
+  for (const link of root.querySelectorAll("a[href]")) {
+    link.setAttribute("href", link.href);
+  }
+  for (const image of root.querySelectorAll("img[src]")) {
+    image.setAttribute("src", image.src);
   }
 }
 
-function diffNodes(oldNode, newNode, dmp) {
-  if (isContainer(oldNode) && isContainer(newNode)) {
-    return diffContainer(oldNode, newNode, dmp);
+function markNode(node, className) {
+  node.classList.add(className);
+  return node;
+}
+
+function diffNodes(oldNode, newNode) {
+  const oldChildren = getChildren(oldNode);
+  const newChildren = getChildren(newNode);
+  if (isContainer(oldChildren) && isContainer(newChildren)) {
+    return diffChildren(newNode.cloneNode(false), oldChildren, newChildren);
   }
-  return getVisualDomDiff()(oldNode, newNode, VISUAL_DIFF_OPTIONS);
+  return visualDomDiffFunction(oldNode, newNode, VISUAL_DIFF_OPTIONS);
 }
 
 /**
- * Align the children of two containers block by block.
+ * Align the children of two containers one by one, into ``output``.
  *
- * Children are compared by their serialized HTML with a line-based diff.
- * Equal children are copied as they are, children present on only one side
- * are marked as added or removed as a whole, and a removed child followed by
- * an added one of the same kind is diffed recursively as a changed block.
+ * Children are compared by their serialized HTML. Equal children are kept as
+ * they are, children present on only one side are marked as added or removed
+ * as a whole, and a removed child followed by an added one of the same kind
+ * is diffed recursively as a changed block.
+ *
+ * The children are moved into ``output``, not copied.
  */
-function diffContainer(oldElement, newElement, dmp) {
-  const output = newElement.cloneNode(false);
-  const oldChildren = getChildren(oldElement);
-  const newChildren = getChildren(newElement);
-
-  // One "line" per child. Serialized nodes may contain newlines themselves.
-  const toLines = (nodes) =>
+function diffChildren(output, oldChildren, newChildren) {
+  // Give each distinct child a character, so the children can be aligned
+  // with a text diff. The same HTML on both sides gets the same character.
+  const chars = new Map();
+  const toChars = (nodes) =>
     nodes
-      .map((node) => node.outerHTML.replace(/\n/g, "\u0001") + "\n")
+      .map((node) => {
+        const html = node.outerHTML;
+        if (!chars.has(html)) {
+          chars.set(html, String.fromCharCode(chars.size + 1));
+        }
+        return chars.get(html);
+      })
       .join("");
-  const { chars1, chars2 } = dmp.diff_linesToChars_(
-    toLines(oldChildren),
-    toLines(newChildren),
+  const diffs = dmp.diff_main(
+    toChars(oldChildren),
+    toChars(newChildren),
+    false,
   );
 
   let oldIndex = 0;
@@ -161,31 +160,27 @@ function diffContainer(oldElement, newElement, dmp) {
   let removed = [];
   const flushRemoved = () => {
     for (const node of removed) {
-      const clone = node.cloneNode(true);
-      clone.classList.add(REMOVED_CLASS);
-      output.appendChild(clone);
+      output.appendChild(markNode(node, REMOVED_CLASS));
     }
     removed = [];
   };
 
-  for (const [operation, text] of dmp.diff_main(chars1, chars2, false)) {
+  for (const [operation, text] of diffs) {
     // Each character of the diff text stands for one child.
     for (let i = 0; i < text.length; i++) {
       if (operation === DIFF_EQUAL) {
         flushRemoved();
-        output.appendChild(newChildren[newIndex++].cloneNode(true));
+        output.appendChild(newChildren[newIndex++]);
         oldIndex++;
       } else if (operation === DIFF_DELETE) {
         removed.push(oldChildren[oldIndex++]);
       } else {
         const newNode = newChildren[newIndex++];
         if (removed.length && removed[0].nodeName === newNode.nodeName) {
-          output.appendChild(diffNodes(removed.shift(), newNode, dmp));
+          output.appendChild(diffNodes(removed.shift(), newNode));
         } else {
           flushRemoved();
-          const clone = newNode.cloneNode(true);
-          clone.classList.add(ADDED_CLASS);
-          output.appendChild(clone);
+          output.appendChild(markNode(newNode, ADDED_CLASS));
         }
       }
     }
@@ -213,7 +208,8 @@ export function diffDocuments(oldRoot, newRoot) {
   resolveURLs(oldRoot);
   resolveURLs(newRoot);
 
-  const node = diffNodes(oldRoot, newRoot, new diff_match_patch());
+  const node = diffNodes(oldRoot, newRoot);
+  // visual-dom-diff returns a fragment with the root element inside
   if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
     return node.firstElementChild;
   }
