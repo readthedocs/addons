@@ -5,6 +5,7 @@ import {
   buildBaseDocument,
   renderDocument,
 } from "../src/docdiff";
+import { docTool } from "../src/utils";
 
 // Simulates copybutton.js: adds a button to the title from JavaScript
 const COPYBUTTON_SCRIPT = `
@@ -231,6 +232,34 @@ describe("Doc diff addon", () => {
 
       const button = document.querySelector("[role=main] button.copybutton");
       expect(button).to.not.be.null;
+      expect(button.closest(".doc-diff-added")).to.not.be.null;
+
+      element.disableDocDiff();
+    });
+
+    it("uses the raw base content on single page applications", async () => {
+      addRoot(
+        '<div role="main"><h1>Title<button class="copybutton">Copy</button></h1></div>',
+      );
+      element.fetchBaseContent = () =>
+        Promise.resolve('<div role="main"><h1>Title</h1></div>');
+      let pageSourceFetched = false;
+      element.fetchPageSource = () => {
+        pageSourceFetched = true;
+        return Promise.resolve("<html><body></body></html>");
+      };
+      element.loadConfig(config);
+
+      const isSinglePageApplication = docTool.isSinglePageApplication;
+      docTool.isSinglePageApplication = () => true;
+      try {
+        await element.enableDocDiff();
+      } finally {
+        docTool.isSinglePageApplication = isSinglePageApplication;
+      }
+
+      expect(pageSourceFetched).to.be.false;
+      const button = document.querySelector("[role=main] button.copybutton");
       expect(button.closest(".doc-diff-added")).to.not.be.null;
 
       element.disableDocDiff();
