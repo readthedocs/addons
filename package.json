@@ -51,7 +51,7 @@
     "tslib": "^2.8.1",
     "unfetch": "4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.111.1",
+    "webpack": "^5.112.0",
     "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^6.0.0"
   },
