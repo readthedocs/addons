@@ -257,9 +257,18 @@ export class SearchElement extends LitElement {
       title: "Result",
       classes: ["header", "icon"],
     });
+    // The API retries the search matching similar terms (typos, partial words)
+    // when the exact query has no results. Let the user know when that happens.
+    const fuzzyNotice = data.fuzzy_fallback
+      ? html`<p class="fuzzy-notice">
+          No exact matches for <strong>"${data.query}"</strong>. Showing results
+          for similar terms.
+        </p>`
+      : nothing;
     // JSON example from our production API
     // https://docs.readthedocs.io/_/api/v3/search/?q=project%3Adocs%2Fstable+build+customization
     this.results = html`
+      ${fuzzyNotice}
       <div class="hit">
         ${data.results.map(
           (result, rindex) =>
