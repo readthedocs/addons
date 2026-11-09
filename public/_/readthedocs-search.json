@@ -13,6 +13,7 @@
     }
   ],
   "query": "\"config file\"",
+  "fuzzy_fallback": false,
   "results": [
     {
       "blocks": [
