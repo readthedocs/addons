@@ -20,7 +20,7 @@
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^8.0.7",
+    "@babel/core": "^8.0.9",
     "@babel/preset-env": "^8.0.7",
     "@floating-ui/dom": "^1.8.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
@@ -40,7 +40,7 @@
     "jquery": "^4.0.0",
     "keyboard-event-to-string": "^2.1.0",
     "lit": "^3.3.3",
-    "minimizer-webpack-plugin": "^5.13.0",
+    "minimizer-webpack-plugin": "^5.13.1",
     "nise": "^6.1.5",
     "npm-check-updates": "^23.1.1",
     "object-path": "^0.11.8",
@@ -51,9 +51,9 @@
     "tslib": "^2.8.1",
     "unfetch": "4.2.0",
     "visual-dom-diff": "^0.7.3",
-    "webpack": "^5.112.0",
+    "webpack": "^5.112.2",
     "webpack-cli": "^7.2.3",
-    "webpack-dev-server": "^6.0.0"
+    "webpack-dev-server": "^6.1.0"
   },
   "babel": {
     "env": {
