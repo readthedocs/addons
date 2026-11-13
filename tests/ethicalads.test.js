@@ -83,6 +83,52 @@ describe("EthicalAds addon dark mode", () => {
       "rgb(78, 75, 75)",
     );
   });
+
+  it("creates a secondary takeover placement for readthedocs-pallets", () => {
+    const palletsConfig = {
+      addons: {
+        ethicalads: {
+          enabled: true,
+          ad_free: false,
+          campaign_types: ["community", "paid"],
+          keywords: ["flask", "pallets"],
+          publisher: "readthedocs-pallets",
+        },
+      },
+    };
+
+    new EthicalAdsAddon(palletsConfig);
+
+    const placements = document.querySelectorAll("[data-ea-publisher]");
+    expect(placements.length).to.equal(2);
+
+    const takeoverPlacement = document.querySelector("#ea-takeover-nodoctool");
+    expect(takeoverPlacement).to.exist;
+    expect(document.body.firstElementChild).to.equal(takeoverPlacement);
+    expect(takeoverPlacement.getAttribute("data-ea-publisher")).to.equal(
+      "readthedocs-pallets",
+    );
+    expect(takeoverPlacement.getAttribute("data-ea-type")).to.equal(
+      "takeover-v1",
+    );
+    expect(takeoverPlacement.getAttribute("data-ea-style")).to.equal(
+      "fixedheader",
+    );
+    expect(takeoverPlacement.getAttribute("data-ea-priority")).to.equal("10");
+    expect(takeoverPlacement.getAttribute("data-ea-keywords")).to.equal(
+      "flask|pallets",
+    );
+    expect(takeoverPlacement.getAttribute("data-ea-campaign-types")).to.equal(
+      "community|paid",
+    );
+    expect(takeoverPlacement.hasAttribute("class")).to.be.false;
+
+    const primaryPlacement = document.querySelector(
+      "#readthedocs-ea-text-nostyle-nodoctool",
+    );
+    expect(primaryPlacement).to.exist;
+    expect(primaryPlacement.getAttribute("data-ea-priority")).to.equal("1");
+  });
 });
 
 describe("EthicalAds addon", () => {
