@@ -357,21 +357,38 @@ export class EthicalAdsAddon extends AddonBase {
         );
       }
 
+      // Takeover ad placement - Currently only for Pallets/Flask
+      // Fixed header element at the top of the page
+      // This should *never* be filled by a regular ad, only by a "takeover" ad
+      // Regular ads use the regular placement position (sidebar, typically)
+      if (data.publisher === "readthedocs-pallets") {
+        secondPlacement = placement.cloneNode();
+        secondPlacement.setAttribute("data-ea-type", "takeover-v1");
+        secondPlacement.setAttribute("data-ea-style", "fixedheader");
+        // No RTD ad styles - use the ad client's
+        secondPlacement.removeAttribute("class");
+        // Set any priority on both placements for an either-or placement
+        secondPlacement.setAttribute("data-ea-priority", "10");
+        placement.setAttribute("data-ea-priority", "1");
+        secondPlacement.setAttribute("id", `ea-takeover-${placementIdSuffix}`);
+        // Append at the top of the body
+        document.body.prepend(secondPlacement);
+        console.debug("Added takeover ad placement for:", data.publisher);
+      }
+      // Large ad format
       // For now, only show the larger ad format on revshare partners
-      if (data.publisher !== "readthedocs" && secondSelector !== null) {
+      else if (data.publisher !== "readthedocs" && secondSelector) {
         const secondElementToAppend = document.querySelector(secondSelector);
         if (secondElementToAppend !== null) {
-          if (secondSelector !== null) {
-            secondPlacement = placement.cloneNode();
-            secondPlacement.setAttribute("data-ea-type", "logo-large-v1");
-            secondPlacement.setAttribute("data-ea-style", "");
-            secondPlacement.setAttribute(
-              "id",
-              `readthedocs-ea-logo-large-${placementIdSuffix}`,
-            );
-            secondElementToAppend.after(secondPlacement);
-            return secondPlacement;
-          }
+          secondPlacement = placement.cloneNode();
+          secondPlacement.setAttribute("data-ea-type", "logo-large-v1");
+          secondPlacement.setAttribute("data-ea-style", "");
+          secondPlacement.setAttribute(
+            "id",
+            `readthedocs-ea-logo-large-${placementIdSuffix}`,
+          );
+          secondElementToAppend.after(secondPlacement);
+          return secondPlacement;
         }
       }
 
