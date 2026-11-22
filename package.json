@@ -20,7 +20,7 @@
   "author": "Read the Docs, Inc",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^8.0.10",
+    "@babel/core": "^8.1.0",
     "@babel/preset-env": "^8.0.7",
     "@floating-ui/dom": "^1.8.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
